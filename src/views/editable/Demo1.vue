@@ -1,15 +1,14 @@
 <template>
   <div>
     <h1>基于 ElementUI 可编辑表格</h1>
-    <el-button type="primary" @click="$refs.editable.insert({name: 'new1'})">插入一行</el-button>
-    <el-button type="primary" @click="$refs.editable.insertAt({name: 'new1'}, -1)">在最后插入一行</el-button>
+    <el-button @click="$refs.editable.insert({name: '默认名字1'})">插入一行</el-button>
+    <el-button @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后插入一行</el-button>
     <el-button type="danger" @click="$refs.editable.removeRows([0, 2])">删除指定行[0, 2]</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="danger" @click="$refs.editable.revert()">还原更改</el-button>
-    <el-button type="danger" @click="$refs.editable.clear()">清空所有</el-button>
+    <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
+    <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
     <el-editable ref="editable" :data.sync="list">
       <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
@@ -97,7 +96,10 @@ export default {
           birthdate: new Date(1994, 0, 1),
           date1: new Date(2019, 0, 1, 20, 0, 30),
           remark: '备注1',
-          flag: false
+          status: ['error'],
+          order: '123456',
+          flag: false,
+          flag2: 'Y'
         },
         {
           name: 'test22',
@@ -108,7 +110,10 @@ export default {
           birthdate: new Date(1992, 0, 1),
           date1: new Date(2019, 0, 1, 12, 10, 30),
           remark: '备注2',
-          flag: true
+          status: ['success', 'error'],
+          order: '1362',
+          flag: true,
+          flag2: 'N'
         },
         {
           name: 'test33',
@@ -119,7 +124,10 @@ export default {
           birthdate: new Date(1990, 0, 1),
           date1: new Date(2019, 0, 1, 0, 30, 50),
           remark: null,
-          flag: false
+          status: ['success'],
+          order: '13886',
+          flag: false,
+          flag2: 'N'
         }
       ]
     }

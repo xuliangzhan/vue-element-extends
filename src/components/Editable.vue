@@ -157,7 +157,7 @@ export default {
     },
     insertAt (record, rowIndex) {
       let recordItem = {}
-      let len = this.data.length
+      let len = this.datas.length
       this.$refs.refElTable.columns.forEach(column => {
         if (column.property) {
           recordItem[column.property] = null

@@ -12,8 +12,16 @@ import Editable from '@/components/Editable.vue'
 import EditableColumn from '@/components/EditableColumn.vue'
 
 import {
+  Loading,
   Dialog,
   Switch,
+  Radio,
+  RadioGroup,
+  RadioButton,
+  Checkbox,
+  CheckboxButton,
+  CheckboxGroup,
+  Autocomplete,
   Input,
   InputNumber,
   Select,
@@ -33,6 +41,13 @@ Vue.component(EditableColumn.name, EditableColumn)
 
 Vue.use(Dialog)
 Vue.use(Switch)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(RadioButton)
+Vue.use(Checkbox)
+Vue.use(CheckboxButton)
+Vue.use(CheckboxGroup)
+Vue.use(Autocomplete)
 Vue.use(Input)
 Vue.use(InputNumber)
 Vue.use(Select)
@@ -45,6 +60,8 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(DatePicker)
 Vue.use(Tree)
+
+Vue.use(Loading.directive)
 
 Vue.use(VXEUtils, XEUtils)
 Vue.config.productionTip = false

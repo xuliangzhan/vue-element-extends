@@ -1,26 +1,66 @@
 <template>
   <el-table-column
     v-if="isDefaultRender"
-    className="editable-column col-readonly"
     :type="type"
     :label="label"
     :columnKey="columnKey"
     :prop="prop"
     :width="width"
-    :minWidth="minWidth">
+    :minWidth="minWidth"
+    :fixed="fixed"
+    :renderHeader="renderHeader"
+    :sortable="sortable"
+    :sortMethod="sortMethod"
+    :sortBy="sortBy"
+    :sortOrders="sortOrders"
+    :resizable="resizable"
+    :formatter="formatter"
+    :showOverflowTooltip="showOverflowTooltip"
+    :align="align"
+    :headerAlign="headerAlign"
+    :className="`editable-column col-readonly${className ? ' ' + className : ''}`"
+    :labelClassName="labelClassName"
+    :selectable="selectable"
+    :reserveSelection="reserveSelection"
+    :filters="filters"
+    :filterPlacement="filterPlacement"
+    :filterMultiple="filterMultiple"
+    :filterMethod="filterMethod"
+    :filteredValue="filteredValue">
     <slot></slot>
   </el-table-column>
   <el-table-column
     v-else-if="editRender"
-    className="editable-column col-edit"
     :type="type"
     :label="label"
     :columnKey="columnKey"
     :prop="prop"
     :width="width"
-    :minWidth="minWidth">
+    :minWidth="minWidth"
+    :fixed="fixed"
+    :renderHeader="renderHeader"
+    :sortable="sortable"
+    :sortMethod="sortMethod"
+    :sortBy="sortBy"
+    :sortOrders="sortOrders"
+    :resizable="resizable"
+    :formatter="formatter"
+    :showOverflowTooltip="showOverflowTooltip"
+    :align="align"
+    :headerAlign="headerAlign"
+    :className="`editable-column col-readonly${className ? ' ' + className : ''}`"
+    :labelClassName="labelClassName"
+    :selectable="selectable"
+    :reserveSelection="reserveSelection"
+    :filters="filters"
+    :filterPlacement="filterPlacement"
+    :filterMultiple="filterMultiple"
+    :filterMethod="filterMethod"
+    :filteredValue="filteredValue">
     <template slot="header" slot-scope="scope">
-      <i class="el-icon-edit-outline"></i>{{ scope.column.label }}
+      <slot name="head" v-bind="{$index: scope.$index, column: scope.column}">
+        <i class="el-icon-edit-outline"></i>{{ scope.column.label }}
+      </slot>
     </template>
     <template slot-scope="scope">
       <template v-if="editRender.type === 'visible' || editRender.name === 'ElSwitch'">
@@ -63,13 +103,32 @@
   </el-table-column>
   <el-table-column
     v-else
-    className="editable-column col-readonly"
     :type="type"
     :label="label"
     :columnKey="columnKey"
     :prop="prop"
     :width="width"
-    :minWidth="minWidth">
+    :minWidth="minWidth"
+    :fixed="fixed"
+    :renderHeader="renderHeader"
+    :sortable="sortable"
+    :sortMethod="sortMethod"
+    :sortBy="sortBy"
+    :sortOrders="sortOrders"
+    :resizable="resizable"
+    :formatter="formatter"
+    :showOverflowTooltip="showOverflowTooltip"
+    :align="align"
+    :headerAlign="headerAlign"
+    :className="`editable-column col-readonly${className ? ' ' + className : ''}`"
+    :labelClassName="labelClassName"
+    :selectable="selectable"
+    :reserveSelection="reserveSelection"
+    :filters="filters"
+    :filterPlacement="filterPlacement"
+    :filterMultiple="filterMultiple"
+    :filterMethod="filterMethod"
+    :filteredValue="filteredValue">
     <template slot-scope="scope">
       <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">{{ scope.row.data[scope.column.property] }}</slot>
     </template>
@@ -86,7 +145,27 @@ export default {
     columnKey: String,
     prop: String,
     width: String,
-    minWidth: String
+    minWidth: String,
+    fixed: [Boolean, String],
+    renderHeader: Function,
+    sortable: [Boolean, String],
+    sortMethod: Function,
+    sortBy: [String, Array, Function],
+    sortOrders: Array,
+    resizable: { type: Boolean, default: true },
+    formatter: Function,
+    showOverflowTooltip: Boolean,
+    align: { type: String, default: 'left' },
+    headerAlign: String,
+    className: { type: String, default: '' },
+    labelClassName: String,
+    selectable: Function,
+    reserveSelection: Boolean,
+    filters: Array,
+    filterPlacement: String,
+    filterMultiple: { type: Boolean, default: true },
+    filterMethod: Function,
+    filteredValue: Array
   },
   computed: {
     isDefaultRender () {

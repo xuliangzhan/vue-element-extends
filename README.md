@@ -6,31 +6,35 @@
 
 ## API
 
-* 基于 ElementUI 可编辑表格 Editable
-  * reload(datas) 初始化数据
-  * revert() 还原修改之前数据
-  * clear() 清空所有数据
-  * insert(record) 插入一行
-  * insertAt(record, rowIndex) 指定位置插入一行
-  * remove(record) 删除行
-  * removes(records) 删除多行
-  * removeRow(rowIndex) 删除行
-  * removeRows(rowIndexs) 删除多行
-  * removeSelecteds() 删除选中行
-  * getRecords() 获取表格数据
-  * getAllRecords() 获取表格所有数据
-  * getInsertRecords() 获取插入数据
-  * getRemoveRecords() 获取删除数据
-  * getUpdateRecords() 获取修改数据
-* editRender 属性
-  * name 渲染的组件名称（ElInput, ElSelect, ElCascader, ElDatePicker, ElInputNumber, ElSwitch）
-  * type 渲染类型（default组件激活后才可视,visible组件一直可视）
-  * attrs 渲染组件附加属性
-  * optionAttrs 下拉组件选项附加属性（只对name=ElSelect有效）
-  * options 下拉组件选项列表（只对name=ElSelect有效）
-* Scoped Slot
-  * — 自定义渲染显示内容
-  * edit 自定义渲染组件
+* Editable
+  * Attributes
+    * reload(datas) 初始化数据
+    * revert() 还原修改之前数据
+    * clear() 清空所有数据
+    * insert(record) 插入一行
+    * insertAt(record, rowIndex) 指定位置插入一行
+    * remove(record) 删除行
+    * removes(records) 删除多行
+    * removeRow(rowIndex) 删除行
+    * removeRows(rowIndexs) 删除多行
+    * removeSelecteds() 删除选中行
+    * getRecords() 获取表格数据
+    * getAllRecords() 获取表格所有数据
+    * getInsertRecords() 获取插入数据
+    * getRemoveRecords() 获取删除数据
+    * getUpdateRecords() 获取修改数据
+* EditableColumn
+  * Attributes
+    * edit-render
+      * name 渲染的组件名称（ElInput, ElSelect, ElCascader, ElDatePicker, ElInputNumber, ElSwitch）
+      * type 渲染类型（default组件激活后才可视,visible组件一直可视）
+      * attrs 渲染组件附加属性
+      * optionAttrs 下拉组件选项附加属性（只对name=ElSelect有效）
+      * options 下拉组件选项列表（只对name=ElSelect有效）
+  * Scoped Slot
+    * — 自定义渲染显示内容 { row, column, $index }
+    * edit 自定义渲染组件 { row, column, $index }
+    * head 自定义表头的内容 { column, $index }
 
 ## Example
 

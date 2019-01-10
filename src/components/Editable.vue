@@ -28,7 +28,23 @@
     :sumText="sumText"
     :summaryMethod="summaryMethod"
     :selectOnIndeterminate="selectOnIndeterminate"
-    @cell-click="_cellClick">
+    @select="_cellEvent('select', arguments)"
+    @select-all="_cellEvent('select-all', arguments)"
+    @selection-change="_cellEvent('selection-change', arguments)"
+    @cell-mouse-enter="_cellEvent('cell-mouse-enter', arguments)"
+    @cell-mouse-leave="_cellEvent('cell-mouse-leave', arguments)"
+    @cell-click="_cellClick"
+    @cell-dblclick="_cellEvent('cell-dblclick', arguments)"
+    @row-click="_cellEvent('row-click', arguments)"
+    @row-contextmenu="_cellEvent('row-contextmenu', arguments)"
+    @row-dblclick="_cellEvent('row-dblclick', arguments)"
+    @header-click="_cellEvent('header-click', arguments)"
+    @header-contextmenu="_cellEvent('header-contextmenu', arguments)"
+    @sort-change="_cellEvent('sort-change', arguments)"
+    @filter-change="_cellEvent('filter-change', arguments)"
+    @current-change="_cellEvent('current-change', arguments)"
+    @header-dragend="_cellEvent('header-dragend', arguments)"
+    @expand-change="_cellEvent('expand-change', arguments)">
     <slot></slot>
   </el-table>
 </template>
@@ -120,6 +136,9 @@ export default {
     },
     _updateData () {
       this.$emit('update:data', this.datas.map(item => item.data))
+    },
+    _cellEvent (name, args) {
+      this.$emit.apply(this, [name].concat(Array.from(args)))
     },
     _cellClick (row, column, cell, event) {
       this._clearActive()

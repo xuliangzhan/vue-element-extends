@@ -38,7 +38,9 @@
 
 ## Example
 
-main.js 引入组件
+* 全局事件需要依赖 vuex (参考store/modules/event.js)
+* 将 Editable.vue 和 EditableColumn.vue 复制到自己项目的 components 目录下
+* 然后在 main.js 引入组件即可
 
 ```JavaScript
 import Editable from '@/components/Editable.vue'

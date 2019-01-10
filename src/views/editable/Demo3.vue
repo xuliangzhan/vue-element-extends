@@ -8,15 +8,27 @@
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
     <el-button type="primary" @click="submitEvent">保存</el-button>
-    <el-editable ref="editable" stripe>
-      <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字" show-overflow-tooltip></el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="age" label="年龄" width="140" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
+    <el-editable ref="editable" height="340" stripe border @select="selectEvent" @current-change="currentChangeEvent">
+      <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
+      <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
+      <el-editable-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline>
+            <el-form-item label="名称">
+              <span>{{ props.row.name }}</span>
+            </el-form-item>
+            <el-form-item label="描述">
+              <span>{{ props.row.desc }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-editable-column>
+      <el-editable-column prop="name" label="名字" min-width="180" show-overflow-tooltip></el-editable-column>
+      <el-editable-column prop="sex" label="性别" width="100" align="center" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="180" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="出生日期" min-width="180" sortable :sort-method="birthdateSortHandler" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="date1" label="选择日期" min-width="180" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch'}"></el-editable-column>
       <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
@@ -34,16 +46,13 @@
           </el-checkbox-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="order" label="自定义渲染" width="120" :editRender="{type: 'default'}">
+      <el-editable-column prop="order" label="自定义渲染" width="140" :formatter="formatterOrder" :editRender="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单"></el-autocomplete>
         </template>
-        <template slot-scope="scope">
-          <span>订单号：{{ scope.row.order }}</span>
-        </template>
       </el-editable-column>
-      <el-editable-column prop="remark" label="备注" :editRender="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column label="操作">
+      <el-editable-column prop="remark" label="备注" min-width="180" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column label="操作" width="100" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
         </template>
@@ -65,6 +74,20 @@ export default {
         {value: '136'},
         {value: '1362'},
         {value: '13886'}
+      ],
+      ageFilterList: [
+        {
+          text: '26',
+          value: 26
+        },
+        {
+          text: '24',
+          value: 24
+        },
+        {
+          text: '22',
+          value: 22
+        }
       ]
     }
   },
@@ -90,12 +113,6 @@ export default {
         this.loading = false
       })
     },
-    submitEvent () {
-      let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
-      this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-        this.findList()
-      })
-    },
     removeEvent (row, index) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {
         confirmButtonText: '确定',
@@ -104,6 +121,33 @@ export default {
       }).then(() => {
         this.$refs.editable.removeRow(index)
       }).catch(e => e)
+    },
+    indexMethod (index) {
+      return index * 2
+    },
+    selectEvent (selection, row) {
+      console.log(selection)
+    },
+    currentChangeEvent (currentRow, oldCurrentRow) {
+      console.log(oldCurrentRow)
+    },
+    formatterOrder (row, column, cellValue, index) {
+      return `订单号：${cellValue}`
+    },
+    submitEvent () {
+      let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
+      this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
+        this.findList()
+      })
+    },
+    selectableEvent (row, index) {
+      return index >= 1
+    },
+    birthdateSortHandler (a, b) {
+      return -1
+    },
+    filterHandler (value, row, column) {
+      return row[column.property] === value
     },
     querySearchAsync (queryString, cb) {
       var orderDataList = this.orderDataList
@@ -158,6 +202,7 @@ export default {
               order: '136',
               flag: false,
               flag2: 'Y',
+              desc: '描述1',
               noList: [
                 {
                   no: '10',
@@ -182,6 +227,7 @@ export default {
               order: '1362',
               flag: true,
               flag2: 'N',
+              desc: '描述2',
               noList: [
                 {
                   no: '20',
@@ -206,6 +252,7 @@ export default {
               order: '13886',
               flag: false,
               flag2: 'N',
+              desc: '描述3',
               noList: [
                 {
                   no: '30',

@@ -88,7 +88,7 @@ export default {
       ],
       list: [
         {
-          name: 'test11',
+          name: 'test11111111111111111111111111111111111111111111111111111111',
           height: 176,
           age: 26,
           sex: '1',
@@ -97,9 +97,19 @@ export default {
           date1: new Date(2019, 0, 1, 20, 0, 30),
           remark: '备注1',
           status: ['error'],
-          order: '123456',
+          order: '136',
           flag: false,
-          flag2: 'Y'
+          flag2: 'Y',
+          noList: [
+            {
+              no: '10',
+              content: ''
+            },
+            {
+              no: '11',
+              content: ''
+            }
+          ]
         },
         {
           name: 'test22',
@@ -113,10 +123,20 @@ export default {
           status: ['success', 'error'],
           order: '1362',
           flag: true,
-          flag2: 'N'
+          flag2: 'N',
+          noList: [
+            {
+              no: '20',
+              content: ''
+            },
+            {
+              no: '22',
+              content: ''
+            }
+          ]
         },
         {
-          name: 'test33',
+          name: 'test333333333333333333333333333333333333333333333333333',
           height: 172,
           age: 22,
           sex: '1',
@@ -127,7 +147,17 @@ export default {
           status: ['success'],
           order: '13886',
           flag: false,
-          flag2: 'N'
+          flag2: 'N',
+          noList: [
+            {
+              no: '30',
+              content: ''
+            },
+            {
+              no: '31',
+              content: ''
+            }
+          ]
         }
       ]
     }

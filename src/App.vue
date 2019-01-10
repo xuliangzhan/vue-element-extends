@@ -2,6 +2,7 @@
   <div id="app">
     <router-link :to="{name: 'EditableDemo1'}" replace>示例1</router-link>
     <router-link :to="{name: 'EditableDemo2'}" replace>示例2</router-link>
+    <router-link :to="{name: 'EditableDemo3'}" replace>示例3</router-link>
     <router-view/>
   </div>
 </template>

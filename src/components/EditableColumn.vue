@@ -1,62 +1,13 @@
 <template>
-  <el-table-column
-    v-if="isDefaultRender"
-    :type="type"
-    :label="label"
-    :columnKey="columnKey"
-    :prop="prop"
-    :width="width"
-    :minWidth="minWidth"
-    :fixed="fixed"
-    :renderHeader="renderHeader"
-    :sortable="sortable"
-    :sortMethod="sortMethod"
-    :sortBy="sortBy"
-    :sortOrders="sortOrders"
-    :resizable="resizable"
-    :formatter="formatter"
-    :showOverflowTooltip="showOverflowTooltip"
-    :align="align"
-    :headerAlign="headerAlign"
-    :className="`editable-column col-readonly${className ? ' ' + className : ''}`"
-    :labelClassName="labelClassName"
-    :selectable="selectable"
-    :reserveSelection="reserveSelection"
-    :filters="filters"
-    :filterPlacement="filterPlacement"
-    :filterMultiple="filterMultiple"
-    :filterMethod="filterMethod"
-    :filteredValue="filteredValue">
+  <el-table-column v-if="['selection', 'index'].includes(this.type)" v-bind="attrs">
     <slot></slot>
   </el-table-column>
-  <el-table-column
-    v-else-if="editRender"
-    :type="type"
-    :label="label"
-    :columnKey="columnKey"
-    :prop="prop"
-    :width="width"
-    :minWidth="minWidth"
-    :fixed="fixed"
-    :renderHeader="renderHeader"
-    :sortable="sortable"
-    :sortMethod="sortMethod"
-    :sortBy="sortBy"
-    :sortOrders="sortOrders"
-    :resizable="resizable"
-    :formatter="formatter"
-    :showOverflowTooltip="showOverflowTooltip"
-    :align="align"
-    :headerAlign="headerAlign"
-    :className="`editable-column col-readonly${className ? ' ' + className : ''}`"
-    :labelClassName="labelClassName"
-    :selectable="selectable"
-    :reserveSelection="reserveSelection"
-    :filters="filters"
-    :filterPlacement="filterPlacement"
-    :filterMultiple="filterMultiple"
-    :filterMethod="filterMethod"
-    :filteredValue="filteredValue">
+  <el-table-column v-else-if="['expand'].includes(this.type)" v-bind="attrs">
+    <template slot-scope="scope">
+      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}"></slot>
+    </template>
+  </el-table-column>
+  <el-table-column v-else-if="editRender" v-bind="attrs">
     <template slot="header" slot-scope="scope">
       <slot name="head" v-bind="{$index: scope.$index, column: scope.column}">
         <i class="el-icon-edit-outline"></i>{{ scope.column.label }}
@@ -95,42 +46,15 @@
             <template v-if="editRender.name === 'ElSelect'">{{ getSelectLabel(scope) }}</template>
             <template v-else-if="editRender.name === 'ElCascader'">{{ getCascaderLabel(scope) }}</template>
             <template v-else-if="editRender.name === 'ElDatePicker'">{{ getDatePickerLabel(scope) }}</template>
-            <template v-else>{{ scope.row.data[scope.column.property] }}</template>
+            <template v-else>{{ formatter ? formatter(scope.row.data, scope.column, scope.row.data[scope.column.property], scope.$index) : scope.row.data[scope.column.property] }}</template>
           </slot>
         </template>
       </template>
     </template>
   </el-table-column>
-  <el-table-column
-    v-else
-    :type="type"
-    :label="label"
-    :columnKey="columnKey"
-    :prop="prop"
-    :width="width"
-    :minWidth="minWidth"
-    :fixed="fixed"
-    :renderHeader="renderHeader"
-    :sortable="sortable"
-    :sortMethod="sortMethod"
-    :sortBy="sortBy"
-    :sortOrders="sortOrders"
-    :resizable="resizable"
-    :formatter="formatter"
-    :showOverflowTooltip="showOverflowTooltip"
-    :align="align"
-    :headerAlign="headerAlign"
-    :className="`editable-column col-readonly${className ? ' ' + className : ''}`"
-    :labelClassName="labelClassName"
-    :selectable="selectable"
-    :reserveSelection="reserveSelection"
-    :filters="filters"
-    :filterPlacement="filterPlacement"
-    :filterMultiple="filterMultiple"
-    :filterMethod="filterMethod"
-    :filteredValue="filteredValue">
+  <el-table-column v-else v-bind="attrs">
     <template slot-scope="scope">
-      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">{{ scope.row.data[scope.column.property] }}</slot>
+      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">{{ formatter ? formatter(scope.row.data, scope.column, scope.row.data[scope.column.property], scope.$index) : scope.row.data[scope.column.property] }}</slot>
     </template>
   </el-table-column>
 </template>
@@ -140,6 +64,7 @@ export default {
   name: 'ElEditableColumn',
   props: {
     editRender: Object,
+    index: [Number, Function],
     type: String,
     label: String,
     columnKey: String,
@@ -147,7 +72,6 @@ export default {
     width: String,
     minWidth: String,
     fixed: [Boolean, String],
-    renderHeader: Function,
     sortable: [Boolean, String],
     sortMethod: Function,
     sortBy: [String, Array, Function],
@@ -168,8 +92,34 @@ export default {
     filteredValue: Array
   },
   computed: {
-    isDefaultRender () {
-      return ['selection', 'index', 'expand'].includes(this.type)
+    attrs () {
+      return {
+        index: this.index,
+        type: this.type,
+        label: this.label,
+        columnKey: this.columnKey,
+        prop: this.prop,
+        width: this.width,
+        minWidth: this.minWidth,
+        fixed: this.fixed,
+        sortable: this.sortable,
+        sortMethod: this.sortMethod ? this.sortMethodEvent : this.sortMethod,
+        sortBy: this.$utils.isFunction(this.sortBy) ? this.sortByEvent : this.sortBy,
+        sortOrders: this.sortOrders,
+        resizable: this.resizable,
+        showOverflowTooltip: this.showOverflowTooltip,
+        align: this.align,
+        headerAlign: this.headerAlign,
+        className: `editable-column ${this.editRender ? 'col-edit' : 'col-readonly'}${this.className ? ' ' + this.className : ''}`,
+        labelClassName: this.labelClassName,
+        selectable: this.selectable ? this.selectableEvent : this.selectable,
+        reserveSelection: this.reserveSelection,
+        filters: this.filters,
+        filterPlacement: this.filterPlacement,
+        filterMultiple: this.filterMultiple,
+        filterMethod: this.filterMethod ? this.filterMethodEvent : this.filterMethod,
+        filteredValue: this.filteredValue
+      }
     }
   },
   methods: {
@@ -198,6 +148,18 @@ export default {
     getDatePickerLabel (scope) {
       let value = scope.row.data[scope.column.property]
       return this.$utils.toDateString(value, this.editRender.attrs ? this.editRender.attrs.format : null)
+    },
+    sortByEvent (row, index) {
+      return this.sortBy(row.data, index)
+    },
+    sortMethodEvent (a, b) {
+      return this.sortMethod(a.data, b.data)
+    },
+    selectableEvent (row, index) {
+      return this.selectable(row.data, index)
+    },
+    filterMethodEvent (value, row, column) {
+      return this.filterMethod(value, row.data, column)
     }
   }
 }
@@ -206,8 +168,10 @@ export default {
 <style lang="scss">
 .editable {
   .editable-column {
-    &.active {
-      padding: 0;
+    &.col-edit {
+      &.active {
+        padding: 0;
+      }
     }
     .cell {
       >.edit-input,

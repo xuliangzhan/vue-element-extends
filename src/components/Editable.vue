@@ -28,23 +28,23 @@
     :sumText="sumText"
     :summaryMethod="summaryMethod"
     :selectOnIndeterminate="selectOnIndeterminate"
-    @select="_cellEvent('select', arguments)"
-    @select-all="_cellEvent('select-all', arguments)"
-    @selection-change="_cellEvent('selection-change', arguments)"
-    @cell-mouse-enter="_cellEvent('cell-mouse-enter', arguments)"
-    @cell-mouse-leave="_cellEvent('cell-mouse-leave', arguments)"
+    @select="_select"
+    @select-all="_selectAll"
+    @selection-change="_selectionChange"
+    @cell-mouse-enter="_cellMouseEnter"
+    @cell-mouse-leave="_cellMouseLeave"
     @cell-click="_cellClick"
-    @cell-dblclick="_cellEvent('cell-dblclick', arguments)"
-    @row-click="_cellEvent('row-click', arguments)"
-    @row-contextmenu="_cellEvent('row-contextmenu', arguments)"
-    @row-dblclick="_cellEvent('row-dblclick', arguments)"
-    @header-click="_cellEvent('header-click', arguments)"
-    @header-contextmenu="_cellEvent('header-contextmenu', arguments)"
-    @sort-change="_cellEvent('sort-change', arguments)"
-    @filter-change="_cellEvent('filter-change', arguments)"
-    @current-change="_cellEvent('current-change', arguments)"
-    @header-dragend="_cellEvent('header-dragend', arguments)"
-    @expand-change="_cellEvent('expand-change', arguments)">
+    @cell-dblclick="_cellDblclick"
+    @row-click="_rowClick"
+    @row-contextmenu="_rowContextmenu"
+    @row-dblclick="_rowDblclick"
+    @header-click="_headerClick"
+    @header-contextmenu="_headerContextmenu"
+    @sort-change="_sortChange"
+    @filter-change="_filterChange"
+    @current-change="_currentChange"
+    @header-dragend="_headerDragend"
+    @expand-change="_expandChange">
     <slot></slot>
   </el-table>
 </template>
@@ -137,8 +137,20 @@ export default {
     _updateData () {
       this.$emit('update:data', this.datas.map(item => item.data))
     },
-    _cellEvent (name, args) {
-      this.$emit.apply(this, [name].concat(Array.from(args)))
+    _select (selection, row) {
+      this.$emit('select', selection.map(item => item.data), row.data)
+    },
+    _selectAll (selection) {
+      this.$emit('select-all', selection.map(item => item.data))
+    },
+    _selectionChange (selection) {
+      this.$emit('selection-change', selection.map(item => item.data))
+    },
+    _cellMouseEnter (row, column, cell, event) {
+      this.$emit('cell-mouse-enter', row.data, column, cell, event)
+    },
+    _cellMouseLeave (row, column, cell, event) {
+      this.$emit('cell-mouse-leave', row.data, column, cell, event)
     },
     _cellClick (row, column, cell, event) {
       this._clearActive()
@@ -146,6 +158,45 @@ export default {
       cell.className += ` active`
       row.editable.active = column.property
       this.$emit('cell-click', row.data, column, cell, event)
+    },
+    _cellDblclick (row, column, cell, event) {
+      this.$emit('cell-dblclick', row.data, column, cell, event)
+    },
+    _rowClick (row, event, column) {
+      this.$emit('row-click', row.data, event, column)
+    },
+    _rowContextmenu (row, event) {
+      this.$emit('row-contextmenu', row.data, event)
+    },
+    _rowDblclick (row, event) {
+      this.$emit('row-dblclick', row.data, event)
+    },
+    _headerClick (column, event) {
+      this.$emit('header-click', column, event)
+    },
+    _headerContextmenu (column, event) {
+      this.$emit('header-contextmenu', column, event)
+    },
+    _sortChange ({ column, prop, order }) {
+      this.$emit('sort-change', { column, prop, order })
+    },
+    _filterChange (filters) {
+      this.$emit('filter-change', filters)
+    },
+    _currentChange (currentRow, oldCurrentRow) {
+      if (currentRow && oldCurrentRow) {
+        this.$emit('current-change', currentRow.data, oldCurrentRow.data)
+      } else if (currentRow) {
+        this.$emit('current-change', currentRow.data)
+      } else if (oldCurrentRow) {
+        this.$emit('current-change', oldCurrentRow.data)
+      }
+    },
+    _headerDragend (newWidth, oldWidth, column, event) {
+      this.$emit('header-dragend', newWidth, oldWidth, column, event)
+    },
+    _expandChange (row, expandedRows) {
+      this.$emit('expand-change', row.data, expandedRows)
     },
     _clearActive () {
       this.lastActive = null

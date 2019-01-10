@@ -7,9 +7,9 @@
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
-    <el-editable ref="editable" :data.sync="list">
+    <el-editable ref="editable" :data.sync="list" size="mini">
       <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字"></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>

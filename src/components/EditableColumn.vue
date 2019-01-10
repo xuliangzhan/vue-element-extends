@@ -20,7 +20,7 @@
         </slot>
       </template>
       <template v-else>
-        <template v-if="scope.row.editable.active === scope.column.property">
+        <template v-if="scope.row.editable.mode === 'row' ? scope.row.editable.active : scope.row.editable.active === scope.column.property">
           <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">
             <template v-if="editRender.name === 'ElSelect'">
               <el-select v-model="scope.row.data[scope.column.property]" v-bind="editRender.attrs">
@@ -167,12 +167,23 @@ export default {
 
 <style lang="scss">
 .editable {
-  .editable-column {
-    &.col-edit {
-      &.active {
-        padding: 0;
-      }
+  &.el-table--mini {
+    .editable-column {
+      height: 42px;
     }
+  }
+  &.el-table--small {
+    .editable-column {
+      height: 48px;
+    }
+  }
+  &.el-table--medium {
+    .editable-column {
+      height: 62px;
+    }
+  }
+  .editable-column {
+    height: 62px;
     .cell {
       >.edit-input,
       >.el-autocomplete,

@@ -34,10 +34,10 @@
     @cell-mouse-enter="_cellMouseEnter"
     @cell-mouse-leave="_cellMouseLeave"
     @cell-click="_cellClick"
-    @cell-dblclick="_cellDblclick"
+    @cell-dblclick="_cellDBLclick"
     @row-click="_rowClick"
     @row-contextmenu="_rowContextmenu"
-    @row-dblclick="_rowDblclick"
+    @row-dblclick="_rowDBLclick"
     @header-click="_headerClick"
     @header-contextmenu="_headerContextmenu"
     @sort-change="_sortChange"
@@ -55,6 +55,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'ElEditable',
   props: {
+    editConfig: Object,
     data: Array,
     height: [String, Number],
     maxHeight: [String, Number],
@@ -104,7 +105,7 @@ export default {
         let target = evnt.target
         let { cell } = this.lastActive
         while (target && target.nodeType && target !== document) {
-          if (target === cell) {
+          if (this.editConfig && this.editConfig.mode === 'row' ? target === cell.parentNode : target === cell) {
             return
           }
           target = target.parentNode
@@ -129,6 +130,7 @@ export default {
         data: item,
         store: this.$utils.clone(item, true),
         editable: {
+          mode: this.editConfig ? (this.editConfig.mode || 'cell') : 'cell',
           status: status || 'initial',
           active: null
         }
@@ -153,14 +155,18 @@ export default {
       this.$emit('cell-mouse-leave', row.data, column, cell, event)
     },
     _cellClick (row, column, cell, event) {
-      this._clearActive()
-      this.lastActive = { row, column, cell }
-      cell.className += ` active`
-      row.editable.active = column.property
-      this.$emit('cell-click', row.data, column, cell, event)
+      if (!this.editConfig || this.editConfig.trigger === 'click') {
+        this._triggerActive(row, column, cell, event)
+      } else {
+        this.$emit('cell-click', row.data, column, cell, event)
+      }
     },
-    _cellDblclick (row, column, cell, event) {
-      this.$emit('cell-dblclick', row.data, column, cell, event)
+    _cellDBLclick (row, column, cell, event) {
+      if (this.editConfig && this.editConfig.trigger === 'dblclick') {
+        this._triggerActive(row, column, cell, event)
+      } else {
+        this.$emit('cell-dblclick', row.data, column, cell, event)
+      }
     },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)
@@ -168,7 +174,7 @@ export default {
     _rowContextmenu (row, event) {
       this.$emit('row-contextmenu', row.data, event)
     },
-    _rowDblclick (row, event) {
+    _rowDBLclick (row, event) {
       this.$emit('row-dblclick', row.data, event)
     },
     _headerClick (column, event) {
@@ -197,6 +203,13 @@ export default {
     },
     _expandChange (row, expandedRows) {
       this.$emit('expand-change', row.data, expandedRows)
+    },
+    _triggerActive (row, column, cell, event) {
+      this._clearActive()
+      this.lastActive = { row, column, cell }
+      cell.className += ` active`
+      row.editable.active = column.property
+      this.$emit('cell-click', row.data, column, cell, event)
     },
     _clearActive () {
       this.lastActive = null

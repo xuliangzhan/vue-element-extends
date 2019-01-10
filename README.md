@@ -7,7 +7,11 @@
 ## API
 
 * Editable.vue
-  * Attributes
+  * Editable Attributes
+    * editConfig
+      * trigger 触发方式（click, dblclick）
+      * mode 编辑方式（cell,row）
+  * Editable Methods
     * reload(datas) 初始化数据
     * revert() 还原修改之前数据
     * clear() 清空所有数据
@@ -24,14 +28,14 @@
     * getRemoveRecords() 获取删除数据
     * getUpdateRecords() 获取修改数据
 * EditableColumn.vue
-  * Attributes
+  * Editable Column Attributes
     * edit-render
       * name 渲染的组件名称（ElInput, ElSelect, ElCascader, ElDatePicker, ElInputNumber, ElSwitch）
       * type 渲染类型（default组件激活后才可视,visible组件一直可视）
       * attrs 渲染组件附加属性
       * optionAttrs 下拉组件选项附加属性（只对name=ElSelect有效）
       * options 下拉组件选项列表（只对name=ElSelect有效）
-  * Scoped Slot
+  * Editable Column Scoped Slot
     * — 自定义渲染显示内容 { row, column, $index }
     * edit 自定义渲染组件 { row, column, $index }
     * head 自定义表头的内容 { column, $index }

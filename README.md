@@ -9,10 +9,10 @@
 * Editable.vue 可编辑表格
   * Editable Attributes
     * edit-config
-      * trigger 触发方式（click, dblclick）
+      * trigger 触发方式（manual, click, dblclick）
       * mode 编辑方式（cell, row）
   * Editable Methods
-    * reload(datas) 初始化数据
+    * reload(datas) 初始化加载数据
     * revert() 还原修改之前数据
     * clear() 清空所有数据
     * insert(record) 插入一行
@@ -22,6 +22,8 @@
     * removeRow(rowIndex) 删除行
     * removeRows(rowIndexs) 删除多行
     * removeSelecteds() 删除选中行
+    * clearActive() 清除所有活动行列为不可编辑状态
+    * setActiveRow(rowIndex) 设置活动行为可编辑状态（只对mode=row有效）
     * getRecords() 获取表格数据
     * getAllRecords() 获取表格所有数据
     * getInsertRecords() 获取插入数据

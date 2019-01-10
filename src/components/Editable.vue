@@ -110,7 +110,7 @@ export default {
           }
           target = target.parentNode
         }
-        this._clearActive()
+        this.clearActive()
       }
     }
   },
@@ -156,17 +156,15 @@ export default {
     },
     _cellClick (row, column, cell, event) {
       if (!this.editConfig || this.editConfig.trigger === 'click') {
-        this._triggerActive(row, column, cell, event)
-      } else {
-        this.$emit('cell-click', row.data, column, cell, event)
+        this._triggerActive(row, column, cell)
       }
+      this.$emit('cell-click', row.data, column, cell, event)
     },
     _cellDBLclick (row, column, cell, event) {
       if (this.editConfig && this.editConfig.trigger === 'dblclick') {
-        this._triggerActive(row, column, cell, event)
-      } else {
-        this.$emit('cell-dblclick', row.data, column, cell, event)
+        this._triggerActive(row, column, cell)
       }
+      this.$emit('cell-dblclick', row.data, column, cell, event)
     },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)
@@ -204,14 +202,13 @@ export default {
     _expandChange (row, expandedRows) {
       this.$emit('expand-change', row.data, expandedRows)
     },
-    _triggerActive (row, column, cell, event) {
-      this._clearActive()
+    _triggerActive (row, column, cell) {
+      this.clearActive()
       this.lastActive = { row, column, cell }
       cell.className += ` active`
       row.editable.active = column.property
-      this.$emit('cell-click', row.data, column, cell, event)
     },
-    _clearActive () {
+    clearActive () {
       this.lastActive = null
       this.datas.forEach(item => {
         item.editable.active = null
@@ -220,9 +217,20 @@ export default {
         elem.className = elem.className.replace(/\s?active/, '')
       })
     },
+    setActiveRow (rowIndex) {
+      setTimeout(() => {
+        let row = this.datas[rowIndex]
+        if (row && this.editConfig.mode === 'row') {
+          let column = this.$refs.refElTable.columns.find(column => column.property)
+          let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper>table>tbody>tr')
+          let cell = trElemList[rowIndex].children[0]
+          this._triggerActive(row, column, cell)
+        }
+      }, 10)
+    },
     reload (datas) {
       this.deleteRecords = []
-      this._clearActive()
+      this.clearActive()
       this._initial(datas, true)
       this._updateData()
     },
@@ -231,7 +239,7 @@ export default {
     },
     clear () {
       this.deleteRecords = []
-      this._clearActive()
+      this.clearActive()
       this._initial([])
       this._updateData()
     },

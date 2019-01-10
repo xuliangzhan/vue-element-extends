@@ -8,7 +8,7 @@
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
     <el-button type="primary" @click="submitEvent">保存</el-button>
-    <el-editable ref="editable" height="340" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'click', mode: 'row'}">
+    <el-editable ref="editable" height="340" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'manual', mode: 'row'}">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">
@@ -52,8 +52,9 @@
         </template>
       </el-editable-column>
       <el-editable-column prop="remark" label="备注" min-width="180" :editRender="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column label="操作" width="100" fixed="right">
+      <el-editable-column label="操作" width="160" fixed="right">
         <template slot-scope="scope">
+          <el-button size="mini" type="danger" @click="$refs.editable.setActiveRow(scope.$index)">编辑</el-button>
           <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
         </template>
       </el-editable-column>

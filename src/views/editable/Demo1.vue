@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>基于 ElementUI 可编辑表格</h1>
+    <h1>Editable 可编辑表格</h1>
     <el-button @click="$refs.editable.insert({name: '默认名字1'})">插入一行</el-button>
     <el-button @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后插入一行</el-button>
     <el-button type="danger" @click="$refs.editable.removeRows([0, 2])">删除指定行[0, 2]</el-button>

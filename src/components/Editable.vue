@@ -64,7 +64,6 @@ export default {
     }
   },
   created () {
-    window.aaa = this
     this._initial(this.data)
   },
   methods: {

@@ -6,7 +6,7 @@
 
 ## API
 
-* Editable.vue
+* Editable.vue 可编辑表格
   * Editable Attributes
     * edit-config
       * trigger 触发方式（click, dblclick）
@@ -27,7 +27,7 @@
     * getInsertRecords() 获取插入数据
     * getRemoveRecords() 获取删除数据
     * getUpdateRecords() 获取修改数据
-* EditableColumn.vue
+* EditableColumn.vue 可编辑表格列
   * Editable Column Attributes
     * edit-render
       * name 渲染的组件名称（ElInput, ElSelect, ElCascader, ElDatePicker, ElInputNumber, ElSwitch）

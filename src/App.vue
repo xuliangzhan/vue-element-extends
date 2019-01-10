@@ -1,15 +1,27 @@
 <template>
   <div id="app">
-    <router-link :to="{name: 'EditableDemo1'}" replace>单击编辑 mini</router-link>
-    <router-link :to="{name: 'EditableDemo2'}" replace>双击编辑 small</router-link>
-    <router-link :to="{name: 'EditableDemo3'}" replace>行编辑 medium</router-link>
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="单击列编辑 mini" name="EditableDemo1"></el-tab-pane>
+      <el-tab-pane label="双击列编辑 small" name="EditableDemo2"></el-tab-pane>
+      <el-tab-pane label="行编辑 medium" name="EditableDemo3"></el-tab-pane>
+    </el-tabs>
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  computed: {
+    activeName: {
+      get () {
+        return this.$route.name
+      },
+      set (value) {
+        this.$router.replace({name: value})
+      }
+    }
+  }
 }
 </script>
 

@@ -227,7 +227,7 @@ export default {
           let cell = trElemList[rowIndex].children[0]
           this._triggerActive(row, column, cell)
         }
-      }, 10)
+      }, 5)
     },
     reload (datas) {
       this.deleteRecords = []

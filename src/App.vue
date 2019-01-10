@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <router-link :to="{name: 'EditableDemo1'}" replace>单击编辑1</router-link>
-    <router-link :to="{name: 'EditableDemo2'}" replace>双击编辑2</router-link>
-    <router-link :to="{name: 'EditableDemo3'}" replace>行编辑3</router-link>
+    <router-link :to="{name: 'EditableDemo1'}" replace>单击编辑 mini</router-link>
+    <router-link :to="{name: 'EditableDemo2'}" replace>双击编辑 small</router-link>
+    <router-link :to="{name: 'EditableDemo3'}" replace>行编辑 medium</router-link>
     <router-view/>
   </div>
 </template>

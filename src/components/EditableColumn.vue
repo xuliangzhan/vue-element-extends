@@ -16,25 +16,25 @@
     <template slot-scope="scope">
       <template v-if="editRender.type === 'visible' || editRender.name === 'ElSwitch'">
         <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">
-          <el-switch v-model="scope.row.data[scope.column.property]" v-bind="editRender.attrs"></el-switch>
+          <el-switch v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)"></el-switch>
         </slot>
       </template>
       <template v-else>
         <template v-if="scope.row.editable.mode === 'row' ? scope.row.editable.active : scope.row.editable.active === scope.column.property">
           <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">
             <template v-if="editRender.name === 'ElSelect'">
-              <el-select v-model="scope.row.data[scope.column.property]" v-bind="editRender.attrs">
+              <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)">
                 <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="editRender.optionAttrs"></el-option>
               </el-select>
             </template>
             <template v-else-if="editRender.name === 'ElCascader'">
-              <el-cascader v-model="scope.row.data[scope.column.property]" v-bind="editRender.attrs"></el-cascader>
+              <el-cascader v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)"></el-cascader>
             </template>
             <template v-else-if="editRender.name === 'ElDatePicker'">
-              <el-date-picker v-model="scope.row.data[scope.column.property]" v-bind="editRender.attrs"></el-date-picker>
+              <el-date-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)"></el-date-picker>
             </template>
             <template v-else-if="editRender.name === 'ElInputNumber'">
-              <el-input-number v-model="scope.row.data[scope.column.property]" v-bind="editRender.attrs"></el-input-number>
+              <el-input-number v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)"></el-input-number>
             </template>
             <template v-else>
               <el-input v-model="scope.row.data[scope.column.property]"></el-input>
@@ -123,6 +123,10 @@ export default {
     }
   },
   methods: {
+    getRendAttrs ({ row }) {
+      let size = row.editable.size
+      return Object.assign({ size }, this.editRender.attrs)
+    },
     getSelectLabel (scope) {
       let value = scope.row.data[scope.column.property]
       let selectItem = this.editRender.options.find(item => item.value === value)
@@ -142,12 +146,14 @@ export default {
     getCascaderLabel (scope) {
       let values = scope.row.data[scope.column.property] || []
       let labels = []
-      this.matchCascaderData(values, 0, this.editRender.attrs.options, labels)
-      return labels.join(this.editRender.attrs ? this.editRender.attrs.separator || '/' : '/')
+      let attrs = this.editRender.attrs || {}
+      this.matchCascaderData(values, 0, attrs.options || [], labels)
+      return labels.join(attrs.separator || '/')
     },
     getDatePickerLabel (scope) {
       let value = scope.row.data[scope.column.property]
-      return this.$utils.toDateString(value, this.editRender.attrs ? this.editRender.attrs.format : null)
+      let attrs = this.editRender.attrs || {}
+      return this.$utils.toDateString(value, attrs.format)
     },
     sortByEvent (row, index) {
       return this.sortBy(row.data, index)
@@ -184,6 +190,7 @@ export default {
   }
   .editable-column {
     height: 62px;
+    padding: 0;
     .cell {
       >.edit-input,
       >.el-autocomplete,

@@ -61,7 +61,7 @@ export default {
     maxHeight: [String, Number],
     stripe: Boolean,
     border: Boolean,
-    size: String,
+    size: { type: String, default: 'small' },
     fit: { type: Boolean, default: true },
     showHeader: { type: Boolean, default: true },
     highlightCurrentRow: Boolean,
@@ -130,6 +130,7 @@ export default {
         data: item,
         store: this.$utils.clone(item, true),
         editable: {
+          size: this.size,
           mode: this.editConfig ? (this.editConfig.mode || 'cell') : 'cell',
           status: status || 'initial',
           active: null

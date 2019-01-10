@@ -10,7 +10,7 @@
   * Editable Attributes
     * edit-config
       * trigger 触发方式（click, dblclick）
-      * mode 编辑方式（cell,row）
+      * mode 编辑方式（cell, row）
   * Editable Methods
     * reload(datas) 初始化数据
     * revert() 还原修改之前数据

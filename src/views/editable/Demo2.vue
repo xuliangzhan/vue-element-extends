@@ -18,7 +18,7 @@
       <el-editable-column prop="birthdate" label="出生日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" :editRender="{name: 'ElSwitch'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{visible: true}">
+      <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-radio-group v-model="scope.row.flag2" size="mini">
             <el-radio label="N" border>值1</el-radio>
@@ -26,7 +26,7 @@
           </el-radio-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="status" label="状态" width="160" :editRender="{visible: true}">
+      <el-editable-column prop="status" label="状态" width="160" :editRender="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-checkbox-group v-model="scope.row.status" size="mini">
             <el-checkbox-button label="success">成功</el-checkbox-button>
@@ -34,7 +34,7 @@
           </el-checkbox-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="order" label="自定义渲染" width="120" :editRender="{}">
+      <el-editable-column prop="order" label="自定义渲染" width="120" :editRender="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单"></el-autocomplete>
         </template>

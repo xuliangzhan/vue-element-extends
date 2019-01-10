@@ -23,7 +23,7 @@
       <i class="el-icon-edit-outline"></i>{{ scope.column.label }}
     </template>
     <template slot-scope="scope">
-      <template v-if="editRender.visible === true || editRender.name === 'ElSwitch'">
+      <template v-if="editRender.type === 'visible' || editRender.name === 'ElSwitch'">
         <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">
           <el-switch v-model="scope.row.data[scope.column.property]" v-bind="editRender.attrs"></el-switch>
         </slot>

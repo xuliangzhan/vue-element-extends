@@ -22,6 +22,15 @@
   * getInsertRecords() 获取插入数据
   * getRemoveRecords() 获取删除数据
   * getUpdateRecords() 获取修改数据
+* editRender 属性
+  * name 渲染的组件名称（ElInput, ElSelect, ElCascader, ElDatePicker, ElInputNumber, ElSwitch）
+  * type 渲染类型（default组件激活后才可视,visible组件一直可视）
+  * attrs 渲染组件附加属性
+  * optionAttrs 下拉组件选项附加属性（只对name=ElSelect有效）
+  * options 下拉组件选项列表（只对name=ElSelect有效）
+* Scoped Slot
+  * — 自定义渲染显示内容
+  * edit 自定义渲染组件
 
 ## Example
 

@@ -8,7 +8,7 @@
 
 * Editable.vue
   * Editable Attributes
-    * editConfig
+    * edit-config
       * trigger 触发方式（click, dblclick）
       * mode 编辑方式（cell,row）
   * Editable Methods

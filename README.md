@@ -6,7 +6,7 @@
 
 ## API
 
-* Editable
+* Editable.vue
   * Attributes
     * reload(datas) 初始化数据
     * revert() 还原修改之前数据
@@ -23,7 +23,7 @@
     * getInsertRecords() 获取插入数据
     * getRemoveRecords() 获取删除数据
     * getUpdateRecords() 获取修改数据
-* EditableColumn
+* EditableColumn.vue
   * Attributes
     * edit-render
       * name 渲染的组件名称（ElInput, ElSelect, ElCascader, ElDatePicker, ElInputNumber, ElSwitch）

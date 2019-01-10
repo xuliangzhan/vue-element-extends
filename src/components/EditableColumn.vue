@@ -1,15 +1,32 @@
 <template>
   <el-table-column
-    :className="editRender ? 'editable-column edit' : 'editable-column view'"
+    v-if="isDefaultRender"
+    className="editable-column col-readonly"
+    :type="type"
     :label="label"
     :columnKey="columnKey"
     :prop="prop"
     :width="width"
     :minWidth="minWidth">
+    <slot></slot>
+  </el-table-column>
+  <el-table-column
+    v-else-if="editRender"
+    className="editable-column col-edit"
+    :type="type"
+    :label="label"
+    :columnKey="columnKey"
+    :prop="prop"
+    :width="width"
+    :minWidth="minWidth">
+    <template slot="header" slot-scope="scope">
+      <i class="el-icon-edit-outline"></i>{{ scope.column.label }}
+    </template>
     <template slot-scope="scope">
-      <template v-if="!editRender">{{ scope.row.data[scope.column.property] }}</template>
-      <template v-else-if="editRender.name === 'ElSwitch'">
-        <el-switch v-model="scope.row.data[scope.column.property]" v-bind="editRender.attrs"></el-switch>
+      <template v-if="editRender.name === 'ElSwitch'">
+        <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">
+          <el-switch v-model="scope.row.data[scope.column.property]" v-bind="editRender.attrs"></el-switch>
+        </slot>
       </template>
       <template v-else>
         <template v-if="scope.row.editable.active === scope.column.property">
@@ -44,6 +61,19 @@
       </template>
     </template>
   </el-table-column>
+  <el-table-column
+    v-else
+    className="editable-column col-readonly"
+    :type="type"
+    :label="label"
+    :columnKey="columnKey"
+    :prop="prop"
+    :width="width"
+    :minWidth="minWidth">
+    <template slot-scope="scope">
+      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">{{ scope.row.data[scope.column.property] }}</slot>
+    </template>
+  </el-table-column>
 </template>
 
 <script>
@@ -51,11 +81,17 @@ export default {
   name: 'ElEditableColumn',
   props: {
     editRender: Object,
+    type: String,
     label: String,
     columnKey: String,
     prop: String,
     width: String,
     minWidth: String
+  },
+  computed: {
+    isDefaultRender () {
+      return ['selection', 'index', 'expand'].includes(this.type)
+    }
   },
   methods: {
     getSelectLabel (scope) {

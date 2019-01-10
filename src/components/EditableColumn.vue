@@ -132,6 +132,8 @@ export default {
     }
     .cell {
       >.edit-input,
+      >.el-input-number,
+      >.el-date-editor,
       >.el-select {
         width: 100%;
       }

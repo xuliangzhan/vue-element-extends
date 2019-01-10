@@ -5,7 +5,8 @@
     <el-button type="primary" @click="$refs.editable.insertAt({name: 'new1'}, -1)">在最后插入一行</el-button>
     <el-button type="danger" @click="$refs.editable.removeRows([0, 2])">删除指定行[0, 2]</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="danger" @click="$refs.editable.reset()">还原更改</el-button>
+    <el-button type="danger" @click="$refs.editable.revert()">还原更改</el-button>
+    <el-button type="danger" @click="$refs.editable.clear()">清空所有</el-button>
     <el-editable ref="editable" :data.sync="list">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
@@ -19,7 +20,7 @@
       <el-editable-column prop="remark" label="备注" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="danger" @click="$refs.editable.removeRow(scope.$index)">删除</el-button>
+          <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
         </template>
       </el-editable-column>
     </el-editable>
@@ -27,6 +28,8 @@
 </template>
 
 <script>
+import { MessageBox } from 'element-ui'
+
 export default {
   data () {
     return {
@@ -119,6 +122,17 @@ export default {
           flag: false
         }
       ]
+    }
+  },
+  methods: {
+    removeEvent (row, index) {
+      MessageBox.confirm('确定删除该数据?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$refs.editable.removeRow(index)
+      }).catch(e => e)
     }
   }
 }

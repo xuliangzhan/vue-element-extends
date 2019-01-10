@@ -12,6 +12,22 @@
     :showHeader="showHeader"
     :highlightCurrentRow="highlightCurrentRow"
     :currentRowKey="currentRowKey"
+    :rowClassName="rowClassName"
+    :rowStyle="rowStyle"
+    :headerRowClassName="headerRowClassName"
+    :headerRowStyle="headerRowStyle"
+    :headerCellClassName="headerCellClassName"
+    :headerCellStyle="headerCellStyle"
+    :rowKey="rowKey"
+    :emptyText="emptyText"
+    :defaultExpandAll="defaultExpandAll"
+    :expandRowKeys="expandRowKeys"
+    :defaultSort="defaultSort"
+    :tooltipEffect="tooltipEffect"
+    :showSummary="showSummary"
+    :sumText="sumText"
+    :summaryMethod="summaryMethod"
+    :selectOnIndeterminate="selectOnIndeterminate"
     @cell-click="_cellClick">
     <slot></slot>
   </el-table>
@@ -32,7 +48,25 @@ export default {
     fit: { type: Boolean, default: true },
     showHeader: { type: Boolean, default: true },
     highlightCurrentRow: Boolean,
-    currentRowKey: [String, Number]
+    currentRowKey: [String, Number],
+    rowClassName: [Function, String],
+    rowStyle: [Function, Object],
+    cellClassName: [Function, String],
+    cellStyle: [Function, Object],
+    headerRowClassName: [Function, String],
+    headerRowStyle: [Function, Object],
+    headerCellClassName: [Function, String],
+    headerCellStyle: [Function, Object],
+    rowKey: [Function, String],
+    emptyText: String,
+    defaultExpandAll: Boolean,
+    expandRowKeys: Array,
+    defaultSort: Object,
+    tooltipEffect: { type: String, default: 'dark' },
+    showSummary: Boolean,
+    sumText: { type: String, default: '合计' },
+    summaryMethod: Function,
+    selectOnIndeterminate: { type: Boolean, default: true }
   },
   data () {
     return {
@@ -59,16 +93,18 @@ export default {
           }
           target = target.parentNode
         }
-        this.clearActive()
+        this._clearActive()
       }
     }
   },
   created () {
-    this._initial(this.data)
+    this._initial(this.data, true)
   },
   methods: {
-    _initial (datas) {
-      this.initialStore = this.$utils.clone(datas, true)
+    _initial (datas, isReload) {
+      if (isReload) {
+        this.initialStore = this.$utils.clone(datas, true)
+      }
       this.datas = (datas || []).map(item => this._toData(item))
     },
     _toData (item, status) {
@@ -86,22 +122,13 @@ export default {
       this.$emit('update:data', this.datas.map(item => item.data))
     },
     _cellClick (row, column, cell, event) {
-      this.clearActive()
+      this._clearActive()
       this.lastActive = { row, column, cell }
       cell.className += ` active`
       row.editable.active = column.property
       this.$emit('cell-click', row.data, column, cell, event)
     },
-    reload (datas) {
-      this.deleteRecords = []
-      this.clearActive()
-      this._initial(datas)
-      this._updateData()
-    },
-    reset () {
-      this.reload(this.initialStore)
-    },
-    clearActive () {
+    _clearActive () {
       this.lastActive = null
       this.datas.forEach(item => {
         item.editable.active = null
@@ -109,6 +136,21 @@ export default {
       Array.from(this.$el.querySelectorAll('.active.editable-column')).forEach(elem => {
         elem.className = elem.className.replace(/\s?active/, '')
       })
+    },
+    reload (datas) {
+      this.deleteRecords = []
+      this._clearActive()
+      this._initial(datas, true)
+      this._updateData()
+    },
+    revert () {
+      this.reload(this.initialStore)
+    },
+    clear () {
+      this.deleteRecords = []
+      this._clearActive()
+      this._initial([])
+      this._updateData()
     },
     insert (record) {
       this.insertAt(record, 0)

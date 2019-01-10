@@ -6,7 +6,8 @@
 
 * 基于 ElementUI 可编辑表格 Editable
   * reload(datas) 初始化数据
-  * reset() 还原修改之前数据
+  * revert() 还原修改之前数据
+  * clear() 清空所有数据
   * insert(record) 插入一行
   * insertAt(record, rowIndex) 指定位置插入一行
   * remove(record) 删除行

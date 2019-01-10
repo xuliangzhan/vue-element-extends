@@ -23,6 +23,16 @@
 
 ## Example
 
+main.js 引入组件
+
+```JavaScript
+import Editable from '@/components/Editable.vue'
+import EditableColumn from '@/components/EditableColumn.vue'
+
+Vue.component(Editable.name, Editable)
+Vue.component(EditableColumn.name, EditableColumn)
+```
+
 ```html
 <template>
   <div>

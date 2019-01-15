@@ -223,7 +223,7 @@ export default {
         let row = this.datas[rowIndex]
         if (row && this.editConfig.mode === 'row') {
           let column = this.$refs.refElTable.columns.find(column => column.property)
-          let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper>table>tbody>tr')
+          let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
           let cell = trElemList[rowIndex].children[0]
           this._triggerActive(row, column, cell)
         }

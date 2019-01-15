@@ -9,7 +9,7 @@ const getters = {
 }
 
 const actions = {
-  triggerEvent ({ state, commit }, evnt) {
+  triggerEvent ({ commit }, evnt) {
     commit(types.SET_EVENT, evnt)
   }
 }

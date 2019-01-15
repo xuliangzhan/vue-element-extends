@@ -9,8 +9,8 @@
 * Editable.vue 可编辑表格
   * Editable Attributes
     * edit-config
-      * trigger 触发方式（manual, click, dblclick）
-      * mode 编辑方式（cell, row）
+      * trigger 触发方式（'manual'手动方式, 'click'点击触发编辑, 'dblclick'双击触发编辑）
+      * mode 编辑方式（'cell'列编辑模式, 'row'行编辑模式）
   * Editable Methods
     * reload(datas) 初始化加载数据
     * revert() 还原修改之前数据
@@ -23,7 +23,7 @@
     * removeRows(rowIndexs) 删除多行
     * removeSelecteds() 删除选中行
     * clearActive() 清除所有活动行列为不可编辑状态
-    * setActiveRow(rowIndex) 设置活动行为可编辑状态（只对mode=row有效）
+    * setActiveRow(rowIndex) 设置活动行为可编辑状态（只对mode='row'有效）
     * getRecords() 获取表格数据
     * getAllRecords() 获取表格所有数据
     * getInsertRecords() 获取插入数据
@@ -32,11 +32,11 @@
 * EditableColumn.vue 可编辑表格列
   * Editable Column Attributes
     * edit-render
-      * name 渲染的组件名称（ElInput, ElSelect, ElCascader, ElDatePicker, ElInputNumber, ElSwitch）
-      * type 渲染类型（default组件激活后才可视,visible组件一直可视）
+      * name 渲染的组件名称（'ElInput', 'ElSelect', 'ElCascader', 'ElDatePicker', 'ElInputNumber', 'ElSwitch'）
+      * type 渲染类型（'default'组件激活后才可视,'visible'组件一直可视）
       * attrs 渲染组件附加属性
-      * optionAttrs 下拉组件选项附加属性（只对name=ElSelect有效）
-      * options 下拉组件选项列表（只对name=ElSelect有效）
+      * optionAttrs 下拉组件选项附加属性（只对name='ElSelect'有效）
+      * options 下拉组件选项列表（只对name='ElSelect'有效）
   * Editable Column Scoped Slot
     * — 自定义渲染显示内容 { row, column, $index }
     * edit 自定义渲染组件 { row, column, $index }
@@ -44,7 +44,7 @@
 
 ## Example
 
-* 全局事件需要依赖 vuex (参考store/modules/event.js)
+* 全局事件需要依赖 vuex 中的 click 事件 (参考store/modules/event.js)
 * 将 Editable.vue 和 EditableColumn.vue 复制到自己项目的 components 目录下
 * 然后在 main.js 引入组件即可
 

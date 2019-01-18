@@ -16,7 +16,24 @@
     <template slot-scope="scope">
       <template v-if="editRender.type === 'visible'">
         <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
-          <template v-if="editRender.name === 'ElSwitch'">
+          <template v-if="editRender.name === 'ElSelect'">
+            <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)">
+              <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="editRender.optionAttrs"></el-option>
+            </el-select>
+          </template>
+          <template v-else-if="editRender.name === 'ElCascader'">
+            <el-cascader v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-cascader>
+          </template>
+          <template v-else-if="editRender.name === 'ElTimePicker'">
+            <el-time-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-time-picker>
+          </template>
+          <template v-else-if="editRender.name === 'ElDatePicker'">
+            <el-date-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-date-picker>
+          </template>
+          <template v-else-if="editRender.name === 'ElInputNumber'">
+            <el-input-number v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-input-number>
+          </template>
+          <template v-else-if="editRender.name === 'ElSwitch'">
             <el-switch v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-switch>
           </template>
           <template v-else-if="editRender.name === 'ElRate'">

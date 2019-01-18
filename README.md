@@ -40,7 +40,7 @@
 | clearActive() | 清除所有活动行列为不可编辑状态 |  |
 | setActiveRow(rowIndex) | 设置活动行为可编辑状态（只对mode='row'有效） | rowIndex |
 | updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
-| getAllRecords() | 获取表格数据集 |  |
+| getAllRecords() | 获取表格数据集合 |  |
 | getRecords() | 获取表格数据 |  |
 | getInsertRecords() | 获取新增数据 |  |
 | getRemoveRecords() | 获取已删除数据 |  |

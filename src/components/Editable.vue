@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import XEUtils from 'xe-utils'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -129,7 +130,7 @@ export default {
   methods: {
     _initial (datas, isReload) {
       if (isReload) {
-        this.initialStore = this.$utils.clone(datas, true)
+        this.initialStore = XEUtils.clone(datas, true)
       }
       this.datas = (datas || []).map(item => this._toData(item))
     },
@@ -137,7 +138,7 @@ export default {
       return item.editable && item.EDITABLE_PROTO === this.editProto ? item : {
         EDITABLE_PROTO: this.editProto,
         data: item,
-        store: this.$utils.clone(item, true),
+        store: XEUtils.clone(item, true),
         editStatus: status || 'initial',
         editActive: null,
         editable: {
@@ -299,17 +300,17 @@ export default {
       this._updateData()
     },
     removeRows (rowIndexs) {
-      this.$utils.lastEach(this.datas, (item, index) => {
+      XEUtils.lastEach(this.datas, (item, index) => {
         if (rowIndexs.includes(index)) {
           this.removeRow(index)
         }
       })
     },
     remove (record) {
-      this.removeRow(this.$utils.findIndexOf(this.datas, item => item.data === record))
+      this.removeRow(XEUtils.findIndexOf(this.datas, item => item.data === record))
     },
     removes (records) {
-      this.$utils.lastEach(this.datas, (item, index) => {
+      XEUtils.lastEach(this.datas, (item, index) => {
         if (records.includes(item.data)) {
           this.removeRow(index)
         }
@@ -336,7 +337,7 @@ export default {
       return this.getRecords(this.deleteRecords)
     },
     getUpdateRecords () {
-      return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !this.$utils.isEqual(item.data, item.store)))
+      return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
     },
     updateStatus (scope) {
       if (this.showStatus) {
@@ -351,7 +352,7 @@ export default {
               } else {
                 columns.forEach((column, cIndex) => {
                   let tdElem = trElem.children[cIndex]
-                  if (this.$utils.isEqual(item.data[column.property], item.store[column.property])) {
+                  if (XEUtils.isEqual(item.data[column.property], item.store[column.property])) {
                     let classList = tdElem.className.split(' ')
                     tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
                   } else {
@@ -367,7 +368,7 @@ export default {
             let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
             let tdElem = trElem.querySelector(`.${column.id}`)
             let classList = tdElem.className.split(' ')
-            if (this.$utils.isEqual(_row.data[column.property], _row.store[column.property])) {
+            if (XEUtils.isEqual(_row.data[column.property], _row.store[column.property])) {
               tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
             } else {
               this._updateColumnStatus(trElem, column, tdElem)

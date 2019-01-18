@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import XEUtils from 'xe-utils'
+
 export default {
   name: 'ElEditableColumn',
   props: {
@@ -104,7 +106,7 @@ export default {
         fixed: this.fixed,
         sortable: this.sortable,
         sortMethod: this.sortMethod ? this.sortMethodEvent : this.sortMethod,
-        sortBy: this.$utils.isFunction(this.sortBy) ? this.sortByEvent : this.sortBy,
+        sortBy: XEUtils.isFunction(this.sortBy) ? this.sortByEvent : this.sortBy,
         sortOrders: this.sortOrders,
         resizable: this.resizable,
         showOverflowTooltip: this.showOverflowTooltip,
@@ -153,7 +155,7 @@ export default {
     getDatePickerLabel (scope) {
       let value = scope.row.data[scope.column.property]
       let attrs = this.editRender.attrs || {}
-      return this.$utils.toDateString(value, attrs.format)
+      return XEUtils.toDateString(value, attrs.format)
     },
     sortByEvent (row, index) {
       return this.sortBy(row.data, index)
@@ -173,7 +175,7 @@ export default {
           let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
           let tdElem = trElem.querySelector(`.${column.id}`)
           let classList = tdElem.className.split(' ')
-          if (this.$utils.isEqual(row.data[column.property], row.store[column.property])) {
+          if (XEUtils.isEqual(row.data[column.property], row.store[column.property])) {
             tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
           } else {
             if (!classList.includes('editable-col_dirty')) {

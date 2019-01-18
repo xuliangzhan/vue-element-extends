@@ -15,7 +15,6 @@
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
-    "vxe-utils": "^1.4.6",
     "xe-utils": "^1.7.9"
   },
   "devDependencies": {

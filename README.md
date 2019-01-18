@@ -23,7 +23,6 @@ edit-config="{trigger: 'click'}"
 |------|------|-----|
 | reload(datas) | 初始化加载数据 |  |
 | revert() | String | 还原修改之前数据 |  |
-| clear() | Boolean | 清空所有数据 |  |
 | insert(record) | 插入一行 |  |
 | insertAt(record, rowIndex) | 指定位置插入一行 |  |
 | remove(record) | 删除行 |  |
@@ -31,14 +30,15 @@ edit-config="{trigger: 'click'}"
 | removeRow(rowIndex) | 删除行 |  |
 | removeRows(rowIndexs) | 删除多行 |  |
 | removeSelecteds() | 删除选中行 |  |
+| clear() | Boolean | 清空所有数据 |  |
 | clearActive() | 清除所有活动行列为不可编辑状态 |  |
 | setActiveRow(rowIndex) | 设置活动行为可编辑状态（只对mode='row'有效） |  |
+| updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态） |  |
 | getRecords() | 获取表格数据 |  |
 | getAllRecords() | 获取表格所有数据 |  |
 | getInsertRecords() | 获取插入数据 |  |
 | getRemoveRecords() | 获取删除数据 |  |
 | getUpdateRecords()| 获取修改数据 |  |
-| updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态） |  |
 
 ### Editable-Column Attributes
 

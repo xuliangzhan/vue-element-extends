@@ -4,8 +4,8 @@
     <el-button type="success" icon="el-icon-plus" @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后新增一行</el-button>
     <el-button type="danger" icon="el-icon-delete" @click="$refs.editable.removeRows([0, 2])">删除指定行[0, 2]</el-button>
     <el-button type="danger" icon="el-icon-delete" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="warning" @click="$refs.editable.revert()">还原</el-button>
-    <el-button type="info" @click="$refs.editable.clear()">清空</el-button>
+    <el-button type="warning" @click="$refs.editable.revert()">放弃更改</el-button>
+    <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
     <el-editable ref="editable" :data.sync="list" size="mini">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字" show-overflow-tooltip></el-editable-column>

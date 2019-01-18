@@ -3,8 +3,8 @@
     <el-button icon="el-icon-plus" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
     <el-button type="success" icon="el-icon-plus" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
     <el-button type="danger" icon="el-icon-delete" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="warning" @click="$refs.editable.revert()">还原</el-button>
-    <el-button type="info" @click="$refs.editable.clear()">清空</el-button>
+    <el-button type="warning" @click="$refs.editable.revert()">放弃更改</el-button>
+    <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
     <el-button type="success" icon="el-icon-check" @click="submitEvent">保存</el-button>
     <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>

@@ -28,7 +28,7 @@
 | 方法名 | 描述 | 参数 |
 |------|------|-----|
 | reload(datas) | 初始化加载数据 | datas |
-| revert() | 还原修改之前数据 |  |
+| revert() | 放弃更改，还原修改之前数据 |  |
 | insert(record) | 新增一行新数据 | record |
 | insertAt(record, rowIndex) | 指定位置新增一行新数据，如果是-1则从底部新增新数据 | record, rowIndex |
 | remove(record) | 根据数据删除一行数据 | record |

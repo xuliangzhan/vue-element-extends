@@ -5,7 +5,7 @@ const state = {
 }
 
 const getters = {
-  onclick: state => state.click
+  globalClick: state => state.click
 }
 
 const actions = {

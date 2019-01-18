@@ -96,14 +96,14 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'onclick'
+      'globalClick'
     ]),
     editIcon () {
       return this.editConfig ? !(this.editConfig.icon === false) : true
     }
   },
   watch: {
-    onclick (evnt) {
+    globalClick (evnt) {
       if (this.lastActive) {
         let target = evnt.target
         let { cell } = this.lastActive

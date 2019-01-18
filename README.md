@@ -23,19 +23,19 @@
 
 | 属性 | 描述 | 参数 |
 |------|------|-----|
-| reload(datas) | 初始化加载数据 |  |
-| revert() | String | 还原修改之前数据 |  |
-| insert(record) | 从顶部插入一行新数据 |  |
-| insertAt(record, rowIndex) | 指定位置插入一行新数据，如果是-1则从底部插入新数据 |  |
-| remove(record) | 根据数据删除一行数据 |  |
-| removes(records) | 根据数据删除多行数据 |  |
-| removeRow(rowIndex) | 根据行号删除一行数据 |  |
-| removeRows(rowIndexs) | 根据行号删除多行数据 |  |
+| reload(datas) | 初始化加载数据 | datas |
+| revert() | 还原修改之前数据 |  |
+| insert(record) | 从顶部插入一行新数据 | record |
+| insertAt(record, rowIndex) | 指定位置插入一行新数据，如果是-1则从底部插入新数据 | record, rowIndex |
+| remove(record) | 根据数据删除一行数据 | record |
+| removes(records) | 根据数据删除多行数据 | records |
+| removeRow(rowIndex) | 根据行号删除一行数据 | rowIndex |
+| removeRows(rowIndexs) | 根据行号删除多行数据 | rowIndexs |
 | removeSelecteds() | 删除选中行数据 |  |
-| clear() | Boolean | 清空所有数据 |  |
+| clear() | 清空所有数据 |  |
 | clearActive() | 清除所有活动行列为不可编辑状态 |  |
-| setActiveRow(rowIndex) | 设置活动行为可编辑状态（只对mode='row'有效） |  |
-| updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态） |  |
+| setActiveRow(rowIndex) | 设置活动行为可编辑状态（只对mode='row'有效） | rowIndex |
+| updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态） | scope |
 | getRecords() | 获取表格数据集 |  |
 | getAllRecords() | 获取表格所有数据 |  |
 | getInsertRecords() | 获取新插入数据 |  |
@@ -52,9 +52,9 @@
 |------|------|-----|-----|
 | name | String | 渲染的组件名称（'ElInput', 'ElSelect', 'ElCascader', 'ElDatePicker', 'ElInputNumber', 'ElSwitch'） | 'ElInput' |
 | type | String | 渲染类型（'default'组件激活后才可视,'visible'组件一直可视） | 'default' |
-| attrs | Boolean | 渲染组件附加属性 | {} |
-| optionAttrs | Boolean | 下拉组件选项附加属性（只对name='ElSelect'有效） | {} |
-| options | Boolean | 下拉组件选项列表（只对name='ElSelect'有效） | [] |
+| attrs | Object | 渲染组件附加属性 | {} |
+| optionAttrs | Object | 下拉组件选项附加属性（只对name='ElSelect'有效） | {} |
+| options | Array | 下拉组件选项列表（只对name='ElSelect'有效） | [] |
 
 ### Editable-Column Scoped Slot
 

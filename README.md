@@ -9,7 +9,7 @@
 ### Editable Attributes
 
 ```html
-<el-editable ref="editable" edit-config="{trigger: 'click'}"></el-editable>
+<el-editable ref="editable" edit-config="{trigger: 'click', mode: 'cell'}"></el-editable>
 ```
 
 | 属性 | 类型 | 描述 | 默认值 |
@@ -25,27 +25,27 @@
 |------|------|-----|
 | reload(datas) | 初始化加载数据 |  |
 | revert() | String | 还原修改之前数据 |  |
-| insert(record) | 插入一行 |  |
-| insertAt(record, rowIndex) | 指定位置插入一行 |  |
-| remove(record) | 删除行 |  |
-| removes(records) | 删除多行 |  |
-| removeRow(rowIndex) | 删除行 |  |
-| removeRows(rowIndexs) | 删除多行 |  |
-| removeSelecteds() | 删除选中行 |  |
+| insert(record) | 从顶部插入一行新数据 |  |
+| insertAt(record, rowIndex) | 指定位置插入一行新数据，如果是-1则从底部插入新数据 |  |
+| remove(record) | 根据数据删除一行数据 |  |
+| removes(records) | 根据数据删除多行数据 |  |
+| removeRow(rowIndex) | 根据行号删除一行数据 |  |
+| removeRows(rowIndexs) | 根据行号删除多行数据 |  |
+| removeSelecteds() | 删除选中行数据 |  |
 | clear() | Boolean | 清空所有数据 |  |
 | clearActive() | 清除所有活动行列为不可编辑状态 |  |
 | setActiveRow(rowIndex) | 设置活动行为可编辑状态（只对mode='row'有效） |  |
 | updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态） |  |
-| getRecords() | 获取表格数据 |  |
+| getRecords() | 获取表格数据集 |  |
 | getAllRecords() | 获取表格所有数据 |  |
-| getInsertRecords() | 获取插入数据 |  |
-| getRemoveRecords() | 获取删除数据 |  |
-| getUpdateRecords()| 获取修改数据 |  |
+| getInsertRecords() | 获取新插入数据 |  |
+| getRemoveRecords() | 获取已删除数据 |  |
+| getUpdateRecords()| 获取已修改数据 |  |
 
 ### Editable-Column Attributes
 
 ```html
-<el-editable-column ref="editable" edit-render="{name: 'ElInput'}"></el-editable-column>
+<el-editable-column ref="editable" edit-render="{name: 'ElInput', type: 'default'}"></el-editable-column>
 ```
 
 | 属性 | 类型 | 描述 | 默认值 |
@@ -81,12 +81,9 @@ Vue.component(EditableColumn.name, EditableColumn)
 ```html
 <template>
   <div>
-    <h1>基于 ElementUI 可编辑表格</h1>
+    <h1>可编辑表格</h1>
     <el-button type="primary" @click="$refs.editable.insert({name: 'new1'})">插入一行</el-button>
-    <el-button type="primary" @click="$refs.editable.insertAt({name: 'new1'}, -1)">在最后插入一行</el-button>
-    <el-button type="danger" @click="$refs.editable.removeRows([0, 2])">删除指定行[0, 2]</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="danger" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="danger" @click="$refs.editable.clear()">清空所有</el-button>
     <el-editable ref="editable" :data.sync="list">
       <el-editable-column type="selection" width="55"></el-editable-column>

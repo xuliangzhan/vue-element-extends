@@ -10,7 +10,10 @@
 ### Editable Attributes
 
 ```html
-<el-editable ref="editable" edit-config="{trigger: 'click', mode: 'cell'}"></el-editable>
+<el-editable ref="editable" edit-config="{trigger: 'click', mode: 'cell'}">
+  <el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput'}"></el-editable-column>
+  <el-editable-column prop="age" label="年龄" edit-render="{name: 'ElInput'}"></el-editable-column>
+</el-editable>
 ```
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
@@ -46,7 +49,7 @@
 ### Editable-Column Attributes
 
 ```html
-<el-editable-column ref="editable" edit-render="{name: 'ElInput', type: 'default'}"></el-editable-column>
+<el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput', type: 'default'}"></el-editable-column>
 ```
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |

@@ -62,6 +62,9 @@ export default {
           type: 'date',
           format: 'yyyy-MM-dd'
         }
+        let rateItem = data.find(column => column.prop === 'rate')
+        rateItem.editRender.type = 'visible'
+
         this.columnConfigs = data
       })
     },

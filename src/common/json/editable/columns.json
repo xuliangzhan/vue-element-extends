@@ -27,5 +27,12 @@
     "editRender": {
       "name": "ElDatePicker"
     }
+  },
+  {
+    "prop": "rate",
+    "label": "评分",
+    "editRender": {
+      "name": "ElRate"
+    }
   }
 ]

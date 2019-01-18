@@ -14,7 +14,7 @@
       <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
       <el-editable-column prop="birthdate" label="出生日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" :editRender="{name: 'ElSwitch'}"></el-editable-column>
+      <el-editable-column prop="flag" label="是否启用" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="remark" label="备注" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">

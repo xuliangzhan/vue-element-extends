@@ -14,9 +14,23 @@
       </slot>
     </template>
     <template slot-scope="scope">
-      <template v-if="editRender.type === 'visible' || editRender.name === 'ElSwitch'">
+      <template v-if="editRender.type === 'visible'">
         <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
-          <el-switch v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-switch>
+          <template v-if="editRender.name === 'ElSwitch'">
+            <el-switch v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-switch>
+          </template>
+          <template v-else-if="editRender.name === 'ElRate'">
+            <el-rate v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-rate>
+          </template>
+          <template v-else-if="editRender.name === 'ElColorPicker'">
+            <el-color-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-color-picker>
+          </template>
+          <template v-else-if="editRender.name === 'ElSlider'">
+            <el-slider v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-slider>
+          </template>
+          <template v-else>
+            <el-input v-model="scope.row.data[scope.column.property]" @change="changeEvent(scope)"></el-input>
+          </template>
         </slot>
       </template>
       <template v-else>
@@ -35,6 +49,18 @@
             </template>
             <template v-else-if="editRender.name === 'ElInputNumber'">
               <el-input-number v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-input-number>
+            </template>
+            <template v-else-if="editRender.name === 'ElSwitch'">
+              <el-switch v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-switch>
+            </template>
+            <template v-else-if="editRender.name === 'ElRate'">
+              <el-rate v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-rate>
+            </template>
+            <template v-else-if="editRender.name === 'ElColorPicker'">
+              <el-color-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-color-picker>
+            </template>
+            <template v-else-if="editRender.name === 'ElSlider'">
+              <el-slider v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-slider>
             </template>
             <template v-else>
               <el-input v-model="scope.row.data[scope.column.property]" @change="changeEvent(scope)"></el-input>

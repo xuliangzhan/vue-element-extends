@@ -49,7 +49,7 @@
 ```
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
-|------|------|-----|-----|
+|------|------|-----|-----|-----|
 | name | 渲染的组件名称 | String | ElInput/ElSelect/ElCascader/ElDatePicker/ElInputNumber/ElSwitch | ElInput |
 | type | 渲染类型 | String | default（组件激活后才可视）/visible（组件一直可视） | default |
 | attrs | 渲染组件附加属性 | Object | — | {} |

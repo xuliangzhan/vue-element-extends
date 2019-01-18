@@ -29,8 +29,8 @@
 |------|------|-----|
 | reload(datas) | 初始化加载数据 | datas |
 | revert() | 还原修改之前数据 |  |
-| insert(record) | 从顶部插入一行新数据 | record |
-| insertAt(record, rowIndex) | 指定位置插入一行新数据，如果是-1则从底部插入新数据 | record, rowIndex |
+| insert(record) | 新增一行新数据 | record |
+| insertAt(record, rowIndex) | 指定位置新增一行新数据，如果是-1则从底部新增新数据 | record, rowIndex |
 | remove(record) | 根据数据删除一行数据 | record |
 | removes(records) | 根据数据删除多行数据 | records |
 | removeRow(rowIndex) | 根据行号删除一行数据 | rowIndex |
@@ -85,7 +85,7 @@ Vue.component(EditableColumn.name, EditableColumn)
 ```html
 <template>
   <div>
-    <el-button type="primary" @click="$refs.editable.insert({name: 'new1'})">插入一行</el-button>
+    <el-button type="primary" @click="$refs.editable.insert({name: 'new1'})">新增</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="danger" @click="$refs.editable.clear()">清空所有</el-button>
     <el-editable ref="editable" :data.sync="list">
@@ -99,11 +99,6 @@ Vue.component(EditableColumn.name, EditableColumn)
       <el-editable-column prop="date1" label="选择日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" :editRender="{name: 'ElSwitch'}"></el-editable-column>
       <el-editable-column prop="remark" label="备注" :editRender="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
-        </template>
-      </el-editable-column>
     </el-editable>
   </div>
 </template>
@@ -203,17 +198,6 @@ export default {
           flag: false
         }
       ]
-    }
-  },
-  methods: {
-    removeEvent (row, index) {
-      MessageBox.confirm('确定删除该数据?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$refs.editable.removeRow(index)
-      }).catch(e => e)
     }
   }
 }

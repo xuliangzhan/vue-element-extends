@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
-    <el-button @click="$refs.editable.insert({name: '默认名字2'})">插入一行</el-button>
-    <el-button @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后插入一行</el-button>
+    <el-button @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
+    <el-button @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>

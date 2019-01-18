@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-button @click="$refs.editable.insert({name: '默认名字1'})">插入一行</el-button>
-    <el-button @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后插入一行</el-button>
+    <el-button @click="$refs.editable.insert({name: '默认名字1'})">新增一行</el-button>
+    <el-button @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后新增一行</el-button>
     <el-button type="danger" @click="$refs.editable.removeRows([0, 2])">删除指定行[0, 2]</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>

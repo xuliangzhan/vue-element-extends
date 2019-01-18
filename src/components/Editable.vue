@@ -1,7 +1,7 @@
 <template>
   <el-table
     ref="refElTable"
-    :class="['editable', {'editable--icon': editIcon}]"
+    :class="['editable', {'editable--icon': showIcon}]"
     :data="datas"
     :height="height"
     :maxHeight="maxHeight"
@@ -98,8 +98,11 @@ export default {
     ...mapGetters([
       'globalClick'
     ]),
-    editIcon () {
-      return this.editConfig ? !(this.editConfig.icon === false) : true
+    showIcon () {
+      return this.editConfig ? !(this.editConfig.showIcon === false) : true
+    },
+    showStatus () {
+      return this.editConfig ? !(this.editConfig.showStatus === false) : true
     }
   },
   watch: {
@@ -139,8 +142,8 @@ export default {
         editActive: null,
         editable: {
           size: this.size,
-          icon: this.editIcon,
-          status: this.editConfig ? !(this.editConfig.status === false) : true,
+          showIcon: this.showIcon,
+          showStatus: this.showStatus,
           mode: this.editConfig ? (this.editConfig.mode || 'cell') : 'cell'
         }
       }
@@ -336,39 +339,41 @@ export default {
       return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !this.$utils.isEqual(item.data, item.store)))
     },
     updateStatus (scope) {
-      if (arguments.length === 0) {
-        this.$nextTick(() => {
-          let trElems = this.$el.querySelectorAll('.el-table__row')
-          let columns = this.$refs.refElTable.columns
-          this.datas.forEach((item, index) => {
-            let trElem = trElems[index]
-            if (item.editStatus === 'insert') {
-              columns.forEach((column, cIndex) => this._updateColumnStatus(trElem, column, trElem.children[cIndex]))
+      if (this.showStatus) {
+        if (arguments.length === 0) {
+          this.$nextTick(() => {
+            let trElems = this.$el.querySelectorAll('.el-table__row')
+            let columns = this.$refs.refElTable.columns
+            this.datas.forEach((item, index) => {
+              let trElem = trElems[index]
+              if (item.editStatus === 'insert') {
+                columns.forEach((column, cIndex) => this._updateColumnStatus(trElem, column, trElem.children[cIndex]))
+              } else {
+                columns.forEach((column, cIndex) => {
+                  let tdElem = trElem.children[cIndex]
+                  if (this.$utils.isEqual(item.data[column.property], item.store[column.property])) {
+                    let classList = tdElem.className.split(' ')
+                    tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+                  } else {
+                    this._updateColumnStatus(trElem, column, trElem.children[cIndex])
+                  }
+                })
+              }
+            })
+          })
+        } else {
+          this.$nextTick(() => {
+            let { $index, _row, column, store } = scope
+            let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
+            let tdElem = trElem.querySelector(`.${column.id}`)
+            let classList = tdElem.className.split(' ')
+            if (this.$utils.isEqual(_row.data[column.property], _row.store[column.property])) {
+              tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
             } else {
-              columns.forEach((column, cIndex) => {
-                let tdElem = trElem.children[cIndex]
-                if (this.$utils.isEqual(item.data[column.property], item.store[column.property])) {
-                  let classList = tdElem.className.split(' ')
-                  tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
-                } else {
-                  this._updateColumnStatus(trElem, column, trElem.children[cIndex])
-                }
-              })
+              this._updateColumnStatus(trElem, column, tdElem)
             }
           })
-        })
-      } else {
-        this.$nextTick(() => {
-          let { $index, _row, column, store } = scope
-          let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
-          let tdElem = trElem.querySelector(`.${column.id}`)
-          let classList = tdElem.className.split(' ')
-          if (this.$utils.isEqual(_row.data[column.property], _row.store[column.property])) {
-            tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
-          } else {
-            this._updateColumnStatus(trElem, column, tdElem)
-          }
-        })
+        }
       }
     }
   }

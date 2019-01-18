@@ -8,7 +8,7 @@
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
     <el-button type="primary" @click="submitEvent">保存</el-button>
-    <el-editable ref="editable" stripe size="small" :editConfig="{icon: false, trigger: 'dblclick'}">
+    <el-editable ref="editable" stripe size="small" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字" show-overflow-tooltip></el-editable-column>

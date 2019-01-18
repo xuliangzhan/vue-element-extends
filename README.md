@@ -20,8 +20,8 @@
 |------|------|-----|-----|-----|
 | trigger | 触发方式 | String | manual（手动方式） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑方式 | String | cell（列编辑模式） / row（行编辑模式） | cell |
-| icon | 是否显示列头编辑图标 | Boolean | — | true |
-| status | 是否显示列的编辑状态 | Boolean | — | true |
+| showIcon | 是否显示列头编辑图标 | Boolean | — | true |
+| showStatus | 是否显示列的编辑状态 | Boolean | — | true |
 
 ### Editable Methods
 
@@ -39,7 +39,7 @@
 | clear() | 清空所有数据 |  |
 | clearActive() | 清除所有活动行列为不可编辑状态 |  |
 | setActiveRow(rowIndex) | 设置活动行为可编辑状态（只对mode='row'有效） | rowIndex |
-| updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态） | scope |
+| updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
 | getRecords() | 获取表格数据集 |  |
 | getAllRecords() | 获取表格所有数据 |  |
 | getInsertRecords() | 获取新插入数据 |  |

@@ -168,19 +168,21 @@ export default {
       return this.filterMethod(value, row.data, column)
     },
     changeEvent ({ $index, row, column, store }) {
-      this.$nextTick(() => {
-        let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
-        let tdElem = trElem.querySelector(`.${column.id}`)
-        let classList = tdElem.className.split(' ')
-        if (this.$utils.isEqual(row.data[column.property], row.store[column.property])) {
-          tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
-        } else {
-          if (!classList.includes('editable-col_dirty')) {
-            classList.push('editable-col_dirty')
-            tdElem.className = classList.join(' ')
+      if (row.editable.showStatus) {
+        this.$nextTick(() => {
+          let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
+          let tdElem = trElem.querySelector(`.${column.id}`)
+          let classList = tdElem.className.split(' ')
+          if (this.$utils.isEqual(row.data[column.property], row.store[column.property])) {
+            tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+          } else {
+            if (!classList.includes('editable-col_dirty')) {
+              classList.push('editable-col_dirty')
+              tdElem.className = classList.join(' ')
+            }
           }
-        }
-      })
+        })
+      }
     }
   }
 }

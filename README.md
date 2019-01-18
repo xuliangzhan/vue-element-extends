@@ -6,11 +6,16 @@
 
 ## API
 
+
 * Editable.vue 可编辑表格
   * Editable Attributes
     * edit-config
-      * trigger 触发方式（'manual'手动方式, 'click'点击触发编辑, 'dblclick'双击触发编辑）
-      * mode 编辑方式（'cell'列编辑模式, 'row'行编辑模式）
+      | 属性 | 类型 | 默认值 | 描述 |
+      |------|------|-----|
+      | trigger | String | 'click' | 触发方式（'manual'手动方式, 'click'点击触发编辑, 'dblclick'双击触发编辑） |
+      | mode | String | 'cell' | 编辑方式（'cell'列编辑模式, 'row'行编辑模式） |
+      | icon | Boolean | true | 是否显示列头编辑图标 |
+      | status | Boolean | true | 是否显示列的编辑状态 |
   * Editable Methods
     * reload(datas) 初始化加载数据
     * revert() 还原修改之前数据
@@ -29,6 +34,7 @@
     * getInsertRecords() 获取插入数据
     * getRemoveRecords() 获取删除数据
     * getUpdateRecords() 获取修改数据
+    * updateStatus(scope) 更新列状态（渲染自定义组件时，当值发生改变需要调用改方法来更新状态）
 * EditableColumn.vue 可编辑表格列
   * Editable Column Attributes
     * edit-render

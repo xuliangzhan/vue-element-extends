@@ -4,45 +4,45 @@
   </el-table-column>
   <el-table-column v-else-if="['expand'].includes(this.type)" v-bind="attrs">
     <template slot-scope="scope">
-      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}"></slot>
+      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, change: changeEvent}"></slot>
     </template>
   </el-table-column>
   <el-table-column v-else-if="editRender" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="{$index: scope.$index, column: scope.column}">
-        <i class="el-icon-edit-outline"></i>{{ scope.column.label }}
+      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store, change: changeEvent}">
+        <i class="el-icon-edit-outline editable-header-icon"></i>{{ scope.column.label }}
       </slot>
     </template>
     <template slot-scope="scope">
       <template v-if="editRender.type === 'visible' || editRender.name === 'ElSwitch'">
-        <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">
-          <el-switch v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)"></el-switch>
+        <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, change: changeEvent}">
+          <el-switch v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-switch>
         </slot>
       </template>
       <template v-else>
-        <template v-if="scope.row.editable.mode === 'row' ? scope.row.editable.active : scope.row.editable.active === scope.column.property">
-          <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">
+        <template v-if="scope.row.editable.mode === 'row' ? scope.row.editActive : scope.row.editActive === scope.column.property">
+          <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, change: changeEvent}">
             <template v-if="editRender.name === 'ElSelect'">
-              <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)">
+              <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)">
                 <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="editRender.optionAttrs"></el-option>
               </el-select>
             </template>
             <template v-else-if="editRender.name === 'ElCascader'">
-              <el-cascader v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)"></el-cascader>
+              <el-cascader v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-cascader>
             </template>
             <template v-else-if="editRender.name === 'ElDatePicker'">
-              <el-date-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)"></el-date-picker>
+              <el-date-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-date-picker>
             </template>
             <template v-else-if="editRender.name === 'ElInputNumber'">
-              <el-input-number v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)"></el-input-number>
+              <el-input-number v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-input-number>
             </template>
             <template v-else>
-              <el-input v-model="scope.row.data[scope.column.property]"></el-input>
+              <el-input v-model="scope.row.data[scope.column.property]" @change="changeEvent(scope)"></el-input>
             </template>
           </slot>
         </template>
         <template v-else>
-          <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">
+          <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, change: changeEvent}">
             <template v-if="editRender.name === 'ElSelect'">{{ getSelectLabel(scope) }}</template>
             <template v-else-if="editRender.name === 'ElCascader'">{{ getCascaderLabel(scope) }}</template>
             <template v-else-if="editRender.name === 'ElDatePicker'">{{ getDatePickerLabel(scope) }}</template>
@@ -54,7 +54,7 @@
   </el-table-column>
   <el-table-column v-else v-bind="attrs">
     <template slot-scope="scope">
-      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column}">{{ formatter ? formatter(scope.row.data, scope.column, scope.row.data[scope.column.property], scope.$index) : scope.row.data[scope.column.property] }}</slot>
+      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, change: changeEvent}">{{ formatter ? formatter(scope.row.data, scope.column, scope.row.data[scope.column.property], scope.$index) : scope.row.data[scope.column.property] }}</slot>
     </template>
   </el-table-column>
 </template>
@@ -110,7 +110,7 @@ export default {
         showOverflowTooltip: this.showOverflowTooltip,
         align: this.align,
         headerAlign: this.headerAlign,
-        className: `editable-column ${this.editRender ? 'col-edit' : 'col-readonly'}${this.className ? ' ' + this.className : ''}`,
+        className: `editable-column ${this.editRender ? 'editable-col_edit' : 'editable-col_readonly'}${this.className ? ' ' + this.className : ''}`,
         labelClassName: this.labelClassName,
         selectable: this.selectable ? this.selectableEvent : this.selectable,
         reserveSelection: this.reserveSelection,
@@ -166,6 +166,15 @@ export default {
     },
     filterMethodEvent (value, row, column) {
       return this.filterMethod(value, row.data, column)
+    },
+    changeEvent ({ $index, column, store }) {
+      let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
+      let tdElem = trElem.querySelector(`.${column.id}`)
+      let classList = tdElem.className.split(' ')
+      if (!classList.includes('editable-col_dirty')) {
+        classList.push('editable-col_dirty')
+        tdElem.className = classList.join(' ')
+      }
     }
   }
 }
@@ -173,6 +182,11 @@ export default {
 
 <style lang="scss">
 .editable {
+  &.editable--icon {
+    .editable-header-icon {
+      display: inline-block;
+    }
+  }
   &.el-table--mini {
     .editable-column {
       height: 42px;
@@ -188,9 +202,24 @@ export default {
       height: 62px;
     }
   }
+  .editable-header-icon {
+    display: none;
+  }
   .editable-column {
     height: 62px;
     padding: 0;
+    &.editable-col_dirty {
+      position: relative;
+      &:before {
+        content: '';
+        top: -5px;
+        left: -5px;
+        position: absolute;
+        border: 5px solid;
+        border-color: transparent #C00000 transparent transparent;
+        transform: rotate(45deg);
+      }
+    }
     .cell {
       >.edit-input,
       >.el-autocomplete,

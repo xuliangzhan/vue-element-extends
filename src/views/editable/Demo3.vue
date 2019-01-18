@@ -8,7 +8,7 @@
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
     <el-button type="primary" @click="submitEvent">保存</el-button>
-    <el-editable ref="editable" height="340" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'click', mode: 'row'}">
+    <el-editable ref="editable" height="340" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{icon: false, trigger: 'click', mode: 'row'}">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">
@@ -32,7 +32,7 @@
       <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch'}"></el-editable-column>
       <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
-          <el-radio-group v-model="scope.row.flag2" size="mini">
+          <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-radio label="N" border>值1</el-radio>
             <el-radio label="Y" border>值2</el-radio>
           </el-radio-group>
@@ -40,7 +40,7 @@
       </el-editable-column>
       <el-editable-column prop="status" label="状态" width="160" :editRender="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
-          <el-checkbox-group v-model="scope.row.status" size="mini">
+          <el-checkbox-group v-model="scope.row.status" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-checkbox-button label="success">成功</el-checkbox-button>
             <el-checkbox-button label="error">失败</el-checkbox-button>
           </el-checkbox-group>
@@ -48,7 +48,7 @@
       </el-editable-column>
       <el-editable-column prop="order" label="自定义渲染" width="140" :formatter="formatterOrder" :editRender="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
-          <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单"></el-autocomplete>
+          <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
         </template>
       </el-editable-column>
       <el-editable-column prop="remark" label="备注" min-width="180" :editRender="{name: 'ElInput'}"></el-editable-column>

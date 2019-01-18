@@ -1,7 +1,7 @@
 <template>
   <el-table
     ref="refElTable"
-    class="editable"
+    :class="['editable', {'editable--icon': editIcon}]"
     :data="datas"
     :height="height"
     :maxHeight="maxHeight"
@@ -97,7 +97,10 @@ export default {
   computed: {
     ...mapGetters([
       'onclick'
-    ])
+    ]),
+    editIcon () {
+      return this.editConfig ? !(this.editConfig.icon === false) : true
+    }
   },
   watch: {
     onclick (evnt) {
@@ -129,11 +132,13 @@ export default {
         EDITABLE_PROTO: this.editProto,
         data: item,
         store: this.$utils.clone(item, true),
+        editStatus: status || 'initial',
+        editActive: null,
         editable: {
           size: this.size,
-          mode: this.editConfig ? (this.editConfig.mode || 'cell') : 'cell',
-          status: status || 'initial',
-          active: null
+          icon: this.editIcon,
+          status: this.editConfig ? !(this.editConfig.status === false) : true,
+          mode: this.editConfig ? (this.editConfig.mode || 'cell') : 'cell'
         }
       }
     },
@@ -206,16 +211,16 @@ export default {
     _triggerActive (row, column, cell) {
       this.clearActive()
       this.lastActive = { row, column, cell }
-      cell.className += ` active`
-      row.editable.active = column.property
+      cell.className += ` editable-col_active`
+      row.editActive = column.property
     },
     clearActive () {
       this.lastActive = null
       this.datas.forEach(item => {
-        item.editable.active = null
+        item.editActive = null
       })
-      Array.from(this.$el.querySelectorAll('.active.editable-column')).forEach(elem => {
-        elem.className = elem.className.replace(/\s?active/, '')
+      Array.from(this.$el.querySelectorAll('.editable-col_active.editable-column')).forEach(elem => {
+        elem.className = elem.className.split(' ').filter(name => name !== 'editable-col_active').join(' ')
       })
     },
     setActiveRow (rowIndex) {
@@ -270,7 +275,7 @@ export default {
     removeRow (rowIndex) {
       let items = this.datas.splice(rowIndex, 1)
       items.forEach(item => {
-        if (item.editable.status === 'initial') {
+        if (item.editStatus === 'initial') {
           this.deleteRecords.push(item)
         }
       })
@@ -308,13 +313,22 @@ export default {
       }
     },
     getInsertRecords () {
-      return this.getRecords(this.datas.filter(item => item.editable.status === 'insert'))
+      return this.getRecords(this.datas.filter(item => item.editStatus === 'insert'))
     },
     getRemoveRecords () {
       return this.getRecords(this.deleteRecords)
     },
     getUpdateRecords () {
-      return this.getRecords(this.datas.filter(item => item.editable.status === 'initial' && !this.$utils.isEqual(item.data, item.store)))
+      return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !this.$utils.isEqual(item.data, item.store)))
+    },
+    updateStatus ({ $index, column }) {
+      let trElem = this.$el.querySelectorAll('.el-table__row')[$index]
+      let tdElem = trElem.querySelector(`.${column.id}`)
+      let classList = tdElem.className.split(' ')
+      if (!classList.includes('editable-col_dirty')) {
+        classList.push('editable-col_dirty')
+        tdElem.className = classList.join(' ')
+      }
     }
   }
 }

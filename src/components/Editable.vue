@@ -104,6 +104,9 @@ export default {
     },
     showStatus () {
       return this.editConfig ? !(this.editConfig.showStatus === false) : true
+    },
+    mode () {
+      return this.editConfig ? (this.editConfig.mode || 'cell') : 'cell'
     }
   },
   watch: {
@@ -112,7 +115,7 @@ export default {
         let target = evnt.target
         let { cell } = this.lastActive
         while (target && target.nodeType && target !== document) {
-          if (this.editConfig && this.editConfig.mode === 'row' ? target === cell.parentNode : target === cell) {
+          if (this.mode === 'row' ? target === cell.parentNode : target === cell) {
             return
           }
           target = target.parentNode
@@ -145,7 +148,7 @@ export default {
           size: this.size,
           showIcon: this.showIcon,
           showStatus: this.showStatus,
-          mode: this.editConfig ? (this.editConfig.mode || 'cell') : 'cell'
+          mode: this.mode
         }
       }
     },
@@ -242,7 +245,7 @@ export default {
     setActiveRow (rowIndex) {
       setTimeout(() => {
         let row = this.datas[rowIndex]
-        if (row && this.editConfig.mode === 'row') {
+        if (row && this.mode === 'row') {
           let column = this.$refs.refElTable.columns.find(column => column.property)
           let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
           let cell = trElemList[rowIndex].children[0]

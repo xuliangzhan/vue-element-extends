@@ -8,7 +8,9 @@
 
 ### Editable Attributes
 
-edit-config="{trigger: 'click'}"
+```html
+<el-editable ref="editable" edit-config="{trigger: 'click'}"></el-editable>
+```
 
 | 属性 | 类型 | 描述 | 默认值 |
 |------|------|-----|-----|
@@ -42,7 +44,9 @@ edit-config="{trigger: 'click'}"
 
 ### Editable-Column Attributes
 
-edit-render="{name: 'ElInput'}"
+```html
+<el-editable-column ref="editable" edit-render="{name: 'ElInput'}"></el-editable-column>
+```
 
 | 属性 | 类型 | 描述 | 默认值 |
 |------|------|-----|-----|

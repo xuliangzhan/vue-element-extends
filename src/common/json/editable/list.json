@@ -17,6 +17,7 @@
     "order": "136",
     "flag": false,
     "flag2": "Y",
+    "flag3": false,
     "desc": "描述1",
     "noList": [
       {
@@ -52,6 +53,7 @@
     "order": "1362",
     "flag": true,
     "flag2": "N",
+    "flag3": false,
     "desc": "描述2",
     "noList": [
       {
@@ -86,6 +88,7 @@
     "order": "13886",
     "flag": false,
     "flag2": "N",
+    "flag3": false,
     "desc": "描述3",
     "noList": [
       {

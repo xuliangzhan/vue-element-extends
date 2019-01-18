@@ -14,7 +14,14 @@
       <el-editable-column v-for="(item, index) in columnConfigs" :key="index" v-bind="item"></el-editable-column>
       <el-editable-column label="操作" width="160">
         <template slot-scope="scope">
-          <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
+          <el-popover placement="top" width="160" v-model="scope.row.flag3">
+            <p>这是一段内容这是一段内容确定删除吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button type="text" size="mini" @click="scope.row.flag3 = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="removeEvent(scope.row, scope.$index)">确定</el-button>
+            </div>
+            <el-button slot="reference" size="mini" type="danger">删除</el-button>
+          </el-popover>
         </template>
       </el-editable-column>
     </el-editable>
@@ -78,13 +85,8 @@ export default {
       })
     },
     removeEvent (row, index) {
-      MessageBox.confirm('确定删除该数据?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$refs.editable.removeRow(index)
-      }).catch(e => e)
+      row.flag3 = false
+      this.$refs.editable.removeRow(index)
     },
     submitEvent () {
       let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()

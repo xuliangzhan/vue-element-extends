@@ -135,8 +135,8 @@ export default {
       this.datas = (datas || []).map(item => this._toData(item))
     },
     _toData (item, status) {
-      return item.editable && item.EDITABLE_PROTO === this.editProto ? item : {
-        EDITABLE_PROTO: this.editProto,
+      return item.editable && item._EDITABLE_PROTO === this.editProto ? item : {
+        _EDITABLE_PROTO: this.editProto,
         data: item,
         store: XEUtils.clone(item, true),
         editStatus: status || 'initial',

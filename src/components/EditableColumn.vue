@@ -181,6 +181,9 @@ export default {
     getDatePickerLabel (scope) {
       let value = scope.row.data[scope.column.property]
       let attrs = this.editRender.attrs || {}
+      if (attrs.type === 'datetimerange') {
+        return XEUtils.toArray(value).map(date => XEUtils.toDateString(date, attrs.format)).join(attrs.rangeSeparator)
+      }
       return XEUtils.toDateString(value, attrs.format)
     },
     sortByEvent (row, index) {

@@ -21,7 +21,7 @@
 
 ### Editable Methods
 
-| 属性 | 描述 | 参数 |
+| 方法名 | 描述 | 参数 |
 |------|------|-----|
 | reload(datas) | 初始化加载数据 | datas |
 | revert() | 还原修改之前数据 |  |
@@ -48,19 +48,19 @@
 <el-editable-column ref="editable" edit-render="{name: 'ElInput', type: 'default'}"></el-editable-column>
 ```
 
-| 属性 | 类型 | 描述 | 默认值 |
+| 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|
-| name | String | 渲染的组件名称（'ElInput', 'ElSelect', 'ElCascader', 'ElDatePicker', 'ElInputNumber', 'ElSwitch'） | 'ElInput' |
-| type | String | 渲染类型（'default'组件激活后才可视,'visible'组件一直可视） | 'default' |
-| attrs | Object | 渲染组件附加属性 | {} |
-| optionAttrs | Object | 下拉组件选项附加属性（只对name='ElSelect'有效） | {} |
-| options | Array | 下拉组件选项列表（只对name='ElSelect'有效） | [] |
+| name | 渲染的组件名称 | String | ElInput/ElSelect/ElCascader/ElDatePicker/ElInputNumber/ElSwitch | ElInput |
+| type | 渲染类型 | String | default（组件激活后才可视）/visible（组件一直可视） | default |
+| attrs | 渲染组件附加属性 | Object | — | {} |
+| optionAttrs | 下拉组件选项附加属性（只对name='ElSelect'有效） | Object | — | {} |
+| options | 下拉组件选项列表（只对name='ElSelect'有效） | Array | — | [] |
 
 ### Editable-Column Scoped Slot
 
-| 属性 | 描述 |
+| name | 说明 |
 |------|------|
-| --- | 自定义渲染显示内容，参数为 { row, column, $index } |
+| — | 自定义渲染显示内容，参数为 { row, column, $index } |
 | type | 自定义渲染组件，参数为 { row, column, $index } |
 | head | 自定义表头的内容，参数为 { column, $index } |
 

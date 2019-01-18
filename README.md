@@ -70,7 +70,7 @@
 
 ## Example
 
-* 全局事件需要依赖 vuex 中的 click 事件 (参考store/modules/event.js)
+* 全局事件需要依赖 vuex 中的 globalClick 变量 (参考store/modules/event.js)
 * 将 Editable.vue 和 EditableColumn.vue 复制到自己项目的 components 目录下
 * 然后在 main.js 引入组件即可
 

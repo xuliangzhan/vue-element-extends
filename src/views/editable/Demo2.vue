@@ -1,12 +1,12 @@
 <template>
   <div v-loading="loading">
     <el-button @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
-    <el-button @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
+    <el-button type="success" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
     <el-button type="danger" @click="$refs.editable.removeRows([0, 2])">删除指定行[0, 2]</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
-    <el-button type="primary" @click="submitEvent">保存</el-button>
+    <el-button type="success" @click="submitEvent">保存</el-button>
     <el-editable ref="editable" stripe size="small" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>

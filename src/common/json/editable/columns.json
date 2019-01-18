@@ -1,0 +1,39 @@
+[
+  {
+    "prop": "name",
+    "label": "名称",
+    "showOverflowTooltip": true,
+    "editRender": {
+      "name": "ElInput"
+    }
+  },
+  {
+    "prop": "sex",
+    "label": "性别",
+    "editRender": {
+      "name": "ElSelect",
+      "options": []
+    }
+  },
+  {
+    "prop": "region",
+    "label": "地区",
+    "editRender": {
+      "name": "ElCascader",
+      "attrs": {
+        "options": []
+      }
+    }
+  },
+  {
+    "prop": "birthdate",
+    "label": "出生日期",
+    "editRender": {
+      "name": "ElDatePicker",
+      "attrs": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      }
+    }
+  }
+]

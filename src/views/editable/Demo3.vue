@@ -1,13 +1,12 @@
 <template>
   <div v-loading="loading">
-    <h1>Editable 可编辑表格</h1>
     <el-button @click="$refs.editable.insert({name: '默认名字2'})">插入一行</el-button>
     <el-button @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后插入一行</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
     <el-button type="primary" @click="submitEvent">保存</el-button>
-    <el-editable ref="editable" height="340" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}">
+    <el-editable ref="editable" height="440" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">
@@ -62,7 +61,11 @@
 </template>
 
 <script>
+import XEUtils from 'xe-utils'
 import { MessageBox } from 'element-ui'
+import listData from '@/common/json/editable/list.json'
+import regionData from '@/common/json/editable/region.json'
+import sexData from '@/common/json/editable/sex.json'
 
 export default {
   data () {
@@ -171,151 +174,17 @@ export default {
     },
     getSexJSON () {
       return new Promise(resolve => {
-        setTimeout(() => {
-          resolve([
-            {
-              label: '男',
-              value: '1'
-            },
-            {
-              label: '女',
-              value: '0'
-            }
-          ])
-        }, 100)
+        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
       })
     },
     getDataJSON () {
       return new Promise(resolve => {
-        setTimeout(() => {
-          resolve([
-            {
-              name: 'test11111111111111111111111111111111111111111111111111111111',
-              height: 176,
-              age: 26,
-              sex: '1',
-              region: null,
-              birthdate: new Date(1994, 0, 1),
-              date1: new Date(2019, 0, 1, 20, 0, 30),
-              remark: '备注1',
-              status: ['error'],
-              order: '136',
-              flag: false,
-              flag2: 'Y',
-              desc: '描述1',
-              noList: [
-                {
-                  no: '10',
-                  content: ''
-                },
-                {
-                  no: '11',
-                  content: ''
-                }
-              ]
-            },
-            {
-              name: 'test22',
-              height: 166,
-              age: 24,
-              sex: '0',
-              region: ['gds', 'szs', 'lhq'],
-              birthdate: new Date(1992, 0, 1),
-              date1: new Date(2019, 0, 1, 12, 10, 30),
-              remark: '备注2',
-              status: ['success', 'error'],
-              order: '1362',
-              flag: true,
-              flag2: 'N',
-              desc: '描述2',
-              noList: [
-                {
-                  no: '20',
-                  content: ''
-                },
-                {
-                  no: '22',
-                  content: ''
-                }
-              ]
-            },
-            {
-              name: 'test333333333333333333333333333333333333333333333333333',
-              height: 172,
-              age: 22,
-              sex: '1',
-              region: ['bj', 'bjs', 'dcq'],
-              birthdate: new Date(1990, 0, 1),
-              date1: new Date(2019, 0, 1, 0, 30, 50),
-              remark: null,
-              status: ['success'],
-              order: '13886',
-              flag: false,
-              flag2: 'N',
-              desc: '描述3',
-              noList: [
-                {
-                  no: '30',
-                  content: ''
-                },
-                {
-                  no: '31',
-                  content: ''
-                }
-              ]
-            }
-          ])
-        }, 350)
+        setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
       })
     },
     getRegionJSON () {
       return new Promise(resolve => {
-        setTimeout(() => {
-          resolve([
-            {
-              value: 'bj',
-              label: '北京',
-              children: [
-                {
-                  value: 'bjs',
-                  label: '北京市',
-                  children: [
-                    {
-                      value: 'dcq',
-                      label: '东城区'
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              value: 'gds',
-              label: '广东省',
-              children: [
-                {
-                  value: 'szs',
-                  label: '深圳市',
-                  children: [
-                    {
-                      value: 'lhq',
-                      label: '罗湖区'
-                    }
-                  ]
-                },
-                {
-                  value: 'gzs',
-                  label: '广州市',
-                  children: [
-                    {
-                      value: 'thq',
-                      label: '天河区'
-                    }
-                  ]
-                }
-              ]
-            }
-          ])
-        }, 200)
+        setTimeout(() => resolve(XEUtils.clone(regionData, true)), 200)
       })
     }
   }

@@ -85,7 +85,6 @@ Vue.component(EditableColumn.name, EditableColumn)
 ```html
 <template>
   <div>
-    <h1>可编辑表格</h1>
     <el-button type="primary" @click="$refs.editable.insert({name: 'new1'})">插入一行</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="danger" @click="$refs.editable.clear()">清空所有</el-button>

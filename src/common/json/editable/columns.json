@@ -11,29 +11,21 @@
     "prop": "sex",
     "label": "性别",
     "editRender": {
-      "name": "ElSelect",
-      "options": []
+      "name": "ElSelect"
     }
   },
   {
     "prop": "region",
     "label": "地区",
     "editRender": {
-      "name": "ElCascader",
-      "attrs": {
-        "options": []
-      }
+      "name": "ElCascader"
     }
   },
   {
     "prop": "birthdate",
     "label": "出生日期",
     "editRender": {
-      "name": "ElDatePicker",
-      "attrs": {
-        "type": "date",
-        "format": "yyyy-MM-dd"
-      }
+      "name": "ElDatePicker"
     }
   }
 ]

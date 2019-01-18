@@ -6,6 +6,9 @@
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
     <el-button type="primary" @click="submitEvent">保存</el-button>
+    <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
+    <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
+    <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-editable ref="editable" height="440" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
@@ -142,6 +145,18 @@ export default {
       this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
         this.findList()
       })
+    },
+    getInsertEvent () {
+      let rest = this.$refs.editable.getInsertRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` })
+    },
+    getUpdateEvent () {
+      let rest = this.$refs.editable.getUpdateRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` })
+    },
+    getRemoveEvent () {
+      let rest = this.$refs.editable.getRemoveRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
     },
     selectableEvent (row, index) {
       return index >= 1

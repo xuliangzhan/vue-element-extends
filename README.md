@@ -42,7 +42,7 @@
 | updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
 | getRecords() | 获取表格数据集 |  |
 | getAllRecords() | 获取表格所有数据 |  |
-| getInsertRecords() | 获取新插入数据 |  |
+| getInsertRecords() | 获取新增数据 |  |
 | getRemoveRecords() | 获取已删除数据 |  |
 | getUpdateRecords()| 获取已修改数据 |  |
 

@@ -6,6 +6,9 @@
     <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
     <el-button type="primary" @click="submitEvent">保存</el-button>
+    <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
+    <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
+    <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-editable ref="editable" height="440" stripe border size="medium">
       <el-editable-column v-for="(item, index) in columnConfigs" :key="index" v-bind="item"></el-editable-column>
       <el-editable-column label="操作" width="160">
@@ -43,15 +46,22 @@ export default {
       let regionPromise = this.getRegionJSON()
       this.findList()
       this.getColumnConfigs().then(data => {
+        let sexItem = data.find(column => column.prop === 'sex')
+        sexItem.editRender.options = []
+        sexPromise.then(rest => {
+          sexItem.editRender.options = rest
+        })
+        let regionItem = data.find(column => column.prop === 'region')
+        regionItem.editRender.attrs = {options: []}
+        regionPromise.then(rest => {
+          regionItem.editRender.attrs.options = rest
+        })
+        let birthdateItem = data.find(column => column.prop === 'birthdate')
+        birthdateItem.editRender.attrs = {
+          type: 'date',
+          format: 'yyyy-MM-dd'
+        }
         this.columnConfigs = data
-        sexPromise.then(data => {
-          let item = this.columnConfigs.find(column => column.prop === 'sex')
-          item.editRender.options = data
-        })
-        regionPromise.then(data => {
-          let item = this.columnConfigs.find(column => column.prop === 'region')
-          item.editRender.attrs.options = data
-        })
       })
     },
     findList () {
@@ -77,6 +87,18 @@ export default {
       this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
         this.findList()
       })
+    },
+    getInsertEvent () {
+      let rest = this.$refs.editable.getInsertRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` })
+    },
+    getUpdateEvent () {
+      let rest = this.$refs.editable.getUpdateRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` })
+    },
+    getRemoveEvent () {
+      let rest = this.$refs.editable.getRemoveRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
     },
     postJSON (data) {
       return new Promise(resolve => {

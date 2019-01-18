@@ -6,47 +6,59 @@
 
 ## API
 
+### Editable Attributes
 
-* Editable.vue 可编辑表格
-  * Editable Attributes
-    * edit-config
-      | 属性 | 类型 | 默认值 | 描述 |
-      |------|------|-----|
-      | trigger | String | 'click' | 触发方式（'manual'手动方式, 'click'点击触发编辑, 'dblclick'双击触发编辑） |
-      | mode | String | 'cell' | 编辑方式（'cell'列编辑模式, 'row'行编辑模式） |
-      | icon | Boolean | true | 是否显示列头编辑图标 |
-      | status | Boolean | true | 是否显示列的编辑状态 |
-  * Editable Methods
-    * reload(datas) 初始化加载数据
-    * revert() 还原修改之前数据
-    * clear() 清空所有数据
-    * insert(record) 插入一行
-    * insertAt(record, rowIndex) 指定位置插入一行
-    * remove(record) 删除行
-    * removes(records) 删除多行
-    * removeRow(rowIndex) 删除行
-    * removeRows(rowIndexs) 删除多行
-    * removeSelecteds() 删除选中行
-    * clearActive() 清除所有活动行列为不可编辑状态
-    * setActiveRow(rowIndex) 设置活动行为可编辑状态（只对mode='row'有效）
-    * getRecords() 获取表格数据
-    * getAllRecords() 获取表格所有数据
-    * getInsertRecords() 获取插入数据
-    * getRemoveRecords() 获取删除数据
-    * getUpdateRecords() 获取修改数据
-    * updateStatus(scope) 更新列状态（渲染自定义组件时，当值发生改变需要调用改方法来更新状态）
-* EditableColumn.vue 可编辑表格列
-  * Editable Column Attributes
-    * edit-render
-      * name 渲染的组件名称（'ElInput', 'ElSelect', 'ElCascader', 'ElDatePicker', 'ElInputNumber', 'ElSwitch'）
-      * type 渲染类型（'default'组件激活后才可视,'visible'组件一直可视）
-      * attrs 渲染组件附加属性
-      * optionAttrs 下拉组件选项附加属性（只对name='ElSelect'有效）
-      * options 下拉组件选项列表（只对name='ElSelect'有效）
-  * Editable Column Scoped Slot
-    * — 自定义渲染显示内容 { row, column, $index }
-    * edit 自定义渲染组件 { row, column, $index }
-    * head 自定义表头的内容 { column, $index }
+edit-config="{trigger: 'click'}"
+
+| 属性 | 类型 | | 描述 | 默认值
+|------|------|-----|
+| trigger | String | 触发方式（'manual'手动方式, 'click'点击触发编辑, 'dblclick'双击触发编辑） | 'click' |
+| mode | String | 编辑方式（'cell'列编辑模式, 'row'行编辑模式） | 'cell' |
+| icon | Boolean | 是否显示列头编辑图标 | true |
+| status | Boolean | 是否显示列的编辑状态 | true |
+
+### Editable Methods
+
+| 属性 | 描述 | 参数 |
+|------|------|-----|
+| reload(datas) | 初始化加载数据 |  |
+| revert() | String | 还原修改之前数据 |  |
+| clear() | Boolean | 清空所有数据 |  |
+| insert(record) | 插入一行 |  |
+| insertAt(record, rowIndex) | 指定位置插入一行 |  |
+| remove(record) | 删除行 |  |
+| removes(records) | 删除多行 |  |
+| removeRow(rowIndex) | 删除行 |  |
+| removeRows(rowIndexs) | 删除多行 |  |
+| removeSelecteds() | 删除选中行 |  |
+| clearActive() | 清除所有活动行列为不可编辑状态 |  |
+| setActiveRow(rowIndex) | 设置活动行为可编辑状态（只对mode='row'有效） |  |
+| getRecords() | 获取表格数据 |  |
+| getAllRecords() | 获取表格所有数据 |  |
+| getInsertRecords() | 获取插入数据 |  |
+| getRemoveRecords() | 获取删除数据 |  |
+| getUpdateRecords()| 获取修改数据 |  |
+| updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态） |  |
+
+### Editable-Column Attributes
+
+edit-render="{name: 'ElInput'}"
+
+| 属性 | 类型 | | 描述 | 默认值
+|------|------|-----|
+| name | String | 渲染的组件名称（'ElInput', 'ElSelect', 'ElCascader', 'ElDatePicker', 'ElInputNumber', 'ElSwitch'） | 'ElInput' |
+| type | String | 渲染类型（'default'组件激活后才可视,'visible'组件一直可视） | 'default' |
+| attrs | Boolean | 渲染组件附加属性 | {} |
+| optionAttrs | Boolean | 下拉组件选项附加属性（只对name='ElSelect'有效） | {} |
+| options | Boolean | 下拉组件选项列表（只对name='ElSelect'有效） | [] |
+
+### Editable-Column Scoped Slot
+
+| 属性 | 描述 |
+|------|------|-----|
+| --- | 自定义渲染显示内容，参数为 { row, column, $index } |
+| type | 自定义渲染组件，参数为 { row, column, $index } |
+| head | 自定义表头的内容，参数为 { column, $index } |
 
 ## Example
 

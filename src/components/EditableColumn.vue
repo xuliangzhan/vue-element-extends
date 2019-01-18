@@ -222,6 +222,7 @@ export default {
     }
     .cell {
       >.edit-input,
+      >.el-cascader,
       >.el-autocomplete,
       >.el-input-number,
       >.el-date-editor,

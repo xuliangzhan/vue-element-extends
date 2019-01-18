@@ -31,10 +31,10 @@
 | revert() | 放弃更改，还原修改之前数据 |  |
 | insert(record) | 新增一行新数据 | record |
 | insertAt(record, rowIndex) | 指定位置新增一行新数据，如果是-1则从底部新增新数据 | record, rowIndex |
-| remove(record) | 根据数据删除一行数据 | record |
-| removes(records) | 根据数据删除多行数据 | records |
+| remove(record) | 根据数据删除 | record |
+| removes(records) | 根据多条数据删除 | records |
 | removeRow(rowIndex) | 根据行号删除一行数据 | rowIndex |
-| removeRows(rowIndexs) | 根据行号删除多行数据 | rowIndexs |
+| removeRows(rowIndexs) | 根据多个行号删除多行数据 | rowIndexs |
 | removeSelecteds() | 删除选中行数据 |  |
 | clear() | 清空所有数据 |  |
 | clearActive() | 清除所有活动行列为不可编辑状态 |  |

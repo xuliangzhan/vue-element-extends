@@ -10,8 +10,8 @@
 
 edit-config="{trigger: 'click'}"
 
-| 属性 | 类型 | | 描述 | 默认值
-|------|------|-----|
+| 属性 | 类型 | | 描述 | 默认值 |
+|------|------|-----|-----|
 | trigger | String | 触发方式（'manual'手动方式, 'click'点击触发编辑, 'dblclick'双击触发编辑） | 'click' |
 | mode | String | 编辑方式（'cell'列编辑模式, 'row'行编辑模式） | 'cell' |
 | icon | Boolean | 是否显示列头编辑图标 | true |
@@ -44,8 +44,8 @@ edit-config="{trigger: 'click'}"
 
 edit-render="{name: 'ElInput'}"
 
-| 属性 | 类型 | | 描述 | 默认值
-|------|------|-----|
+| 属性 | 类型 | | 描述 | 默认值 |
+|------|------|-----|-----|
 | name | String | 渲染的组件名称（'ElInput', 'ElSelect', 'ElCascader', 'ElDatePicker', 'ElInputNumber', 'ElSwitch'） | 'ElInput' |
 | type | String | 渲染类型（'default'组件激活后才可视,'visible'组件一直可视） | 'default' |
 | attrs | Boolean | 渲染组件附加属性 | {} |
@@ -55,7 +55,7 @@ edit-render="{name: 'ElInput'}"
 ### Editable-Column Scoped Slot
 
 | 属性 | 描述 |
-|------|------|-----|
+|------|------|
 | --- | 自定义渲染显示内容，参数为 { row, column, $index } |
 | type | 自定义渲染组件，参数为 { row, column, $index } |
 | head | 自定义表头的内容，参数为 { column, $index } |

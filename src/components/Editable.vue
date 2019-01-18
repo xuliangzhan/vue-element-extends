@@ -115,6 +115,9 @@ export default {
         }
         this.clearActive()
       }
+    },
+    datas () {
+      this.updateStatus()
     }
   },
   created () {
@@ -214,6 +217,15 @@ export default {
       cell.className += ` editable-col_active`
       row.editActive = column.property
     },
+    _updateColumnStatus (trElem, column, tdElem) {
+      if (column.className.split(' ').includes('editable-col_edit')) {
+        let classList = tdElem.className.split(' ')
+        if (!classList.includes('editable-col_dirty')) {
+          classList.push('editable-col_dirty')
+          tdElem.className = classList.join(' ')
+        }
+      }
+    },
     clearActive () {
       this.lastActive = null
       this.datas.forEach(item => {
@@ -263,11 +275,13 @@ export default {
       recordItem = this._toData(Object.assign(recordItem, record), 'insert')
       if (rowIndex) {
         if (rowIndex === -1 || rowIndex >= len) {
+          rowIndex = len
           this.datas.push(recordItem)
         } else {
           this.datas.splice(rowIndex, 0, recordItem)
         }
       } else {
+        rowIndex = 0
         this.datas.unshift(recordItem)
       }
       this._updateData()
@@ -321,13 +335,40 @@ export default {
     getUpdateRecords () {
       return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !this.$utils.isEqual(item.data, item.store)))
     },
-    updateStatus ({ $index, column }) {
-      let trElem = this.$el.querySelectorAll('.el-table__row')[$index]
-      let tdElem = trElem.querySelector(`.${column.id}`)
-      let classList = tdElem.className.split(' ')
-      if (!classList.includes('editable-col_dirty')) {
-        classList.push('editable-col_dirty')
-        tdElem.className = classList.join(' ')
+    updateStatus (scope) {
+      if (arguments.length === 0) {
+        this.$nextTick(() => {
+          let trElems = this.$el.querySelectorAll('.el-table__row')
+          let columns = this.$refs.refElTable.columns
+          this.datas.forEach((item, index) => {
+            let trElem = trElems[index]
+            if (item.editStatus === 'insert') {
+              columns.forEach((column, cIndex) => this._updateColumnStatus(trElem, column, trElem.children[cIndex]))
+            } else {
+              columns.forEach((column, cIndex) => {
+                let tdElem = trElem.children[cIndex]
+                if (this.$utils.isEqual(item.data[column.property], item.store[column.property])) {
+                  let classList = tdElem.className.split(' ')
+                  tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+                } else {
+                  this._updateColumnStatus(trElem, column, trElem.children[cIndex])
+                }
+              })
+            }
+          })
+        })
+      } else {
+        this.$nextTick(() => {
+          let { $index, _row, column, store } = scope
+          let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
+          let tdElem = trElem.querySelector(`.${column.id}`)
+          let classList = tdElem.className.split(' ')
+          if (this.$utils.isEqual(_row.data[column.property], _row.store[column.property])) {
+            tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+          } else {
+            this._updateColumnStatus(trElem, column, tdElem)
+          }
+        })
       }
     }
   }

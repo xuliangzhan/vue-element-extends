@@ -44,6 +44,9 @@
             <template v-else-if="editRender.name === 'ElCascader'">
               <el-cascader v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-cascader>
             </template>
+            <template v-else-if="editRender.name === 'ElTimePicker'">
+              <el-time-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-time-picker>
+            </template>
             <template v-else-if="editRender.name === 'ElDatePicker'">
               <el-date-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-date-picker>
             </template>
@@ -71,6 +74,7 @@
           <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
             <template v-if="editRender.name === 'ElSelect'">{{ getSelectLabel(scope) }}</template>
             <template v-else-if="editRender.name === 'ElCascader'">{{ getCascaderLabel(scope) }}</template>
+            <template v-else-if="editRender.name === 'ElTimePicker'">{{ getTimePickerLabel(scope) }}</template>
             <template v-else-if="editRender.name === 'ElDatePicker'">{{ getDatePickerLabel(scope) }}</template>
             <template v-else>{{ formatter ? formatter(scope.row.data, scope.column, scope.row.data[scope.column.property], scope.$index) : scope.row.data[scope.column.property] }}</template>
           </slot>
@@ -178,13 +182,18 @@ export default {
       this.matchCascaderData(values, 0, attrs.options || [], labels)
       return labels.join(attrs.separator || '/')
     },
+    getTimePickerLabel (scope) {
+      let value = scope.row.data[scope.column.property]
+      let attrs = this.editRender.attrs || {}
+      return XEUtils.toDateString(value, attrs.format || 'hh:mm:ss')
+    },
     getDatePickerLabel (scope) {
       let value = scope.row.data[scope.column.property]
       let attrs = this.editRender.attrs || {}
       if (attrs.type === 'datetimerange') {
         return XEUtils.toArray(value).map(date => XEUtils.toDateString(date, attrs.format)).join(attrs.rangeSeparator)
       }
-      return XEUtils.toDateString(value, attrs.format)
+      return XEUtils.toDateString(value, attrs.format, 'yyyy-MM-dd')
     },
     sortByEvent (row, index) {
       return this.sortBy(row.data, index)

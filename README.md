@@ -12,12 +12,12 @@
 <el-editable ref="editable" edit-config="{trigger: 'click', mode: 'cell'}"></el-editable>
 ```
 
-| 属性 | 类型 | 描述 | 默认值 |
-|------|------|-----|-----|
-| trigger | String | 触发方式（'manual'手动方式, 'click'点击触发编辑, 'dblclick'双击触发编辑） | 'click' |
-| mode | String | 编辑方式（'cell'列编辑模式, 'row'行编辑模式） | 'cell' |
-| icon | Boolean | 是否显示列头编辑图标 | true |
-| status | Boolean | 是否显示列的编辑状态 | true |
+| 属性 | 描述 | 类型 | 可选值 | 默认值 |
+|------|------|-----|-----|-----|
+| trigger | 触发方式 | String | manual（手动方式） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
+| mode  | 编辑方式 | String | cell（列编辑模式） / row（行编辑模式） | cell |
+| icon | 是否显示列头编辑图标 | Boolean | — | true |
+| status | 是否显示列的编辑状态 | Boolean | — | true |
 
 ### Editable Methods
 

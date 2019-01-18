@@ -4,8 +4,8 @@
     <el-button type="success" icon="el-icon-plus" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
     <el-button type="danger" icon="el-icon-delete" @click="$refs.editable.removeRows([0, 2])">删除指定行[0, 2]</el-button>
     <el-button type="danger" icon="el-icon-delete" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="warning" @click="$refs.editable.revert()">还原更改</el-button>
-    <el-button type="info" @click="$refs.editable.clear()">清空所有</el-button>
+    <el-button type="warning" @click="$refs.editable.revert()">还原</el-button>
+    <el-button type="info" @click="$refs.editable.clear()">清空</el-button>
     <el-button type="success" icon="el-icon-check" @click="submitEvent">保存</el-button>
     <el-editable ref="editable" stripe size="small" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="selection" width="55"></el-editable-column>

@@ -2,6 +2,13 @@
 
  [查看博客](https://blog.csdn.net/xlz26296/article/details/80195408)
 
+* 功能点：
+  * 支持列编辑
+  * 支持行编辑
+  * 支持渲染任意组件
+  * 支持动态列
+  * 支持 ElTable 所有功能
+
 ![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable1.gif?raw=true)
 ![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable2.gif?raw=true)
 

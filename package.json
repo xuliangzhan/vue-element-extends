@@ -15,7 +15,7 @@
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
-    "xe-utils": "^1.7.9"
+    "xe-utils": "^1.7.10"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

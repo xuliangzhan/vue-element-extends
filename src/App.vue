@@ -6,6 +6,7 @@
       <el-tab-pane label="单击行编辑 medium" name="EditableDemo3"></el-tab-pane>
       <el-tab-pane label="双击行编辑 small" name="EditableDemo4"></el-tab-pane>
       <el-tab-pane label="动态列渲染" name="EditableDemo5"></el-tab-pane>
+      <el-tab-pane label="自定义动态列" name="EditableDemo6"></el-tab-pane>
     </el-tabs>
     <router-view/>
   </div>

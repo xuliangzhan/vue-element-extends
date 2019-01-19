@@ -9,7 +9,7 @@
     <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
-    <el-editable ref="editable" height="440" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}">
+    <el-editable ref="editable" height="440" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">

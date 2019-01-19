@@ -1,15 +1,24 @@
 <template>
-  <el-table-column v-if="['selection', 'index'].includes(this.type)" v-bind="attrs">
+  <el-table-column v-if="type === 'selection'" v-bind="attrs">
     <slot></slot>
   </el-table-column>
-  <el-table-column v-else-if="['expand'].includes(this.type)" v-bind="attrs">
+  <el-table-column v-else-if="type === 'index'" v-bind="attrs">
+    <template slot="header" slot-scope="scope">
+      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store}">#</slot>
+    </template>
+    <slot></slot>
+  </el-table-column>
+  <el-table-column v-else-if="type === 'expand'" v-bind="attrs">
+    <template slot="header" slot-scope="scope">
+      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store}"></slot>
+    </template>
     <template slot-scope="scope">
       <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}"></slot>
     </template>
   </el-table-column>
   <el-table-column v-else-if="editRender" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store, _row: scope.row}">
+      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store}">
         <i class="el-icon-edit-outline editable-header-icon"></i>{{ scope.column.label }}
       </slot>
     </template>

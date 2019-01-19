@@ -5,8 +5,12 @@
 * 功能点：
   * 支持列编辑
   * 支持行编辑
+  * 支持单击、双击编辑
   * 支持渲染任意组件
   * 支持动态列
+  * 支持显示编辑状态
+  * 支持增删改查数据获取
+  * 支持还原更改数据
   * 支持 ElTable 所有功能
 
 ![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable1.gif?raw=true)

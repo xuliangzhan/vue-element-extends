@@ -7,7 +7,7 @@
     <el-button type="warning" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
     <el-button type="success" icon="el-icon-check" @click="submitEvent">保存</el-button>
-    <el-editable ref="editable" stripe size="small" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}" style="width: 100%">
+    <el-editable ref="editable" :row-class-name="tableRowClassName" size="small" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}" style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
@@ -93,6 +93,14 @@ export default {
         this.loading = false
       })
     },
+    tableRowClassName ({row, rowIndex}) {
+      if (rowIndex === 1) {
+        return 'warning-row'
+      } else if (rowIndex === 3) {
+        return 'success-row'
+      }
+      return ''
+    },
     submitEvent () {
       let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
       this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
@@ -146,3 +154,14 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.el-table {
+  .warning-row {
+    background: oldlace;
+  }
+  .success-row {
+    background: #f0f9eb;
+  }
+}
+</style>

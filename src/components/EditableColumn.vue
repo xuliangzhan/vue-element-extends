@@ -1,5 +1,5 @@
 <template>
-  <el-table-column v-if="type === 'selection'" v-bind="attrs">
+  <el-table-column v-if="type === 'selection' || group" v-bind="attrs">
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="type === 'index'" v-bind="attrs">
@@ -121,7 +121,9 @@ import XEUtils from 'xe-utils'
 export default {
   name: 'ElEditableColumn',
   props: {
+    group: Boolean,
     editRender: Object,
+
     index: [Number, Function],
     type: String,
     label: String,

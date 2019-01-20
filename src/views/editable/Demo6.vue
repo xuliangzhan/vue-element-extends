@@ -9,7 +9,7 @@
     <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
-    <el-editable ref="editable" height="440" stripe border size="medium" style="width: 100%">
+    <el-editable ref="editable" stripe border size="medium" style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
@@ -39,8 +39,9 @@
         </li>
       </ul>
       <span slot="footer" class="dialog-footer">
+        <el-button @click="resetCustomEvent">重 置</el-button>
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveCustomEvent">确 定</el-button>
+        <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
       </span>
     </el-dialog>
   </div>
@@ -125,6 +126,11 @@ export default {
     openCustomEvent () {
       this.columnConfigs.forEach(column => {
         column.checked = column.show
+      })
+    },
+    resetCustomEvent () {
+      this.columnConfigs.forEach(column => {
+        column.checked = true
       })
     },
     saveCustomEvent () {

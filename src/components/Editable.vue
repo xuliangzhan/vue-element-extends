@@ -26,8 +26,9 @@
     :tooltipEffect="tooltipEffect"
     :showSummary="showSummary"
     :sumText="sumText"
-    :summaryMethod="summaryMethod"
+    :summaryMethod="_summaryMethod"
     :selectOnIndeterminate="selectOnIndeterminate"
+    :spanMethod="_spanMethod"
     @select="_select"
     @select-all="_selectAll"
     @selection-change="_selectionChange"
@@ -57,6 +58,7 @@ export default {
   name: 'ElEditable',
   props: {
     editConfig: Object,
+
     data: Array,
     height: [String, Number],
     maxHeight: [String, Number],
@@ -84,7 +86,8 @@ export default {
     showSummary: Boolean,
     sumText: { type: String, default: '合计' },
     summaryMethod: Function,
-    selectOnIndeterminate: { type: Boolean, default: true }
+    selectOnIndeterminate: { type: Boolean, default: true },
+    spanMethod: Function
   },
   data () {
     return {
@@ -233,6 +236,69 @@ export default {
         }
       }
     },
+    _summaryMethod (param) {
+      let { columns } = param
+      let data = param.data.map(item => item.data)
+      let sums = []
+      if (this.summaryMethod) {
+        sums = this.summaryMethod({ columns, data })
+      } else {
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = this.sumText
+            return
+          }
+          let values = data.map(item => Number(item[column.property]))
+          let precisions = []
+          let notNumber = true
+          values.forEach(value => {
+            if (!isNaN(value)) {
+              notNumber = false
+              let decimal = ('' + value).split('.')[1]
+              precisions.push(decimal ? decimal.length : 0)
+            }
+          })
+          let precision = Math.max.apply(null, precisions)
+          if (!notNumber) {
+            sums[index] = values.reduce((prev, curr) => {
+              let value = Number(curr)
+              if (!isNaN(value)) {
+                return parseFloat((prev + curr).toFixed(Math.min(precision, 20)))
+              } else {
+                return prev
+              }
+            }, 0)
+          } else {
+            sums[index] = ''
+          }
+        })
+      }
+      return sums
+    },
+    _spanMethod ({ row, column, rowIndex, columnIndex }) {
+      let rowspan = 1
+      let colspan = 1
+      let fn = this.spanMethod
+      if (XEUtils.isFunction(fn)) {
+        var result = fn({
+          row: row.data,
+          column: column,
+          rowIndex: rowIndex,
+          columnIndex: columnIndex
+        })
+        if (XEUtils.isArray(result)) {
+          rowspan = result[0]
+          colspan = result[1]
+        } else if (XEUtils.isPlainObject(result)) {
+          rowspan = result.rowspan
+          colspan = result.colspan
+        }
+      }
+      return {
+        rowspan: rowspan,
+        colspan: colspan
+      }
+    },
     clearActive () {
       this.lastActive = null
       this.datas.forEach(item => {
@@ -347,34 +413,45 @@ export default {
         if (arguments.length === 0) {
           this.$nextTick(() => {
             let trElems = this.$el.querySelectorAll('.el-table__row')
-            let columns = this.$refs.refElTable.columns
-            this.datas.forEach((item, index) => {
-              let trElem = trElems[index]
-              if (item.editStatus === 'insert') {
-                columns.forEach((column, cIndex) => this._updateColumnStatus(trElem, column, trElem.children[cIndex]))
-              } else {
-                columns.forEach((column, cIndex) => {
-                  let tdElem = trElem.children[cIndex]
-                  if (XEUtils.isEqual(item.data[column.property], item.store[column.property])) {
-                    let classList = tdElem.className.split(' ')
-                    tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+            if (trElems.length) {
+              let columns = this.$refs.refElTable.columns
+              this.datas.forEach((item, index) => {
+                let trElem = trElems[index]
+                if (trElem.children.length) {
+                  if (item.editStatus === 'insert') {
+                    columns.forEach((column, cIndex) => this._updateColumnStatus(trElem, column, trElem.children[cIndex]))
                   } else {
-                    this._updateColumnStatus(trElem, column, trElem.children[cIndex])
+                    columns.forEach((column, cIndex) => {
+                      let tdElem = trElem.children[cIndex]
+                      if (tdElem) {
+                        if (XEUtils.isEqual(item.data[column.property], item.store[column.property])) {
+                          let classList = tdElem.className.split(' ')
+                          tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+                        } else {
+                          this._updateColumnStatus(trElem, column, trElem.children[cIndex])
+                        }
+                      }
+                    })
                   }
-                })
-              }
-            })
+                }
+              })
+            }
           })
         } else {
           this.$nextTick(() => {
             let { $index, _row, column, store } = scope
-            let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
-            let tdElem = trElem.querySelector(`.${column.id}`)
-            let classList = tdElem.className.split(' ')
-            if (XEUtils.isEqual(_row.data[column.property], _row.store[column.property])) {
-              tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
-            } else {
-              this._updateColumnStatus(trElem, column, tdElem)
+            let trElems = store.table.$el.querySelectorAll('.el-table__row')
+            if (trElems.length) {
+              let trElem = trElems[$index]
+              let tdElem = trElem.querySelector(`.${column.id}`)
+              if (tdElem) {
+                let classList = tdElem.className.split(' ')
+                if (XEUtils.isEqual(_row.data[column.property], _row.store[column.property])) {
+                  tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+                } else {
+                  this._updateColumnStatus(trElem, column, tdElem)
+                }
+              }
             }
           })
         }

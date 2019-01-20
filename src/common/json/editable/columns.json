@@ -15,6 +15,13 @@
     }
   },
   {
+    "prop": "age",
+    "label": "年龄",
+    "editRender": {
+      "name": "ElInputNumber"
+    }
+  },
+  {
     "prop": "region",
     "label": "地区",
     "editRender": {

@@ -226,6 +226,18 @@ export default {
       this.lastActive = { row, column, cell }
       cell.className += ` editable-col_active`
       row.editActive = column.property
+      this.$nextTick(() => {
+        let inpElem = cell.querySelector('.el-input>input')
+        if (!inpElem) {
+          inpElem = cell.querySelector('.el-textarea>textarea')
+          if (!inpElem) {
+            inpElem = cell.querySelector('.editable-custom_input')
+          }
+        }
+        if (inpElem) {
+          inpElem.focus()
+        }
+      })
     },
     _updateColumnStatus (trElem, column, tdElem) {
       if (column.className.split(' ').includes('editable-col_edit')) {

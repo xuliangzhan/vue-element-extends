@@ -9,7 +9,7 @@
     <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
-    <el-editable ref="editable" stripe border show-summary :summary-method="getSummaries" :span-method="objectSpanMethod" size="medium" style="width: 100%">
+    <el-editable ref="editable" stripe border show-summary :summary-method="getSummaries" :span-method="arraySpanMethod" size="medium" style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
@@ -138,18 +138,12 @@ export default {
       })
       return sums
     },
-    objectSpanMethod ({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        if (rowIndex % 2 === 0) {
-          return {
-            rowspan: 2,
-            colspan: 1
-          }
-        } else {
-          return {
-            rowspan: 0,
-            colspan: 0
-          }
+    arraySpanMethod ({ row, column, rowIndex, columnIndex }) {
+      if (rowIndex % 2 === 0) {
+        if (columnIndex === 0) {
+          return [1, 2]
+        } else if (columnIndex === 1) {
+          return [0, 0]
         }
       }
     },

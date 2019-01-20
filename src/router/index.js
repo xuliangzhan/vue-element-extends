@@ -9,6 +9,7 @@ import EditableDemo5 from '@/views/editable/Demo5'
 import EditableDemo6 from '@/views/editable/Demo6'
 import EditableDemo7 from '@/views/editable/Demo7'
 import EditableDemo8 from '@/views/editable/Demo8'
+import EditableDemo9 from '@/views/editable/Demo9'
 
 Vue.use(Router)
 
@@ -60,6 +61,11 @@ export default new Router({
       path: '/demo/editable8',
       name: 'EditableDemo8',
       component: EditableDemo8
+    },
+    {
+      path: '/demo/editable9',
+      name: 'EditableDemo9',
+      component: EditableDemo9
     }
   ]
 })

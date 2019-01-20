@@ -9,15 +9,9 @@
     <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
-    <el-editable ref="editable" stripe border size="medium" style="width: 100%">
-      <el-editable-column type="index" width="55">
-        <template slot="head">
-          <i class="el-icon-setting" @click="dialogVisible = true"></i>
-        </template>
-      </el-editable-column>
-      <template v-for="(item, index) in columnConfigs">
-        <el-editable-column v-if="item.show" :key="index" v-bind="item"></el-editable-column>
-      </template>
+    <el-editable ref="editable" stripe border show-summary size="medium" style="width: 100%">
+      <el-editable-column type="index" width="55"></el-editable-column>
+      <el-editable-column v-for="(item, index) in columnConfigs" :key="index" v-bind="item"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-popover placement="top" width="160" v-model="scope.row.flag3">
@@ -31,19 +25,6 @@
         </template>
       </el-editable-column>
     </el-editable>
-
-    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
-      <ul>
-        <li v-for="(item, index) in columnConfigs" :key="index">
-          <el-checkbox v-model="item.checked">{{ item.label }}</el-checkbox>
-        </li>
-      </ul>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="resetCustomEvent">重 置</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -59,7 +40,6 @@ export default {
   data () {
     return {
       loading: false,
-      dialogVisible: false,
       columnConfigs: [],
       sexList: [],
       regionList: []
@@ -74,34 +54,25 @@ export default {
       let regionPromise = this.getRegionJSON()
       this.findList()
       this.getColumnConfigs().then(data => {
-        this.columnConfigs = data.map(column => {
-          column.checked = true
-          column.show = true
-          switch (column.prop) {
-            case 'sex':
-              column.editRender.options = []
-              sexPromise.then(rest => {
-                column.editRender.options = rest
-              })
-              break
-            case 'region':
-              column.editRender.attrs = {options: []}
-              regionPromise.then(rest => {
-                column.editRender.attrs.options = rest
-              })
-              break
-            case 'birthdate':
-              column.editRender.attrs = {
-                type: 'date',
-                format: 'yyyy-MM-dd'
-              }
-              break
-            case 'rate':
-              column.editRender.type = 'visible'
-              break
-          }
-          return column
+        let sexItem = data.find(column => column.prop === 'sex')
+        sexItem.editRender.options = []
+        sexPromise.then(rest => {
+          sexItem.editRender.options = rest
         })
+        let regionItem = data.find(column => column.prop === 'region')
+        regionItem.editRender.attrs = {options: []}
+        regionPromise.then(rest => {
+          regionItem.editRender.attrs.options = rest
+        })
+        let birthdateItem = data.find(column => column.prop === 'birthdate')
+        birthdateItem.editRender.attrs = {
+          type: 'date',
+          format: 'yyyy-MM-dd'
+        }
+        let rateItem = data.find(column => column.prop === 'rate')
+        rateItem.editRender.type = 'visible'
+
+        this.columnConfigs = data
       })
     },
     findList () {
@@ -121,22 +92,6 @@ export default {
       let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
       this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
         this.findList()
-      })
-    },
-    openCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.checked = column.show
-      })
-    },
-    resetCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.checked = true
-      })
-    },
-    saveCustomEvent () {
-      this.dialogVisible = false
-      this.columnConfigs.forEach(column => {
-        column.show = column.checked
       })
     },
     getInsertEvent () {

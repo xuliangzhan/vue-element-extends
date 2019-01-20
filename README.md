@@ -15,6 +15,7 @@
 
 ![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable1.gif?raw=true)
 ![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable2.gif?raw=true)
+![editable3](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable3.gif?raw=true)
 
 ## API
 

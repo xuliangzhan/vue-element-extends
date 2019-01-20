@@ -24,7 +24,7 @@
 ```html
 <el-editable ref="editable" edit-config="{trigger: 'click', mode: 'cell'}">
   <el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput'}"></el-editable-column>
-  <el-editable-column prop="age" label="年龄" edit-render="{name: 'ElInput'}"></el-editable-column>
+  <el-editable-column prop="age" label="年龄" edit-render="{name: 'ElInputNumber'}"></el-editable-column>
 </el-editable>
 ```
 

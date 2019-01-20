@@ -24,7 +24,11 @@
           </el-form>
         </template>
       </el-editable-column>
-      <el-editable-column prop="name" label="名字（只读）" min-width="180" show-overflow-tooltip></el-editable-column>
+      <el-editable-column prop="name" label="名字（自定义渲染)" min-width="180" show-overflow-tooltip :editRender="{type: 'default'}">
+        <template slot="edit" slot-scope="scope" @change="$refs.editable.updateStatus(scope)">
+          <input class="editable-custom_input" type="text" v-model="scope.row.name">
+        </template>
+      </el-editable-column>
       <el-editable-column prop="sex" label="性别" width="100" align="center" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" min-width="180" :editRender="{name: 'ElCascader', attrs: {options: regionList, separator: '->'}}"></el-editable-column>
@@ -207,3 +211,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.editable-custom_input {
+  width: 100%;
+}
+</style>

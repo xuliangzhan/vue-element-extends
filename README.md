@@ -77,7 +77,7 @@
 | name | 说明 |
 |------|------|
 | — | 自定义渲染显示内容，参数为 { row, column, $index } |
-| type | 自定义渲染组件，参数为 { row, column, $index } |
+| edit | 自定义渲染组件，参数为 { row, column, $index } |
 | head | 自定义表头的内容，参数为 { column, $index } |
 
 ## Example

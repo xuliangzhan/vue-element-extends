@@ -1,14 +1,15 @@
 <template>
   <div v-loading="loading">
-    <el-button icon="el-icon-plus" @click="$refs.editable.insert()">新增一行</el-button>
-    <el-button type="success" icon="el-icon-plus" @click="$refs.editable.insertAt(null, -1)">在最后新增一行</el-button>
-    <el-button type="danger" icon="el-icon-delete" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="warning" @click="$refs.editable.revert()">放弃更改</el-button>
+    <el-button type="success" @click="$refs.editable.insert()">新增一行</el-button>
+    <el-button type="success" @click="$refs.editable.insertAt(null, -1)">在最后新增一行</el-button>
+    <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
+    <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
-    <el-button type="success" icon="el-icon-check" @click="submitEvent">保存</el-button>
+    <el-button type="warning" @click="submitEvent">保存</el-button>
     <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
+    <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
     <el-editable ref="editable" stripe border show-summary :summary-method="getSummaries" :span-method="arraySpanMethod" size="medium" style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
@@ -183,6 +184,10 @@ export default {
     },
     getRemoveEvent () {
       let rest = this.$refs.editable.getRemoveRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
+    },
+    getAllEvent () {
+      let rest = this.$refs.editable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
     },
     postJSON (data) {

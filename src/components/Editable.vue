@@ -59,6 +59,9 @@ export default {
   props: {
     editConfig: Object,
 
+    /**
+     * 还原 ElTable 所有属性
+     */
     data: Array,
     height: [String, Number],
     maxHeight: [String, Number],
@@ -113,6 +116,10 @@ export default {
     }
   },
   watch: {
+    /**
+     * 监听全局 click 事件
+     * 用于处理点击表格外清除激活状态
+     */
     globalClick (evnt) {
       if (this.lastActive) {
         let target = evnt.target
@@ -292,12 +299,7 @@ export default {
       let colspan = 1
       let fn = this.spanMethod
       if (XEUtils.isFunction(fn)) {
-        var result = fn({
-          row: row.data,
-          column: column,
-          rowIndex: rowIndex,
-          columnIndex: columnIndex
-        })
+        var result = fn({ row: row.data, column, rowIndex, columnIndex })
         if (XEUtils.isArray(result)) {
           rowspan = result[0]
           colspan = result[1]
@@ -306,10 +308,7 @@ export default {
           colspan = result.colspan
         }
       }
-      return {
-        rowspan: rowspan,
-        colspan: colspan
-      }
+      return { rowspan, colspan }
     },
     clearActive () {
       this.lastActive = null
@@ -320,6 +319,11 @@ export default {
         elem.className = elem.className.split(' ').filter(name => name !== 'editable-col_active').join(' ')
       })
     },
+    /**
+     * 指定某一行为激活状态
+     * 当指定为 mode='row' 行编辑模式时
+     * 可以根据索引激活行为编辑状态
+     */
     setActiveRow (rowIndex) {
       setTimeout(() => {
         let row = this.datas[rowIndex]
@@ -331,15 +335,26 @@ export default {
         }
       }, 5)
     },
+    /**
+     * 初始化
+     * 用于初始化数据、重新加载数据
+     */
     reload (datas) {
       this.deleteRecords = []
       this.clearActive()
       this._initial(datas, true)
       this._updateData()
     },
+    /**
+     * 还原更改
+     * 还原为最后一次 reload 的数据
+     */
     revert () {
       this.reload(this.initialStore)
     },
+    /**
+     * 清空
+     */
     clear () {
       this.deleteRecords = []
       this.clearActive()
@@ -349,6 +364,11 @@ export default {
     insert (record) {
       this.insertAt(record, 0)
     },
+    /**
+     * 插入数据
+     * 可以根据索引将数据插入到指定任意行
+     * 如果是 -1 则使用 push 到表格最后
+     */
     insertAt (record, rowIndex) {
       let recordItem = {}
       let len = this.datas.length
@@ -420,6 +440,11 @@ export default {
     getUpdateRecords () {
       return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
     },
+    /**
+     * 更新列状态
+     * 如果组件值 v-model 发生 change 时，调用改函数用于更新某一列编辑状态
+     * 由于缓存策略，但行数据发生增加或删除时，需要更新所有行
+     */
     updateStatus (scope) {
       if (this.showStatus) {
         if (arguments.length === 0) {

@@ -124,6 +124,9 @@ export default {
     group: Boolean,
     editRender: Object,
 
+    /**
+     * 还原 ElTableColumn 所有属性
+     */
     index: [Number, Function],
     type: String,
     label: String,
@@ -187,8 +190,8 @@ export default {
       let size = row.editable.size
       return Object.assign({ size }, this.editRender.attrs)
     },
-    getSelectLabel (scope) {
-      let value = scope.row.data[scope.column.property]
+    getSelectLabel ({ row, column }) {
+      let value = row.data[column.property]
       let selectItem = this.editRender.options.find(item => item.value === value)
       return selectItem ? selectItem.label : null
     },
@@ -203,20 +206,20 @@ export default {
         })
       }
     },
-    getCascaderLabel (scope) {
-      let values = scope.row.data[scope.column.property] || []
+    getCascaderLabel ({ row, column }) {
+      let values = row.data[column.property] || []
       let labels = []
       let attrs = this.editRender.attrs || {}
       this.matchCascaderData(values, 0, attrs.options || [], labels)
       return labels.join(attrs.separator || '/')
     },
-    getTimePickerLabel (scope) {
-      let value = scope.row.data[scope.column.property]
+    getTimePickerLabel ({ row, column }) {
+      let value = row.data[column.property]
       let attrs = this.editRender.attrs || {}
       return XEUtils.toDateString(value, attrs.format || 'hh:mm:ss')
     },
-    getDatePickerLabel (scope) {
-      let value = scope.row.data[scope.column.property]
+    getDatePickerLabel ({ row, column }) {
+      let value = row.data[column.property]
       let attrs = this.editRender.attrs || {}
       if (attrs.type === 'datetimerange') {
         return XEUtils.toArray(value).map(date => XEUtils.toDateString(date, attrs.format)).join(attrs.rangeSeparator)
@@ -226,8 +229,8 @@ export default {
     sortByEvent (row, index) {
       return this.sortBy(row.data, index)
     },
-    sortMethodEvent (a, b) {
-      return this.sortMethod(a.data, b.data)
+    sortMethodEvent (v1, v2) {
+      return this.sortMethod(v1.data, v2.data)
     },
     selectableEvent (row, index) {
       return this.selectable(row.data, index)

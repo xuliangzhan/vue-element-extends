@@ -30,7 +30,7 @@
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
-| trigger | 触发方式 | String | manual（手动方式） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
+| trigger | 触发方式 | String | manual（手动触发方式） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑方式 | String | cell（列编辑模式） / row（行编辑模式） | cell |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示列的编辑状态 | Boolean | — | true |
@@ -61,13 +61,14 @@
 ### Editable-Column Attributes
 
 ```html
-<el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput', type: 'default'}"></el-editable-column>
+<el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput'}"></el-editable-column>
+<el-editable-column prop="switch" label="是否启用" edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
 ```
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
 | name | 渲染内置的组件名称（如果是自定义渲染不需要传） | String | ElInput / ElSelect / ElCascader / ElDatePicker / ElInputNumber / ElSwitch / ElRate / ElColorPicker / ElSlider | ElInput |
-| type | 渲染类型 | String | default（组件激活后才可视） / visible（组件一直可视） | default |
+| type | 渲染类型 | String | default（组件触发后可视） / visible（组件一直可视） | default |
 | attrs | 渲染组件附加属性 | Object | — | {} |
 | optionAttrs | 下拉组件选项附加属性（只对name='ElSelect'有效） | Object | — | {} |
 | options | 下拉组件选项列表（只对name='ElSelect'有效） | Array | — | [] |

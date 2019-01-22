@@ -14,7 +14,6 @@ import EditableDemo9 from '@/views/editable/Demo9'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
   routes: [
     {
       path: '/',

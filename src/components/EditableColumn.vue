@@ -260,6 +260,9 @@ export default {
 </script>
 
 <style>
+.editable .editable-header-icon {
+  display: none;
+}
 .editable.editable--icon .editable-header-icon {
   display: inline-block;
 }
@@ -272,17 +275,14 @@ export default {
 .editable.el-table--medium .editable-column {
   height: 62px;
 }
-.editable .editable-header-icon {
-  display: none;
-}
-.editable .editable-column {
+.editable-column {
   height: 62px;
   padding: 0;
 }
-.editable .editable-column.editable-col_dirty {
+.editable-column.editable-col_dirty {
   position: relative;
 }
-.editable .editable-column.editable-col_dirty:before {
+.editable-column.editable-col_dirty:before {
   content: '';
   top: -5px;
   left: -5px;
@@ -292,12 +292,12 @@ export default {
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-.editable .editable-column .cell > .edit-input,
-.editable .editable-column .cell > .el-cascader,
-.editable .editable-column .cell > .el-autocomplete,
-.editable .editable-column .cell > .el-input-number,
-.editable .editable-column .cell > .el-date-editor,
-.editable .editable-column .cell > .el-select {
+.editable-column .cell > .edit-input,
+.editable-column .cell > .el-cascader,
+.editable-column .cell > .el-autocomplete,
+.editable-column .cell > .el-input-number,
+.editable-column .cell > .el-date-editor,
+.editable-column .cell > .el-select {
   width: 100%;
 }
 </style>

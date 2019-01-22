@@ -11,7 +11,7 @@
   * 支持显示编辑状态
   * 支持增删改查数据获取
   * 支持还原更改数据
-  * 支持 ElTable 所有功能
+  * 支持 ElTable 所有参数及功能
 
 ![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable1.gif?raw=true)
 ![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable2.gif?raw=true)

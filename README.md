@@ -34,8 +34,16 @@
 |------|------|-----|-----|-----|
 | trigger | 触发方式 | String | manual（手动触发方式） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑方式 | String | cell（列编辑模式） / row（行编辑模式） | cell |
+| autoFocus  | 编辑列在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | true |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示列的编辑状态 | Boolean | — | true |
+
+### Editable Events
+
+| 事件名 | 说明 | 参数 |
+|------|------|-----|
+| edit-active | 激活编辑状态之后会触发该事件 | row, column, cell, event |
+| clear-active | 当点击其它地方后，自动清除最后活动列之后会触发该事件 | row, lastColumn, lastCell, event |
 
 ### Editable Methods
 
@@ -51,7 +59,7 @@
 | removeRows(rowIndexs) | 根据多个行号删除多行数据 | rowIndexs |
 | removeSelecteds() | 删除选中行数据 |  |
 | clear() | 清空所有数据 |  |
-| clearActive() | 清除所有活动行列为不可编辑状态 |  |
+| clearActive() | 清除所有活动行或列为不可编辑状态 |  |
 | setActiveRow(rowIndex) | 设置活动行为可编辑状态（只对mode='row'有效） | rowIndex |
 | updateStatus(scope) | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
 | getAllRecords() | 获取表格数据集合 |  |

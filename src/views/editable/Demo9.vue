@@ -10,7 +10,7 @@
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
-    <el-editable ref="editable" stripe border show-summary :summary-method="getSummaries" :span-method="arraySpanMethod" size="medium" style="width: 100%">
+    <el-editable ref="editable" stripe border show-summary :summary-method="getSummaries" :span-method="arraySpanMethod" @edit-active="editActiveEvent" @clear-active="clearActiveEvent" size="medium" style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
@@ -113,6 +113,16 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    editActiveEvent (row, column, cell, event) {
+      if (column.property) {
+        console.log('激活活动状态')
+      }
+    },
+    clearActiveEvent (row, lastColumn, lastCell, event) {
+      if (lastColumn.property) {
+        console.log('清除活动状态')
+      }
     },
     getSummaries (param) {
       const { columns, data } = param

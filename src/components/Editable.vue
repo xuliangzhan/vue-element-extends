@@ -111,6 +111,9 @@ export default {
     showStatus () {
       return this.editConfig ? !(this.editConfig.showStatus === false) : true
     },
+    autoFocus () {
+      return this.editConfig ? !(this.editConfig.autoFocus === false) : true
+    },
     mode () {
       return this.editConfig ? (this.editConfig.mode || 'cell') : 'cell'
     }
@@ -123,7 +126,7 @@ export default {
     globalClick (evnt) {
       if (this.lastActive) {
         let target = evnt.target
-        let { cell } = this.lastActive
+        let { row, column, cell } = this.lastActive
         while (target && target.nodeType && target !== document) {
           if (this.mode === 'row' ? target === cell.parentNode : target === cell) {
             return
@@ -131,6 +134,7 @@ export default {
           target = target.parentNode
         }
         this.clearActive()
+        this.$emit('clear-active', row.data, column, cell, evnt)
       }
     },
     datas () {
@@ -158,6 +162,7 @@ export default {
           size: this.size,
           showIcon: this.showIcon,
           showStatus: this.showStatus,
+          autoFocus: this.autoFocus,
           mode: this.mode
         }
       }
@@ -182,13 +187,13 @@ export default {
     },
     _cellClick (row, column, cell, event) {
       if (!this.editConfig || this.editConfig.trigger === 'click') {
-        this._triggerActive(row, column, cell)
+        this._triggerActive(row, column, cell, event)
       }
       this.$emit('cell-click', row.data, column, cell, event)
     },
     _cellDBLclick (row, column, cell, event) {
       if (this.editConfig && this.editConfig.trigger === 'dblclick') {
-        this._triggerActive(row, column, cell)
+        this._triggerActive(row, column, cell, event)
       }
       this.$emit('cell-dblclick', row.data, column, cell, event)
     },
@@ -228,23 +233,30 @@ export default {
     _expandChange (row, expandedRows) {
       this.$emit('expand-change', row.data, expandedRows)
     },
-    _triggerActive (row, column, cell) {
-      this.clearActive()
-      this.lastActive = { row, column, cell }
-      cell.className += ` editable-col_active`
-      row.editActive = column.property
-      this.$nextTick(() => {
-        let inpElem = cell.querySelector('.el-input>input')
-        if (!inpElem) {
-          inpElem = cell.querySelector('.el-textarea>textarea')
-          if (!inpElem) {
-            inpElem = cell.querySelector('.editable-custom_input')
-          }
+    _triggerActive (row, column, cell, event) {
+      if (row.editActive !== column.property) {
+        this.clearActive()
+        this.lastActive = { row, column, cell }
+        cell.className += ` editable-col_active`
+        row.editActive = column.property
+        if (this.autoFocus) {
+          this.$nextTick(() => {
+            let inpElem = cell.querySelector('.el-input>input')
+            if (!inpElem) {
+              inpElem = cell.querySelector('.el-textarea>textarea')
+              if (!inpElem) {
+                inpElem = cell.querySelector('.editable-custom_input')
+              }
+            }
+            if (inpElem) {
+              inpElem.focus()
+            }
+            this.$emit('edit-active', row.data, column, cell, event)
+          })
+        } else {
+          this.$emit('edit-active', row.data, column, cell, event)
         }
-        if (inpElem) {
-          inpElem.focus()
-        }
-      })
+      }
     },
     _updateColumnStatus (trElem, column, tdElem) {
       if (column.className.split(' ').includes('editable-col_edit')) {
@@ -331,7 +343,7 @@ export default {
           let column = this.$refs.refElTable.columns.find(column => column.property)
           let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
           let cell = trElemList[rowIndex].children[0]
-          this._triggerActive(row, column, cell)
+          this._triggerActive(row, column, cell, null)
         }
       }, 5)
     },

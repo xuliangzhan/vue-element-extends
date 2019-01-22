@@ -566,8 +566,8 @@ export default {
      * 由于缓存策略，但行数据发生增加或删除时，需要更新所有行
      */
     updateStatus (scope) {
-      if (this.showStatus) {
-        if (arguments.length === 0) {
+      if (arguments.length === 0) {
+        if (this.showStatus) {
           this.$nextTick(() => {
             let trElems = this.$el.querySelectorAll('.el-table__row')
             if (trElems.length) {
@@ -593,29 +593,31 @@ export default {
               })
             }
           })
-        } else {
-          this.$nextTick(() => {
-            let { $index, _row, column, store } = scope
-            let trElems = store.table.$el.querySelectorAll('.el-table__row')
-            if (trElems.length) {
-              let trElem = trElems[$index]
-              let tdElem = trElem.querySelector(`.${column.id}`)
-              if (tdElem) {
+        }
+      } else {
+        this.$nextTick(() => {
+          let { $index, _row, column, store } = scope
+          let trElems = store.table.$el.querySelectorAll('.el-table__row')
+          if (trElems.length) {
+            let trElem = trElems[$index]
+            let tdElem = trElem.querySelector(`.${column.id}`)
+            if (tdElem) {
+              if (this.showStatus) {
                 if (XEUtils.isEqual(_row.data[column.property], _row.store[column.property])) {
                   this._removeCellClass(tdElem, ['editable-col_dirty'])
                 } else {
                   this._updateColumnStatus(trElem, column, tdElem)
                 }
-                return this._validRules('change', _row, column).then(rule => {
-                  this._clearValidError(_row)
-                  this._removeCellClass(tdElem, ['valid-error'])
-                }).catch(rule => {
-                  this._toValidError(rule, _row, column, tdElem)
-                })
               }
+              return this._validRules('change', _row, column).then(rule => {
+                this._clearValidError(_row)
+                this._removeCellClass(tdElem, ['valid-error'])
+              }).catch(rule => {
+                this._toValidError(rule, _row, column, tdElem)
+              })
             }
-          })
-        }
+          }
+        })
       }
     },
     _clearValidError (row) {

@@ -11,6 +11,7 @@ import EditableDemo7 from '@/views/editable/Demo7'
 import EditableDemo8 from '@/views/editable/Demo8'
 import EditableDemo9 from '@/views/editable/Demo9'
 import EditableDemo10 from '@/views/editable/Demo10'
+import EditableDemo11 from '@/views/editable/Demo11'
 import EditableExcelDemo from '@/views/editable/Excel'
 
 Vue.use(Router)
@@ -72,6 +73,11 @@ export default new Router({
       path: '/demo/editable10',
       name: 'EditableDemo10',
       component: EditableDemo10
+    },
+    {
+      path: '/demo/editable11',
+      name: 'EditableDemo11',
+      component: EditableDemo11
     },
     {
       path: '/demo/editableExcelDemo',

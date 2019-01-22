@@ -19,6 +19,7 @@
   <el-table-column v-else-if="editRender" v-bind="attrs">
     <template slot="header" slot-scope="scope">
       <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store}">
+        <i class="editable-required-icon" v-if="checkRequired(scope)"></i>
         <i class="el-icon-edit-outline editable-header-icon"></i>{{ scope.column.label }}
       </slot>
     </template>
@@ -229,6 +230,15 @@ export default {
       }
       return XEUtils.toDateString(value, attrs.format, 'yyyy-MM-dd')
     },
+    checkRequired ({ column, store }) {
+      if (column.property && this.$parent && this.$parent.$parent && this.$parent.$parent.editRules) {
+        let rules = this.$parent.$parent.editRules[column.property]
+        if (rules) {
+          return rules.some(rule => rule.required === true)
+        }
+      }
+      return false
+    },
     sortByEvent (row, index) {
       return this.sortBy(row.data, index)
     },
@@ -271,6 +281,10 @@ export default {
 <style>
 .editable .editable-header-icon {
   display: none;
+}
+.editable .editable-required-icon:before {
+  content: "*";
+  color: #f56c6c;
 }
 .editable.editable--icon .editable-header-icon {
   display: inline-block;

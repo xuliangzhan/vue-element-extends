@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <h1>Editable 示例</h1>
     <el-tabs v-model="activeName">
       <el-tab-pane label="单击列编辑 mini" name="EditableDemo1"></el-tab-pane>
       <el-tab-pane label="双击列编辑 small" name="EditableDemo2"></el-tab-pane>
@@ -37,6 +38,5 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

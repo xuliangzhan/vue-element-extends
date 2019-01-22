@@ -7,6 +7,7 @@
   * 支持渲染简化的内置组件
   * 支持渲染任意自定义组件
   * 支持动态列渲染
+  * 支持数据校验
   * 支持显示数据 change 状态
   * 支持增/删/改/查/还原
   * 支持原 ElTable 所有参数及功能
@@ -29,6 +30,18 @@
   <el-editable-column prop="age" label="年龄" edit-render="{name: 'ElInputNumber'}"></el-editable-column>
 </el-editable>
 ```
+
+edit-rules 校验规则配置
+
+| 属性 | 描述 | 类型 | 可选值 |
+|------|------|-----|-----|-----|
+| required | 是否必填 | Boolean | — |
+| min  | 校验最小长度 | Number | — |
+| max  | 校验最大长度 | Number | — |
+| validator  | 自定义校验方法 | Function(rule, value, callback) |
+| trigger  | 触发校验方式 | String | blue / change | cell |
+
+edit-config 编辑参数配置
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
@@ -90,6 +103,7 @@
 | — | 自定义渲染显示内容，参数为 { row, column, $index } |
 | edit | 自定义渲染组件，参数为 { row, column, $index } |
 | head | 自定义表头的内容，参数为 { column, $index } |
+| valid | 自定义校验提示信息，参数为 { row, column, $index } |
 
 ## Example
 

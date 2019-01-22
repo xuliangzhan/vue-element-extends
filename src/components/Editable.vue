@@ -58,6 +58,7 @@ export default {
   name: 'ElEditable',
   props: {
     editConfig: Object,
+    editRules: Object,
 
     /**
      * 还原 ElTable 所有属性
@@ -127,15 +128,18 @@ export default {
       if (this.lastActive) {
         let target = evnt.target
         let { row, column, cell } = this.lastActive
-        while (target && target.nodeType && target !== document) {
-          if (this.mode === 'row' ? target === cell.parentNode : target === cell) {
-            return
+        this._checkValid().then(() => {
+          while (target && target.nodeType && target !== document) {
+            if (this.mode === 'row' ? target === cell.parentNode : target === cell) {
+              return
+            }
+            target = target.parentNode
           }
-          target = target.parentNode
-        }
-        this._clearActiveData()
-        this._clearActiveCell(['editable-col_active'])
-        this.$emit('clear-active', row.data, column, cell, evnt)
+          this._clearValidError(row)
+          this._clearActiveData()
+          this._clearActiveCell(['editable-col_active', 'valid-error'])
+          this.$emit('clear-active', row.data, column, cell, evnt)
+        }).catch(e => e)
       }
     },
     datas () {
@@ -157,14 +161,17 @@ export default {
         _EDITABLE_PROTO: this.editProto,
         data: item,
         store: XEUtils.clone(item, true),
-        editStatus: status || 'initial',
+        validActive: null,
+        validRule: null,
         editActive: null,
+        editStatus: status || 'initial',
         editable: {
           size: this.size,
           showIcon: this.showIcon,
           showStatus: this.showStatus,
           autoFocus: this.autoFocus,
-          mode: this.mode
+          mode: this.mode,
+          rules: this.editRules
         }
       }
     },
@@ -188,20 +195,28 @@ export default {
     },
     _cellClick (row, column, cell, event) {
       this._cellHandleEvent('click', row, column, cell, event)
-      this.$emit('cell-click', row.data, column, cell, event)
     },
     _cellDBLclick (row, column, cell, event) {
       this._cellHandleEvent('dblclick', row, column, cell, event)
-      this.$emit('cell-dblclick', row.data, column, cell, event)
     },
     _cellHandleEvent (type, row, column, cell, event) {
-      if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
-        this._triggerActive(row, column, cell, event)
-      } else {
-        if (row.editActive !== column.property) {
-          this._addActiveCell(cell, ['editable-col_checked'])
+      this._checkValid().then(() => {
+        if (this.lastActive) {
+          this._clearValidError(this.lastActive.row)
+          this._removeCellClass(this.lastActive.cell, ['valid-error'])
         }
-      }
+        if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
+          this._triggerActive(row, column, cell, event)
+          this._validRules('change', row, column).catch(rule => {
+            this._toValidError(rule, row, column, cell)
+          })
+        } else {
+          if (row.editActive !== column.property) {
+            this._addActiveCell(cell, ['editable-col_checked'])
+          }
+        }
+        this.$emit(`cell-${type}`, row.data, column, cell, event)
+      }).catch(e => e)
     },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)
@@ -270,27 +285,36 @@ export default {
       })
       cell.className = classList.join(' ')
     },
+    _setFocus (cell) {
+      let inpElem = cell.querySelector('.el-input>input')
+      if (!inpElem) {
+        inpElem = cell.querySelector('.el-textarea>textarea')
+        if (!inpElem) {
+          inpElem = cell.querySelector('.editable-custom_input')
+        }
+      }
+      if (inpElem) {
+        inpElem.focus()
+      }
+    },
     _triggerActive (row, column, cell, event) {
-      if (row.editActive !== column.property) {
-        this.clearActive()
-        this.lastActive = { row, column, cell }
-        this._addCellClass(cell, ['editable-col_active'])
-        row.editActive = column.property
-        if (this.autoFocus) {
-          this.$nextTick(() => {
-            let inpElem = cell.querySelector('.el-input>input')
-            if (!inpElem) {
-              inpElem = cell.querySelector('.el-textarea>textarea')
-              if (!inpElem) {
-                inpElem = cell.querySelector('.editable-custom_input')
-              }
-            }
-            if (inpElem) {
-              inpElem.focus()
-            }
+      let clss = ['editable-col_active']
+      if (row.validActive === column.property) {
+        clss.push('valid-error')
+      }
+      this.clearActive()
+      this.lastActive = { row, column, cell }
+      this._addCellClass(cell, clss)
+      row.editActive = column.property
+      if (this.autoFocus) {
+        this.$nextTick(() => {
+          this._setFocus(cell)
+          if (row.editActive !== column.property) {
             this.$emit('edit-active', row.data, column, cell, event)
-          })
-        } else {
+          }
+        })
+      } else {
+        if (row.editActive !== column.property) {
           this.$emit('edit-active', row.data, column, cell, event)
         }
       }
@@ -355,9 +379,65 @@ export default {
       }
       return { rowspan, colspan }
     },
+    isValidError () {
+      return this.lastActive ? !!this.lastActive.row.validActive : false
+    },
+    /**
+     * 校验数据
+     * 顺序校验（同步或异步）
+     * 参数：required=Boolean 是否必填，min=Number 最小长度，max=Number 最大长度，validator=Function(rule, value, callback) 自定义校验，trigger=blur|change 触发方式
+     */
+    _validRules (type, row, column) {
+      let property = column.property
+      let validPromise = Promise.resolve()
+      if (property && !XEUtils.isEmpty(this.editRules)) {
+        let rules = this.editRules[property]
+        let value = row.data[property]
+        if (rules) {
+          for (let rIndex = 0; rIndex < rules.length; rIndex++) {
+            validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
+              let rule = rules[rIndex]
+              if ((type === 'all' || !rule.trigger || rule.trigger === 'change' || type === rule.trigger) && (rule.required === true || value)) {
+                if (XEUtils.isFunction(rule.validator)) {
+                  rule.validator(rule, value, e => {
+                    if (XEUtils.isError(e)) {
+                      let cusRule = { type: 'custom', message: e.message, rule }
+                      return reject(cusRule)
+                    }
+                    return resolve(rule)
+                  })
+                } else {
+                  let strVal = '' + (value || '')
+                  if (!value ||
+                    (XEUtils.isNumber(rule.min) && strVal.length < rule.min) ||
+                    (XEUtils.isNumber(rule.max) && strVal.length > rule.max)) {
+                    reject(rule)
+                  } else {
+                    resolve(rule)
+                  }
+                }
+              } else {
+                resolve(rule)
+              }
+            }))
+          }
+        }
+      }
+      return validPromise
+    },
+    _checkValid () {
+      if (this.lastActive && !XEUtils.isEmpty(this.editRules)) {
+        let { row, column, cell } = this.lastActive
+        return this._validRules('blur', row, column).catch(rule => {
+          this._toValidError(rule, row, column, cell)
+          return Promise.reject(rule)
+        })
+      }
+      return Promise.resolve()
+    },
     clearActive () {
       this._clearActiveData()
-      this._clearActiveCell(['editable-col_active', 'editable-col_checked'])
+      this._clearActiveCell(['editable-col_active', 'editable-col_checked', 'valid-error'])
     },
     /**
      * 指定某一行为激活状态
@@ -371,7 +451,7 @@ export default {
           let column = this.$refs.refElTable.columns.find(column => column.property)
           let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
           let cell = trElemList[rowIndex].children[0]
-          this._triggerActive(row, column, cell, null)
+          this._triggerActive(row, column, cell, { type: 'edit' })
         }
       }, 5)
     },
@@ -526,11 +606,64 @@ export default {
                 } else {
                   this._updateColumnStatus(trElem, column, tdElem)
                 }
+                return this._validRules('change', _row, column).then(rule => {
+                  this._clearValidError(_row)
+                  this._removeCellClass(tdElem, ['valid-error'])
+                }).catch(rule => {
+                  this._toValidError(rule, _row, column, tdElem)
+                })
               }
             }
           })
         }
       }
+    },
+    _clearValidError (row) {
+      row.validRule = null
+      row.validActive = null
+    },
+    _toValidError (rule, row, column, cell) {
+      row.validRule = rule
+      row.validActive = column.property
+      setTimeout(() => this._triggerActive(row, column, cell, { type: 'valid' }), 5)
+    },
+    /**
+     * 对整个表格数据进行校验
+     * 返回 Promise 对象，或者使用回调方式
+     */
+    validate (fn) {
+      if (!XEUtils.isEmpty(this.editRules)) {
+        let editRules = this.editRules
+        let datas = this.datas
+        let columns = this.$refs.refElTable.columns
+        let ruleKeys = Object.keys(editRules)
+        let trElems = this.$el.querySelectorAll('.el-table__row')
+        let validPromise = Promise.resolve()
+        datas.forEach((row, index) => {
+          this._clearValidError(row)
+          columns.forEach((column, cIndex) => {
+            if (ruleKeys.includes(column.property)) {
+              validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
+                this._validRules('all', row, column).then(resolve).catch(rule => {
+                  let rest = { rule, row, column, cell: trElems[index].children[cIndex] }
+                  return reject(rest)
+                })
+              }))
+            }
+          })
+        })
+        return validPromise.then(() => {
+          fn && fn(true)
+          return true
+        }).catch(({ rule, row, column, cell }) => {
+          this._toValidError(rule, row, column, cell)
+          fn && fn(false)
+          return fn ? Promise.resolve(false) : Promise.reject(rule)
+        })
+      } else {
+        fn && fn(true)
+      }
+      return Promise.resolve(true)
     }
   }
 }

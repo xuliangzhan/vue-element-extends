@@ -55,12 +55,12 @@
             <el-slider v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-slider>
           </template>
           <template v-else>
-            <el-input v-model="scope.row.data[scope.column.property]" @change="changeEvent(scope)"></el-input>
+            <el-input v-model="scope.row.data[scope.column.property]" @input="changeEvent(scope)"></el-input>
           </template>
         </slot>
       </template>
       <template v-else>
-        <template v-if="scope.row.editable.mode === 'row' ? scope.row.editActive : scope.row.editActive === scope.column.property">
+        <template v-if="scope.row.editActive && (scope.row.editable.mode === 'row' ? scope.row.editActive : scope.row.editActive === scope.column.property)">
           <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
             <template v-if="editRender.name === 'ElSelect'">
               <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)">
@@ -92,7 +92,7 @@
               <el-slider v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-slider>
             </template>
             <template v-else>
-              <el-input v-model="scope.row.data[scope.column.property]" @change="changeEvent(scope)"></el-input>
+              <el-input v-model="scope.row.data[scope.column.property]" @input="changeEvent(scope)"></el-input>
             </template>
           </slot>
         </template>
@@ -106,6 +106,9 @@
           </slot>
         </template>
       </template>
+      <slot name="valid" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
+        <div v-if="scope.row.validActive && scope.row.validActive === scope.column.property" class="editable-valid_error">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</div>
+      </slot>
     </template>
   </el-table-column>
   <el-table-column v-else v-bind="attrs">
@@ -239,21 +242,27 @@ export default {
       return this.filterMethod(value, row.data, column)
     },
     changeEvent ({ $index, row, column, store }) {
-      if (row.editable.showStatus) {
-        this.$nextTick(() => {
-          let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
-          let tdElem = trElem.querySelector(`.${column.id}`)
-          let classList = tdElem.className.split(' ')
-          if (XEUtils.isEqual(row.data[column.property], row.store[column.property])) {
-            tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
-          } else {
-            if (!classList.includes('editable-col_dirty')) {
-              classList.push('editable-col_dirty')
-              tdElem.className = classList.join(' ')
-            }
+      this.$nextTick(() => {
+        if (this.$parent && this.$parent.$parent && this.$parent.$parent.updateStatus) {
+          this.$parent.$parent.updateStatus({$index, row: row.data, column, store, _row: row})
+        } else {
+          if (row.editable.showStatus) {
+            this.$nextTick(() => {
+              let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
+              let tdElem = trElem.querySelector(`.${column.id}`)
+              let classList = tdElem.className.split(' ')
+              if (XEUtils.isEqual(row.data[column.property], row.store[column.property])) {
+                tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+              } else {
+                if (!classList.includes('editable-col_dirty')) {
+                  classList.push('editable-col_dirty')
+                  tdElem.className = classList.join(' ')
+                }
+              }
+            })
           }
-        })
-      }
+        }
+      })
     }
   }
 }
@@ -299,5 +308,50 @@ export default {
 .editable .editable-column .cell > .el-date-editor,
 .editable .editable-column .cell > .el-select {
   width: 100%;
+}
+.editable .editable-column.editable-col_active .cell {
+  overflow: initial;
+}
+.editable .editable-column .editable-valid_error {
+  display: none;
+}
+.editable .editable-column.valid-error .el-input__inner,
+.editable .editable-column.valid-error .el-input__inner:focus,
+.editable .editable-column.valid-error .el-textarea__inner,
+.editable .editable-column.valid-error .el-textarea__inner:focus {
+  border-color: #f56c6c;
+}
+.editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error {
+  top: -20px;
+}
+.editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error:before {
+  top: auto;
+  bottom: -8px;
+  border-color: #f56c6c transparent transparent transparent;
+}
+.editable .editable-column.valid-error .editable-valid_error,
+.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error {
+  display: block;
+  color: #fff;
+  background-color: #f56c6c;
+  border-radius: 2px;
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px;
+  position: absolute;
+  top: 100%;
+  left: 10px;
+  z-index: 9;
+  padding-left: 10px;
+}
+.editable .editable-column .editable-valid_error:before,
+.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error:before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 20%;
+  bottom: auto;
+  border: 4px solid;
+  border-color: transparent transparent #f56c6c transparent;
 }
 </style>

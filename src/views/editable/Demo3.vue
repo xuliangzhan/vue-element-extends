@@ -10,7 +10,7 @@
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
-    <el-editable ref="editable" height="600" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
+    <el-editable ref="editable" height="600" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editRules="validRules" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">
@@ -25,9 +25,9 @@
           </el-form>
         </template>
       </el-editable-column>
-      <el-editable-column prop="name" label="名字（自定义渲染)" min-width="180" show-overflow-tooltip :editRender="{type: 'default'}">
-        <template slot="edit" slot-scope="scope" @change="$refs.editable.updateStatus(scope)">
-          <textarea class="editable-custom_input" v-model="scope.row.name"></textarea>
+      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="180" show-overflow-tooltip :editRender="{type: 'default'}">
+        <template slot="edit" slot-scope="scope">
+          <textarea class="editable-custom_input" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)"></textarea>
         </template>
       </el-editable-column>
       <el-editable-column prop="sex" label="性别" width="100" align="center" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
@@ -101,7 +101,13 @@ export default {
           text: '22',
           value: 22
         }
-      ]
+      ],
+      validRules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'change' },
+          { min: 3, max: 10, message: '名称长度在 3 到 10 个字符', trigger: 'change' }
+        ]
+      }
     }
   },
   created () {
@@ -148,9 +154,16 @@ export default {
       return `订单号：${cellValue}`
     },
     submitEvent () {
-      let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
-      this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-        this.findList()
+      this.$refs.editable.validate(valid => {
+        if (valid) {
+          let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
+            this.findList()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
     },
     getInsertEvent () {
@@ -167,7 +180,7 @@ export default {
     },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
     },
     selectableEvent (row, index) {
       return index >= 1
@@ -219,6 +232,6 @@ export default {
 
 <style scoped>
 .editable-custom_input {
-  width: 100%;
+  width: 95%;
 }
 </style>

@@ -37,7 +37,7 @@ export default {
   methods: {
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
     }
   }
 }

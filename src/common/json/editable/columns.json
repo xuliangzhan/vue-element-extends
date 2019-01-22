@@ -8,6 +8,13 @@
     }
   },
   {
+    "prop": "nickname",
+    "label": "昵称",
+    "editRender": {
+      "name": "ElInput"
+    }
+  },
+  {
     "prop": "sex",
     "label": "性别",
     "editRender": {

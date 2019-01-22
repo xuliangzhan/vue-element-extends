@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
-    <el-button type="success" @click="$refs.editable.insert()">新增一行</el-button>
-    <el-button type="success" @click="$refs.editable.insertAt(null, -1)">在最后新增一行</el-button>
+    <el-button type="success" @click="$refs.editable.insert({flag3: false})">新增一行</el-button>
+    <el-button type="success" @click="$refs.editable.insertAt({flag3: false}, -1)">在最后新增一行</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
@@ -154,7 +154,7 @@ export default {
     },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
     },
     postJSON (data) {
       return new Promise(resolve => {

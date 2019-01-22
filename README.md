@@ -43,7 +43,7 @@
 | 事件名 | 说明 | 参数 |
 |------|------|-----|
 | edit-active | 激活编辑状态之后会触发该事件 | row, column, cell, event |
-| clear-active | 当点击其它地方后，自动清除最后活动列之后会触发该事件 | row, lastColumn, lastCell, event |
+| clear-active | 当点击其它地方后，自动清除最后活动列之后会触发该事件 | lastRow, lastColumn, lastCell, event |
 
 ### Editable Methods
 

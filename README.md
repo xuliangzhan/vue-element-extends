@@ -1,7 +1,5 @@
 # vue-element-extends
 
- [查看博客](https://blog.csdn.net/xlz26296/article/details/80195408)
-
 * 功能点：
   * 支持单列编辑
   * 支持整行编辑

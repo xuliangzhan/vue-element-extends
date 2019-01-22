@@ -4,12 +4,12 @@
   * 支持单列编辑
   * 支持整行编辑
   * 支持单击、双击编辑模式
-  * 支持渲染任意组件
-  * 支持动态列
-  * 支持显示编辑状态
-  * 支持增删改查数据获取
-  * 支持还原更改数据
-  * 支持 ElTable 所有参数及功能
+  * 支持渲染简化的内置组件
+  * 支持渲染任意自定义组件
+  * 支持动态列渲染
+  * 支持显示数据 change 状态
+  * 支持增/删/改/查/还原
+  * 支持原 ElTable 所有参数及功能
 
 ![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable1.gif?raw=true)
 ![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable2.gif?raw=true)

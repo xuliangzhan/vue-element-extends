@@ -658,9 +658,10 @@ export default {
           fn && fn(true)
           return true
         }).catch(({ rule, row, column, cell }) => {
+          let status = false
           this._toValidError(rule, row, column, cell)
-          fn && fn(false)
-          return fn ? Promise.resolve(false) : Promise.reject(rule)
+          fn && fn(status, {[column.property]: [new Error(rule.message)]})
+          return fn ? Promise.resolve(status) : Promise.reject(status)
         })
       } else {
         fn && fn(true)

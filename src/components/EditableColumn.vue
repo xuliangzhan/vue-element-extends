@@ -19,8 +19,8 @@
   <el-table-column v-else-if="editRender" v-bind="attrs">
     <template slot="header" slot-scope="scope">
       <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store}">
-        <i class="editable-required-icon" v-if="checkRequired(scope)"></i>
-        <i class="el-icon-edit-outline editable-header-icon"></i>{{ scope.column.label }}
+        <i v-if="checkRequired(scope)" class="editable-required-icon"></i>
+        <i v-if="checkIcon(scope)" class="el-icon-edit-outline editable-header-icon"></i>{{ scope.column.label }}
       </slot>
     </template>
     <template slot-scope="scope">
@@ -236,6 +236,12 @@ export default {
         if (rules) {
           return rules.some(rule => rule.required === true)
         }
+      }
+      return false
+    },
+    checkIcon ({ column, store }) {
+      if (column.property && this.$parent && this.$parent.$parent && this.$parent.$parent.editRules) {
+        return this.$parent.$parent.showIcon
       }
       return false
     },

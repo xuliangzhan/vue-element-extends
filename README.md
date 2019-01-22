@@ -83,6 +83,7 @@ edit-config 编辑参数配置
 | getInsertRecords() | 获取新增数据 |  |
 | getRemoveRecords() | 获取已删除数据 |  |
 | getUpdateRecords()| 获取已修改数据 |  |
+| validate() | 对整个表格进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：是否校验成功和最近列未通过校验的字段。若不传入回调函数，则会返回一个 promise |  |
 
 ### Editable-Column Attributes
 

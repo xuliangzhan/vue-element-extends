@@ -280,7 +280,7 @@ export default {
   padding: 0;
 }
 .editable .editable-column.editable-col_dirty {
-    position: relative;
+  position: relative;
 }
 .editable .editable-column.editable-col_dirty:before {
   content: '';
@@ -298,6 +298,6 @@ export default {
 .editable .editable-column .cell > .el-input-number,
 .editable .editable-column .cell > .el-date-editor,
 .editable .editable-column .cell > .el-select {
-    width: 100%;
+  width: 100%;
 }
 </style>

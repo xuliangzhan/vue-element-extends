@@ -39,7 +39,7 @@ edit-rules 校验规则配置
 | min  | 校验最小长度 | Number | — |
 | max  | 校验最大长度 | Number | — |
 | validator  | 自定义校验方法 | Function(rule, value, callback) |
-| trigger  | 触发校验方式 | String | blue / change | cell |
+| trigger  | 触发校验方式 | String | blue / change | — |
 
 edit-config 编辑参数配置
 

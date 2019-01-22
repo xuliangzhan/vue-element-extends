@@ -87,9 +87,10 @@
 
 ## Example
 
-* 依赖函数库 npm install xe-utils
-* 依赖 vuex 中的 globalClick 全局 click  事件 (参考store/modules/event.js)
-* 将 Editable.vue 和 EditableColumn.vue 复制到自己项目的 components 目录下，然后在 main.js 引入组件即可
+* 依赖库 npm install vuex xe-utils
+* 依赖 vuex 中的 globalClick 全局 click  事件 (具体实现方式可以参考store/modules/event.js)
+* 将 Editable.vue 和 EditableColumn.vue 复制到自己项目的 components 目录下，然后在 main.js 引入组件
+* 如果有遇到哪些问题欢迎提 Issues
 
 ```JavaScript
 import Editable from '@/components/Editable.vue'

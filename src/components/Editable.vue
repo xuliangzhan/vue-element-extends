@@ -204,9 +204,6 @@ export default {
         }
       }
     },
-    _addClass () {
-
-    },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)
     },

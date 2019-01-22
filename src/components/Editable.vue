@@ -133,7 +133,8 @@ export default {
           }
           target = target.parentNode
         }
-        this.clearActive()
+        this._clearActiveData()
+        this._clearActiveCell(['editable-col_active'])
         this.$emit('clear-active', row.data, column, cell, evnt)
       }
     },
@@ -186,16 +187,25 @@ export default {
       this.$emit('cell-mouse-leave', row.data, column, cell, event)
     },
     _cellClick (row, column, cell, event) {
-      if (!this.editConfig || this.editConfig.trigger === 'click') {
-        this._triggerActive(row, column, cell, event)
-      }
+      this._cellHandleEvent('click', row, column, cell, event)
       this.$emit('cell-click', row.data, column, cell, event)
     },
     _cellDBLclick (row, column, cell, event) {
-      if (this.editConfig && this.editConfig.trigger === 'dblclick') {
-        this._triggerActive(row, column, cell, event)
-      }
+      this._cellHandleEvent('dblclick', row, column, cell, event)
       this.$emit('cell-dblclick', row.data, column, cell, event)
+    },
+    _cellHandleEvent (type, row, column, cell, event) {
+      if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
+        this._triggerActive(row, column, cell, event)
+      } else {
+        if (row.editActive !== column.property) {
+          this._clearActiveCell(['editable-col_checked'])
+          cell.className += ` editable-col_checked`
+        }
+      }
+    },
+    _addClass () {
+
     },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)
@@ -232,6 +242,17 @@ export default {
     },
     _expandChange (row, expandedRows) {
       this.$emit('expand-change', row.data, expandedRows)
+    },
+    _clearActiveData () {
+      this.lastActive = null
+      this.datas.forEach(item => {
+        item.editActive = null
+      })
+    },
+    _clearActiveCell (clss) {
+      Array.from(this.$el.querySelectorAll(`.${clss.join('.editable-column,.')}.editable-column`)).forEach(elem => {
+        elem.className = elem.className.split(' ').filter(name => clss.indexOf(name) === -1).join(' ')
+      })
     },
     _triggerActive (row, column, cell, event) {
       if (row.editActive !== column.property) {
@@ -323,13 +344,8 @@ export default {
       return { rowspan, colspan }
     },
     clearActive () {
-      this.lastActive = null
-      this.datas.forEach(item => {
-        item.editActive = null
-      })
-      Array.from(this.$el.querySelectorAll('.editable-col_active.editable-column')).forEach(elem => {
-        elem.className = elem.className.split(' ').filter(name => name !== 'editable-col_active').join(' ')
-      })
+      this._clearActiveData()
+      this._clearActiveCell(['editable-col_active', 'editable-col_checked'])
     },
     /**
      * 指定某一行为激活状态

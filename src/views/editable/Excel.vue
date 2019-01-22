@@ -1,0 +1,59 @@
+<template>
+  <div>
+    <el-button size="mini" @click="$refs.editable.insert()">新增</el-button>
+    <el-button size="mini" @click="getAllEvent">获取</el-button>
+    <el-editable ref="editable" class="excel-table" :data.sync="list" border size="mini" style="width: 100%" :editConfig="{trigger: 'dblclick', showIcon: false}">
+      <el-editable-column type="index" align="center" width="50"></el-editable-column>
+      <template v-for="(column, index) in columnConfigs">
+        <el-editable-column header-align="center" min-width="60" :key="index" v-bind="column"></el-editable-column>
+      </template>
+    </el-editable>
+  </div>
+</template>
+
+<script>
+import { MessageBox } from 'element-ui'
+
+export default {
+  data () {
+    let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    return {
+      list: Array.from(new Array(10), (v, i) => {
+        let rest = {}
+        columns.forEach(name => {
+          rest[name.toLowerCase()] = ''
+        })
+        return rest
+      }),
+      columnConfigs: columns.map(name => {
+        return {
+          prop: name.toLowerCase(),
+          label: name,
+          editRender: {name: 'ElInput'}
+        }
+      })
+    }
+  },
+  methods: {
+    getAllEvent () {
+      let rest = this.$refs.editable.getRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
+    }
+  }
+}
+</script>
+
+<style>
+.excel-table .el-table__body .el-table__row>td {
+  cursor: cell;
+}
+.excel-table .el-table__body .el-table__row:hover>td {
+  background-color: initial;
+}
+.excel-table .el-table__body .el-table__row>td.editable-col_checked {
+  border: 2px solid #217346;
+}
+.excel-table .el-table__row>td .cell {
+  padding: 0;
+}
+</style>

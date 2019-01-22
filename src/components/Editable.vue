@@ -199,8 +199,7 @@ export default {
         this._triggerActive(row, column, cell, event)
       } else {
         if (row.editActive !== column.property) {
-          this._clearActiveCell(['editable-col_checked'])
-          cell.className += ` editable-col_checked`
+          this._addActiveCell(cell, ['editable-col_checked'])
         }
       }
     },
@@ -247,15 +246,35 @@ export default {
       })
     },
     _clearActiveCell (clss) {
-      Array.from(this.$el.querySelectorAll(`.${clss.join('.editable-column,.')}.editable-column`)).forEach(elem => {
-        elem.className = elem.className.split(' ').filter(name => clss.indexOf(name) === -1).join(' ')
+      Array.from(this.$el.querySelectorAll(`.${clss.join('.editable-column,.')}.editable-column`)).forEach(elem => this._removeCellClass(elem, clss))
+    },
+    _addActiveCell (cell, clss) {
+      this._clearActiveCell(clss)
+      this._addCellClass(cell, clss)
+    },
+    _addCellClass (cell, clss) {
+      let classList = cell.className.split(' ')
+      clss.forEach(name => {
+        if (classList.indexOf(name) === -1) {
+          classList.push(name)
+        }
       })
+      cell.className = classList.join(' ')
+    },
+    _removeCellClass (cell, clss) {
+      let classList = []
+      cell.className.split(' ').forEach(name => {
+        if (clss.indexOf(name) === -1) {
+          classList.push(name)
+        }
+      })
+      cell.className = classList.join(' ')
     },
     _triggerActive (row, column, cell, event) {
       if (row.editActive !== column.property) {
         this.clearActive()
         this.lastActive = { row, column, cell }
-        cell.className += ` editable-col_active`
+        this._addCellClass(cell, ['editable-col_active'])
         row.editActive = column.property
         if (this.autoFocus) {
           this.$nextTick(() => {
@@ -278,11 +297,7 @@ export default {
     },
     _updateColumnStatus (trElem, column, tdElem) {
       if (column.className.split(' ').includes('editable-col_edit')) {
-        let classList = tdElem.className.split(' ')
-        if (!classList.includes('editable-col_dirty')) {
-          classList.push('editable-col_dirty')
-          tdElem.className = classList.join(' ')
-        }
+        this._addCellClass(tdElem, ['editable-col_dirty'])
       }
     },
     _summaryMethod (param) {
@@ -487,8 +502,7 @@ export default {
                       let tdElem = trElem.children[cIndex]
                       if (tdElem) {
                         if (XEUtils.isEqual(item.data[column.property], item.store[column.property])) {
-                          let classList = tdElem.className.split(' ')
-                          tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+                          this._removeCellClass(tdElem, ['editable-col_dirty'])
                         } else {
                           this._updateColumnStatus(trElem, column, trElem.children[cIndex])
                         }
@@ -507,9 +521,8 @@ export default {
               let trElem = trElems[$index]
               let tdElem = trElem.querySelector(`.${column.id}`)
               if (tdElem) {
-                let classList = tdElem.className.split(' ')
                 if (XEUtils.isEqual(_row.data[column.property], _row.store[column.property])) {
-                  tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
+                  this._removeCellClass(tdElem, ['editable-col_dirty'])
                 } else {
                   this._updateColumnStatus(trElem, column, tdElem)
                 }

@@ -90,7 +90,7 @@
 * 依赖库 npm install vuex xe-utils
 * 依赖 vuex 中的 globalClick 全局 click  事件 (具体实现方式可以参考store/modules/event.js)
 * 将 Editable.vue 和 EditableColumn.vue 复制到自己项目的 components 目录下，然后在 main.js 引入组件
-* 如果有建议或遇到问题欢迎提 Issues 和讨论
+* 如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
 
 ```JavaScript
 import Editable from '@/components/Editable.vue'

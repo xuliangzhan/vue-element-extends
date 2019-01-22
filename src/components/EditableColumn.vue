@@ -259,56 +259,45 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.editable {
-  &.editable--icon {
-    .editable-header-icon {
-      display: inline-block;
-    }
-  }
-  &.el-table--mini {
-    .editable-column {
-      height: 42px;
-    }
-  }
-  &.el-table--small {
-    .editable-column {
-      height: 48px;
-    }
-  }
-  &.el-table--medium {
-    .editable-column {
-      height: 62px;
-    }
-  }
-  .editable-header-icon {
-    display: none;
-  }
-  .editable-column {
-    height: 62px;
-    padding: 0;
-    &.editable-col_dirty {
-      position: relative;
-      &:before {
-        content: '';
-        top: -5px;
-        left: -5px;
-        position: absolute;
-        border: 5px solid;
-        border-color: transparent #C00000 transparent transparent;
-        transform: rotate(45deg);
-      }
-    }
-    .cell {
-      >.edit-input,
-      >.el-cascader,
-      >.el-autocomplete,
-      >.el-input-number,
-      >.el-date-editor,
-      >.el-select {
-        width: 100%;
-      }
-    }
-  }
+<style>
+.editable.editable--icon .editable-header-icon {
+  display: inline-block;
+}
+.editable.el-table--mini .editable-column {
+  height: 42px;
+}
+.editable.el-table--small .editable-column {
+  height: 48px;
+}
+.editable.el-table--medium .editable-column {
+  height: 62px;
+}
+.editable .editable-header-icon {
+  display: none;
+}
+.editable .editable-column {
+  height: 62px;
+  padding: 0;
+}
+.editable .editable-column.editable-col_dirty {
+    position: relative;
+}
+.editable .editable-column.editable-col_dirty:before {
+  content: '';
+  top: -5px;
+  left: -5px;
+  position: absolute;
+  border: 5px solid;
+  border-color: transparent #C00000 transparent transparent;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.editable .editable-column .cell > .edit-input,
+.editable .editable-column .cell > .el-cascader,
+.editable .editable-column .cell > .el-autocomplete,
+.editable .editable-column .cell > .el-input-number,
+.editable .editable-column .cell > .el-date-editor,
+.editable .editable-column .cell > .el-select {
+    width: 100%;
 }
 </style>

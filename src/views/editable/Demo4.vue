@@ -217,7 +217,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .editable-custom_input {
   width: 100%;
 }

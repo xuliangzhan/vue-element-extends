@@ -155,13 +155,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.el-table {
-  .warning-row {
-    background: oldlace;
-  }
-  .success-row {
-    background: #f0f9eb;
-  }
+<style scoped>
+.el-table .warning-row {
+  background: oldlace;
+}
+.el-table .success-row {
+  background: #f0f9eb;
 }
 </style>

@@ -384,7 +384,11 @@ export default {
     },
     /**
      * 校验数据
-     * 顺序校验（同步或异步）
+     * 按表格行、列顺序依次校验（同步或异步）
+     * 校验规则根据索引顺序依次校验，如果是异步则会等待校验完成才会继续校验下一列
+     * 如果校验失败则，触发回调或者Promise，结果返回一个 Boolean 值
+     * 如果是传回调方式这返回一个 Boolean 值和校验不通过列的错误消息
+     *
      * 参数：required=Boolean 是否必填，min=Number 最小长度，max=Number 最大长度，validator=Function(rule, value, callback) 自定义校验，trigger=blur|change 触发方式
      */
     _validRules (type, row, column) {
@@ -434,6 +438,15 @@ export default {
         })
       }
       return Promise.resolve()
+    },
+    _clearValidError (row) {
+      row.validRule = null
+      row.validActive = null
+    },
+    _toValidError (rule, row, column, cell) {
+      row.validRule = rule
+      row.validActive = column.property
+      setTimeout(() => this._triggerActive(row, column, cell, { type: 'valid' }), 5)
     },
     clearActive () {
       this._clearActiveData()
@@ -487,7 +500,8 @@ export default {
     /**
      * 插入数据
      * 可以根据索引将数据插入到指定任意行
-     * 如果是 -1 则使用 push 到表格最后
+     * 如果是 null 或 0 则插入到第一行
+     * 如果是 -1 或 大于行索引 则使用 push 到表格最后
      */
     insertAt (record, rowIndex) {
       let recordItem = {}
@@ -511,6 +525,9 @@ export default {
       }
       this._updateData()
     },
+    /**
+     * 根据索引删除行数据
+     */
     removeRow (rowIndex) {
       let items = this.datas.splice(rowIndex, 1)
       items.forEach(item => {
@@ -619,15 +636,6 @@ export default {
           }
         })
       }
-    },
-    _clearValidError (row) {
-      row.validRule = null
-      row.validActive = null
-    },
-    _toValidError (rule, row, column, cell) {
-      row.validRule = rule
-      row.validActive = column.property
-      setTimeout(() => this._triggerActive(row, column, cell, { type: 'valid' }), 5)
     },
     /**
      * 对整个表格数据进行校验

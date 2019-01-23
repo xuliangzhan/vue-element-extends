@@ -669,7 +669,7 @@ export default {
       }
     },
     /**
-     * 指定行索引进行校验
+     * 对表格某一行进行校验的方法
      * 返回 Promise 对象，或者使用回调方式
      */
     validateRow (rowIndex, fn) {

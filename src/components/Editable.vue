@@ -104,7 +104,9 @@ export default {
       datas: [],
       initialStore: [],
       deleteRecords: [],
-      lastActive: null
+      lastActive: null,
+      isClearlActivate: false,
+      isManualActivate: false
     }
   },
   computed: {
@@ -127,7 +129,7 @@ export default {
      * 用于处理点击表格外清除激活状态
      */
     globalClick (evnt) {
-      if (this.lastActive) {
+      if (!this.isManualActivate && this.lastActive) {
         let target = evnt.target
         let { row, column, cell } = this.lastActive
         this._validActiveCell().then(() => {
@@ -142,6 +144,8 @@ export default {
           this._clearActiveCell(['editable-col_active', 'valid-error'])
           this.$emit('clear-active', row.data, column, cell, evnt)
         }).catch(e => e)
+      } else {
+        this.isManualActivate = false
       }
     },
     datas () {
@@ -201,27 +205,31 @@ export default {
       this._cellHandleEvent('dblclick', row, column, cell, event)
     },
     _cellHandleEvent (type, row, column, cell, event) {
-      this._validActiveCell().then(() => {
-        if (this.lastActive) {
-          this._clearValidError(this.lastActive.row)
-          this._removeCellClass(this.lastActive.cell, ['valid-error'])
-        }
-        if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
-          this._triggerActive(row, column, cell, event)
-          if (row && this.mode === 'row') {
-            this.validateRow(XEUtils.findIndexOf(this.datas, item => item === row)).catch(e => e)
+      if (!this.isClearlActivate && cell.className.split(' ').includes('editable-col_edit')) {
+        this._validActiveCell().then(() => {
+          if (this.lastActive) {
+            this._clearValidError(this.lastActive.row)
+            this._removeCellClass(this.lastActive.cell, ['valid-error'])
+          }
+          if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
+            this._triggerActive(row, column, cell, event)
+            if (row && this.mode === 'row') {
+              this.validateRow(XEUtils.findIndexOf(this.datas, item => item === row)).catch(e => e)
+            } else {
+              this._validColRules('change', row, column).catch(rule => {
+                this._toValidError(rule, row, column, cell)
+              })
+            }
           } else {
-            this._validColRules('change', row, column).catch(rule => {
-              this._toValidError(rule, row, column, cell)
-            })
+            if (row.editActive !== column.property) {
+              this._addActiveCell(cell, ['editable-col_checked'])
+            }
           }
-        } else {
-          if (row.editActive !== column.property) {
-            this._addActiveCell(cell, ['editable-col_checked'])
-          }
-        }
-        this.$emit(`cell-${type}`, row.data, column, cell, event)
-      }).catch(e => e)
+          this.$emit(`cell-${type}`, row.data, column, cell, event)
+        }).catch(e => e)
+      } else {
+        this.isClearlActivate = false
+      }
     },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)
@@ -475,7 +483,7 @@ export default {
     _toValidError (rule, row, column, cell) {
       row.validRule = rule
       row.validActive = column.property
-      setTimeout(() => this._triggerActive(row, column, cell, { type: 'valid' }), 5)
+      this._triggerActive(row, column, cell, { type: 'valid' })
     },
     /**
      * 初始化
@@ -586,7 +594,8 @@ export default {
     getUpdateRecords () {
       return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
     },
-    clearActive () {
+    clearActive (force) {
+      this.isClearlActivate = true
       this._clearActiveData()
       this._clearActiveCell(['editable-col_active', 'editable-col_checked', 'valid-error'])
     },
@@ -598,6 +607,7 @@ export default {
     setActiveRow (rowIndex) {
       let row = this.datas[rowIndex]
       if (row && this.mode === 'row') {
+        this.isManualActivate = true
         this.validateRow(rowIndex).then(valid => {
           let column = this.$refs.refElTable.columns.find(column => column.property)
           let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
@@ -680,38 +690,36 @@ export default {
      */
     validateRow (rowIndex, fn) {
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          this._validActiveCell().then(() => {
-            let row = this.datas[rowIndex]
-            if (row && this.mode === 'row') {
-              this._validRowRules('change', row).then(rest => {
-                if (fn) {
-                  fn(true)
-                }
-                resolve(true)
-              }).catch(({ rule, row, column, cell }) => {
-                let status = false
-                this._toValidError(rule, row, column, cell)
-                if (fn) {
-                  fn(status, {[column.property]: [new Error(rule.message)]})
-                  resolve(status)
-                } else {
-                  reject(status)
-                }
-              })
-            } else {
-              resolve()
-            }
-          }).catch(({ rule, row, column, cell }) => {
-            let status = false
-            if (fn) {
-              fn(status, {[column.property]: [new Error(rule.message)]})
-              resolve(status)
-            } else {
-              reject(status)
-            }
-          })
-        }, 5)
+        this._validActiveCell().then(() => {
+          let row = this.datas[rowIndex]
+          if (row && this.mode === 'row') {
+            this._validRowRules('change', row).then(rest => {
+              if (fn) {
+                fn(true)
+              }
+              resolve(true)
+            }).catch(({ rule, row, column, cell }) => {
+              let status = false
+              this._toValidError(rule, row, column, cell)
+              if (fn) {
+                fn(status, {[column.property]: [new Error(rule.message)]})
+                resolve(status)
+              } else {
+                reject(status)
+              }
+            })
+          } else {
+            resolve()
+          }
+        }).catch(({ rule, row, column, cell }) => {
+          let status = false
+          if (fn) {
+            fn(status, {[column.property]: [new Error(rule.message)]})
+            resolve(status)
+          } else {
+            reject(status)
+          }
+        })
       })
     },
     /**

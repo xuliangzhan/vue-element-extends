@@ -62,9 +62,14 @@
       <el-editable-column prop="remark" label="备注" min-width="180" :editRender="{name: 'ElInput', attrs: {type: 'textarea', rows: 2}}"></el-editable-column>
       <el-editable-column label="操作" width="160" fixed="right">
         <template slot-scope="scope">
-          <el-button v-if="$refs.editable.getActiveRowIndex() === scope.$index" size="mini" type="danger" @click="saveRowEvent(scope.row, scope.$index)">保存</el-button>
-          <el-button v-else size="mini" type="danger" @click="$refs.editable.setActiveRow(scope.$index)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
+          <template v-if="$refs.editable.getActiveRowIndex() === scope.$index">
+            <el-button size="mini" type="success" @click="saveRowEvent(scope.row, scope.$index)">保存</el-button>
+            <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row, scope.$index)">取消</el-button>
+          </template>
+          <template v-else>
+            <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.$index)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
+          </template>
         </template>
       </el-editable-column>
     </el-editable>
@@ -150,6 +155,16 @@ export default {
           })
         } else {
           console.log('error row submit!!')
+        }
+      })
+    },
+    cancelRowEvent (row, index) {
+      this.$refs.editable.validateRow(index, valid => {
+        if (valid) {
+          this.$refs.editable.clearActive()
+        } else {
+          // 当前行有不通过校验的列，强制取消
+          this.$refs.editable.clearActive(true)
         }
       })
     },

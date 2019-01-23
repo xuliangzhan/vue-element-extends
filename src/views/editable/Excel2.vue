@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-button size="mini" @click="$refs.editable.insert()">新增</el-button>
+    <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
     <el-button size="mini" @click="getAllEvent">获取</el-button>
-    <el-editable ref="editable" class="excel-table2" :data.sync="list" border tooltip-effect="light" size="mini" style="width: 100%" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
+    <el-editable ref="editable" class="excel-table2" :data.sync="list" border tooltip-effect="light" size="customSize" style="width: 100%" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" align="center" width="50"></el-editable-column>
       <template v-for="(column, index) in columnConfigs">
         <el-editable-column :key="index" v-bind="column" header-align="center" min-width="60" show-overflow-tooltip></el-editable-column>
@@ -18,7 +18,7 @@ export default {
   data () {
     let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     return {
-      list: Array.from(new Array(10), (v, i) => {
+      list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach(name => {
           rest[name.toLowerCase()] = ''
@@ -44,8 +44,16 @@ export default {
 </script>
 
 <style>
+.excel-table2.el-table--customSize .editable-column {
+  height: 30px;
+}
 .excel-table2 .el-table__body .el-table__row>td {
   cursor: cell;
+}
+.excel-table2 th,
+.excel-table2 .el-table__body .el-table__row>td:first-child,
+.excel-table2 .el-table__body .el-table__row:hover>td:first-child {
+  background-color: #f5f5f5;
 }
 .excel-table2 .el-table__body .el-table__row:hover>td {
   background-color: inherit;
@@ -57,8 +65,14 @@ export default {
 .excel-table2 .el-table__row>td .cell {
   padding: 0;
 }
+.excel-table2 .el-table__row>td .cell,
+.excel-table2 .el-table__row>td .cell .el-input,
+.excel-table2 .el-table__row>td .cell .el-input__inner {
+  height: 100%;
+}
 .excel-table2 .el-table__row>td .cell .el-input__inner {
   border-radius: 0;
   padding: 0 2px;
+  line-height: 30px;
 }
 </style>

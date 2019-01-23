@@ -11,7 +11,11 @@
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
     <el-editable ref="editable" class="my-table11" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
-      <el-editable-column type="index" width="55"></el-editable-column>
+      <el-editable-column type="index" width="55">
+        <template slot="head">
+          <i class="el-icon-setting" @click="dialogVisible = true"></i>
+        </template>
+      </el-editable-column>
       <template v-for="(item, index) in columnConfigs">
         <template v-if="item.show">
           <el-editable-column v-if="index === 0" :key="index" v-bind="item">
@@ -28,6 +32,19 @@
         </template>
       </el-editable-column>
     </el-editable>
+
+    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
+      <ul>
+        <li v-for="(item, index) in columnConfigs" :key="index">
+          <el-checkbox v-model="item.checked">{{ item.label }}</el-checkbox>
+        </li>
+      </ul>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="resetCustomEvent">重 置</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -66,6 +83,7 @@ export default {
     }
     return {
       loading: false,
+      dialogVisible: false,
       columnConfigs: [],
       sexList: [],
       regionList: [],
@@ -102,8 +120,9 @@ export default {
       this.findList()
       this.getColumnConfigs().then(data => {
         this.columnConfigs = data.map(column => {
-          column.checked = true
-          column.show = true
+          let defaultShow = ['name', 'nickname', 'region', 'rate'].includes(column.prop)
+          column.checked = defaultShow
+          column.show = defaultShow
           switch (column.prop) {
             case 'sex':
               column.editRender.options = []
@@ -151,6 +170,22 @@ export default {
         })
       }).catch(valid => {
         console.log('error submit!!')
+      })
+    },
+    openCustomEvent () {
+      this.columnConfigs.forEach(column => {
+        column.checked = column.show
+      })
+    },
+    resetCustomEvent () {
+      this.columnConfigs.forEach(column => {
+        column.checked = true
+      })
+    },
+    saveCustomEvent () {
+      this.dialogVisible = false
+      this.columnConfigs.forEach(column => {
+        column.show = column.checked
       })
     },
     getInsertEvent () {

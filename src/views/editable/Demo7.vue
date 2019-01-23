@@ -76,8 +76,9 @@ export default {
       this.findList()
       this.getColumnConfigs().then(data => {
         this.columnConfigs = data.map(column => {
-          column.checked = true
-          column.show = true
+          let defaultShow = ['name', 'region', 'rate'].includes(column.prop)
+          column.checked = defaultShow
+          column.show = defaultShow
           switch (column.prop) {
             case 'sex':
               column.editRender.options = []

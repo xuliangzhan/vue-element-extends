@@ -117,9 +117,6 @@ export default {
     showStatus () {
       return this.editConfig ? !(this.editConfig.showStatus === false) : true
     },
-    autoFocus () {
-      return this.editConfig ? !(this.editConfig.autoFocus === false) : true
-    },
     mode () {
       return this.editConfig ? (this.editConfig.mode || 'cell') : 'cell'
     }
@@ -133,7 +130,7 @@ export default {
       if (this.lastActive) {
         let target = evnt.target
         let { row, column, cell } = this.lastActive
-        this._validActiveCol().then(() => {
+        this._validActiveCell().then(() => {
           while (target && target.nodeType && target !== document) {
             if (this.mode === 'row' ? target === cell.parentNode : target === cell) {
               return
@@ -174,7 +171,6 @@ export default {
           size: this.size,
           showIcon: this.showIcon,
           showStatus: this.showStatus,
-          autoFocus: this.autoFocus,
           mode: this.mode,
           rules: this.editRules
         }
@@ -205,16 +201,20 @@ export default {
       this._cellHandleEvent('dblclick', row, column, cell, event)
     },
     _cellHandleEvent (type, row, column, cell, event) {
-      this._validActiveCol().then(() => {
+      this._validActiveCell().then(() => {
         if (this.lastActive) {
           this._clearValidError(this.lastActive.row)
           this._removeCellClass(this.lastActive.cell, ['valid-error'])
         }
         if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
           this._triggerActive(row, column, cell, event)
-          this._validColRules('change', row, column).catch(rule => {
-            this._toValidError(rule, row, column, cell)
-          })
+          if (row && this.mode === 'row') {
+            this.validateRow(XEUtils.findIndexOf(this.datas, item => item === row)).catch(e => e)
+          } else {
+            this._validColRules('change', row, column).catch(rule => {
+              this._toValidError(rule, row, column, cell)
+            })
+          }
         } else {
           if (row.editActive !== column.property) {
             this._addActiveCell(cell, ['editable-col_checked'])
@@ -298,7 +298,7 @@ export default {
           inpElem = cell.querySelector('.editable-custom_input')
         }
       }
-      if (inpElem) {
+      if (inpElem && cell.className.split(' ').includes('autofocus')) {
         inpElem.focus()
       }
     },
@@ -311,18 +311,12 @@ export default {
       this.lastActive = { row, column, cell }
       this._addCellClass(cell, clss)
       row.editActive = column.property
-      if (this.autoFocus) {
-        this.$nextTick(() => {
-          this._setFocus(cell)
-          if (row.editActive !== column.property) {
-            this.$emit('edit-active', row.data, column, cell, event)
-          }
-        })
-      } else {
+      this.$nextTick(() => {
+        this._setFocus(cell)
         if (row.editActive !== column.property) {
           this.$emit('edit-active', row.data, column, cell, event)
         }
-      }
+      })
     },
     _updateColumnStatus (trElem, column, tdElem) {
       if (column.className.split(' ').includes('editable-col_edit')) {
@@ -457,7 +451,7 @@ export default {
       }
       return validPromise
     },
-    _validActiveCol () {
+    _validActiveCell () {
       if (this.lastActive && !XEUtils.isEmpty(this.editRules)) {
         let { row, column, cell } = this.lastActive
         return this._validColRules('blur', row, column).catch(rule => {
@@ -612,7 +606,7 @@ export default {
       return this.lastActive ? this.lastActive.row.data : null
     },
     getActiveRowIndex () {
-      return this.lastActive ? XEUtils.findIndexOf(this.datas, row => row === this.lastActive.row) : -1
+      return this.lastActive ? XEUtils.findIndexOf(this.datas, item => item === this.lastActive.row) : -1
     },
     /**
      * 更新列状态
@@ -681,7 +675,7 @@ export default {
     validateRow (rowIndex, fn) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          this._validActiveCol().then(() => {
+          this._validActiveCell().then(() => {
             let row = this.datas[rowIndex]
             if (row && this.mode === 'row') {
               this._validRowRules('change', row).then(rest => {

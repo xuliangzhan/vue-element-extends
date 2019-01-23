@@ -165,6 +165,10 @@ export default {
   ],
   computed: {
     attrs () {
+      let isDefaultFocus = this.editRender ? ['ElInput', 'ElInputNumber'].includes(this.editRender.name) : false
+      let className = this.className ? ` ${this.className}` : ''
+      let editTypeClass = this.editRender ? ' editable-col_edit' : ' editable-col_readonly'
+      let autofocusClass = this.editRender ? (this.editRender.autofocus === true || isDefaultFocus ? ' autofocus' : '') : (isDefaultFocus ? ' autofocus' : '')
       return {
         index: this.index,
         type: this.type,
@@ -182,7 +186,7 @@ export default {
         showOverflowTooltip: this.showOverflowTooltip,
         align: this.align,
         headerAlign: this.headerAlign,
-        className: `editable-column ${this.editRender ? 'editable-col_edit' : 'editable-col_readonly'}${this.className ? ' ' + this.className : ''}`,
+        className: `editable-column${editTypeClass}${autofocusClass}${className}`,
         labelClassName: this.labelClassName,
         selectable: this.selectable ? this.selectableEvent : this.selectable,
         reserveSelection: this.reserveSelection,

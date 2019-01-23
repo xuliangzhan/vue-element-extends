@@ -51,7 +51,6 @@ edit-config 编辑参数配置
 |------|------|-----|-----|-----|
 | trigger | 触发方式 | String | manual（手动触发方式） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑方式 | String | cell（列编辑模式） / row（行编辑模式） | cell |
-| autoFocus  | 编辑列在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | true |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示列的 change 状态 | Boolean | — | true |
 
@@ -98,6 +97,7 @@ edit-config 编辑参数配置
 |------|------|-----|-----|-----|
 | name | 渲染内置的组件名称（如果是自定义渲染不需要传） | String | ElInput / ElSelect / ElCascader / ElDatePicker / ElInputNumber / ElSwitch / ElRate / ElColorPicker / ElSlider | ElInput |
 | type | 渲染类型 | String | default（组件触发后可视） / visible（组件一直可视） | default |
+| autofocus  | 该列在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | — |
 | attrs | 渲染组件附加属性 | Object | — | {} |
 | optionAttrs | 下拉组件选项附加属性（只对name='ElSelect'有效） | Object | — | {} |
 | options | 下拉组件选项列表（只对name='ElSelect'有效） | Array | — | [] |

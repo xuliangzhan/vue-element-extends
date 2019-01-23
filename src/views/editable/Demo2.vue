@@ -41,7 +41,7 @@
           <span>订单号：{{ scope.row.order }}</span>
         </template>
       </el-editable-column>
-      <el-editable-column prop="remark" label="备注" :editRender="{name: 'ElInput', attrs: {type: 'textarea', rows: 2}}"></el-editable-column>
+      <el-editable-column prop="remark" label="备注" :editRender="{name: 'ElInput', attrs: {type: 'textarea', rows: 1}}"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>

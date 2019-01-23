@@ -56,7 +56,7 @@
             <el-slider v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-slider>
           </template>
           <template v-else>
-            <el-input v-model="scope.row.data[scope.column.property]" @input="changeEvent(scope)"></el-input>
+            <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @input="changeEvent(scope)"></el-input>
           </template>
         </slot>
       </template>
@@ -93,7 +93,7 @@
               <el-slider v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)"></el-slider>
             </template>
             <template v-else>
-              <el-input v-model="scope.row.data[scope.column.property]" @input="changeEvent(scope)"></el-input>
+              <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @input="changeEvent(scope)"></el-input>
             </template>
           </slot>
         </template>

@@ -111,9 +111,6 @@ export default {
     ...mapGetters([
       'globalClick'
     ]),
-    activeRowIndex () {
-      return this.lastActive ? XEUtils.findIndexOf(this.datas, row => row === this.lastActive.row) : -1
-    },
     showIcon () {
       return this.editConfig ? !(this.editConfig.showIcon === false) : true
     },
@@ -480,28 +477,6 @@ export default {
       row.validActive = column.property
       setTimeout(() => this._triggerActive(row, column, cell, { type: 'valid' }), 5)
     },
-    clearActive () {
-      this._clearActiveData()
-      this._clearActiveCell(['editable-col_active', 'editable-col_checked', 'valid-error'])
-    },
-    /**
-     * 指定某一行为激活状态
-     * 当指定为 mode='row' 行编辑模式时
-     * 可以根据索引激活行为编辑状态
-     */
-    setActiveRow (rowIndex) {
-      let row = this.datas[rowIndex]
-      if (row && this.mode === 'row') {
-        this.validateRow(rowIndex).then(valid => {
-          let column = this.$refs.refElTable.columns.find(column => column.property)
-          let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
-          let cell = trElemList[rowIndex].children[0]
-          this._triggerActive(row, column, cell, { type: 'edit' })
-        }).catch(e => e)
-        return true
-      }
-      return false
-    },
     /**
      * 初始化
      * 用于初始化数据、重新加载数据
@@ -610,6 +585,34 @@ export default {
     },
     getUpdateRecords () {
       return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
+    },
+    clearActive () {
+      this._clearActiveData()
+      this._clearActiveCell(['editable-col_active', 'editable-col_checked', 'valid-error'])
+    },
+    /**
+     * 指定某一行为激活状态
+     * 只有当指定为 mode='row' 行编辑模式时
+     * 才可以根据索引激活行为编辑状态
+     */
+    setActiveRow (rowIndex) {
+      let row = this.datas[rowIndex]
+      if (row && this.mode === 'row') {
+        this.validateRow(rowIndex).then(valid => {
+          let column = this.$refs.refElTable.columns.find(column => column.property)
+          let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
+          let cell = trElemList[rowIndex].children[0]
+          this._triggerActive(row, column, cell, { type: 'edit' })
+        }).catch(e => e)
+        return true
+      }
+      return false
+    },
+    getActiveRow () {
+      return this.lastActive ? this.lastActive.row.data : null
+    },
+    getActiveRowIndex () {
+      return this.lastActive ? XEUtils.findIndexOf(this.datas, row => row === this.lastActive.row) : -1
     },
     /**
      * 更新列状态

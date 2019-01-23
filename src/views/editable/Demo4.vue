@@ -62,7 +62,7 @@
       <el-editable-column prop="remark" label="备注" min-width="180" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column label="操作" width="160" fixed="right">
         <template slot-scope="scope">
-          <el-button v-if="$refs.editable && $refs.editable.activeRowIndex === scope.$index" size="mini" type="danger" @click="saveRowEvent(scope.row, scope.$index)">保存</el-button>
+          <el-button v-if="$refs.editable.getActiveRowIndex() === scope.$index" size="mini" type="danger" @click="saveRowEvent(scope.row, scope.$index)">保存</el-button>
           <el-button v-else size="mini" type="danger" @click="$refs.editable.setActiveRow(scope.$index)">编辑</el-button>
           <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
         </template>

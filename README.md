@@ -64,10 +64,6 @@ edit-config 编辑参数配置
 
 ### Editable Methods
 
-| 属性名 | 描述 |
-|------|------|-----|
-| activeRowIndex | 当前活动行索引 |
-
 | 方法名 | 描述 | 参数 |
 |------|------|-----|
 | reload | 初始化加载数据 | datas |
@@ -82,6 +78,7 @@ edit-config 编辑参数配置
 | clear | 清空所有数据 |  |
 | clearActive | 清除所有活动行或列为不可编辑状态 |  |
 | setActiveRow | 设置活动行为可编辑状态（只对mode='row'有效） | rowIndex |
+| getActiveRowIndex | 获取当前活动状态行索引 |  |
 | updateStatus | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
 | getAllRecords | 获取表格数据集合 |  |
 | getRecords | 获取表格数据 |  |

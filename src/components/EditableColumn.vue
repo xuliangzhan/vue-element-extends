@@ -305,7 +305,7 @@ export default {
 .editable .editable-column .cell > .el-select {
   width: 100%;
 }
-.editable .editable-column.editable-col_active .cell {
+.editable .editable-column.editable-col_edit.editable-col_active .cell {
   overflow: initial;
 }
 .editable .editable-column .editable-valid_error {

@@ -64,6 +64,10 @@ edit-config 编辑参数配置
 
 ### Editable Methods
 
+| 属性名 | 描述 |
+|------|------|-----|
+| activeRowIndex | 当前活动行索引 |
+
 | 方法名 | 描述 | 参数 |
 |------|------|-----|
 | reload | 初始化加载数据 | datas |

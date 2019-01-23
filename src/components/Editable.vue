@@ -111,6 +111,9 @@ export default {
     ...mapGetters([
       'globalClick'
     ]),
+    activeRowIndex () {
+      return this.lastActive ? XEUtils.findIndexOf(this.datas, row => row === this.lastActive.row) : -1
+    },
     showIcon () {
       return this.editConfig ? !(this.editConfig.showIcon === false) : true
     },
@@ -133,7 +136,7 @@ export default {
       if (this.lastActive) {
         let target = evnt.target
         let { row, column, cell } = this.lastActive
-        this._checkValid().then(() => {
+        this._validActiveCol().then(() => {
           while (target && target.nodeType && target !== document) {
             if (this.mode === 'row' ? target === cell.parentNode : target === cell) {
               return
@@ -205,14 +208,14 @@ export default {
       this._cellHandleEvent('dblclick', row, column, cell, event)
     },
     _cellHandleEvent (type, row, column, cell, event) {
-      this._checkValid().then(() => {
+      this._validActiveCol().then(() => {
         if (this.lastActive) {
           this._clearValidError(this.lastActive.row)
           this._removeCellClass(this.lastActive.cell, ['valid-error'])
         }
         if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
           this._triggerActive(row, column, cell, event)
-          this._validRules('change', row, column).catch(rule => {
+          this._validColRules('change', row, column).catch(rule => {
             this._toValidError(rule, row, column, cell)
           })
         } else {
@@ -387,6 +390,29 @@ export default {
     isValidError () {
       return this.lastActive ? !!this.lastActive.row.validActive : false
     },
+    _validRowRules (type, row) {
+      let validPromise = Promise.resolve()
+      if (!XEUtils.isEmpty(this.editRules)) {
+        let editRules = this.editRules
+        let datas = this.datas
+        let columns = this.$refs.refElTable.columns
+        let ruleKeys = Object.keys(editRules)
+        let trElems = this.$el.querySelectorAll('.el-table__row')
+        let index = XEUtils.findIndexOf(datas, item => item === row)
+        this._clearValidError(row)
+        columns.forEach((column, cIndex) => {
+          if (ruleKeys.includes(column.property)) {
+            validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
+              this._validColRules('all', row, column).then(resolve).catch(rule => {
+                let rest = { rule, row, column, cell: trElems[index].children[cIndex] }
+                return reject(rest)
+              })
+            }))
+          }
+        })
+      }
+      return validPromise
+    },
     /**
      * 校验数据
      * 按表格行、列顺序依次校验（同步或异步）
@@ -396,7 +422,7 @@ export default {
      *
      * 参数：required=Boolean 是否必填，min=Number 最小长度，max=Number 最大长度，validator=Function(rule, value, callback) 自定义校验，trigger=blur|change 触发方式
      */
-    _validRules (type, row, column) {
+    _validColRules (type, row, column) {
       let property = column.property
       let validPromise = Promise.resolve()
       if (property && !XEUtils.isEmpty(this.editRules)) {
@@ -434,12 +460,13 @@ export default {
       }
       return validPromise
     },
-    _checkValid () {
+    _validActiveCol () {
       if (this.lastActive && !XEUtils.isEmpty(this.editRules)) {
         let { row, column, cell } = this.lastActive
-        return this._validRules('blur', row, column).catch(rule => {
+        return this._validColRules('blur', row, column).catch(rule => {
+          let rest = { rule, row, column, cell }
           this._toValidError(rule, row, column, cell)
-          return Promise.reject(rule)
+          return Promise.reject(rest)
         })
       }
       return Promise.resolve()
@@ -463,15 +490,17 @@ export default {
      * 可以根据索引激活行为编辑状态
      */
     setActiveRow (rowIndex) {
-      setTimeout(() => {
-        let row = this.datas[rowIndex]
-        if (row && this.mode === 'row') {
+      let row = this.datas[rowIndex]
+      if (row && this.mode === 'row') {
+        this.validateRow(rowIndex).then(valid => {
           let column = this.$refs.refElTable.columns.find(column => column.property)
           let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
           let cell = trElemList[rowIndex].children[0]
           this._triggerActive(row, column, cell, { type: 'edit' })
-        }
-      }, 5)
+        }).catch(e => e)
+        return true
+      }
+      return false
     },
     /**
      * 初始化
@@ -631,7 +660,7 @@ export default {
                   this._updateColumnStatus(trElem, column, tdElem)
                 }
               }
-              return this._validRules('change', _row, column).then(rule => {
+              return this._validColRules('change', _row, column).then(rule => {
                 this._clearValidError(_row)
                 this._removeCellClass(tdElem, ['valid-error'])
               }).catch(rule => {
@@ -643,23 +672,63 @@ export default {
       }
     },
     /**
+     * 指定行索引进行校验
+     * 返回 Promise 对象，或者使用回调方式
+     */
+    validateRow (rowIndex, fn) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          this._validActiveCol().then(() => {
+            let row = this.datas[rowIndex]
+            if (row && this.mode === 'row') {
+              this._validRowRules('change', row).then(rest => {
+                if (fn) {
+                  fn(true)
+                }
+                resolve(true)
+              }).catch(({ rule, row, column, cell }) => {
+                let status = false
+                this._toValidError(rule, row, column, cell)
+                if (fn) {
+                  fn(status, {[column.property]: [new Error(rule.message)]})
+                  resolve(status)
+                } else {
+                  reject(status)
+                }
+              })
+            } else {
+              resolve()
+            }
+          }).catch(({ rule, row, column, cell }) => {
+            let status = false
+            if (fn) {
+              fn(status, {[column.property]: [new Error(rule.message)]})
+              resolve(status)
+            } else {
+              reject(status)
+            }
+          })
+        }, 5)
+      })
+    },
+    /**
      * 对整个表格数据进行校验
      * 返回 Promise 对象，或者使用回调方式
      */
     validate (fn) {
+      let validPromise = Promise.resolve(true)
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
         let datas = this.datas
         let columns = this.$refs.refElTable.columns
         let ruleKeys = Object.keys(editRules)
         let trElems = this.$el.querySelectorAll('.el-table__row')
-        let validPromise = Promise.resolve()
         datas.forEach((row, index) => {
           this._clearValidError(row)
           columns.forEach((column, cIndex) => {
             if (ruleKeys.includes(column.property)) {
               validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
-                this._validRules('all', row, column).then(resolve).catch(rule => {
+                this._validColRules('all', row, column).then(resolve).catch(rule => {
                   let rest = { rule, row, column, cell: trElems[index].children[cIndex] }
                   return reject(rest)
                 })
@@ -668,18 +737,24 @@ export default {
           })
         })
         return validPromise.then(() => {
-          fn && fn(true)
+          if (fn) {
+            fn(true)
+          }
           return true
         }).catch(({ rule, row, column, cell }) => {
           let status = false
           this._toValidError(rule, row, column, cell)
-          fn && fn(status, {[column.property]: [new Error(rule.message)]})
+          if (fn) {
+            fn(status, {[column.property]: [new Error(rule.message)]})
+          }
           return fn ? Promise.resolve(status) : Promise.reject(status)
         })
       } else {
-        fn && fn(true)
+        if (fn) {
+          fn(true)
+        }
       }
-      return Promise.resolve(true)
+      return validPromise
     }
   }
 }

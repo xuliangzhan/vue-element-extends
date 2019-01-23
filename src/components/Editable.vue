@@ -276,6 +276,10 @@ export default {
     _clearActiveCell (clss) {
       Array.from(this.$el.querySelectorAll(`.${clss.join('.editable-column,.')}.editable-column`)).forEach(elem => this._removeCellClass(elem, clss))
     },
+    _clearActiveColumns (force) {
+      this._clearActiveData()
+      this._clearActiveCell(['editable-col_active', 'editable-col_checked', 'valid-error'])
+    },
     _addActiveCell (cell, clss) {
       this._clearActiveCell(clss)
       this._addCellClass(cell, clss)
@@ -315,7 +319,7 @@ export default {
       if (row.validActive === column.property) {
         clss.push('valid-error')
       }
-      this.clearActive()
+      this._clearActiveColumns()
       this.lastActive = { row, column, cell }
       this._addCellClass(cell, clss)
       row.editActive = column.property
@@ -491,7 +495,7 @@ export default {
      */
     reload (datas) {
       this.deleteRecords = []
-      this.clearActive()
+      this._clearActiveColumns()
       this._initial(datas, true)
       this._updateData()
     },
@@ -507,7 +511,7 @@ export default {
      */
     clear () {
       this.deleteRecords = []
-      this.clearActive()
+      this._clearActiveColumns()
       this._initial([])
       this._updateData()
     },
@@ -596,8 +600,7 @@ export default {
     },
     clearActive (force) {
       this.isClearlActivate = true
-      this._clearActiveData()
-      this._clearActiveCell(['editable-col_active', 'editable-col_checked', 'valid-error'])
+      this._clearActiveColumns()
     },
     /**
      * 指定某一行为激活状态

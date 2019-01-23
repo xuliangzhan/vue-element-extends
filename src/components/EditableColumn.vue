@@ -107,9 +107,11 @@
           </slot>
         </template>
       </template>
-      <slot name="valid" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
-        <div v-if="scope.row.validActive && scope.row.validActive === scope.column.property" class="editable-valid_error">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</div>
-      </slot>
+      <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
+        <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
+          <div class="editable-valid_error">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</div>
+        </slot>
+      </template>
     </template>
   </el-table-column>
   <el-table-column v-else v-bind="attrs">
@@ -158,6 +160,9 @@ export default {
     filterMethod: Function,
     filteredValue: Array
   },
+  inject: [
+    '$editable'
+  ],
   computed: {
     attrs () {
       return {
@@ -231,8 +236,8 @@ export default {
       return XEUtils.toDateString(value, attrs.format, 'yyyy-MM-dd')
     },
     checkRequired ({ column, store }) {
-      if (column.property && this.$parent && this.$parent.$parent && this.$parent.$parent.editRules) {
-        let rules = this.$parent.$parent.editRules[column.property]
+      if (column.property && this.$editable && this.$editable.editRules) {
+        let rules = this.$editable.editRules[column.property]
         if (rules) {
           return rules.some(rule => rule.required === true)
         }
@@ -240,10 +245,7 @@ export default {
       return false
     },
     checkIcon ({ column, store }) {
-      if (column.property && this.$parent && this.$parent.$parent && this.$parent.$parent.editRules) {
-        return this.$parent.$parent.showIcon
-      }
-      return false
+      return column.property && this.$editable && this.$editable.editConfig ? !(this.$editable.editConfig.showIcon === false) : true
     },
     sortByEvent (row, index) {
       return this.sortBy(row.data, index)
@@ -258,42 +260,18 @@ export default {
       return this.filterMethod(value, row.data, column)
     },
     changeEvent ({ $index, row, column, store }) {
-      this.$nextTick(() => {
-        if (this.$parent && this.$parent.$parent && this.$parent.$parent.updateStatus) {
-          this.$parent.$parent.updateStatus({$index, row: row.data, column, store, _row: row})
-        } else {
-          if (row.editable.showStatus) {
-            this.$nextTick(() => {
-              let trElem = store.table.$el.querySelectorAll('.el-table__row')[$index]
-              let tdElem = trElem.querySelector(`.${column.id}`)
-              let classList = tdElem.className.split(' ')
-              if (XEUtils.isEqual(row.data[column.property], row.store[column.property])) {
-                tdElem.className = classList.filter(name => name !== 'editable-col_dirty').join(' ')
-              } else {
-                if (!classList.includes('editable-col_dirty')) {
-                  classList.push('editable-col_dirty')
-                  tdElem.className = classList.join(' ')
-                }
-              }
-            })
-          }
-        }
-      })
+      if (this.$editable) {
+        this.$editable.updateStatus({$index, row: row.data, column, store, _row: row})
+      }
     }
   }
 }
 </script>
 
 <style>
-.editable .editable-header-icon {
-  display: none;
-}
 .editable .editable-required-icon:before {
   content: "*";
   color: #f56c6c;
-}
-.editable.editable--icon .editable-header-icon {
-  display: inline-block;
 }
 .editable.el-table--mini .editable-column {
   height: 42px;
@@ -301,10 +279,8 @@ export default {
 .editable.el-table--small .editable-column {
   height: 48px;
 }
+.editable .editable-column,
 .editable.el-table--medium .editable-column {
-  height: 62px;
-}
-.editable .editable-column {
   height: 62px;
   padding: 0;
 }
@@ -357,12 +333,11 @@ export default {
   border-radius: 2px;
   font-size: 12px;
   line-height: 1;
-  padding: 4px;
+  padding: 4px 10px;
   position: absolute;
   top: 100%;
   left: 10px;
   z-index: 9;
-  padding-left: 10px;
 }
 .editable .editable-column .editable-valid_error:before,
 .editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error:before {

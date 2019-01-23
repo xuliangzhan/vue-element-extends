@@ -93,6 +93,11 @@ export default {
     selectOnIndeterminate: { type: Boolean, default: true },
     spanMethod: Function
   },
+  provide () {
+    return {
+      $editable: this
+    }
+  },
   data () {
     return {
       editProto: {},

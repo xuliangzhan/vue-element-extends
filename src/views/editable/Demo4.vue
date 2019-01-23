@@ -25,7 +25,7 @@
           </el-form>
         </template>
       </el-editable-column>
-      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="180" show-overflow-tooltip :editRender="{type: 'default'}">
+      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="220" show-overflow-tooltip :editRender="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <input class="editable-custom_input" type="text" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)">
         </template>

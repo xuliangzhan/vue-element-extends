@@ -10,10 +10,17 @@
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
-    <el-editable ref="editable" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
+    <el-editable ref="editable" class="my-table11" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" width="55"></el-editable-column>
       <template v-for="(item, index) in columnConfigs">
-        <el-editable-column v-if="item.show" :key="index" v-bind="item"></el-editable-column>
+        <template v-if="item.show">
+          <el-editable-column v-if="index === 0" :key="index" v-bind="item">
+            <template slot="valid" slot-scope="scope">
+              <span class="error-msg">自定义校验提示语：<br>{{ scope.rule.message }}<br>名称为必填字段</span>
+            </template>
+          </el-editable-column>
+          <el-editable-column v-else :key="index" v-bind="item"></el-editable-column>
+        </template>
       </template>
       <el-editable-column label="操作">
         <template slot-scope="scope">
@@ -192,3 +199,27 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.my-table11 .error-msg {
+  display: block;
+  color: #fff;
+  background-color: red;
+  border-radius: 2px;
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 10px;
+  position: absolute;
+  top: 100%;
+  left: 10px;
+  z-index: 9;
+}
+.my-table11 .error-msg:before {
+  content: "";
+  position: absolute;
+  border: 4px solid;
+  top: -8px;
+  left: 20%;
+  border-color: transparent transparent red transparent;
+}
+</style>

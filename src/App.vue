@@ -13,7 +13,8 @@
       <el-tab-pane label="动态合并行或列" name="EditableDemo9"></el-tab-pane>
       <el-tab-pane label="数据检验 单击" name="EditableDemo10"></el-tab-pane>
       <el-tab-pane label="数据检验 双击" name="EditableDemo11"></el-tab-pane>
-      <el-tab-pane label="Excel表格" name="EditableExcelDemo"></el-tab-pane>
+      <el-tab-pane label="Excel表格1" name="EditableExcelDemo1"></el-tab-pane>
+      <el-tab-pane label="Excel表格2" name="EditableExcelDemo2"></el-tab-pane>
     </el-tabs>
     <router-view/>
   </div>

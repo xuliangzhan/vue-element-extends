@@ -8,13 +8,14 @@
   * 支持渲染任意自定义组件
   * 支持动态列渲染
   * 支持数据校验
-  * 支持显示数据 change 状态
+  * 支持显示列数据 change 状态
   * 支持增/删/改/查/还原
   * 支持原 ElTable 所有参数及功能
 
 ![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable1.gif?raw=true)
 ![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable2.gif?raw=true)
 ![editable3](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable3.gif?raw=true)
+![editable4](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable4.gif?raw=true)
 
 ## Docs
 
@@ -52,7 +53,7 @@ edit-config 编辑参数配置
 | mode  | 编辑方式 | String | cell（列编辑模式） / row（行编辑模式） | cell |
 | autoFocus  | 编辑列在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | true |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
-| showStatus | 是否显示列的编辑状态 | Boolean | — | true |
+| showStatus | 是否显示列的 change 状态 | Boolean | — | true |
 
 ### Editable Events
 

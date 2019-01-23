@@ -245,7 +245,7 @@ export default {
   line-height: 1;
   padding: 4px 10px;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   left: 10px;
   z-index: 9;
 }

@@ -310,7 +310,9 @@ export default {
   width: 100%;
 }
 .editable .editable-column.editable-col_edit.editable-col_active .cell {
-  overflow: initial;
+  line-height: inherit;
+  overflow: inherit;
+  position: relative;
 }
 .editable .editable-column .editable-valid_error {
   display: none;
@@ -322,7 +324,8 @@ export default {
   border-color: #f56c6c;
 }
 .editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error {
-  top: -20px;
+  top: auto;
+  bottom: calc(100% + 10px);
 }
 .editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error:before {
   top: auto;
@@ -339,7 +342,7 @@ export default {
   line-height: 1;
   padding: 4px 10px;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   left: 10px;
   z-index: 9;
 }

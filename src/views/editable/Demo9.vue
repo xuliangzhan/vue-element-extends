@@ -119,8 +119,8 @@ export default {
         console.log('激活活动状态')
       }
     },
-    clearActiveEvent (lastRow, lastColumn, lastCell, event) {
-      if (lastColumn.property) {
+    clearActiveEvent (activeRow, activeColumn, activeCell, event) {
+      if (activeColumn.property) {
         console.log('清除活动状态')
       }
     },

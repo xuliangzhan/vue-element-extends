@@ -293,7 +293,7 @@ export default {
   left: -5px;
   position: absolute;
   border: 5px solid;
-  border-color: transparent #C00000 transparent transparent;
+  border-color: transparent #f56c6c transparent transparent;
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }

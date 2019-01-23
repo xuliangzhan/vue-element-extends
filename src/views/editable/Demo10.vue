@@ -12,9 +12,10 @@
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
     <el-editable ref="editable" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules">
       <el-editable-column type="index" width="55"></el-editable-column>
-      <template v-for="(item, index) in columnConfigs">
-        <el-editable-column v-if="item.show" :key="index" v-bind="item"></el-editable-column>
-      </template>
+      <el-editable-column prop="name" label="名字" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="attr1" label="校验数字" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="attr2" label="校验数字(必填)" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
@@ -30,7 +31,6 @@ import { MessageBox } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
-import columnsData from '@/common/json/editable/columns.json'
 
 export default {
   data () {
@@ -67,8 +67,11 @@ export default {
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, max: 10, message: '名称长度在 3 到 10 个字符', trigger: 'change' }
         ],
-        nickname: [
-          { min: 5, max: 15, message: '名称长度在 5 到 15 个字符', trigger: 'blur' }
+        attr1: [
+          { type: 'number', message: '请输入有效的数字', trigger: 'blur' }
+        ],
+        attr2: [
+          { required: true, type: 'number', message: '请输入有效的数字', trigger: 'blur' }
         ],
         sex: [
           { required: true, message: '请选择性别', trigger: 'blur' }
@@ -90,38 +93,12 @@ export default {
   },
   methods: {
     init () {
-      let sexPromise = this.getSexJSON()
-      let regionPromise = this.getRegionJSON()
       this.findList()
-      this.getColumnConfigs().then(data => {
-        this.columnConfigs = data.map(column => {
-          column.checked = true
-          column.show = true
-          switch (column.prop) {
-            case 'sex':
-              column.editRender.options = []
-              sexPromise.then(rest => {
-                column.editRender.options = rest
-              })
-              break
-            case 'region':
-              column.editRender.attrs = {options: []}
-              regionPromise.then(rest => {
-                column.editRender.attrs.options = rest
-              })
-              break
-            case 'birthdate':
-              column.editRender.attrs = {
-                type: 'date',
-                format: 'yyyy-MM-dd'
-              }
-              break
-            case 'rate':
-              column.editRender.type = 'visible'
-              break
-          }
-          return column
-        })
+      this.getSexJSON().then(data => {
+        this.sexList = data
+      })
+      this.getRegionJSON().then(data => {
+        this.regionList = data
       })
     },
     findList () {
@@ -172,11 +149,6 @@ export default {
     getSexJSON () {
       return new Promise(resolve => {
         setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
-      })
-    },
-    getColumnConfigs () {
-      return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 100)
       })
     },
     getDataJSON () {

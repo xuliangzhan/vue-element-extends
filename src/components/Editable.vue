@@ -423,7 +423,9 @@ export default {
           for (let rIndex = 0; rIndex < rules.length; rIndex++) {
             validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
               let rule = rules[rIndex]
-              if ((type === 'all' || !rule.trigger || rule.trigger === 'change' || type === rule.trigger) && (rule.required === true || value)) {
+              let isRequired = rule.required === true
+              let isNumber = rule.type === 'number'
+              if ((type === 'all' || !rule.trigger || rule.trigger === 'change' || type === rule.trigger) && (isRequired || value)) {
                 if (XEUtils.isFunction(rule.validator)) {
                   rule.validator(rule, value, e => {
                     if (XEUtils.isError(e)) {
@@ -434,9 +436,13 @@ export default {
                   })
                 } else {
                   let strVal = '' + (value || '')
-                  if (!value ||
-                    (XEUtils.isNumber(rule.min) && strVal.length < rule.min) ||
-                    (XEUtils.isNumber(rule.max) && strVal.length > rule.max)) {
+                  if (isRequired && !value) {
+                    reject(rule)
+                  } else if (value &&
+                    ((isNumber && isNaN(value)) ||
+                    (XEUtils.isNumber(rule.min) && (isNumber ? parseFloat(value) < rule.min : strVal.length < rule.min)) ||
+                    (XEUtils.isNumber(rule.max) && (isNumber ? parseFloat(value) > rule.max : strVal.length > rule.max)))
+                  ) {
                     reject(rule)
                   } else {
                     resolve(rule)

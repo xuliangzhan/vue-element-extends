@@ -15,7 +15,9 @@
       <el-editable-column prop="name" label="名字" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="attr1" label="校验数字" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="attr2" label="校验数字(必填)" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="rate" label="评分" :editRender="{name: 'ElRate', type: 'visible'}"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
@@ -51,8 +53,8 @@ export default {
       }, 50)
     }
     const checkRate = (rule, value, callback) => {
-      if (parseInt(value || 0) < 2) {
-        callback(new Error('最小选择2颗星'))
+      if (parseInt(value || 0) < 3) {
+        callback(new Error('亲，不能低于最3颗星'))
       } else {
         callback()
       }
@@ -67,23 +69,20 @@ export default {
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, max: 10, message: '名称长度在 3 到 10 个字符', trigger: 'change' }
         ],
-        attr1: [
-          { type: 'number', message: '请输入有效的数字', trigger: 'blur' }
-        ],
-        attr2: [
-          { required: true, type: 'number', message: '请输入有效的数字', trigger: 'blur' }
-        ],
         sex: [
           { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         age: [
           { validator: checkAge, trigger: 'blur' }
         ],
-        birthdate: [
-          { required: true, message: '请选择性别', trigger: 'blur' }
-        ],
         rate: [
           { validator: checkRate, trigger: 'blur' }
+        ],
+        attr1: [
+          { type: 'number', message: '请输入有效的数字', trigger: 'blur' }
+        ],
+        attr2: [
+          { required: true, type: 'number', message: '请输入有效的数字', trigger: 'blur' }
         ]
       }
     }

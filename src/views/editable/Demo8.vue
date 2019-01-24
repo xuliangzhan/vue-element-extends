@@ -25,7 +25,7 @@
             <p>这是一段内容这是一段内容确定删除吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button type="text" size="mini" @click="scope.row.flag3 = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="removeEvent(scope.row, scope.$index)">确定</el-button>
+              <el-button type="primary" size="mini" @click="removeEvent(scope.row)">确定</el-button>
             </div>
             <el-button slot="reference" size="mini" type="danger">删除</el-button>
           </el-popover>
@@ -115,9 +115,9 @@ export default {
         this.loading = false
       })
     },
-    removeEvent (row, index) {
+    removeEvent (row) {
       row.flag3 = false
-      this.$refs.editable.removeRow(index)
+      this.$refs.editable.remove(row)
     },
     submitEvent () {
       let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()

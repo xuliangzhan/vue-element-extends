@@ -2,7 +2,6 @@
   <div>
     <el-button type="success" @click="$refs.editable.insert({name: '默认名字1'})">新增一行</el-button>
     <el-button type="success" @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后新增一行</el-button>
-    <el-button type="danger" @click="$refs.editable.removeRows([0, 2])">删除指定行[0, 2]</el-button>
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
@@ -24,7 +23,7 @@
           </template>
           <template v-else>
             <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.$index)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
+            <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
           </template>
         </template>
       </el-editable-column>
@@ -54,13 +53,13 @@ export default {
     }
   },
   methods: {
-    removeEvent (row, index) {
+    removeEvent (row) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$refs.editable.removeRow(index)
+        this.$refs.editable.remove(row)
       }).catch(e => e)
     },
     saveRowEvent (row, index) {

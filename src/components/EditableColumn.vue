@@ -165,10 +165,20 @@ export default {
   ],
   computed: {
     attrs () {
+      let sortBy
       let isDefaultFocus = this.editRender ? ['ElInput', 'ElInputNumber'].includes(this.editRender.name) : false
       let className = this.className ? ` ${this.className}` : ''
       let editTypeClass = this.editRender ? ' editable-col_edit' : ' editable-col_readonly'
       let autofocusClass = this.editRender ? (this.editRender.autofocus === true || isDefaultFocus ? ' autofocus' : '') : (isDefaultFocus ? ' autofocus' : '')
+      if (XEUtils.isFunction(this.sortBy)) {
+        sortBy = this.sortBy
+      } else if (XEUtils.isString(this.sortBy)) {
+        sortBy = `data.${this.sortBy}`
+      } else if (XEUtils.isArray(this.sortBy)) {
+        sortBy = this.sortBy.map(name => `data.${name}`)
+      } else if (this.prop) {
+        sortBy = `data.${this.prop}`
+      }
       return {
         index: this.index,
         type: this.type,
@@ -180,7 +190,7 @@ export default {
         fixed: this.fixed,
         sortable: this.sortable,
         sortMethod: this.sortMethod ? this.sortMethodEvent : this.sortMethod,
-        sortBy: XEUtils.isFunction(this.sortBy) ? this.sortByEvent : this.sortBy,
+        sortBy,
         sortOrders: this.sortOrders,
         resizable: this.resizable,
         showOverflowTooltip: this.showOverflowTooltip,

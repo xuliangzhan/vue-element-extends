@@ -29,7 +29,7 @@
       </template>
       <el-editable-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
+          <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
       </el-editable-column>
     </el-editable>
@@ -160,8 +160,8 @@ export default {
         this.loading = false
       })
     },
-    removeEvent (row, index) {
-      this.$refs.editable.removeRow(index)
+    removeEvent (row) {
+      this.$refs.editable.remove(row)
     },
     validEvent () {
       this.$refs.editable.validate().then(valid => {

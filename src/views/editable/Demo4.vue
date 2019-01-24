@@ -68,7 +68,7 @@
           </template>
           <template v-else>
             <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.$index)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
+            <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
           </template>
         </template>
       </el-editable-column>
@@ -138,13 +138,13 @@ export default {
         this.loading = false
       })
     },
-    removeEvent (row, index) {
+    removeEvent (row) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$refs.editable.removeRow(index)
+        this.$refs.editable.remove(row)
       }).catch(e => e)
     },
     saveRowEvent (row, index) {
@@ -213,7 +213,7 @@ export default {
       return index >= 1
     },
     birthdateSortHandler (a, b) {
-      return -1
+      return a.birthdate > b.birthdate ? 1 : -1
     },
     filterHandler (value, row, column) {
       return row[column.property] === value

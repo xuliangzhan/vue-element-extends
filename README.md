@@ -69,8 +69,8 @@ edit-config 编辑参数配置
 |------|------|-----|
 | reload | 初始化加载数据 | datas |
 | revert | 放弃更改，还原修改之前数据 | — |
-| insert | 新增一行新数据 | defaultData |
-| insertAt | 如果是 row 或 $index 则在指定位置新增一行新数据，如果是 -1 则从底部新增新数据 | defaultData, rowOrIndex |
+| insert | 新增一行新数据 | data |
+| insertAt | 如果是 row 或 $index 则在指定位置新增一行新数据，如果是 -1 则从底部新增新数据 | data, rowOrIndex |
 | remove | 根据数据删除 | row |
 | removes | 根据多条数据删除 | rows |
 | removeByIndex | 根据行号删除一行数据 | $index |

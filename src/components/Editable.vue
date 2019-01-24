@@ -228,13 +228,13 @@ export default {
       this.$emit('update:data', this.datas.map(item => item.data))
     },
     _select (selection, row) {
-      this.$emit('select', selection.map(item => item.data), row.data)
+      this.$emit('select', selection.map(item => item ? item.data : item), row.data)
     },
     _selectAll (selection) {
-      this.$emit('select-all', selection.map(item => item.data))
+      this.$emit('select-all', selection.map(item => item ? item.data : item))
     },
     _selectionChange (selection) {
-      this.$emit('selection-change', selection.map(item => item.data))
+      this.$emit('selection-change', selection.map(item => item ? item.data : item))
     },
     _cellMouseEnter (row, column, cell, event) {
       this.$emit('cell-mouse-enter', row.data, column, cell, event)

@@ -10,7 +10,7 @@
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
-    <el-editable ref="editable" stripe border show-summary :summary-method="getSummaries" :span-method="arraySpanMethod" @edit-active="editActiveEvent" @clear-active="clearActiveEvent" size="medium" style="width: 100%">
+    <el-editable ref="editable" stripe border :span-method="arraySpanMethod" @edit-active="editActiveEvent" @clear-active="clearActiveEvent" size="medium" style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
@@ -123,31 +123,6 @@ export default {
       if (activeColumn.property) {
         console.log('清除活动状态')
       }
-    },
-    getSummaries (param) {
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '总价'
-          return
-        }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] += ' 元'
-        } else {
-          sums[index] = 'N/A'
-        }
-      })
-      return sums
     },
     arraySpanMethod ({ row, column, rowIndex, columnIndex }) {
       if (rowIndex % 2 === 0) {

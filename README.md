@@ -70,23 +70,23 @@ edit-config 编辑参数配置
 | reload | 初始化加载数据 | datas |
 | revert | 放弃更改，还原修改之前数据 |  |
 | insert | 新增一行新数据 | record |
-| insertAt | 指定位置新增一行新数据，如果是-1则从底部新增新数据 | record, rowIndex |
+| insertAt | 如果是 record 或 rowIndex 则在指定位置新增一行新数据，如果是 -1 则从底部新增新数据 | newRecord, recordOrIndex |
 | remove | 根据数据删除 | record |
 | removes | 根据多条数据删除 | records |
-| removeRow | 根据行号删除一行数据 | rowIndex |
-| removeRows | 根据多个行号删除多行数据 | rowIndexs |
+| removeByIndex | 根据行号删除一行数据 | rowIndex |
+| removeByIndexs | 根据多个行号删除多行数据 | rowIndexs |
 | removeSelecteds | 删除选中行数据 |  |
 | clear | 清空所有数据 |  |
 | clearActive | 清除所有活动行或列为不可编辑状态 |  |
-| setActiveRow | 设置活动行为可编辑状态（只对 mode=row 有效） | rowIndex |
-| getActiveRowIndex | 获取当前活动状态行索引 |  |
+| setActiveRow | 设置活动行为可编辑状态（只对 mode=row 有效） | record |
+| isActiveRow | 判断当前是否活动行 | record |
 | updateStatus | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
 | getAllRecords | 获取表格数据集合 |  |
 | getRecords | 获取表格数据 |  |
 | getInsertRecords | 获取新增数据 |  |
 | getRemoveRecords | 获取已删除数据 |  |
 | getUpdateRecords| 获取已修改数据 |  |
-| validateRow | 对表格某一行进行校验的方法，参数为行索引和一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | rowIndex, callback |
+| validateRow | 对表格某一行进行校验的方法，参数为行数据和一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | record, callback |
 | validate | 对整个表格进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | callback |
 
 ### Editable-Column Attributes

@@ -215,7 +215,7 @@ export default {
           if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
             this._triggerActive(row, column, cell, event)
             if (row && this.mode === 'row') {
-              this.validateRow(XEUtils.findIndexOf(this.datas, item => item === row)).catch(e => e)
+              this.validateRow(row.data).catch(e => e)
             } else {
               this._validColRules('change', row, column).catch(rule => {
                 this._toValidError(rule, row, column, cell)
@@ -540,16 +540,16 @@ export default {
       this._initial([])
       this._updateData()
     },
-    insert (record) {
-      this.insertAt(record, 0)
+    insert (newRecord) {
+      this.insertAt(newRecord, 0)
     },
     /**
      * 插入数据
-     * 可以根据索引将数据插入到指定任意行
+     * 如果是 record 或 rowIndex 则在指定位置新增一行新数据
      * 如果是 null 或 0 则插入到第一行
      * 如果是 -1 或 大于行索引 则使用 push 到表格最后
      */
-    insertAt (record, rowIndex) {
+    insertAt (newRecord, recordOrIndex) {
       let recordItem = {}
       let len = this.datas.length
       this.$refs.refElTable.columns.forEach(column => {
@@ -557,16 +557,17 @@ export default {
           recordItem[column.property] = null
         }
       })
-      recordItem = this._toData(Object.assign(recordItem, record), 'insert')
-      if (rowIndex) {
-        if (rowIndex === -1 || rowIndex >= len) {
-          rowIndex = len
+      recordItem = this._toData(Object.assign(recordItem, newRecord), 'insert')
+      if (recordOrIndex) {
+        if (!XEUtils.isNumber(recordOrIndex)) {
+          recordOrIndex = XEUtils.findIndexOf(this.datas, item => item.data === recordOrIndex)
+        }
+        if (recordOrIndex === -1 || recordOrIndex >= len) {
           this.datas.push(recordItem)
         } else {
-          this.datas.splice(rowIndex, 0, recordItem)
+          this.datas.splice(recordOrIndex, 0, recordItem)
         }
       } else {
-        rowIndex = 0
         this.datas.unshift(recordItem)
       }
       this._updateData()
@@ -574,7 +575,7 @@ export default {
     /**
      * 根据索引删除行数据
      */
-    removeRow (rowIndex) {
+    removeByIndex (rowIndex) {
       let items = this.datas.splice(rowIndex, 1)
       items.forEach(item => {
         if (item.editStatus === 'initial') {
@@ -583,20 +584,20 @@ export default {
       })
       this._updateData()
     },
-    removeRows (rowIndexs) {
+    removeByIndexs (rowIndexs) {
       XEUtils.lastEach(this.datas, (item, index) => {
         if (rowIndexs.includes(index)) {
-          this.removeRow(index)
+          this.removeByIndex(index)
         }
       })
     },
     remove (record) {
-      this.removeRow(XEUtils.findIndexOf(this.datas, item => item.data === record))
+      this.removeByIndex(XEUtils.findIndexOf(this.datas, item => item.data === record))
     },
     removes (records) {
       XEUtils.lastEach(this.datas, (item, index) => {
         if (records.includes(item.data)) {
-          this.removeRow(index)
+          this.removeByIndex(index)
         }
       })
     },
@@ -633,11 +634,12 @@ export default {
      * 只有当指定为 mode='row' 行编辑模式时
      * 才可以根据索引激活行为编辑状态
      */
-    setActiveRow (rowIndex) {
-      let row = this.datas[rowIndex]
-      if (row && this.mode === 'row') {
+    setActiveRow (record) {
+      let rowIndex = XEUtils.findIndexOf(this.datas, item => item.data === record)
+      if (rowIndex > -1 && this.mode === 'row') {
         this.isManualActivate = true
-        this.validateRow(rowIndex).then(valid => {
+        this.validateRow(record).then(valid => {
+          let row = this.datas[rowIndex]
           let column = this.$refs.refElTable.columns.find(column => column.property)
           let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
           let cell = trElemList[rowIndex].children[0]
@@ -646,6 +648,9 @@ export default {
         return true
       }
       return false
+    },
+    isActiveRow (record) {
+      return this.lastActive ? this.lastActive.row.data === record : false
     },
     getActiveRow () {
       return this.lastActive ? this.lastActive.row.data : null
@@ -717,7 +722,8 @@ export default {
      * 对表格某一行进行校验的方法
      * 返回 Promise 对象，或者使用回调方式
      */
-    validateRow (rowIndex, fn) {
+    validateRow (record, fn) {
+      let rowIndex = XEUtils.findIndexOf(this.datas, item => item.data === record)
       return new Promise((resolve, reject) => {
         this._validActiveCell().then(() => {
           let row = this.datas[rowIndex]

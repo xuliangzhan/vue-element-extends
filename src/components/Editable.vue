@@ -1,7 +1,7 @@
 <template>
   <el-table
     ref="refElTable"
-    :class="['editable', `editable_${mode}`, {'editable--icon': showIcon}]"
+    :class="['editable', `editable_${trigger}`, {'editable_icon': showIcon}]"
     :data="datas"
     :height="height"
     :maxHeight="maxHeight"
@@ -115,6 +115,9 @@ export default {
     ]),
     tableData () {
       return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
+    },
+    trigger () {
+      return this.editConfig ? this.editConfig.trigger : 'click'
     },
     showIcon () {
       return this.editConfig ? !(this.editConfig.showIcon === false) : true
@@ -255,7 +258,7 @@ export default {
             this._clearValidError(this.lastActive.row)
             this._removeClass(this.lastActive.cell, ['valid-error'])
           }
-          if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
+          if (this.trigger === type) {
             this._triggerActive(row, column, cell, event)
             if (row && this.mode === 'row') {
               this._validRowRules('change', row).catch(({ rule, row, column, cell }) => {

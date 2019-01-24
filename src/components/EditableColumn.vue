@@ -324,8 +324,8 @@ export default {
   overflow: inherit;
   position: relative;
 }
-.editable.editable_cell .editable-column.editable-col_edit,
-.editable.editable_row .editable-column.editable-col_edit {
+.editable.editable_click .editable-column.editable-col_edit,
+.editable.editable_dblclick .editable-column.editable-col_edit {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

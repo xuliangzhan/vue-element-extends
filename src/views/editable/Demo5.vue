@@ -5,12 +5,12 @@
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
-    <el-button type="warning" @click="submitEvent">保存</el-button>
+    <el-button type="warning" @click="submitEvent">校验&保存</el-button>
     <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
-    <el-editable ref="editable" height="600" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
+    <el-editable ref="editable" height="600" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :edit-rules="validRules" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">
@@ -64,8 +64,14 @@
       <el-editable-column prop="remark" label="备注" min-width="180" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column label="操作" width="160" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="danger" @click="$refs.editable.setActiveRow(scope.$index)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
+          <template v-if="$refs.editable.getActiveRowIndex() === scope.$index">
+            <el-button size="mini" type="success" @click="saveRowEvent(scope.row, scope.$index)">保存</el-button>
+            <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row, scope.$index)">取消</el-button>
+          </template>
+          <template v-else>
+            <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.$index)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
+          </template>
         </template>
       </el-editable-column>
     </el-editable>
@@ -103,7 +109,12 @@ export default {
           text: '22',
           value: 22
         }
-      ]
+      ],
+      validRules: {
+        region: [
+          { required: true, message: '请输入地区', trigger: 'blur' }
+        ]
+      }
     }
   },
   created () {
@@ -137,6 +148,16 @@ export default {
         this.$refs.editable.removeRow(index)
       }).catch(e => e)
     },
+    cancelRowEvent (row, index) {
+      this.$refs.editable.validateRow(index, valid => {
+        if (valid) {
+          this.$refs.editable.clearActive()
+        } else {
+          // 当前行有不通过校验的列，强制取消
+          this.$refs.editable.clearActive(true)
+        }
+      })
+    },
     indexMethod (index) {
       return index * 2
     },
@@ -150,9 +171,16 @@ export default {
       return `订单号：${cellValue}`
     },
     submitEvent () {
-      let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
-      this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-        this.findList()
+      this.$refs.editable.validate(valid => {
+        if (valid) {
+          let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
+            this.findList()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
     },
     getInsertEvent () {

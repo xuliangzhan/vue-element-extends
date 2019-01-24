@@ -1,7 +1,9 @@
 <template>
   <div>
     <el-button size="mini" @click="$refs.editable.insert()">新增</el-button>
-    <el-button size="mini" @click="getAllEvent">获取</el-button>
+    <el-button size="mini" @click="getAllEvent">获取所有</el-button>
+    <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
+    <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
     <el-editable ref="editable" class="excel-table1" :data.sync="list" border size="mini" style="width: 100%" :editConfig="{trigger: 'dblclick', showIcon: false}">
       <el-editable-column type="index" align="center" width="50"></el-editable-column>
       <template v-for="(column, index) in columnConfigs">
@@ -38,6 +40,14 @@ export default {
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
+    },
+    getUpdateEvent () {
+      let rest = this.$refs.editable.getUpdateRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` })
+    },
+    getResultEvent () {
+      let rest = this.$refs.editable.getRecords().filter(item => Object.keys(item).some(key => item[key]))
+      MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` })
     }
   }
 }

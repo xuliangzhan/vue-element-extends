@@ -23,7 +23,7 @@ export default {
       list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach(name => {
-          rest[name.toLowerCase()] = ''
+          rest[name.toLowerCase()] = name === 'A' ? `A-${i}` : ''
         })
         return rest
       }),
@@ -31,6 +31,7 @@ export default {
         return {
           prop: name.toLowerCase(),
           label: name,
+          sortable: name === 'A',
           editRender: {name: 'ElInput'}
         }
       })

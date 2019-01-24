@@ -161,7 +161,7 @@ export default {
   },
   methods: {
     /**************************/
-    /* Default methods statrt */
+    /* Original methods statrt */
     /**************************/
     clearSelection () {
       this.$nextTick(() => this.$refs.refElTable.clearSelection())
@@ -191,7 +191,7 @@ export default {
       this.insertAt(newRecord, 0)
     },
     /**************************/
-    /* Default methods end */
+    /* Original methods end */
     /**************************/
 
     /***************************/

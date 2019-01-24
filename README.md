@@ -51,7 +51,7 @@ edit-config 编辑参数配置
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
-| trigger | 触发方式 | String | manual（手动触发方式） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
+| trigger | 触发方式 | String | manual（手动触发方式，只能用于 mode=row） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑方式 | String | cell（列编辑模式） / row（行编辑模式） | cell |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示列的 change 状态 | Boolean | — | true |

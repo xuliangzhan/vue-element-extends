@@ -281,7 +281,7 @@ export default {
       })
     },
     _disabledTooltip (cell) {
-      let tElems = this.mode === 'row' ? cell.parentNode.querySelectorAll('td>.cell.el-tooltip') : cell.querySelectorAll('.cell.el-tooltip')
+      let tElems = ['row', 'manual'].includes(this.mode) ? cell.parentNode.querySelectorAll('td.editable-col_edit>.cell.el-tooltip') : cell.querySelectorAll('.cell.el-tooltip')
       if (this.$refs.refElTable) {
         let refElTableBody = this.$refs.refElTable.$children.find(comp => this._hasClass(comp.$el, 'el-table__body'))
         if (refElTableBody && refElTableBody.$refs.tooltip) {

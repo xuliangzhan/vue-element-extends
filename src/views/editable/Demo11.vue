@@ -11,41 +11,20 @@
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
-    <el-editable ref="editable" class="my-table11" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
-      <el-editable-column type="index" width="55">
-        <template slot="head">
-          <i class="el-icon-setting" @click="dialogVisible = true"></i>
-        </template>
-      </el-editable-column>
-      <template v-for="(item, index) in columnConfigs">
-        <template v-if="item.show">
-          <el-editable-column v-if="index === 0" :key="index" v-bind="item">
-            <template slot="valid" slot-scope="scope">
-              <span class="error-msg">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段</span>
-            </template>
-          </el-editable-column>
-          <el-editable-column v-else :key="index" v-bind="item"></el-editable-column>
-        </template>
-      </template>
+    <el-editable ref="editable" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules">
+      <el-editable-column type="index" width="55"></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="attr1" label="校验数字" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="attr2" label="校验数字(必填)" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="rate" label="评分" :editRender="{name: 'ElRate', type: 'visible'}"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row, scope.$index)">删除</el-button>
         </template>
       </el-editable-column>
     </el-editable>
-
-    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
-      <ul>
-        <li v-for="(item, index) in columnConfigs" :key="index">
-          <el-checkbox v-model="item.checked">{{ item.label }}</el-checkbox>
-        </li>
-      </ul>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="resetCustomEvent">重 置</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -55,7 +34,6 @@ import { MessageBox } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
-import columnsData from '@/common/json/editable/columns.json'
 
 export default {
   data () {
@@ -76,15 +54,14 @@ export default {
       }, 50)
     }
     const checkRate = (rule, value, callback) => {
-      if (parseInt(value || 0) < 2) {
-        callback(new Error('最小选择2颗星'))
+      if (parseInt(value || 0) < 3) {
+        callback(new Error('亲，不能低于最3颗星'))
       } else {
         callback()
       }
     }
     return {
       loading: false,
-      dialogVisible: false,
       columnConfigs: [],
       sexList: [],
       regionList: [],
@@ -93,20 +70,20 @@ export default {
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, max: 10, message: '名称长度在 3 到 10 个字符', trigger: 'change' }
         ],
-        nickname: [
-          { min: 5, max: 15, message: '名称长度在 5 到 15 个字符', trigger: 'blur' }
-        ],
         sex: [
           { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         age: [
           { validator: checkAge, trigger: 'blur' }
         ],
-        birthdate: [
-          { required: true, message: '请选择性别', trigger: 'blur' }
-        ],
         rate: [
           { validator: checkRate, trigger: 'blur' }
+        ],
+        attr1: [
+          { type: 'number', message: '请输入有效的数字', trigger: 'blur' }
+        ],
+        attr2: [
+          { required: true, type: 'number', message: '请输入有效的数字', trigger: 'blur' }
         ]
       }
     }
@@ -116,39 +93,12 @@ export default {
   },
   methods: {
     init () {
-      let sexPromise = this.getSexJSON()
-      let regionPromise = this.getRegionJSON()
       this.findList()
-      this.getColumnConfigs().then(data => {
-        this.columnConfigs = data.map(column => {
-          let defaultShow = ['name', 'nickname', 'region', 'rate'].includes(column.prop)
-          column.checked = defaultShow
-          column.show = defaultShow
-          switch (column.prop) {
-            case 'sex':
-              column.editRender.options = []
-              sexPromise.then(rest => {
-                column.editRender.options = rest
-              })
-              break
-            case 'region':
-              column.editRender.attrs = {options: []}
-              regionPromise.then(rest => {
-                column.editRender.attrs.options = rest
-              })
-              break
-            case 'birthdate':
-              column.editRender.attrs = {
-                type: 'date',
-                format: 'yyyy-MM-dd'
-              }
-              break
-            case 'rate':
-              column.editRender.type = 'visible'
-              break
-          }
-          return column
-        })
+      this.getSexJSON().then(data => {
+        this.sexList = data
+      })
+      this.getRegionJSON().then(data => {
+        this.regionList = data
       })
     },
     findList () {
@@ -180,22 +130,6 @@ export default {
         console.log('error submit!!')
       })
     },
-    openCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.checked = column.show
-      })
-    },
-    resetCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.checked = true
-      })
-    },
-    saveCustomEvent () {
-      this.dialogVisible = false
-      this.columnConfigs.forEach(column => {
-        column.show = column.checked
-      })
-    },
     getInsertEvent () {
       let rest = this.$refs.editable.getInsertRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` })
@@ -224,11 +158,6 @@ export default {
         setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
       })
     },
-    getColumnConfigs () {
-      return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 100)
-      })
-    },
     getDataJSON () {
       return new Promise(resolve => {
         setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
@@ -242,27 +171,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.my-table11 .error-msg {
-  display: block;
-  color: #fff;
-  background-color: red;
-  border-radius: 2px;
-  font-size: 12px;
-  line-height: 1;
-  padding: 4px 10px;
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 10px;
-  z-index: 9;
-}
-.my-table11 .error-msg:before {
-  content: "";
-  position: absolute;
-  border: 4px solid;
-  top: -8px;
-  left: 20%;
-  border-color: transparent transparent red transparent;
-}
-</style>

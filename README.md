@@ -100,7 +100,7 @@ edit-config 编辑参数配置
 
 ```html
 <el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput'}"></el-editable-column>
-<el-editable-column prop="switch" label="是否启用" edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+<el-editable-column prop="switch" label="开关" edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
 ```
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |

@@ -134,7 +134,7 @@ export default {
       validRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
-          { min: 3, max: 10, message: '名称长度在 3 到 10 个字符', trigger: 'change' }
+          { min: 3, message: '名称长度最小 3 个字符', trigger: 'change' }
         ],
         sex: [
           { required: true, message: '请选择性别', trigger: 'blur' }

@@ -15,6 +15,7 @@
       <el-tab-pane label="数据检验 双击" name="EditableDemo11"></el-tab-pane>
       <el-tab-pane label="Excel表格1" name="EditableExcelDemo1"></el-tab-pane>
       <el-tab-pane label="Excel表格2" name="EditableExcelDemo2"></el-tab-pane>
+      <el-tab-pane label="Excel表格3 带校验排序" name="EditableExcelDemo3"></el-tab-pane>
     </el-tabs>
     <router-view/>
   </div>

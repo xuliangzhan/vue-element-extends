@@ -142,6 +142,7 @@ export default {
           this._clearValidError(row)
           this._clearActiveData()
           this._clearActiveCell(['editable-col_active', 'valid-error'])
+          this._restoreTooltip()
           this.$emit('clear-active', row.data, column, cell, evnt)
         }).catch(e => e)
       } else {
@@ -273,10 +274,30 @@ export default {
         item.editActive = null
       })
     },
+    _restoreTooltip (cell) {
+      Array.from(this.$el.querySelectorAll('.disabled-el-tooltip')).forEach(elem => {
+        this._removeCellClass(elem, ['disabled-el-tooltip'])
+        this._addCellClass(elem, ['el-tooltip'])
+      })
+    },
+    _disabledTooltip (cell) {
+      if (this.$refs.refElTable) {
+        let refElTableBody = this.$refs.refElTable.$children.find(comp => comp.$el.className.split(' ').includes('el-table__body'))
+        if (refElTableBody && refElTableBody.$refs.tooltip) {
+          refElTableBody.$refs.tooltip.hide()
+        }
+      }
+      if (cell.parentNode) {
+        Array.from(cell.parentNode.querySelectorAll('td>.cell.el-tooltip')).forEach(elem => {
+          this._removeCellClass(elem, ['el-tooltip'])
+          this._addCellClass(elem, ['disabled-el-tooltip'])
+        })
+      }
+    },
     _clearActiveCell (clss) {
       Array.from(this.$el.querySelectorAll(`.${clss.join('.editable-column,.')}.editable-column`)).forEach(elem => this._removeCellClass(elem, clss))
     },
-    _clearActiveColumns (force) {
+    _clearActiveColumns () {
       this._clearActiveData()
       this._clearActiveCell(['editable-col_active', 'editable-col_checked', 'valid-error'])
     },
@@ -319,6 +340,8 @@ export default {
       if (row.validActive === column.property) {
         clss.push('valid-error')
       }
+      this._restoreTooltip(cell)
+      this._disabledTooltip(cell)
       this._clearActiveColumns()
       this.lastActive = { row, column, cell }
       this._addCellClass(cell, clss)
@@ -601,6 +624,7 @@ export default {
     clearActive (force) {
       this.isClearlActivate = true
       this._clearActiveColumns()
+      this._restoreTooltip()
     },
     /**
      * 指定某一行为激活状态

@@ -10,7 +10,7 @@
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
-    <el-editable ref="editable" stripe border :span-method="arraySpanMethod" @edit-active="editActiveEvent" @clear-active="clearActiveEvent" size="medium" style="width: 100%">
+    <el-editable ref="editable" stripe border show-summary :summary-method="getSummaries" :span-method="objectSpanMethod" size="medium" style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
@@ -114,22 +114,47 @@ export default {
         this.loading = false
       })
     },
-    editActiveEvent (row, column, cell, event) {
-      if (column.property) {
-        console.log('激活活动状态')
-      }
+    getSummaries (param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '汇总'
+          return
+        }
+        switch (column.property) {
+          case 'sex':
+            let rest = XEUtils.groupBy(data, column.property)
+            sums[index] = `男：${rest[1] ? rest[1].length : 0}，女：${rest[0] ? rest[0].length : 0}`
+            break
+          case 'age':
+            sums[index] = `平均：${XEUtils.mean(data, column.property)}岁`
+            break
+          case 'birthdate':
+            sums[index] = `平均年份：${XEUtils.toInteger(XEUtils.mean(data.map(item => XEUtils.toDateString(item[column.property], 'yyyy'))))}`
+            break
+          case 'rate':
+            sums[index] = `总分：${XEUtils.sum(data, column.property)}`
+            break
+          default:
+            sums[index] = ''
+            break
+        }
+      })
+      return sums
     },
-    clearActiveEvent (activeRow, activeColumn, activeCell, event) {
-      if (activeColumn.property) {
-        console.log('清除活动状态')
-      }
-    },
-    arraySpanMethod ({ row, column, rowIndex, columnIndex }) {
-      if (rowIndex % 2 === 0) {
-        if (columnIndex === 0) {
-          return [1, 2]
-        } else if (columnIndex === 1) {
-          return [0, 0]
+    objectSpanMethod ({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        if (rowIndex % 2 === 0) {
+          return {
+            rowspan: 2,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
         }
       }
     },

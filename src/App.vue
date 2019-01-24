@@ -4,16 +4,17 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="单击列编辑 mini" name="EditableDemo1"></el-tab-pane>
       <el-tab-pane label="双击列编辑 small" name="EditableDemo2"></el-tab-pane>
-      <el-tab-pane label="手动模式 行编辑" name="EditableDemo3"></el-tab-pane>
-      <el-tab-pane label="单击行编辑 medium" name="EditableDemo4"></el-tab-pane>
-      <el-tab-pane label="双击行编辑 medium" name="EditableDemo5"></el-tab-pane>
-      <el-tab-pane label="多级表头" name="EditableDemo6"></el-tab-pane>
-      <el-tab-pane label="动态列渲染" name="EditableDemo7"></el-tab-pane>
-      <el-tab-pane label="自定义动态列" name="EditableDemo8"></el-tab-pane>
-      <el-tab-pane label="表尾合计行" name="EditableDemo9"></el-tab-pane>
-      <el-tab-pane label="合并行或列" name="EditableDemo10"></el-tab-pane>
-      <el-tab-pane label="数据检验 单击" name="EditableDemo11"></el-tab-pane>
-      <el-tab-pane label="数据检验 双击" name="EditableDemo12"></el-tab-pane>
+      <el-tab-pane label="带状态表格" name="EditableDemo3"></el-tab-pane>
+      <el-tab-pane label="手动模式 行编辑" name="EditableDemo4"></el-tab-pane>
+      <el-tab-pane label="单击行编辑 medium" name="EditableDemo5"></el-tab-pane>
+      <el-tab-pane label="双击行编辑 medium" name="EditableDemo6"></el-tab-pane>
+      <el-tab-pane label="多级表头" name="EditableDemo7"></el-tab-pane>
+      <el-tab-pane label="动态列渲染" name="EditableDemo8"></el-tab-pane>
+      <el-tab-pane label="自定义动态列" name="EditableDemo9"></el-tab-pane>
+      <el-tab-pane label="表尾合计行" name="EditableDemo10"></el-tab-pane>
+      <el-tab-pane label="合并行或列" name="EditableDemo11"></el-tab-pane>
+      <el-tab-pane label="数据检验 单击" name="EditableDemo12"></el-tab-pane>
+      <el-tab-pane label="数据检验 双击" name="EditableDemo13"></el-tab-pane>
       <el-tab-pane label="Excel表格1" name="EditableExcelDemo1"></el-tab-pane>
       <el-tab-pane label="Excel表格2" name="EditableExcelDemo2"></el-tab-pane>
       <el-tab-pane label="Excel表格3 带校验排序" name="EditableExcelDemo3"></el-tab-pane>

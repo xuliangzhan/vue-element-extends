@@ -6,7 +6,7 @@
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
     <el-button type="warning" @click="submitEvent">保存</el-button>
-    <el-editable ref="editable" :row-class-name="tableRowClassName" size="small" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}" style="width: 100%">
+    <el-editable ref="editable" size="small" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}" style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
@@ -92,14 +92,6 @@ export default {
         this.loading = false
       })
     },
-    tableRowClassName ({row, rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row'
-      } else if (rowIndex === 3) {
-        return 'success-row'
-      }
-      return ''
-    },
     submitEvent () {
       let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
       this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
@@ -153,12 +145,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.el-table .warning-row {
-  background: oldlace;
-}
-.el-table .success-row {
-  background: #f0f9eb;
-}
-</style>

@@ -5,12 +5,13 @@
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
+    <el-button type="info" @click="$refs.editable.toggleRowExpansion($refs.editable.getRecords(1), true)">展开第二行</el-button>
     <el-button type="warning" @click="submitEvent">校验&保存</el-button>
     <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
-    <el-editable ref="editable" height="600" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :edit-rules="validRules" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
+    <el-editable ref="editable" height="440" stripe border @select="selectEvent" size="small" @current-change="currentChangeEvent" :editRules="validRules" :editConfig="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">
@@ -25,21 +26,19 @@
           </el-form>
         </template>
       </el-editable-column>
-      <el-editable-column label="基本信息" group>
-        <el-editable-column prop="name" label="名字（只读）" min-width="180" show-overflow-tooltip></el-editable-column>
-        <el-editable-column prop="sex" label="性别" width="100" align="center" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
-        <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="220" show-overflow-tooltip :editRender="{type: 'default', autofocus: true}">
+        <template slot="edit" slot-scope="scope">
+          <input class="editable-custom_input" type="text" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)">
+        </template>
       </el-editable-column>
-      <el-editable-column label="更多信息" group>
-        <el-editable-column prop="region" label="地区" min-width="180" :editRender="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}"></el-editable-column>
-        <el-editable-column prop="birthdate" label="出生日期" width="220" sortable :sort-method="birthdateSortHandler" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd hh:mm'}}"></el-editable-column>
-        <el-editable-column label="其他" group>
-          <el-editable-column prop="date1" label="选择日期" width="220" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-          <el-editable-column prop="date3" label="任意时间点" width="160" sortable :editRender="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>
-        </el-editable-column>
-      </el-editable-column>
-      <el-editable-column prop="slider" label="滑块" width="200" :editRender="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" width="100" align="center" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="180" :editRender="{name: 'ElCascader', attrs: {options: regionList, separator: '->'}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="出生日期" width="220" sortable :sort-method="birthdateSortHandler" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy年MM月dd日'}}"></el-editable-column>
+      <el-editable-column prop="date1" label="选择日期" width="220" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
+      <el-editable-column prop="date2" label="选择时间范围" width="260" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetimerange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="180" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
+      <el-editable-column prop="color" label="选择颜色" width="100" :editRender="{name: 'ElColorPicker', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
@@ -87,6 +86,29 @@ import sexData from '@/common/json/editable/sex.json'
 
 export default {
   data () {
+    const checkAge = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('年龄不能为空'))
+      }
+      setTimeout(() => {
+        if (!Number.isInteger(value)) {
+          callback(new Error('请输入数字值'))
+        } else {
+          if (parseInt(value) < 18 || parseInt(value) > 28) {
+            callback(new Error('年龄必须在18-28之间'))
+          } else {
+            callback()
+          }
+        }
+      }, 50)
+    }
+    const checkRate = (rule, value, callback) => {
+      if (parseInt(value) < 2) {
+        callback(new Error('最小选择2颗星'))
+      } else {
+        callback()
+      }
+    }
     return {
       loading: false,
       sexList: [],
@@ -111,8 +133,18 @@ export default {
         }
       ],
       validRules: {
-        region: [
-          { required: true, message: '请输入地区', trigger: 'blur' }
+        name: [
+          { required: true, message: '请输入名称', trigger: 'change' },
+          { min: 3, message: '名称长度最小 3 个字符', trigger: 'change' }
+        ],
+        sex: [
+          { required: true, message: '请选择性别', trigger: 'blur' }
+        ],
+        age: [
+          { validator: checkAge, trigger: 'blur' }
+        ],
+        rate: [
+          { validator: checkRate, trigger: 'blur' }
         ]
       }
     }
@@ -158,12 +190,21 @@ export default {
       })
     },
     cancelRowEvent (row) {
-      this.$refs.editable.validateRow(row, valid => {
+      this.$refs.editable.validateRow(row, (valid, validErrs) => {
         if (valid) {
           this.$refs.editable.clearActive()
         } else {
-          // 关闭取消编辑状态
-          this.$refs.editable.clearActive()
+          let message = <p>
+            <p>请正确填写以下信息！</p>
+            {
+              Object.keys(validErrs).map(name => {
+                let errors = validErrs[name]
+                let msg = `${name}：${errors.map(e => e.message).join(';')}`
+                return <p>{msg}</p>
+              })
+            }
+          </p>
+          Message({ message, dangerouslyUseHTMLString: true, type: 'error' })
         }
       })
     },
@@ -255,3 +296,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.editable-custom_input {
+  width: 95%;
+}
+</style>

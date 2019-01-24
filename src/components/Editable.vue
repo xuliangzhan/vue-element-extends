@@ -138,13 +138,13 @@ export default {
       if (!this.isManualActivate && this.lastActive) {
         let target = evnt.target
         let { row, column, cell } = this.lastActive
-        this._validActiveCell().then(() => {
-          while (target && target.nodeType && target !== document) {
-            if (this.mode === 'row' ? target === cell.parentNode : target === cell) {
-              return
-            }
-            target = target.parentNode
+        while (target && target.nodeType && target !== document) {
+          if (this.mode === 'row' ? target === cell.parentNode : target === cell) {
+            return
           }
+          target = target.parentNode
+        }
+        this._validActiveCell().then(() => {
           this._clearValidError(row)
           this._clearActiveData()
           this._clearActiveCell(['editable-col_active', 'valid-error'])

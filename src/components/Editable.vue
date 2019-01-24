@@ -258,7 +258,9 @@ export default {
           if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
             this._triggerActive(row, column, cell, event)
             if (row && this.mode === 'row') {
-              this.validateRow(row.data).catch(e => e)
+              this._validRowRules('change', row).catch(({ rule, row, column, cell }) => {
+                this._toValidError(rule, row, column, cell)
+              })
             } else {
               this._validColRules('change', row, column).catch(rule => {
                 this._toValidError(rule, row, column, cell)
@@ -458,9 +460,6 @@ export default {
       }
       return { rowspan, colspan }
     },
-    isValidError () {
-      return this.lastActive ? !!this.lastActive.row.validActive : false
-    },
     _validRowRules (type, row) {
       let validPromise = Promise.resolve()
       if (!XEUtils.isEmpty(this.editRules)) {
@@ -540,11 +539,19 @@ export default {
     _validActiveCell () {
       if (this.lastActive && !XEUtils.isEmpty(this.editRules)) {
         let { row, column, cell } = this.lastActive
-        return this._validColRules('blur', row, column).catch(rule => {
-          let rest = { rule, row, column, cell }
-          this._toValidError(rule, row, column, cell)
-          return Promise.reject(rest)
-        })
+        if (row && this.mode === 'row') {
+          return this._validRowRules('blur', row).catch(({ rule, row, column, cell }) => {
+            let rest = { rule, row, column, cell }
+            this._toValidError(rule, row, column, cell)
+            return Promise.reject(rest)
+          })
+        } else {
+          return this._validColRules('blur', row, column).catch(rule => {
+            let rest = { rule, row, column, cell }
+            this._toValidError(rule, row, column, cell)
+            return Promise.reject(rest)
+          })
+        }
       }
       return Promise.resolve()
     },
@@ -651,13 +658,13 @@ export default {
     removes (records) {
       XEUtils.lastEach(this.datas, (item, index) => {
         if (records.includes(item.data)) {
-          this.remove(item)
+          this._deleteData(index)
         }
       })
       this._updateData()
     },
     removeSelecteds () {
-      this.removes(this.$refs.refElTable.selection.map(item => item ? item.data : item))
+      this.removes(this.$refs.refElTable.selection.map(item => item.data))
     },
     getRecords (rowIndex) {
       let list = this._getData()
@@ -692,15 +699,19 @@ export default {
      */
     setActiveRow (record) {
       let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
+      let row = this.tableData[rowIndex]
       if (rowIndex > -1 && this.mode === 'row') {
         this.isManualActivate = true
-        this.validateRow(record).then(valid => {
-          let row = this.tableData[rowIndex]
-          let column = this.$refs.refElTable.columns.find(column => column.property)
+        this._validRowRules('all', row).then(valid => {
+          let columns = this.$refs.refElTable.columns
+          let colIndex = XEUtils.findIndexOf(columns, item => item.property)
+          let column = columns[colIndex]
           let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
-          let cell = trElemList[rowIndex].children[0]
+          let cell = trElemList[rowIndex].children[colIndex]
           this._triggerActive(row, column, cell, { type: 'edit' })
-        }).catch(e => e)
+        }).catch(({ rule, row, column, cell }) => {
+          this._toValidError(rule, row, column, cell)
+        })
         return true
       }
       return false
@@ -708,11 +719,16 @@ export default {
     isActiveRow (record) {
       return this.lastActive ? this.lastActive.row.data === record : false
     },
-    getActiveRow () {
-      return this.lastActive ? this.lastActive.row.data : null
-    },
-    getActiveRowIndex () {
-      return this.lastActive ? XEUtils.findIndexOf(this.datas, item => item === this.lastActive.row) : -1
+    getActiveInfo () {
+      if (this.lastActive) {
+        let { row, column } = this.lastActive
+        let index = XEUtils.findIndexOf(this.datas, item => item === row)
+        if (this.mode === 'row') {
+          return { row, $index: index }
+        }
+        return { row, column, $index: index }
+      }
+      return null
     },
     /**
      * 更新列状态
@@ -781,36 +797,26 @@ export default {
     validateRow (record, fn) {
       let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
       return new Promise((resolve, reject) => {
-        this._validActiveCell().then(() => {
-          let row = this.tableData[rowIndex]
-          if (row && this.mode === 'row') {
-            this._validRowRules('change', row).then(rest => {
-              if (fn) {
-                fn(true)
-              }
-              resolve(true)
-            }).catch(({ rule, row, column, cell }) => {
-              let status = false
-              this._toValidError(rule, row, column, cell)
-              if (fn) {
-                fn(status, {[column.property]: [new Error(rule.message)]})
-                resolve(status)
-              } else {
-                reject(status)
-              }
-            })
-          } else {
-            resolve()
-          }
-        }).catch(({ rule, row, column, cell }) => {
-          let status = false
-          if (fn) {
-            fn(status, {[column.property]: [new Error(rule.message)]})
-            resolve(status)
-          } else {
-            reject(status)
-          }
-        })
+        let row = this.tableData[rowIndex]
+        if (row && this.mode === 'row') {
+          this._validRowRules('all', row).then(rest => {
+            if (fn) {
+              fn(true)
+            }
+            resolve(true)
+          }).catch(({ rule, row, column, cell }) => {
+            let status = false
+            this._toValidError(rule, row, column, cell)
+            if (fn) {
+              fn(status, {[column.property]: [new Error(rule.message)]})
+              resolve(status)
+            } else {
+              reject(status)
+            }
+          })
+        } else {
+          resolve()
+        }
       })
     },
     /**

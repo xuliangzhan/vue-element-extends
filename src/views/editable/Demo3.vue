@@ -10,9 +10,9 @@
     <el-button type="info" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
     <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'manual', mode: 'row'}">
       <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字" show-overflow-tooltip :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
       <el-editable-column prop="birthdate" label="出生日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>

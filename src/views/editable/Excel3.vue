@@ -45,20 +45,21 @@ export default {
         let column = {
           prop: name.toLowerCase(),
           label: name,
+          minWidth: '80',
           sortable: true,
           editRender: {name: 'ElInput'}
         }
         switch (name) {
           case 'A':
-            column.width = '120'
+            column.width = '130'
             column.label = 'A（数值）'
             break
           case 'B':
-            column.width = '120'
+            column.width = '130'
             column.label = 'B（汉字）'
             break
           case 'C':
-            column.width = '120'
+            column.width = '130'
             column.label = 'C（字母）'
             break
         }

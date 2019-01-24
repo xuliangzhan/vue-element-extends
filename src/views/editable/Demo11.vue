@@ -21,7 +21,7 @@
         <template v-if="item.show">
           <el-editable-column v-if="index === 0" :key="index" v-bind="item">
             <template slot="valid" slot-scope="scope">
-              <span class="error-msg">自定义校验提示语：<br>{{ scope.rule.message }}<br>名称为必填字段</span>
+              <span class="error-msg">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段</span>
             </template>
           </el-editable-column>
           <el-editable-column v-else :key="index" v-bind="item"></el-editable-column>

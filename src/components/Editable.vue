@@ -206,11 +206,11 @@ export default {
       this._cellHandleEvent('dblclick', row, column, cell, event)
     },
     _cellHandleEvent (type, row, column, cell, event) {
-      if (!this.isClearlActivate && cell.className.split(' ').includes('editable-col_edit')) {
+      if (!this.isClearlActivate && this._hasClass(cell, 'editable-col_edit')) {
         this._validActiveCell().then(() => {
           if (this.lastActive) {
             this._clearValidError(this.lastActive.row)
-            this._removeCellClass(this.lastActive.cell, ['valid-error'])
+            this._removeClass(this.lastActive.cell, ['valid-error'])
           }
           if (this.editConfig ? this.editConfig.trigger === type : type === 'click') {
             this._triggerActive(row, column, cell, event)
@@ -223,7 +223,7 @@ export default {
             }
           } else {
             if (row.editActive !== column.property) {
-              this._addActiveCell(cell, ['editable-col_checked'])
+              this._checkedActiveCell(cell, ['editable-col_checked'])
             }
           }
           this.$emit(`cell-${type}`, row.data, column, cell, event)
@@ -276,36 +276,36 @@ export default {
     },
     _restoreTooltip (cell) {
       Array.from(this.$el.querySelectorAll('.disabled-el-tooltip')).forEach(elem => {
-        this._removeCellClass(elem, ['disabled-el-tooltip'])
-        this._addCellClass(elem, ['el-tooltip'])
+        this._removeClass(elem, ['disabled-el-tooltip'])
+        this._addClass(elem, ['el-tooltip'])
       })
     },
     _disabledTooltip (cell) {
       if (this.$refs.refElTable) {
-        let refElTableBody = this.$refs.refElTable.$children.find(comp => comp.$el.className.split(' ').includes('el-table__body'))
+        let refElTableBody = this.$refs.refElTable.$children.find(comp => this._hasClass(comp.$el, 'el-table__body'))
         if (refElTableBody && refElTableBody.$refs.tooltip) {
           refElTableBody.$refs.tooltip.hide()
         }
       }
       if (cell.parentNode) {
         Array.from(cell.parentNode.querySelectorAll('td>.cell.el-tooltip')).forEach(elem => {
-          this._removeCellClass(elem, ['el-tooltip'])
-          this._addCellClass(elem, ['disabled-el-tooltip'])
+          this._removeClass(elem, ['el-tooltip'])
+          this._addClass(elem, ['disabled-el-tooltip'])
         })
       }
-    },
-    _clearActiveCell (clss) {
-      Array.from(this.$el.querySelectorAll(`.${clss.join('.editable-column,.')}.editable-column`)).forEach(elem => this._removeCellClass(elem, clss))
     },
     _clearActiveColumns () {
       this._clearActiveData()
       this._clearActiveCell(['editable-col_active', 'editable-col_checked', 'valid-error'])
     },
-    _addActiveCell (cell, clss) {
-      this._clearActiveCell(clss)
-      this._addCellClass(cell, clss)
+    _clearActiveCell (clss) {
+      Array.from(this.$el.querySelectorAll(`.${clss.join('.editable-column,.')}.editable-column`)).forEach(elem => this._removeClass(elem, clss))
     },
-    _addCellClass (cell, clss) {
+    _checkedActiveCell (cell, clss) {
+      this._clearActiveCell(clss)
+      this._addClass(cell, clss)
+    },
+    _addClass (cell, clss) {
       let classList = cell.className.split(' ')
       clss.forEach(name => {
         if (classList.indexOf(name) === -1) {
@@ -314,7 +314,10 @@ export default {
       })
       cell.className = classList.join(' ')
     },
-    _removeCellClass (cell, clss) {
+    _hasClass (cell, cls) {
+      return cell.className.split(' ').includes(cls)
+    },
+    _removeClass (cell, clss) {
       let classList = []
       cell.className.split(' ').forEach(name => {
         if (clss.indexOf(name) === -1) {
@@ -331,7 +334,7 @@ export default {
           inpElem = cell.querySelector('.editable-custom_input')
         }
       }
-      if (inpElem && cell.className.split(' ').includes('autofocus')) {
+      if (inpElem && this._hasClass(cell, 'autofocus')) {
         inpElem.focus()
       }
     },
@@ -343,8 +346,8 @@ export default {
       this._restoreTooltip(cell)
       this._disabledTooltip(cell)
       this._clearActiveColumns()
+      this._addClass(cell, clss)
       this.lastActive = { row, column, cell }
-      this._addCellClass(cell, clss)
       row.editActive = column.property
       this.$nextTick(() => {
         this._setFocus(cell)
@@ -354,8 +357,8 @@ export default {
       })
     },
     _updateColumnStatus (trElem, column, tdElem) {
-      if (column.className.split(' ').includes('editable-col_edit')) {
-        this._addCellClass(tdElem, ['editable-col_dirty'])
+      if (this._hasClass(column, 'editable-col_edit')) {
+        this._addClass(tdElem, ['editable-col_dirty'])
       }
     },
     _summaryMethod (param) {
@@ -673,7 +676,7 @@ export default {
                       let tdElem = trElem.children[cIndex]
                       if (tdElem) {
                         if (XEUtils.isEqual(item.data[column.property], item.store[column.property])) {
-                          this._removeCellClass(tdElem, ['editable-col_dirty'])
+                          this._removeClass(tdElem, ['editable-col_dirty'])
                         } else {
                           this._updateColumnStatus(trElem, column, trElem.children[cIndex])
                         }
@@ -695,14 +698,14 @@ export default {
             if (tdElem) {
               if (this.showStatus) {
                 if (XEUtils.isEqual(_row.data[column.property], _row.store[column.property])) {
-                  this._removeCellClass(tdElem, ['editable-col_dirty'])
+                  this._removeClass(tdElem, ['editable-col_dirty'])
                 } else {
                   this._updateColumnStatus(trElem, column, tdElem)
                 }
               }
               return this._validColRules('change', _row, column).then(rule => {
                 this._clearValidError(_row)
-                this._removeCellClass(tdElem, ['valid-error'])
+                this._removeClass(tdElem, ['valid-error'])
               }).catch(rule => {
                 this._toValidError(rule, _row, column, tdElem)
               })

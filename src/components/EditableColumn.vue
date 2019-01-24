@@ -345,6 +345,9 @@ export default {
   top: calc(100% + 10px);
   left: 10px;
   z-index: 9;
+  font-size: 12px;
+  min-width: 10px;
+  word-wrap: break-word;
 }
 .editable .editable-column .editable-valid_error:before,
 .editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error:before {

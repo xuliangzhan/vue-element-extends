@@ -65,6 +65,9 @@ export default {
 .excel-table2 .el-table__body .el-table__row:hover>td:first-child {
   background-color: #f5f5f5;
 }
+.excel-table2 .el-table__body .el-table__row>td:first-child {
+  cursor: default;
+}
 .excel-table2 .el-table__body .el-table__row:hover>td {
   background-color: inherit;
 }

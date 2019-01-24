@@ -12,6 +12,7 @@ import EditableDemo8 from '@/views/editable/Demo8'
 import EditableDemo9 from '@/views/editable/Demo9'
 import EditableDemo10 from '@/views/editable/Demo10'
 import EditableDemo11 from '@/views/editable/Demo11'
+import EditableDemo12 from '@/views/editable/Demo12'
 import EditableExcelDemo1 from '@/views/editable/Excel1'
 import EditableExcelDemo2 from '@/views/editable/Excel2'
 import EditableExcelDemo3 from '@/views/editable/Excel3'
@@ -80,6 +81,11 @@ export default new Router({
       path: '/demo/editable11',
       name: 'EditableDemo11',
       component: EditableDemo11
+    },
+    {
+      path: '/demo/editable12',
+      name: 'EditableDemo12',
+      component: EditableDemo12
     },
     {
       path: '/demo/editableExcelDemo1',

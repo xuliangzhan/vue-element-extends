@@ -6,9 +6,9 @@
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
-    <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%" :editConfig="{trigger: 'manual', mode: 'row'}">
+    <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'manual', mode: 'row'}">
       <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
@@ -34,7 +34,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
@@ -44,7 +44,13 @@ export default {
     return {
       sexList: XEUtils.clone(sexData, true),
       regionList: XEUtils.clone(regionData, true),
-      list: XEUtils.clone(listData, true)
+      list: XEUtils.clone(listData, true),
+      validRules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'change' },
+          { min: 3, max: 10, message: '名称长度 3-10 个字符', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
@@ -68,12 +74,21 @@ export default {
       })
     },
     cancelRowEvent (row, index) {
-      this.$refs.editable.validateRow(index, valid => {
+      this.$refs.editable.validateRow(index, (valid, validErrs) => {
         if (valid) {
           this.$refs.editable.clearActive()
         } else {
-          // 当前行有不通过校验的列，强制取消
-          this.$refs.editable.clearActive(true)
+          let message = <p>
+            <p>请正确填写以下信息！</p>
+            {
+              Object.keys(validErrs).map(name => {
+                let errors = validErrs[name]
+                let msg = `${name}：${errors.map(e => e.message).join(';')}`
+                return <p>{msg}</p>
+              })
+            }
+          </p>
+          Message({ message, dangerouslyUseHTMLString: true, type: 'error' })
         }
       })
     }

@@ -623,7 +623,7 @@ export default {
     getUpdateRecords () {
       return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
     },
-    clearActive (force) {
+    clearActive () {
       this.isClearlActivate = true
       this._clearActiveColumns()
       this._restoreTooltip()

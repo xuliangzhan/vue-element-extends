@@ -78,7 +78,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
@@ -189,12 +189,21 @@ export default {
       })
     },
     cancelRowEvent (row, index) {
-      this.$refs.editable.validateRow(index, valid => {
+      this.$refs.editable.validateRow(index, (valid, validErrs) => {
         if (valid) {
           this.$refs.editable.clearActive()
         } else {
-          // 当前行有不通过校验的列，强制取消
-          this.$refs.editable.clearActive(true)
+          let message = <p>
+            <p>请正确填写以下信息！</p>
+            {
+              Object.keys(validErrs).map(name => {
+                let errors = validErrs[name]
+                let msg = `${name}：${errors.map(e => e.message).join(';')}`
+                return <p>{msg}</p>
+              })
+            }
+          </p>
+          Message({ message, dangerouslyUseHTMLString: true, type: 'error' })
         }
       })
     },

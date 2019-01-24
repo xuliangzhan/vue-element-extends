@@ -163,8 +163,8 @@ export default {
         if (valid) {
           this.$refs.editable.clearActive()
         } else {
-          // 当前行有不通过校验的列，强制取消
-          this.$refs.editable.clearActive(true)
+          // 关闭取消编辑状态
+          this.$refs.editable.clearActive()
         }
       })
     },

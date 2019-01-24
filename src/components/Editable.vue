@@ -281,18 +281,17 @@ export default {
       })
     },
     _disabledTooltip (cell) {
+      let tElems = this.mode === 'row' ? cell.parentNode.querySelectorAll('td>.cell.el-tooltip') : cell.querySelectorAll('.cell.el-tooltip')
       if (this.$refs.refElTable) {
         let refElTableBody = this.$refs.refElTable.$children.find(comp => this._hasClass(comp.$el, 'el-table__body'))
         if (refElTableBody && refElTableBody.$refs.tooltip) {
           refElTableBody.$refs.tooltip.hide()
         }
       }
-      if (cell.parentNode) {
-        Array.from(cell.parentNode.querySelectorAll('td>.cell.el-tooltip')).forEach(elem => {
-          this._removeClass(elem, ['el-tooltip'])
-          this._addClass(elem, ['disabled-el-tooltip'])
-        })
-      }
+      Array.from(tElems).forEach(elem => {
+        this._removeClass(elem, ['el-tooltip'])
+        this._addClass(elem, ['disabled-el-tooltip'])
+      })
     },
     _clearActiveColumns () {
       this._clearActiveData()

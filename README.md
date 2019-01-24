@@ -40,8 +40,8 @@ edit-rules 校验规则配置
 | 属性 | 描述 | 类型 | 可选值 |
 |------|------|-----|-----|
 | required | 是否必填 | Boolean | — |
-| min  | 校验值最小长度，如果 type=number 则比较值大小 | Number | — |
-| max  | 校验值最大长度，如果 type=number 则比较值大小 | Number | — |
+| min  | 校验值最小长度（如果配置 type=number 则比较值大小） | Number | — |
+| max  | 校验值最大长度（如果配置 type=number 则比较值大小） | Number | — |
 | type | 类型校验 | String | number |
 | validator  | 自定义校验方法 | Function(rule, value, callback) | — |
 | trigger  | 触发校验方式 | String | blur / change |
@@ -77,7 +77,7 @@ edit-config 编辑参数配置
 | removeSelecteds | 删除选中行数据 |  |
 | clear | 清空所有数据 |  |
 | clearActive | 清除所有活动行或列为不可编辑状态 |  |
-| setActiveRow | 设置活动行为可编辑状态（只对mode='row'有效） | rowIndex |
+| setActiveRow | 设置活动行为可编辑状态（只对 mode=row 有效） | rowIndex |
 | getActiveRowIndex | 获取当前活动状态行索引 |  |
 | updateStatus | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
 | getAllRecords | 获取表格数据集合 |  |
@@ -85,8 +85,8 @@ edit-config 编辑参数配置
 | getInsertRecords | 获取新增数据 |  |
 | getRemoveRecords | 获取已删除数据 |  |
 | getUpdateRecords| 获取已修改数据 |  |
-| validateRow | 对表格某一行进行校验的方法，参数为行索引和一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：是否校验成功和最近列未通过校验的字段。若不传入回调函数，则会返回一个 promise | rowIndex, callback |
-| validate | 对整个表格进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：是否校验成功和最近列未通过校验的字段。若不传入回调函数，则会返回一个 promise | callback |
+| validateRow | 对表格某一行进行校验的方法，参数为行索引和一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | rowIndex, callback |
+| validate | 对整个表格进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | callback |
 
 ### Editable-Column Attributes
 
@@ -101,8 +101,8 @@ edit-config 编辑参数配置
 | type | 渲染类型 | String | default（组件触发后可视） / visible（组件一直可视） | default |
 | autofocus  | 该列在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | — |
 | attrs | 渲染组件附加属性 | Object | — | {} |
-| optionAttrs | 下拉组件选项附加属性（只对name='ElSelect'有效） | Object | — | {} |
-| options | 下拉组件选项列表（只对name='ElSelect'有效） | Array | — | [] |
+| optionAttrs | 下拉组件选项附加属性（只对 name=ElSelect 有效） | Object | — | {} |
+| options | 下拉组件选项列表（只对 name=ElSelect 有效） | Array | — | [] |
 
 ### Editable-Column Scoped Slot
 
@@ -116,7 +116,7 @@ edit-config 编辑参数配置
 ## Example
 
 * 依赖库 npm install vuex xe-utils
-* 依赖 vuex 中的 globalClick 全局 click  事件 (具体实现方式可以参考store/modules/event.js)
+* 需要依赖 vuex 中的 globalClick 属性，该属性值为响应全局 click  事件 (具体实现方式可以参考 store/modules/event.js)
 * 将 Editable.vue 和 EditableColumn.vue 复制到自己项目的 components 目录下，然后在 main.js 引入组件
 * 如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
 

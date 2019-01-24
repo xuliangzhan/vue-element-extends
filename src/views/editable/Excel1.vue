@@ -57,6 +57,9 @@ export default {
 .excel-table1 .el-table__body .el-table__row>td {
   cursor: cell;
 }
+.excel-table2 .el-table__body .el-table__row>td:first-child {
+  cursor: default;
+}
 .excel-table1 .el-table__body .el-table__row:hover>td {
   background-color: inherit;
 }

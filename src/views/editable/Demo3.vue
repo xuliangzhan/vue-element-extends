@@ -66,7 +66,7 @@ export default {
       this.$refs.editable.validateRow(row, valid => {
         if (valid) {
           this.$refs.editable.clearActive()
-          console.log('success row submit!!')
+          Message({ message: '保存成功', type: 'success' })
         } else {
           console.log('error row submit!!')
         }

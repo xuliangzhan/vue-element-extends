@@ -113,6 +113,9 @@ export default {
     ...mapGetters([
       'globalClick'
     ]),
+    tableData () {
+      return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
+    },
     showIcon () {
       return this.editConfig ? !(this.editConfig.showIcon === false) : true
     },
@@ -422,7 +425,7 @@ export default {
       let validPromise = Promise.resolve()
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
-        let datas = this.datas
+        let datas = this.tableData
         let columns = this.$refs.refElTable.columns
         let ruleKeys = Object.keys(editRules)
         let trElems = this.$el.querySelectorAll('.el-table__row')
@@ -514,12 +517,28 @@ export default {
       row.validActive = column.property
       this._triggerActive(row, column, cell, { type: 'valid' })
     },
+    _deleteData (index) {
+      if (index > -1) {
+        let items = this.datas.splice(index, 1)
+        items.forEach(item => {
+          if (item.editStatus === 'initial') {
+            this.deleteRecords.push(item)
+          }
+        })
+      }
+    },
+    _clearAllOpers () {
+      this.clearSelection()
+      this.clearFilter()
+      this.clearSort()
+    },
     /**
      * 初始化
      * 用于初始化数据、重新加载数据
      */
     reload (datas) {
       this.deleteRecords = []
+      this._clearAllOpers()
       this._clearActiveColumns()
       this._initial(datas, true)
       this._updateData()
@@ -529,6 +548,7 @@ export default {
      * 还原为最后一次 reload 的数据
      */
     revert () {
+      this._clearAllOpers()
       this.reload(this.initialStore)
     },
     /**
@@ -539,6 +559,30 @@ export default {
       this._clearActiveColumns()
       this._initial([])
       this._updateData()
+    },
+    clearSelection () {
+      this.$nextTick(() => this.$refs.refElTable.clearSelection())
+    },
+    toggleRowSelection (record, selected) {
+      this.$nextTick(() => this.$refs.refElTable.toggleRowSelection(this.datas.find(item => item.data === record), selected))
+    },
+    toggleAllSelection () {
+      this.$nextTick(() => this.$refs.refElTable.toggleAllSelection())
+    },
+    toggleRowExpansion (record, expanded) {
+      this.$nextTick(() => this.$refs.refElTable.toggleRowExpansion(this.datas.find(item => item.data === record), expanded))
+    },
+    setCurrentRow (record) {
+      this.$nextTick(() => this.$refs.refElTable.setCurrentRow(this.datas.find(item => item.data === record)))
+    },
+    clearSort () {
+      this.$nextTick(() => this.$refs.refElTable.clearSort())
+    },
+    clearFilter () {
+      this.$nextTick(() => this.$refs.refElTable.clearFilter())
+    },
+    doLayout () {
+      this.$nextTick(() => this.$refs.refElTable.doLayout())
     },
     insert (newRecord) {
       this.insertAt(newRecord, 0)
@@ -576,30 +620,25 @@ export default {
      * 根据索引删除行数据
      */
     removeByIndex (rowIndex) {
-      let items = this.datas.splice(rowIndex, 1)
-      items.forEach(item => {
-        if (item.editStatus === 'initial') {
-          this.deleteRecords.push(item)
-        }
-      })
-      this._updateData()
+      let row = this.tableData[rowIndex]
+      if (row) {
+        this.remove(row.data)
+      }
     },
     removeByIndexs (rowIndexs) {
-      XEUtils.lastEach(this.datas, (item, index) => {
-        if (rowIndexs.includes(index)) {
-          this.removeByIndex(index)
-        }
-      })
+      this.removes(rowIndexs.map(index => this.tableData[index] ? this.tableData[index].data : null))
     },
     remove (record) {
-      this.removeByIndex(XEUtils.findIndexOf(this.datas, item => item.data === record))
+      this._deleteData(XEUtils.findIndexOf(this.datas, item => item.data === record))
+      this._updateData()
     },
     removes (records) {
       XEUtils.lastEach(this.datas, (item, index) => {
         if (records.includes(item.data)) {
-          this.removeByIndex(index)
+          this.remove(item)
         }
       })
+      this._updateData()
     },
     removeSelecteds () {
       this.removes(this.$refs.refElTable.selection.map(item => item.data))
@@ -635,11 +674,11 @@ export default {
      * 才可以根据索引激活行为编辑状态
      */
     setActiveRow (record) {
-      let rowIndex = XEUtils.findIndexOf(this.datas, item => item.data === record)
+      let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
       if (rowIndex > -1 && this.mode === 'row') {
         this.isManualActivate = true
         this.validateRow(record).then(valid => {
-          let row = this.datas[rowIndex]
+          let row = this.tableData[rowIndex]
           let column = this.$refs.refElTable.columns.find(column => column.property)
           let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
           let cell = trElemList[rowIndex].children[0]
@@ -670,7 +709,7 @@ export default {
             let trElems = this.$el.querySelectorAll('.el-table__row')
             if (trElems.length) {
               let columns = this.$refs.refElTable.columns
-              this.datas.forEach((item, index) => {
+              this.tableData.forEach((item, index) => {
                 let trElem = trElems[index]
                 if (trElem.children.length) {
                   if (item.editStatus === 'insert') {
@@ -723,10 +762,10 @@ export default {
      * 返回 Promise 对象，或者使用回调方式
      */
     validateRow (record, fn) {
-      let rowIndex = XEUtils.findIndexOf(this.datas, item => item.data === record)
+      let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
       return new Promise((resolve, reject) => {
         this._validActiveCell().then(() => {
-          let row = this.datas[rowIndex]
+          let row = this.tableData[rowIndex]
           if (row && this.mode === 'row') {
             this._validRowRules('change', row).then(rest => {
               if (fn) {
@@ -765,7 +804,7 @@ export default {
       let validPromise = Promise.resolve(true)
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
-        let datas = this.datas
+        let datas = this.tableData
         let columns = this.$refs.refElTable.columns
         let ruleKeys = Object.keys(editRules)
         let trElems = this.$el.querySelectorAll('.el-table__row')

@@ -68,26 +68,34 @@ edit-config 编辑参数配置
 | 方法名 | 描述 | 参数 |
 |------|------|-----|
 | reload | 初始化加载数据 | datas |
-| revert | 放弃更改，还原修改之前数据 |  |
-| insert | 新增一行新数据 | record |
-| insertAt | 如果是 record 或 rowIndex 则在指定位置新增一行新数据，如果是 -1 则从底部新增新数据 | newRecord, recordOrIndex |
-| remove | 根据数据删除 | record |
-| removes | 根据多条数据删除 | records |
-| removeByIndex | 根据行号删除一行数据 | rowIndex |
-| removeByIndexs | 根据多个行号删除多行数据 | rowIndexs |
-| removeSelecteds | 删除选中行数据 |  |
-| clear | 清空所有数据 |  |
-| clearActive | 清除所有活动行或列为不可编辑状态 |  |
-| setActiveRow | 设置活动行为可编辑状态（只对 mode=row 有效） | record |
-| isActiveRow | 判断当前是否活动行 | record |
+| revert | 放弃更改，还原修改之前数据 | — |
+| insert | 新增一行新数据 | defaultData |
+| insertAt | 如果是 row 或 $index 则在指定位置新增一行新数据，如果是 -1 则从底部新增新数据 | defaultData, rowOrIndex |
+| remove | 根据数据删除 | row |
+| removes | 根据多条数据删除 | rows |
+| removeByIndex | 根据行号删除一行数据 | $index |
+| removeByIndexs | 根据多个行号删除多行数据 | $indexs |
+| removeSelecteds | 删除选中行数据 | — |
+| clear | 清空所有数据 | — |
+| clearActive | 清除所有活动行或列为不可编辑状态 | — |
+| setActiveRow | 设置活动行为可编辑状态（只对 mode=row 有效） | row |
+| isActiveRow | 判断当前是否活动行 | row |
 | updateStatus | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
-| getAllRecords | 获取表格数据集合 |  |
-| getRecords | 获取表格数据 |  |
-| getInsertRecords | 获取新增数据 |  |
-| getRemoveRecords | 获取已删除数据 |  |
-| getUpdateRecords| 获取已修改数据 |  |
-| validateRow | 对表格某一行进行校验的方法，参数为行数据和一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | record, callback |
+| getAllRecords | 获取表格数据集合 | — |
+| getRecords | 获取表格数据 | — |
+| getInsertRecords | 获取新增数据 | — |
+| getRemoveRecords | 获取已删除数据 | — |
+| getUpdateRecords| 获取已修改数据 | — |
+| validateRow | 对表格某一行进行校验的方法，参数为行数据和一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | row, callback |
 | validate | 对整个表格进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | callback |
+| clearSelection | 用于多选表格，清空用户的选择 | — |
+| toggleRowSelection | 用于多选表格，切换某一行的选中状态，如果使用了第二个参数，则是设置这一行选中与否（selected 为 true 则选中） | row, selected |
+| toggleAllSelection | 用于多选表格，切换所有行的选中状态 | — |
+| toggleRowExpansion | 用于可展开表格，切换某一行的展开状态，如果使用了第二个参数，则是设置这一行展开与否（expanded 为 true 则展开） | row, expanded |
+| setCurrentRow | 用于单选表格，设定某一行为选中行，如果调用时不加参数，则会取消目前高亮行的选中状态。 | row |
+| clearSort | 用于清空排序条件，数据会恢复成未排序的状态 | — |
+| clearFilter | 不传入参数时用于清空所有过滤条件，数据会恢复成未过滤的状态，也可传入由columnKey组成的数组以清除指定列的过滤条件 | datas |
+| doLayout | 对 Table 进行重新布局。当 Table 或其祖先元素由隐藏切换为显示时，可能需要调用此方法 | — |
 
 ### Editable-Column Attributes
 

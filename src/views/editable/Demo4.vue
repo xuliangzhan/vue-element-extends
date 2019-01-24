@@ -78,7 +78,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox } from 'element-ui'
+import { MessageBox, Message } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
@@ -151,7 +151,7 @@ export default {
       this.$refs.editable.validateRow(row, valid => {
         if (valid) {
           this.postJSON('url', { row }).then(data => {
-            this.findList()
+            Message({ message: '保存成功', type: 'success' })
           })
         } else {
           console.log('error row submit!!')

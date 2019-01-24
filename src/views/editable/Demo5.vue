@@ -182,7 +182,7 @@ export default {
     saveRowEvent (row) {
       this.$refs.editable.validateRow(row).then(valid => {
         this.postJSON('url', { row }).then(data => {
-          this.findList()
+          Message({ message: '保存成功', type: 'success' })
         })
       }).catch(e => {
         console.log('error row submit!!')

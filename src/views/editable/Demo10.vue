@@ -13,7 +13,7 @@
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
     <el-editable ref="editable" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules">
       <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="attr1" label="校验数字" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="attr2" label="校验数字(必填)" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>

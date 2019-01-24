@@ -16,6 +16,7 @@
 ![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable2.gif?raw=true)
 ![editable3](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable3.gif?raw=true)
 ![editable4](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable4.gif?raw=true)
+![editable5](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable5.gif?raw=true)
 
 ## Docs
 

@@ -1,7 +1,7 @@
 <template>
   <el-table
     ref="refElTable"
-    :class="['editable', {'editable--icon': showIcon}]"
+    :class="['editable', `editable_${mode}`, {'editable--icon': showIcon}]"
     :data="datas"
     :height="height"
     :maxHeight="maxHeight"

@@ -127,7 +127,7 @@ edit-config 编辑参数配置
 
 1. 依赖库 npm install vuex xe-utils
 2. 需要依赖 vuex 中的 globalClick 属性，该属性值为响应全局 click  事件 (具体实现方式可以参考 store/modules/event.js)
-3. 将 Editable.vue 和 EditableColumn.vue 复制到自己项目的 components 目录下，然后在 main.js 引入组件
+3. 将 Editable.vue 和 EditableColumn.vue 复制到自己项目中，（例如：components 目录下），然后注册组件（全局注册或者局部注册）
 
 如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
 

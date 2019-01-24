@@ -2,11 +2,9 @@
   <div>
     <el-button type="success" @click="$refs.editable.insert({name: '默认名字1'})">新增一行</el-button>
     <el-button type="success" @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后新增一行</el-button>
-    <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
     <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%">
-      <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>

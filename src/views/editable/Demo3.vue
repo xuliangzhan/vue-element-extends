@@ -14,28 +14,12 @@
       <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{type: 'visible'}">
-        <template slot="edit" slot-scope="scope">
-          <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
-            <el-radio label="N" border>值1</el-radio>
-            <el-radio label="Y" border>值2</el-radio>
-          </el-radio-group>
-        </template>
-      </el-editable-column>
-      <el-editable-column prop="status" label="状态" width="160" :editRender="{type: 'visible'}">
-        <template slot="edit" slot-scope="scope">
-          <el-checkbox-group v-model="scope.row.status" size="mini" @change="$refs.editable.updateStatus(scope)">
-            <el-checkbox-button label="success">成功</el-checkbox-button>
-            <el-checkbox-button label="error">失败</el-checkbox-button>
-          </el-checkbox-group>
-        </template>
-      </el-editable-column>
       <el-editable-column prop="order" label="自定义渲染" width="120" :editRender="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
         </template>
         <template slot-scope="scope">
-          <span>订单号：{{ scope.row.order }}</span>
+          <span>自定义：{{ scope.row.order }}</span>
         </template>
       </el-editable-column>
       <el-editable-column prop="remark" label="备注（只读）"></el-editable-column>
@@ -115,9 +99,9 @@ export default {
       this.findList()
     },
     tableRowClassName ({row, rowIndex}) {
-      if (rowIndex === 1) {
+      if (rowIndex === 2 || rowIndex === 3 || rowIndex === 4) {
         return 'warning-row'
-      } else if (rowIndex === 3) {
+      } else if (rowIndex === 6 || rowIndex === 7) {
         return 'success-row'
       }
       return ''

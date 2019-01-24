@@ -5,6 +5,7 @@
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
+    <el-button type="warning" @click="validEvent">校验</el-button>
     <el-button type="warning" @click="submitEvent">校验&保存</el-button>
     <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
@@ -178,6 +179,13 @@ export default {
     },
     formatterOrder (row, column, cellValue, index) {
       return `订单号：${cellValue}`
+    },
+    validEvent () {
+      this.$refs.editable.validate().then(valid => {
+        alert('通过')
+      }).catch(valid => {
+        console.log('error submit!!')
+      })
     },
     submitEvent () {
       this.$refs.editable.validate(valid => {

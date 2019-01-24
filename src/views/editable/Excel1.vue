@@ -4,7 +4,7 @@
     <el-button size="mini" @click="getAllEvent">获取所有</el-button>
     <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
     <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
-    <el-editable ref="editable" class="excel-table1" :data.sync="list" border size="mini" style="width: 100%" :editConfig="{trigger: 'dblclick', showIcon: false}">
+    <el-editable ref="editable" class="excel-table1" :data.sync="list" border size="mini" style="width: 100%" :editConfig="{trigger: 'click', showIcon: false}">
       <el-editable-column type="index" align="center" width="50"></el-editable-column>
       <template v-for="(column, index) in columnConfigs">
         <el-editable-column :key="index" v-bind="column" header-align="center" min-width="60"></el-editable-column>

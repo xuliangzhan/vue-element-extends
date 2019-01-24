@@ -324,6 +324,12 @@ export default {
   overflow: inherit;
   position: relative;
 }
+.editable .editable-column.editable-col_edit.editable-col_active {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 .editable .editable-column .editable-valid_error {
   display: none;
 }

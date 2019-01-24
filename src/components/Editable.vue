@@ -160,11 +160,51 @@ export default {
     this._initial(this.data, true)
   },
   methods: {
+    /**************************/
+    /* Default methods statrt */
+    /**************************/
+    clearSelection () {
+      this.$nextTick(() => this.$refs.refElTable.clearSelection())
+    },
+    toggleRowSelection (record, selected) {
+      this.$nextTick(() => this.$refs.refElTable.toggleRowSelection(this.datas.find(item => item.data === record), selected))
+    },
+    toggleAllSelection () {
+      this.$nextTick(() => this.$refs.refElTable.toggleAllSelection())
+    },
+    toggleRowExpansion (record, expanded) {
+      this.$nextTick(() => this.$refs.refElTable.toggleRowExpansion(this.datas.find(item => item.data === record), expanded))
+    },
+    setCurrentRow (record) {
+      this.$nextTick(() => this.$refs.refElTable.setCurrentRow(this.datas.find(item => item.data === record)))
+    },
+    clearSort () {
+      this.$nextTick(() => this.$refs.refElTable.clearSort())
+    },
+    clearFilter () {
+      this.$nextTick(() => this.$refs.refElTable.clearFilter())
+    },
+    doLayout () {
+      this.$nextTick(() => this.$refs.refElTable.doLayout())
+    },
+    insert (newRecord) {
+      this.insertAt(newRecord, 0)
+    },
+    /**************************/
+    /* Default methods end */
+    /**************************/
+
+    /***************************/
+    /* Interior methods statrt */
+    /***************************/
     _initial (datas, isReload) {
       if (isReload) {
         this.initialStore = XEUtils.clone(datas, true)
       }
       this.datas = (datas || []).map(item => this._toData(item))
+    },
+    _getData (datas) {
+      return (datas || this.datas).map(item => item.data)
     },
     _toData (item, status) {
       return item.editable && item._EDITABLE_PROTO === this.editProto ? item : {
@@ -532,10 +572,13 @@ export default {
       this.clearFilter()
       this.clearSort()
     },
-    /**
-     * 初始化
-     * 用于初始化数据、重新加载数据
-     */
+    /***************************/
+    /* Interior methods end    */
+    /***************************/
+
+    /***************************/
+    /* Public methods start    */
+    /***************************/
     reload (datas) {
       this.deleteRecords = []
       this._clearAllOpers()
@@ -559,33 +602,6 @@ export default {
       this._clearActiveColumns()
       this._initial([])
       this._updateData()
-    },
-    clearSelection () {
-      this.$nextTick(() => this.$refs.refElTable.clearSelection())
-    },
-    toggleRowSelection (record, selected) {
-      this.$nextTick(() => this.$refs.refElTable.toggleRowSelection(this.datas.find(item => item.data === record), selected))
-    },
-    toggleAllSelection () {
-      this.$nextTick(() => this.$refs.refElTable.toggleAllSelection())
-    },
-    toggleRowExpansion (record, expanded) {
-      this.$nextTick(() => this.$refs.refElTable.toggleRowExpansion(this.datas.find(item => item.data === record), expanded))
-    },
-    setCurrentRow (record) {
-      this.$nextTick(() => this.$refs.refElTable.setCurrentRow(this.datas.find(item => item.data === record)))
-    },
-    clearSort () {
-      this.$nextTick(() => this.$refs.refElTable.clearSort())
-    },
-    clearFilter () {
-      this.$nextTick(() => this.$refs.refElTable.clearFilter())
-    },
-    doLayout () {
-      this.$nextTick(() => this.$refs.refElTable.doLayout())
-    },
-    insert (newRecord) {
-      this.insertAt(newRecord, 0)
     },
     /**
      * 插入数据
@@ -641,27 +657,28 @@ export default {
       this._updateData()
     },
     removeSelecteds () {
-      this.removes(this.$refs.refElTable.selection.map(item => item.data))
+      this.removes(this.$refs.refElTable.selection.map(item => item ? item.data : item))
     },
-    getRecords (datas) {
-      return (datas || this.datas).map(item => item.data)
+    getRecords (rowIndex) {
+      let list = this._getData()
+      return arguments.length ? list[rowIndex] : list
     },
     getAllRecords () {
       return {
-        records: this.getRecords(),
+        records: this._getData(),
         insertRecords: this.getInsertRecords(),
         removeRecords: this.getRemoveRecords(),
         updateRecords: this.getUpdateRecords()
       }
     },
     getInsertRecords () {
-      return this.getRecords(this.datas.filter(item => item.editStatus === 'insert'))
+      return this._getData(this.datas.filter(item => item.editStatus === 'insert'))
     },
     getRemoveRecords () {
-      return this.getRecords(this.deleteRecords)
+      return this._getData(this.deleteRecords)
     },
     getUpdateRecords () {
-      return this.getRecords(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
+      return this._getData(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
     },
     clearActive () {
       this.isClearlActivate = true
@@ -841,6 +858,9 @@ export default {
       }
       return validPromise
     }
+    /***************************/
+    /* Public methods end      */
+    /***************************/
   }
 }
 </script>

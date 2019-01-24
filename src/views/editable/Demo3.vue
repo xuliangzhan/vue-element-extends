@@ -5,6 +5,9 @@
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
+    <el-button type="info" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
+    <el-button type="info" @click="$refs.editable.toggleRowSelection($refs.editable.getRecords(1), true)">设置第二行为选中</el-button>
+    <el-button type="info" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
     <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'manual', mode: 'row'}">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字" show-overflow-tooltip :editRender="{name: 'ElInput'}"></el-editable-column>

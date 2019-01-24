@@ -65,8 +65,8 @@
       <el-editable-column label="操作" width="160" fixed="right">
         <template slot-scope="scope">
           <template v-if="$refs.editable.getActiveRow() === scope.$index">
-            <el-button size="mini" type="success" @click="saveRowEvent(scope.row, scope.$index)">保存</el-button>
-            <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row, scope.$index)">取消</el-button>
+            <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
+            <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
           </template>
           <template v-else>
             <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.row)">编辑</el-button>
@@ -148,8 +148,17 @@ export default {
         this.$refs.editable.remove(row)
       }).catch(e => e)
     },
-    cancelRowEvent (row, index) {
-      this.$refs.editable.validateRow(index, valid => {
+    saveRowEvent (row) {
+      this.$refs.editable.validateRow(row).then(valid => {
+        this.postJSON('url', { row }).then(data => {
+          this.findList()
+        })
+      }).catch(e => {
+        console.log('error row submit!!')
+      })
+    },
+    cancelRowEvent (row) {
+      this.$refs.editable.validateRow(row, valid => {
         if (valid) {
           this.$refs.editable.clearActive()
         } else {

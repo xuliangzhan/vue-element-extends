@@ -5,7 +5,7 @@
     <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
 
-    <p style="color: red;">单击模式，点击后自动触发编辑</p>
+    <p style="color: red;">如果是单击模式会在点击后激活列编辑</p>
 
     <el-editable ref="editable" :data.sync="list" border size="mini" style="width: 100%">
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>

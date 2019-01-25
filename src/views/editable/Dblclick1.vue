@@ -6,7 +6,7 @@
     <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
     <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
 
-    <p style="color: red;">双击模式，双击后自动触发编辑</p>
+    <p style="color: red;">如果是单击模式会在双击后激活列编辑</p>
 
     <el-editable ref="editable" size="small" border :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}" style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>

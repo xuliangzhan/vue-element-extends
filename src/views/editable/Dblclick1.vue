@@ -11,7 +11,7 @@
       <el-editable-column prop="sex" label="性别" width="100" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="出生日期（只读）" width="220" :formatter="formatterBirthdate"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{type: 'visible'}">
@@ -89,6 +89,9 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    formatterBirthdate (row, column, cellValue, index) {
+      return XEUtils.toDateString(row.birthdate, 'yyyy-MM-dd')
     },
     submitEvent () {
       let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()

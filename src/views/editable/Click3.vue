@@ -1,17 +1,18 @@
 <template>
   <div v-loading="loading">
-    <el-button type="success" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
-    <el-button type="success" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
-    <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
-    <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
-    <el-button type="info" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
-    <el-button type="info" @click="$refs.editable.clearSort()">清空排序条件</el-button>
-    <el-button type="warning" @click="submitEvent">校验&保存</el-button>
-    <el-button type="primary" @click="getInsertEvent">获取新增数据</el-button>
-    <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
-    <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
-    <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
+    <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
+    <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
+    <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
+    <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
+    <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+    <el-button type="info" size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
+    <el-button type="info" size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
+    <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
+    <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
+    <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
+    <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
+    <el-button type="primary" size="mini" @click="getSelectedEvent">获取已选中数据</el-button>
+    <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
 
     <p style="color: red;">第1行不允许勾选</p>
 
@@ -209,6 +210,10 @@ export default {
     getRemoveEvent () {
       let rest = this.$refs.editable.getRemoveRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
+    },
+    getSelectedEvent () {
+      let rest = this.$refs.editable.getSelecteds()
+      MessageBox({ message: JSON.stringify(rest), title: `获取已选中数据(${rest.length}条)` })
     },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()

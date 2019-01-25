@@ -1,10 +1,10 @@
 <template>
   <div v-loading="loading">
-    <el-button type="success" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
-    <el-button type="success" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
-    <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
-    <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
-    <el-button type="warning" @click="submitEvent">保存</el-button>
+    <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
+    <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
+    <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
+    <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+    <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
     <el-editable ref="editable" height="400" size="small" :row-class-name="tableRowClassName" :editConfig="{trigger: 'click', showStatus: false}" style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>

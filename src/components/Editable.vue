@@ -668,8 +668,11 @@ export default {
       })
       this._updateData()
     },
+    getSelecteds () {
+      return this.$refs.refElTable.selection.map(item => item.data)
+    },
     removeSelecteds () {
-      this.removes(this.$refs.refElTable.selection.map(item => item.data))
+      this.removes(this.getSelecteds())
     },
     getRecords (rowIndex) {
       let list = this._getData()
@@ -678,6 +681,7 @@ export default {
     getAllRecords () {
       return {
         records: this._getData(),
+        selecteds: this.getSelecteds(),
         insertRecords: this.getInsertRecords(),
         removeRecords: this.getRemoveRecords(),
         updateRecords: this.getUpdateRecords()

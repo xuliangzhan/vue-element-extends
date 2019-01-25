@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
-    <el-button @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
-    <el-button @click="$refs.editable.clearSort()">清空排序条件</el-button>
+    <el-button size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
+    <el-button size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
     <el-button size="mini" @click="getAllEvent">获取所有</el-button>
     <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
     <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>

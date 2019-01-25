@@ -61,7 +61,7 @@
         </slot>
       </template>
       <template v-else>
-        <template v-if="scope.row.editActive && (scope.row.editable.mode === 'row' ? scope.row.editActive : scope.row.editActive === scope.column.property)">
+        <template v-if="scope.row.editActive && (scope.row.config.mode === 'row' ? scope.row.editActive : scope.row.editActive === scope.column.property)">
           <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
             <template v-if="editRender.name === 'ElSelect'">
               <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" @change="changeEvent(scope)">
@@ -210,7 +210,7 @@ export default {
   },
   methods: {
     getRendAttrs ({ row }) {
-      let size = row.editable.size
+      let size = row.config.size
       return Object.assign({ size }, this.editRender.attrs)
     },
     getSelectLabel ({ row, column }) {

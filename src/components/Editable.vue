@@ -210,7 +210,7 @@ export default {
       return (datas || this.datas).map(item => item.data)
     },
     _toData (item, status) {
-      return item.editable && item._EDITABLE_PROTO === this.editProto ? item : {
+      return item._EDITABLE_PROTO === this.editProto ? item : {
         _EDITABLE_PROTO: this.editProto,
         data: item,
         store: XEUtils.clone(item, true),
@@ -218,7 +218,7 @@ export default {
         validRule: null,
         editActive: null,
         editStatus: status || 'initial',
-        editable: {
+        config: {
           size: this.size,
           showIcon: this.showIcon,
           showStatus: this.showStatus,

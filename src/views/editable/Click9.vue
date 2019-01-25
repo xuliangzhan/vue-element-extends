@@ -11,11 +11,14 @@
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
+
+    <p style="color: red;">name字段（校验必填，校验3-10个字符）attr1字段（校验数字）attr2字段（校验必填，校验数字）sex字段（校验必填）age字段（自定义校验，18-28之间）rate字段（校验最少选中3颗星）</p>
+
     <el-editable ref="editable" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字" show-overflow-tooltip :editRender="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="attr1" label="校验数字" :editRender="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="attr2" label="校验数字(必填)" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="attr1" label="属性1" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="attr2" label="属性2(必填)" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="rate" label="评分" :editRender="{name: 'ElRate', type: 'visible'}"></el-editable-column>

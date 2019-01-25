@@ -5,10 +5,15 @@
     <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" @click="$refs.editable.clear()">清空数据</el-button>
+    <el-button type="warning" @click="validEvent">校验</el-button>
+    <el-button type="warning" @click="submitEvent">校验&保存</el-button>
     <el-button type="info" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
     <el-button type="info" @click="$refs.editable.toggleRowSelection($refs.editable.getRecords(1), true)">设置第二行为选中</el-button>
     <el-button type="info" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
-    <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%" :editConfig="{trigger: 'manual', mode: 'row'}">
+
+    <p style="color: red;">name字段（校验必填，校验3-10个字符</p>
+
+    <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'manual', mode: 'row'}">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
@@ -46,7 +51,16 @@ export default {
     return {
       sexList: XEUtils.clone(sexData, true),
       regionList: XEUtils.clone(regionData, true),
-      list: XEUtils.clone(listData, true)
+      list: XEUtils.clone(listData, true),
+      validRules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'change' },
+          { min: 3, max: 10, message: '名称长度 3-10 个字符', trigger: 'blur' }
+        ],
+        flag: [
+          { required: true, message: '必须选择启用才能保存', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
@@ -86,6 +100,20 @@ export default {
           </p>
           Message({ message, dangerouslyUseHTMLString: true, type: 'error' })
         }
+      })
+    },
+    validEvent () {
+      this.$refs.editable.validate().then(valid => {
+        alert('通过')
+      }).catch(valid => {
+        console.log('error submit!!')
+      })
+    },
+    submitEvent () {
+      this.$refs.editable.validate().then(valid => {
+        alert('提交通过')
+      }).catch(valid => {
+        console.log('error submit!!')
       })
     }
   }

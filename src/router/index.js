@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import EditableManual1 from '@/views/editable/Manual1'
+import EditableManual2 from '@/views/editable/Manual2'
 import EditableClick1 from '@/views/editable/Click1'
 import EditableClick2 from '@/views/editable/Click2'
 import EditableClick3 from '@/views/editable/Click3'
@@ -32,6 +33,11 @@ export default new Router({
       path: '/demo/editable/manual1',
       name: 'EditableManual1',
       component: EditableManual1
+    },
+    {
+      path: '/demo/editable/manual2',
+      name: 'EditableManual2',
+      component: EditableManual2
     },
     {
       path: '/demo/editable/click1',

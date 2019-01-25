@@ -11,6 +11,9 @@
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
+
+    <p style="color: red;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）age字段（自定义校验，18-28之间）rate字段（校验最少选中2颗星）</p>
+
     <el-editable ref="editable" class="my-table11" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" width="55">
         <template slot="head">
@@ -94,7 +97,7 @@ export default {
           { min: 3, max: 10, message: '名称长度在 3 到 10 个字符', trigger: 'change' }
         ],
         nickname: [
-          { min: 5, max: 15, message: '名称长度在 5 到 15 个字符', trigger: 'blur' }
+          { min: 5, max: 20, message: '名称长度在 5 到 20 个字符', trigger: 'blur' }
         ],
         sex: [
           { required: true, message: '请选择性别', trigger: 'blur' }

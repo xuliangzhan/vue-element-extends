@@ -6,6 +6,7 @@
     <div class="apimenu-header">
       <div class="apimenu-row">
         <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>手动模式、行编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>手动模式、行编辑、校验</router-link>
       </div>
       <div class="apimenu-row">
         <router-link class="apimenu-link" :to="{name: 'EditableClick1'}" replace>单击、列编辑、mini</router-link>

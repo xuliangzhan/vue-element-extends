@@ -11,6 +11,9 @@
     <el-button type="primary" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
+
+    <p style="color: red;">name字段（校验必填，校验最少3个字符）sex字段（校验必填）age字段（自定义校验，18-28之间）rate字段（校验最少选中3颗星）</p>
+
     <el-editable ref="editable" height="440" stripe border @select="selectEvent" size="small" @current-change="currentChangeEvent" :editRules="validRules" :editConfig="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
@@ -103,8 +106,8 @@ export default {
       }, 50)
     }
     const checkRate = (rule, value, callback) => {
-      if (parseInt(value) < 2) {
-        callback(new Error('最小选择2颗星'))
+      if (parseInt(value) < 3) {
+        callback(new Error('最小选择3颗星'))
       } else {
         callback()
       }

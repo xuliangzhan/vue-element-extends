@@ -7,7 +7,7 @@
 
     <p style="color: red;">单击模式，点击后自动触发编辑</p>
 
-    <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%">
+    <el-editable ref="editable" :data.sync="list" border size="mini" style="width: 100%">
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>

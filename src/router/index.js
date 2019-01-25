@@ -28,7 +28,7 @@ export default new Router({
     {
       path: '/',
       redirect: {
-        name: 'EditableManual1'
+        name: 'EditableClick1'
       }
     },
     {

@@ -8,7 +8,7 @@
 
     <p style="color: red;">双击模式，双击后自动触发编辑</p>
 
-    <el-editable ref="editable" size="small" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}" style="width: 100%">
+    <el-editable ref="editable" size="small" border :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}" style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" width="100" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>

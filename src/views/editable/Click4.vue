@@ -13,6 +13,7 @@
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
 
     <p style="color: red;">region字段（校验必填）</p>
+    <p style="color: red;">第1行不允许勾选</p>
 
     <el-editable ref="editable" height="600" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :edit-rules="validRules" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>

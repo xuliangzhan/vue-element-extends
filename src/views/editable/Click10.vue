@@ -14,6 +14,7 @@
     <el-button type="primary" @click="getAllEvent">获取所有数据</el-button>
 
     <p style="color: red;">name字段（校验必填，校验最少3个字符）</p>
+    <p style="color: red;">第1行不允许勾选</p>
     <p style="color: red;">限制第2行不允许编辑</p>
 
     <el-editable ref="editable" height="600" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editRules="validRules" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, activeMethod}" style="width: 100%">

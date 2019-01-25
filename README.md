@@ -100,7 +100,6 @@ edit-config 编辑参数配置
 
 ```html
 <el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput'}"></el-editable-column>
-<el-editable-column prop="switch" label="开关" edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
 ```
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
@@ -142,9 +141,9 @@ Vue.component(EditableColumn.name, EditableColumn)
 ```html
 <template>
   <div>
-    <el-button type="primary" @click="$refs.editable.insert({name: 'new1'})">新增</el-button>
-    <el-button type="danger" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="danger" @click="$refs.editable.clear()">清空所有</el-button>
+    <el-button @click="$refs.editable.insert({name: 'new1'})">新增</el-button>
+    <el-button @click="$refs.editable.removeSelecteds()">删除选中</el-button>
+    <el-button @click="$refs.editable.clear()">清空</el-button>
     <el-editable ref="editable" :data.sync="list">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
@@ -154,7 +153,7 @@ Vue.component(EditableColumn.name, EditableColumn)
       <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
       <el-editable-column prop="birthdate" label="出生日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" :editRender="{name: 'ElSwitch'}"></el-editable-column>
+      <el-editable-column prop="flag" label="是否生效" :editRender="{name: 'ElSwitch'}"></el-editable-column>
       <el-editable-column prop="remark" label="备注" :editRender="{name: 'ElInput'}"></el-editable-column>
     </el-editable>
   </div>
@@ -178,22 +177,6 @@ export default {
       ],
       regionList: [
         {
-          value: 'bj',
-          label: '北京',
-          children: [
-            {
-              value: 'bjs',
-              label: '北京市',
-              children: [
-                {
-                  value: 'dcq',
-                  label: '东城区'
-                }
-              ]
-            }
-          ]
-        },
-        {
           value: 'gds',
           label: '广东省',
           children: [
@@ -202,18 +185,12 @@ export default {
               label: '深圳市',
               children: [
                 {
+                  value: 'lgq',
+                  label: '龙岗区'
+                },
+                {
                   value: 'lhq',
                   label: '罗湖区'
-                }
-              ]
-            },
-            {
-              value: 'gzs',
-              label: '广州市',
-              children: [
-                {
-                  value: 'thq',
-                  label: '天河区'
                 }
               ]
             }
@@ -230,28 +207,6 @@ export default {
           birthdate: new Date(1994, 0, 1),
           date1: new Date(2019, 0, 1, 20, 0, 30),
           remark: '备注1',
-          flag: false
-        },
-        {
-          name: 'test22',
-          height: 166,
-          age: 24,
-          sex: '0',
-          region: ['gds', 'szs', 'lhq'],
-          birthdate: new Date(1992, 0, 1),
-          date1: new Date(2019, 0, 1, 12, 10, 30),
-          remark: '备注2',
-          flag: true
-        },
-        {
-          name: 'test33',
-          height: 172,
-          age: 22,
-          sex: '1',
-          region: ['bj', 'bjs', 'dcq'],
-          birthdate: new Date(1990, 0, 1),
-          date1: new Date(2019, 0, 1, 0, 30, 50),
-          remark: null,
           flag: false
         }
       ]

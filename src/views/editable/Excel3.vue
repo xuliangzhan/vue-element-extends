@@ -18,7 +18,7 @@ import { MessageBox } from 'element-ui'
 
 export default {
   data () {
-    let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
     const checkB = (rule, value, callback) => {
       if (value && !/^[\u4e00-\u9fa5]{1,5}$/.test(value)) {
         callback(new Error('请输入1-5个汉字'))

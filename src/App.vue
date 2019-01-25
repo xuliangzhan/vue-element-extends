@@ -1,23 +1,33 @@
 <template>
   <div id="app">
-    <h1>Editable 示例</h1>
+    <h1>
+      <a href="https://github.com/xuliangzhan/vue-element-extends">Editable</a>
+    </h1>
     <div class="apimenu-header">
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo1'}">单击、列编辑、mini</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo2'}">双击、列编辑、small</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo3'}">单击、行样式、分页</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo4'}">手动模式、行编辑</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo5'}">单击、行编辑、排序</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo6'}">双击、行编辑、筛选</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo7'}">单击、多级表头、必填</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo8'}">单击、动态列渲染</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo9'}">单击、动态列渲染、自定义列</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo10'}">单击、表尾合计行</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo11'}">单击、合并行或列</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo12'}">单击、基本校验</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableDemo13'}">双击、自定义列、校验、自定义提示</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableExcelDemo1'}">Excel表格、单击、带状态</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableExcelDemo2'}">Excel表格、双击、排序</router-link>
-      <router-link class="apimenu-link" :to="{name: 'EditableExcelDemo3'}">Excel表格、双击、校验、排序</router-link>
+      <div class="apimenu-row">
+        <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>手动模式、行编辑</router-link>
+      </div>
+      <div class="apimenu-row">
+        <router-link class="apimenu-link" :to="{name: 'EditableClick1'}" replace>单击、列编辑、mini</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>单击、行样式、分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>单击、行编辑、排序</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>单击、多级表头、必填</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>单击、动态列渲染</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>单击、动态列渲染、自定义列</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>单击、表尾合计行</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>单击、合并行或列</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>单击、基本校验</router-link>
+      </div>
+      <div class="apimenu-row">
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>双击、列编辑、small</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>双击、行编辑、筛选</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>双击、个性化列、校验、自定义校验提示</router-link>
+      </div>
+      <div class="apimenu-row">
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>Excel表格、单击、带状态</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel2'}" replace>Excel表格、双击、排序</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>Excel表格、双击、校验、排序</router-link>
+      </div>
     </div>
     <router-view/>
   </div>
@@ -47,13 +57,14 @@ export default {
   color: #2c3e50;
 }
 .apimenu-header {
-  display: inline-block;
+  margin-bottom: 10px;
 }
 .apimenu-link {
-  margin: 4px;
-  padding: 4px 10px;
+  margin: 2px;
+  padding: 2px 6px;
   border: 1px solid #3a8ee6;
-  float: left;
+  display: inline-block;
+  font-size: 12px;
   text-decoration: none;
 }
 .apimenu-link.router-link-exact-active {

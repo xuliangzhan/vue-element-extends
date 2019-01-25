@@ -18,12 +18,12 @@ import { MessageBox } from 'element-ui'
 
 export default {
   data () {
-    let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V']
     return {
       list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach(name => {
-          rest[name.toLowerCase()] = name === 'A' ? `A-${i}` : ''
+          rest[name.toLowerCase()] = name === 'A' ? `A-${i}`.padEnd(4, 0) : ''
         })
         return rest
       }),

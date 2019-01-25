@@ -64,15 +64,23 @@ export default {
 }
 .apimenu-link {
   margin: 2px;
-  padding: 2px 6px;
-  border: 1px solid #3a8ee6;
+  padding: 4px 6px;
+  color: #606266;
+  border: 1px solid #dcdfe6;
   display: inline-block;
   font-size: 12px;
+  border-radius: 2px;
   text-decoration: none;
 }
-.apimenu-link.router-link-exact-active {
-  background: #3a8ee6;
-  border-color: #3a8ee6;
+.apimenu-link:hover {
+  color: #409eff;
+  border-color: #c6e2ff;
+  background-color: #ecf5ff;
+}
+.apimenu-link.router-link-exact-active,
+.apimenu-link.router-link-exact-active:hover {
   color: #fff;
+  background-color: #409eff;
+  border-color: #409eff;
 }
 </style>

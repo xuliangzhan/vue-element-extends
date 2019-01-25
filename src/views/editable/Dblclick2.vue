@@ -77,6 +77,16 @@
         </template>
       </el-editable-column>
     </el-editable>
+
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageVO.currentPage"
+      :page-sizes="[10, 15, 20]"
+      :page-size="pageVO.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pageVO.totalResult">
+    </el-pagination>
   </div>
 </template>
 
@@ -149,6 +159,11 @@ export default {
         rate: [
           { validator: checkRate, trigger: 'blur' }
         ]
+      },
+      pageVO: {
+        currentPage: 1,
+        pageSize: 10,
+        totalResult: 0
       }
     }
   },
@@ -167,12 +182,21 @@ export default {
     },
     findList () {
       this.loading = true
-      this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
+      this.getDataJSON().then(({ page, result }) => {
+        this.pageVO.totalResult = page.total
+        this.$refs.editable.reload(result)
         this.loading = false
       }).catch(e => {
         this.loading = false
       })
+    },
+    handleSizeChange (pageSize) {
+      this.pageVO.pageSize = pageSize
+      this.findList()
+    },
+    handleCurrentChange (currentPage) {
+      this.pageVO.currentPage = currentPage
+      this.findList()
     },
     removeEvent (row) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {
@@ -287,8 +311,16 @@ export default {
       })
     },
     getDataJSON () {
+      // 模拟分页数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
+        let list = XEUtils.clone(listData, true).concat(XEUtils.clone(listData, true)).concat(XEUtils.clone(listData, true)).concat(XEUtils.clone(listData, true))
+        list.length = this.pageVO.pageSize
+        setTimeout(() => resolve({
+          page: {
+            total: 100
+          },
+          result: XEUtils.shuffle(list)
+        }), 350)
       })
     },
     getRegionJSON () {

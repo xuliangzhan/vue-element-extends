@@ -23,7 +23,7 @@ export default {
       list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach(name => {
-          rest[name.toLowerCase()] = name === 'A' ? `A-${i}`.padEnd(4, 0) : ''
+          rest[name.toLowerCase()] = name === 'A' ? `A-${i < 10 ? '0' + i : i}` : ''
         })
         return rest
       }),

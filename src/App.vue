@@ -29,7 +29,7 @@
       <div class="apimenu-row">
         <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>Excel表格、单击、带状态</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel2'}" replace>Excel表格、双击、排序</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>Excel表格、双击、校验、排序</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>Excel表格、双击、校验、排序、筛选</router-link>
       </div>
     </div>
     <router-view/>

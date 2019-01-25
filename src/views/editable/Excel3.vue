@@ -1,6 +1,8 @@
 <template>
   <div>
     <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
+    <el-button @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
+    <el-button @click="$refs.editable.clearSort()">清空排序条件</el-button>
     <el-button size="mini" @click="getAllEvent">获取所有</el-button>
     <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
     <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
@@ -51,6 +53,16 @@ export default {
           minWidth: '80',
           sortable: true,
           editRender: {name: 'ElInput'}
+        }
+        switch (name) {
+          case 'A':
+            column.filters = [{text: '大于10', value: 10}, {text: '大于50', value: 50}, {text: '大于100', value: 100}]
+            column.filterMethod = (value, row, column) => Number(row[column.property] || 0) > value
+            break
+          case 'C':
+            column.filters = [{text: 'a开头', value: 'a'}, {text: 'b开头', value: 'b'}, {text: 'c开头', value: 'c'}]
+            column.filterMethod = (value, row, column) => (row[column.property] || '').substring(0, 1) === value
+            break
         }
         return column
       }),

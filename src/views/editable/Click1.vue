@@ -4,6 +4,9 @@
     <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后新增一行</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+
+    <p style="color: red;">单击模式，点击后自动触发编辑</p>
+
     <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%">
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>

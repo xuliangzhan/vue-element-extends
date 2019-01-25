@@ -7,6 +7,7 @@
     <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
     <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
 
+    <p style="color: red;">渲染成 Excel 表格</p>
     <p style="color: red;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）</p>
 
     <el-editable ref="editable" class="excel-table2" :data.sync="list" border tooltip-effect="light" size="customSize" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">

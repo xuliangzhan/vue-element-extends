@@ -11,6 +11,7 @@
     <el-button type="info" size="mini" @click="$refs.editable.toggleRowSelection($refs.editable.getRecords(1), true)">设置第二行为选中</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
 
+    <p style="color: red;">手动模式关闭自动触发编辑</p>
     <p style="color: red;">name字段（校验必填，校验3-10个字符；flag（校验必填）</p>
 
     <el-editable ref="editable" :data.sync="list" size="mini" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'manual', mode: 'row'}">

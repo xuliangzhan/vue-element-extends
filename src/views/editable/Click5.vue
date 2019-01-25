@@ -10,6 +10,9 @@
     <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
+
+    <p style="color: red;">动态列渲染</p>
+
     <el-editable ref="editable" stripe border show-summary size="medium" style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column v-for="(item, index) in columnConfigs" :key="index" v-bind="item"></el-editable-column>

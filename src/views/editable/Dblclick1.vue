@@ -5,6 +5,9 @@
     <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
     <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
+
+    <p style="color: red;">双击模式，双击后自动触发编辑</p>
+
     <el-editable ref="editable" size="small" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}" style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>

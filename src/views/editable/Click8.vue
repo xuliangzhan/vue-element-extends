@@ -10,6 +10,10 @@
     <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
     <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
+
+    <p style="color: red;">自定义设置动态列</p>
+    <p style="color: red;">合并行或列</p>
+
     <el-editable ref="editable" stripe border :span-method="arraySpanMethod" @edit-active="editActiveEvent" @clear-active="clearActiveEvent" size="medium" style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">

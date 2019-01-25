@@ -14,7 +14,7 @@
 
     <p style="color: red;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）age字段（自定义校验，18-28之间）rate字段（校验最少选中2颗星）</p>
 
-    <el-editable ref="editable" class="my-table11" stripe border size="medium" height="600" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
+    <el-editable ref="editable" class="my-table11" stripe border size="medium" height="480" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" width="55">
         <template slot="head">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>

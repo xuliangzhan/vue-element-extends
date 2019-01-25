@@ -5,7 +5,11 @@
     <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
     <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
-    <el-editable ref="editable" height="400" size="small" :row-class-name="tableRowClassName" :editConfig="{trigger: 'click', showStatus: false}" style="width: 100%">
+
+    <p style="color: red;">自定义行样式</p>
+    <p style="color: red;">使用分页组件</p>
+
+    <el-editable ref="editable" height="540" size="small" border :row-class-name="tableRowClassName" :editConfig="{trigger: 'click', showStatus: false}" style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" width="100" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
@@ -31,10 +35,11 @@
     </el-editable>
 
     <el-pagination
+      class="my-pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
-      :page-sizes="[10, 15, 20]"
+      :page-sizes="[5, 10, 15, 20]"
       :page-size="pageVO.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pageVO.totalResult">
@@ -168,6 +173,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.my-pagination {
+  margin: 15px 20px 0 0;
+  text-align: right;
+}
+</style>
 
 <style>
 .el-table .warning-row {

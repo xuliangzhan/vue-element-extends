@@ -14,10 +14,11 @@
     <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
 
     <p style="color: red;">name字段（校验必填，校验最少3个字符）sex字段（校验必填）age字段（自定义校验，18-28之间）rate字段（校验最少选中3颗星）</p>
+    <p style="color: red;">使用分页组件</p>
 
-    <el-editable ref="editable" height="440" stripe border @select="selectEvent" size="small" @current-change="currentChangeEvent" :editRules="validRules" :editConfig="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
+    <el-editable ref="editable" height="540" stripe border @select="selectEvent" size="small" @current-change="currentChangeEvent" :editRules="validRules" :editConfig="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
-      <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
+      <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline>
@@ -80,10 +81,11 @@
     </el-editable>
 
     <el-pagination
+      class="my-pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
-      :page-sizes="[10, 15, 20]"
+      :page-sizes="[5, 10, 15, 20]"
       :page-size="pageVO.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pageVO.totalResult">
@@ -236,9 +238,6 @@ export default {
         }
       })
     },
-    indexMethod (index) {
-      return index * 2
-    },
     selectEvent (selection, row) {
       console.log(selection)
     },
@@ -338,6 +337,10 @@ export default {
 </script>
 
 <style scoped>
+.my-pagination {
+  margin: 15px 20px 0 0;
+  text-align: right;
+}
 .editable-custom_input {
   width: 95%;
 }

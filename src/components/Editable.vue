@@ -386,22 +386,24 @@ export default {
       }
     },
     _triggerActive (row, column, cell, event) {
-      let clss = ['editable-col_active']
-      if (row.validActive === column.property) {
-        clss.push('valid-error')
-      }
-      this._restoreTooltip(cell)
-      this._disabledTooltip(cell)
-      this._clearActiveColumns()
-      this._addClass(cell, clss)
-      this.lastActive = { row, column, cell }
-      row.editActive = column.property
-      this.$nextTick(() => {
-        this._setFocus(cell)
-        if (row.editActive !== column.property) {
-          this.$emit('edit-active', row.data, column, cell, event)
+      if (this.editConfig && this.editConfig.activeMethod ? this.editConfig.activeMethod(row, this.mode === 'row' ? null : column, XEUtils.findIndexOf(this.tableData, item => item === row)) : true) {
+        let clss = ['editable-col_active']
+        if (row.validActive === column.property) {
+          clss.push('valid-error')
         }
-      })
+        this._restoreTooltip(cell)
+        this._disabledTooltip(cell)
+        this._clearActiveColumns()
+        this._addClass(cell, clss)
+        this.lastActive = { row, column, cell }
+        row.editActive = column.property
+        this.$nextTick(() => {
+          this._setFocus(cell)
+          if (row.editActive !== column.property) {
+            this.$emit('edit-active', row.data, column, cell, event)
+          }
+        })
+      }
     },
     _updateColumnStatus (trElem, column, tdElem) {
       if (this._hasClass(column, 'editable-col_edit')) {

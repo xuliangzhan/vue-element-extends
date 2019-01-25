@@ -18,6 +18,8 @@
         <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>单击、表尾合计行</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>单击、合并行或列</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>单击、基本校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>单击、行编辑、排序、禁用行编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>单击、列编辑、排序、禁用列编辑</router-link>
       </div>
       <div class="apimenu-row">
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>双击、列编辑、small</router-link>

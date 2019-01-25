@@ -55,6 +55,7 @@ edit-config 编辑参数配置
 | mode  | 编辑方式 | String | cell（列编辑模式） / row（行编辑模式） | cell |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示列的 change 状态 | Boolean | — | true |
+| activeMethod | 仅对 type=default 的列有效，Function((row, column, index) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
 
 ### Editable Events
 
@@ -101,6 +102,8 @@ edit-config 编辑参数配置
 ```html
 <el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput'}"></el-editable-column>
 ```
+
+edit-render 渲染参数配置
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|

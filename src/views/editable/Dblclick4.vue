@@ -24,22 +24,7 @@
       </el-editable-column>
       <template v-for="(item, index) in columnConfigs">
         <template v-if="item.show">
-          <el-editable-column v-if="item.prop === 'attr4'" :key="index" v-bind="item">
-            <template slot="edit" slot-scope="scope">
-              <el-select v-model="scope.row.attr4" @change="attr4ChangeEvent(scope)">
-                <el-option v-for="(item, index) in attr4Options" :key="index" :value="item.value" :label="item.label" :disabled="item.disabled"></el-option>
-              </el-select>
-            </template>
-            <template slot-scope="scope">{{ getAttr4Label(scope.row.attr4) }}</template>
-          </el-editable-column>
-          <el-editable-column v-else-if="item.prop === 'attr5'" :key="index" v-bind="item">
-            <template slot="edit" slot-scope="scope">
-              <el-select v-model="scope.row.attr5" @change="attr5ChangeEvent(scope)">
-                <el-option v-for="(item, index) in attr5Options" :key="index" :value="item.label" :label="item.label"></el-option>
-              </el-select>
-            </template>
-          </el-editable-column>
-          <el-editable-column v-else-if="index === 0" :key="index" v-bind="item">
+          <el-editable-column v-if="index === 0" :key="index" v-bind="item">
             <template slot="valid" slot-scope="scope">
               <span class="error-msg">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段<br><a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">参考API说明</a></span>
             </template>
@@ -121,13 +106,6 @@ export default {
       columnConfigs: [],
       sexList: [],
       regionList: [],
-      typeOptions: Array.from(new Array(5), (v, i) => {
-        return {
-          label: `类型${i}`,
-          value: `type${i}`,
-          disabled: false
-        }
-      }),
       attr4Options: [],
       attr5Options: [],
       validRules: {
@@ -177,41 +155,87 @@ export default {
   },
   methods: {
     init () {
-      this.attr4Options = XEUtils.clone(this.typeOptions)
-      this.attr5Options = XEUtils.clone(this.typeOptions)
+      this.attr4Options = Array.from(new Array(5), (v, i) => {
+        return {
+          label: `类型${i}`,
+          value: `type${i}`,
+          attrs: {
+            disabled: false
+          }
+        }
+      })
+      this.attr5Options = Array.from(new Array(5), (v, i) => {
+        return {
+          label: `类型${i}`,
+          value: `类型${i}`,
+          attrs: {
+            disabled: false
+          }
+        }
+      })
       let sexPromise = this.getSexJSON()
       let regionPromise = this.getRegionJSON()
       this.findList()
       this.getColumnConfigs().then(data => {
         this.columnConfigs = data.map(column => {
           let defaultShow = ['name', 'nickname', 'sex', 'region', 'phone', 'rate', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].includes(column.prop)
+          let editRender = column.editRender
           column.checked = defaultShow
           column.show = defaultShow
           column.minWidth = '150'
-          column.editRender.attrs = {
+          editRender.attrs = {
             placeholder: `请输入${column.label}`
           }
           switch (column.prop) {
             case 'sex':
-              column.editRender.options = []
+              editRender.options = []
               sexPromise.then(rest => {
-                column.editRender.options = rest
+                editRender.options = rest
               })
               break
             case 'region':
-              column.editRender.attrs = {options: []}
+              editRender.attrs = {options: []}
               regionPromise.then(rest => {
-                column.editRender.attrs.options = rest
+                editRender.attrs.options = rest
               })
               break
             case 'birthdate':
-              column.editRender.attrs = {
+              editRender.attrs = {
                 type: 'date',
                 format: 'yyyy-MM-dd'
               }
               break
             case 'rate':
-              column.editRender.type = 'visible'
+              editRender.type = 'visible'
+              break
+            case 'attr4':
+              Object.assign(editRender, {
+                name: 'ElSelect',
+                options: this.attr4Options,
+                events: {
+                  change: (scope, val) => {
+                    let list = this.$refs.editable.getRecords()
+                    this.attr4Options.forEach(item => {
+                      item.attrs.disabled = list.some(row => row.attr4 === item.value)
+                    })
+                    this.$refs.editable.updateStatus(scope)
+                  }
+                }
+              })
+              break
+            case 'attr5':
+              column.formatter = (row, column, cellValue, index) => cellValue
+              Object.assign(editRender, {
+                name: 'ElSelect',
+                options: this.attr5Options,
+                events: {
+                  change: (scope, val) => {
+                    let list = this.$refs.editable.getRecords()
+                    editRender.options = this.attr5Options.filter(item => !list.some(row => row.attr5 === item.label))
+                    this.$refs.editable.updateStatus(scope)
+                  }
+                }
+              })
               break
           }
           return column
@@ -226,22 +250,6 @@ export default {
       }).catch(e => {
         this.loading = false
       })
-    },
-    attr4ChangeEvent (scope) {
-      let list = this.$refs.editable.getRecords()
-      this.$refs.editable.updateStatus(scope)
-      this.attr4Options.forEach(item => {
-        item.disabled = list.some(row => row.attr4 === item.value)
-      })
-    },
-    getAttr4Label (value) {
-      let selectItem = this.attr4Options.find(item => item.value === value)
-      return selectItem ? selectItem.label : null
-    },
-    attr5ChangeEvent (scope) {
-      let list = this.$refs.editable.getRecords()
-      this.$refs.editable.updateStatus(scope)
-      this.attr5Options = this.typeOptions.filter(item => !list.some(row => row.attr5 === item.label))
     },
     insertEvent () {
       let row = this.$refs.editable.insert()

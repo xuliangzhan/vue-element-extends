@@ -111,9 +111,8 @@ edit-render 渲染参数配置
 | name | 渲染内置的组件名称（如果是自定义渲染不需要传） | String | ElInput / ElSelect / ElCascader / ElDatePicker / ElInputNumber / ElSwitch / ElRate / ElColorPicker / ElSlider | ElInput |
 | type | 渲染类型 | String | default（组件触发后可视） / visible（组件一直可视，如果设置为类型则不支持自动校验） | default |
 | autofocus  | 该列在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | — |
-| attrs | 渲染组件附加属性，具体参数请查看被渲染的组件API | Object | — | {} |
-| events | 渲染组件附加事件，具体参数请查看被渲染的组件API | Object | — | {} |
-| optionAttrs | 下拉组件选项附加属性（只对 name=ElSelect 有效） | Object | — | {} |
+| attrs | 渲染组件附加属性，参数请查看被渲染的 Component attrs | Object | — | {} |
+| events | 渲染组件附加事件，参数为 ( { rule, row, column, $index }, ...Component arguments ) | Object | — | {} |
 | options | 下拉组件选项列表（只对 name=ElSelect 有效） | Array | — | [] |
 
 ### Editable-Column Scoped Slot

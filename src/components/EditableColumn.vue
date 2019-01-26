@@ -4,16 +4,16 @@
   </el-table-column>
   <el-table-column v-else-if="type === 'index'" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store}">#</slot>
+      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store, editRender}">#</slot>
     </template>
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="type === 'expand'" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store}"></slot>
+      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store, editRender}"></slot>
     </template>
     <template slot-scope="scope">
-      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}"></slot>
+      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}"></slot>
     </template>
   </el-table-column>
   <el-table-column v-else-if="editRender" v-bind="attrs">
@@ -25,35 +25,14 @@
     </template>
     <template slot-scope="scope">
       <template v-if="editRender.type === 'visible'">
-        <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
+        <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">
           <template v-if="editRender.name === 'ElSelect'">
             <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
-              <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="editRender.optionAttrs"></el-option>
+              <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="item.attrs"></el-option>
             </el-select>
           </template>
-          <template v-else-if="editRender.name === 'ElCascader'">
-            <el-cascader v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-cascader>
-          </template>
-          <template v-else-if="editRender.name === 'ElTimePicker'">
-            <el-time-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-time-picker>
-          </template>
-          <template v-else-if="editRender.name === 'ElDatePicker'">
-            <el-date-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-date-picker>
-          </template>
-          <template v-else-if="editRender.name === 'ElInputNumber'">
-            <el-input-number v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-input-number>
-          </template>
-          <template v-else-if="editRender.name === 'ElSwitch'">
-            <el-switch v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-switch>
-          </template>
-          <template v-else-if="editRender.name === 'ElRate'">
-            <el-rate v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-rate>
-          </template>
-          <template v-else-if="editRender.name === 'ElColorPicker'">
-            <el-color-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-color-picker>
-          </template>
-          <template v-else-if="editRender.name === 'ElSlider'">
-            <el-slider v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-slider>
+          <template v-else-if="comps.includes(editRender.name)">
+            <component :is="editRender.name" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></component>
           </template>
           <template v-else>
             <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-input>
@@ -62,35 +41,14 @@
       </template>
       <template v-else>
         <template v-if="scope.row.editActive && (scope.row.config.mode === 'row' ? scope.row.editActive : scope.row.editActive === scope.column.property)">
-          <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
+          <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">
             <template v-if="editRender.name === 'ElSelect'">
               <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
-                <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="editRender.optionAttrs"></el-option>
+                <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="item.attrs"></el-option>
               </el-select>
             </template>
-            <template v-else-if="editRender.name === 'ElCascader'">
-              <el-cascader v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-cascader>
-            </template>
-            <template v-else-if="editRender.name === 'ElTimePicker'">
-              <el-time-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-time-picker>
-            </template>
-            <template v-else-if="editRender.name === 'ElDatePicker'">
-              <el-date-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-date-picker>
-            </template>
-            <template v-else-if="editRender.name === 'ElInputNumber'">
-              <el-input-number v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-input-number>
-            </template>
-            <template v-else-if="editRender.name === 'ElSwitch'">
-              <el-switch v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-switch>
-            </template>
-            <template v-else-if="editRender.name === 'ElRate'">
-              <el-rate v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-rate>
-            </template>
-            <template v-else-if="editRender.name === 'ElColorPicker'">
-              <el-color-picker v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-color-picker>
-            </template>
-            <template v-else-if="editRender.name === 'ElSlider'">
-              <el-slider v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-slider>
+            <template v-else-if="comps.includes(editRender.name)">
+              <component :is="editRender.name" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></component>
             </template>
             <template v-else>
               <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-input>
@@ -98,17 +56,11 @@
           </slot>
         </template>
         <template v-else>
-          <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
-            <template v-if="editRender.name === 'ElSelect'">{{ getSelectLabel(scope) }}</template>
-            <template v-else-if="editRender.name === 'ElCascader'">{{ getCascaderLabel(scope) }}</template>
-            <template v-else-if="editRender.name === 'ElTimePicker'">{{ getTimePickerLabel(scope) }}</template>
-            <template v-else-if="editRender.name === 'ElDatePicker'">{{ getDatePickerLabel(scope) }}</template>
-            <template v-else>{{ formatter ? formatter(scope.row.data, scope.column, scope.row.data[scope.column.property], scope.$index) : scope.row.data[scope.column.property] }}</template>
-          </slot>
+          <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">{{ formatColumnLabel(scope) }}</slot>
         </template>
       </template>
       <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
-        <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">
+        <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">
           <div class="editable-valid_error">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</div>
         </slot>
       </template>
@@ -116,7 +68,7 @@
   </el-table-column>
   <el-table-column v-else v-bind="attrs">
     <template slot-scope="scope">
-      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, _row: scope.row}">{{ formatter ? formatter(scope.row.data, scope.column, scope.row.data[scope.column.property], scope.$index) : scope.row.data[scope.column.property] }}</slot>
+      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">{{ formatColumnLabel(scope) }}</slot>
     </template>
   </el-table-column>
 </template>
@@ -163,6 +115,11 @@ export default {
   inject: [
     '$editable'
   ],
+  data () {
+    return {
+      comps: ['ElInput', 'ElSelect', 'ElCascader', 'ElDatePicker', 'ElInputNumber', 'ElSwitch', 'ElRate', 'ElColorPicker', 'ElSlider']
+    }
+  },
   computed: {
     attrs () {
       let sortBy
@@ -213,9 +170,32 @@ export default {
       let size = scope.row.config.size
       return Object.assign({ size }, this.editRender.attrs)
     },
-    getRendEvents (scope) {
-      let $self = this
-      return Object.assign({}, this.editRender.events, { change () { $self.changeEvent(scope, arguments) } })
+    getRendEvents ({ $index, row, column, store }) {
+      let editRender = this.editRender
+      let scope = {$index, row: row.data, column, store, editRender, _row: row}
+      let defEvent = { change: () => this.$editable.updateStatus(scope) }
+      if (editRender.events) {
+        return Object.assign(defEvent, XEUtils.objectMap(editRender.events, cb => function () {
+          cb.apply(null, [scope].concat(Array.from(arguments)))
+        }))
+      }
+      return defEvent
+    },
+    formatColumnLabel (scope) {
+      if (this.formatter) {
+        return this.formatter(scope.row.data, scope.column, scope.row.data[scope.column.property], scope.$index)
+      }
+      if (this.editRender) {
+        switch (this.editRender.name) {
+          case 'ElSelect':
+            return this.getSelectLabel(scope)
+          case 'ElCascader':
+            return this.getCascaderLabel(scope)
+          case 'ElTimePicker':
+            return this.getDatePickerLabel(scope)
+        }
+      }
+      return scope.row.data[scope.column.property]
     },
     getSelectLabel ({ row, column }) {
       let value = row.data[column.property]
@@ -276,16 +256,6 @@ export default {
     },
     filterMethodEvent (value, row, column) {
       return this.filterMethod(value, row.data, column)
-    },
-    changeEvent (scope, args) {
-      let events = this.editRender.events
-      let { $index, row, column, store } = scope
-      if (this.$editable) {
-        this.$editable.updateStatus({$index, row: row.data, column, store, _row: row})
-      }
-      if (events && events.change) {
-        events.change.apply(scope, args)
-      }
     }
   }
 }

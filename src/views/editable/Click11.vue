@@ -159,10 +159,10 @@ export default {
     },
     attr4ChangeEvent (scope) {
       let list = this.$refs.editable.getRecords()
-      this.$refs.editable.updateStatus(scope)
       this.attr4Options.forEach(item => {
         item.disabled = list.some(row => row.attr4 === item.value)
       })
+      this.$refs.editable.updateStatus(scope)
     },
     getAttr4Label (value) {
       let selectItem = this.attr4Options.find(item => item.value === value)
@@ -170,8 +170,8 @@ export default {
     },
     attr5ChangeEvent (scope) {
       let list = this.$refs.editable.getRecords()
-      this.$refs.editable.updateStatus(scope)
       this.attr5Options = this.typeOptions.filter(item => !list.some(row => row.attr5 === item.label))
+      this.$refs.editable.updateStatus(scope)
     },
     submitEvent () {
       this.$refs.editable.validate(valid => {

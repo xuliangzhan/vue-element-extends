@@ -1,15 +1,17 @@
 <template>
   <div>
-    <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字1'})">新增一行</el-button>
-    <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后新增一行</el-button>
-    <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.toggleRowSelection($refs.editable.getRecords(1), true)">设置第二行为选中</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
-
     <p style="color: red;">如果是手动模式会自动关闭触发激活</p>
+
+    <p>
+      <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字1'})">新增一行</el-button>
+      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后新增一行</el-button>
+      <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.toggleRowSelection($refs.editable.getRecords(1), true)">设置第二行为选中</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
+    </p>
 
     <el-editable ref="editable" :data.sync="list" border size="mini" style="width: 100%" :editConfig="{trigger: 'manual', mode: 'row'}">
       <el-editable-column type="selection" width="55"></el-editable-column>

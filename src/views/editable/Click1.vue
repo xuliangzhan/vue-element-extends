@@ -1,11 +1,13 @@
 <template>
   <div>
-    <el-button type="success" size="mini" @click="$refs.editable.insert({name: `New ${Date.now()}`, flag: true, createDate: Date.now()})">新增一行</el-button>
-    <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: `New last ${Date.now()}`, flag: true, createDate: Date.now()}, -1)">在最后新增一行</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
-
     <p style="color: red;">如果是单击模式会在点击后激活列编辑</p>
+
+    <p>
+      <el-button type="success" size="mini" @click="$refs.editable.insert({name: `New ${Date.now()}`, flag: true, createDate: Date.now()})">新增一行</el-button>
+      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: `New last ${Date.now()}`, flag: true, createDate: Date.now()}, -1)">在最后新增一行</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+    </p>
 
     <el-editable ref="editable" :data.sync="list" border size="mini" style="width: 100%">
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>

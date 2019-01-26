@@ -83,5 +83,19 @@
     "editRender": {
       "name": "ElInput"
     }
+  },
+  {
+    "prop": "attr4",
+    "label": "属性4",
+    "editRender": {
+      "name": "ElInput"
+    }
+  },
+  {
+    "prop": "attr5",
+    "label": "属性5",
+    "editRender": {
+      "name": "ElInput"
+    }
   }
 ]

@@ -1,17 +1,19 @@
 <template>
   <div v-loading="loading">
-    <el-button type="success" size="mini" @click="$refs.editable.insert({flag3: false})">新增一行</el-button>
-    <el-button type="success" size="mini" @click="$refs.editable.insertAt({flag3: false}, -1)">在最后新增一行</el-button>
-    <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
-    <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
-    <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
-    <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
-    <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
-    <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
-
     <p style="color: red;">自定义设置动态列</p>
+
+    <p>
+      <el-button type="success" size="mini" @click="$refs.editable.insert({flag3: false})">新增一行</el-button>
+      <el-button type="success" size="mini" @click="$refs.editable.insertAt({flag3: false}, -1)">在最后新增一行</el-button>
+      <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+      <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
+      <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
+      <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
+      <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
+      <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
+    </p>
 
     <el-editable ref="editable" stripe border size="medium" style="width: 100%">
       <el-editable-column type="index" width="55">

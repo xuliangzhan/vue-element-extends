@@ -1,17 +1,20 @@
 <template>
   <div v-loading="loading">
-    <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
-    <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
-    <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
-    <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
-    <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
-    <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
-    <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
-    <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
+    <p style="color: red;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-28之间）phone字段（校验必填，校验手机号码）rate字段（校验必填，校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
+    <p style="color: red;">自定义渲染：attr4字段，选择唯一下拉选项；attr5字段，限制唯一下拉选项</p>
 
-    <p style="color: red;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-28之间）phone字段（校验必填，校验手机号码）rate字段（校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
+    <p>
+      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
+      <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+      <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
+      <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
+      <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
+      <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
+      <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
+      <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
+    </p>
 
     <el-editable ref="editable" class="my-table11" stripe border size="medium" height="480" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" width="55">
@@ -21,7 +24,22 @@
       </el-editable-column>
       <template v-for="(item, index) in columnConfigs">
         <template v-if="item.show">
-          <el-editable-column v-if="index === 0" :key="index" v-bind="item">
+          <el-editable-column v-if="item.prop === 'attr4'" :key="index" v-bind="item">
+            <template slot="edit" slot-scope="scope">
+              <el-select v-model="scope.row.attr4" @change="attr4ChangeEvent(scope)">
+                <el-option v-for="(item, index) in attr4Options" :key="index" :value="item.value" :label="item.label" :disabled="item.disabled"></el-option>
+              </el-select>
+            </template>
+            <template slot-scope="scope">{{ getAttr4Label(scope.row.attr4) }}</template>
+          </el-editable-column>
+          <el-editable-column v-else-if="item.prop === 'attr5'" :key="index" v-bind="item">
+            <template slot="edit" slot-scope="scope">
+              <el-select v-model="scope.row.attr5" @change="attr5ChangeEvent(scope)">
+                <el-option v-for="(item, index) in attr5Options" :key="index" :value="item.label" :label="item.label"></el-option>
+              </el-select>
+            </template>
+          </el-editable-column>
+          <el-editable-column v-else-if="index === 0" :key="index" v-bind="item">
             <template slot="valid" slot-scope="scope">
               <span class="error-msg">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段<br><a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">参考API说明</a></span>
             </template>
@@ -103,6 +121,15 @@ export default {
       columnConfigs: [],
       sexList: [],
       regionList: [],
+      typeOptions: Array.from(new Array(5), (v, i) => {
+        return {
+          label: `类型${i}`,
+          value: `type${i}`,
+          disabled: false
+        }
+      }),
+      attr4Options: [],
+      attr5Options: [],
       validRules: {
         name: [
           { required: true, message: '名称必须填写', trigger: 'change' },
@@ -126,6 +153,7 @@ export default {
           { message: '请选择日期', trigger: 'blur' }
         ],
         rate: [
+          { required: true, message: '请选择评分', trigger: 'blur' },
           { validator: checkRate, trigger: 'blur' }
         ],
         url: [
@@ -149,13 +177,16 @@ export default {
   },
   methods: {
     init () {
+      this.attr4Options = XEUtils.clone(this.typeOptions)
+      this.attr5Options = XEUtils.clone(this.typeOptions)
       let sexPromise = this.getSexJSON()
       let regionPromise = this.getRegionJSON()
       this.findList()
       this.getColumnConfigs().then(data => {
         this.columnConfigs = data.map(column => {
-          column.checked = true
-          column.show = true
+          let defaultShow = ['name', 'nickname', 'sex', 'region', 'phone', 'rate', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].includes(column.prop)
+          column.checked = defaultShow
+          column.show = defaultShow
           column.editRender.attrs = {
             placeholder: `请输入${column.label}`
           }
@@ -195,6 +226,22 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    attr4ChangeEvent (scope) {
+      let list = this.$refs.editable.getRecords()
+      this.$refs.editable.updateStatus(scope)
+      this.attr4Options.forEach(item => {
+        item.disabled = list.some(row => row.attr4 === item.value)
+      })
+    },
+    getAttr4Label (value) {
+      let selectItem = this.attr4Options.find(item => item.value === value)
+      return selectItem ? selectItem.label : null
+    },
+    attr5ChangeEvent (scope) {
+      let list = this.$refs.editable.getRecords()
+      this.$refs.editable.updateStatus(scope)
+      this.attr5Options = this.typeOptions.filter(item => !list.some(row => row.attr5 === item.label))
     },
     insertEvent () {
       let row = this.$refs.editable.insert()

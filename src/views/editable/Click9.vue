@@ -1,18 +1,20 @@
 <template>
   <div v-loading="loading">
-    <el-button type="success" size="mini" @click="$refs.editable.insert()">新增一行</el-button>
-    <el-button type="success" size="mini" @click="$refs.editable.insertAt(null, -1)">在最后新增一行</el-button>
-    <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-    <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
-    <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
-    <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
-    <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
-    <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
-    <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
-    <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
-
     <p style="color: red;">name字段（校验必填，校验3-10个字符）attr1字段（校验数字）attr2字段（校验必填，校验数字）sex字段（校验必填）age字段（自定义校验，18-28之间）rate字段（校验最少选中3颗星）</p>
+
+    <p>
+      <el-button type="success" size="mini" @click="$refs.editable.insert()">新增一行</el-button>
+      <el-button type="success" size="mini" @click="$refs.editable.insertAt(null, -1)">在最后新增一行</el-button>
+      <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+      <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
+      <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
+      <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
+      <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
+      <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
+      <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
+    </p>
 
     <el-editable ref="editable" stripe border size="medium" height="480" style="width: 100%" :editRules="validRules">
       <el-editable-column type="index" width="55"></el-editable-column>

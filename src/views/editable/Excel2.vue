@@ -1,12 +1,14 @@
 <template>
   <div>
-    <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
-    <el-button size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
-    <el-button size="mini" @click="getAllEvent">获取所有</el-button>
-    <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
-    <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
-
     <p style="color: red;">A字段（必填校验）</p>
+
+    <p>
+      <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
+      <el-button size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
+      <el-button size="mini" @click="getAllEvent">获取所有</el-button>
+      <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
+      <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
+    </p>
 
     <el-editable ref="editable" class="excel-table2" :data.sync="list" border tooltip-effect="light" size="customSize" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" align="center" width="50"></el-editable-column>

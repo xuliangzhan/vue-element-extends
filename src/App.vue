@@ -19,13 +19,13 @@
         <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>单击、合并行或列</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>单击、基本校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>单击、行编辑、排序、禁用行编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>单击、列编辑、排序、禁用列编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>单击、列编辑、排序、禁用列编辑、下拉选项唯一性</router-link>
       </div>
       <div class="apimenu-row">
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>双击、列编辑、small</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>双击、行编辑、筛选、分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>双击、个性化列、校验、自定义校验提示</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>双击、个性化列、完整校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>双击、个性化列、下拉选项唯一性、完整校验</router-link>
       </div>
       <div class="apimenu-row">
         <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>Excel表格、单击、带状态</router-link>

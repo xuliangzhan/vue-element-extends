@@ -3,11 +3,11 @@
 * 功能点：
   * 支持单列编辑
   * 支持整行编辑
-  * 支持单击、双击编辑模式
+  * 支持手动、单击、双击编辑模式
   * 支持渲染简化的内置组件
   * 支持渲染任意自定义组件
   * 支持动态列渲染
-  * 支持数据校验
+  * 支持数据校验（同步、异步）
   * 支持显示列数据 change 状态
   * 支持增/删/改/查/还原
   * 支持原 ElTable 所有参数及功能
@@ -84,7 +84,7 @@ edit-config 编辑参数配置
 | isActiveRow | 判断当前是否活动行 | row |
 | updateStatus | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
 | getAllRecords | 获取表格数据集合 | — |
-| getRecords | 获取表格数据 | index |
+| getRecords | 获取表格数据，也可以指定索引获取某条数据 | index |
 | getInsertRecords | 获取新增数据 | — |
 | getRemoveRecords | 获取已删除数据 | — |
 | getUpdateRecords| 获取已修改数据 | — |
@@ -111,8 +111,8 @@ edit-render 渲染参数配置
 | name | 渲染内置的组件名称（如果是自定义渲染不需要传） | String | ElInput / ElSelect / ElCascader / ElDatePicker / ElInputNumber / ElSwitch / ElRate / ElColorPicker / ElSlider | ElInput |
 | type | 渲染类型 | String | default（组件触发后可视） / visible（组件一直可视，如果设置为类型则不支持自动校验） | default |
 | autofocus  | 该列在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | — |
-| attrs | 渲染组件附加属性 | Object | — | {} |
-| events | 渲染组件附加事件 | Object | — | {} |
+| attrs | 渲染组件附加属性，具体参数请查看被渲染的组件API | Object | — | {} |
+| events | 渲染组件附加事件，具体参数请查看被渲染的组件API | Object | — | {} |
 | optionAttrs | 下拉组件选项附加属性（只对 name=ElSelect 有效） | Object | — | {} |
 | options | 下拉组件选项列表（只对 name=ElSelect 有效） | Array | — | [] |
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p style="color: red;">渲染成 Excel 表格</p>
+    <p style="color: red;font-size: 12px;">渲染成 Excel 表格</p>
 
     <p>
       <el-button size="mini" @click="$refs.editable.insert()">新增</el-button>

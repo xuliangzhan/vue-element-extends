@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-28之间）phone字段（校验必填，校验手机号码）rate字段（校验必填，校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
-    <p style="color: red;">自定义渲染：attr4字段，选择唯一下拉选项；attr5字段，限制唯一下拉选项</p>
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-28之间）phone字段（校验必填，校验手机号码）rate字段（校验必填，校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
+    <p style="color: red;font-size: 12px;">自定义渲染：attr4字段，选择唯一下拉选项；attr5字段，限制唯一下拉选项</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
@@ -187,6 +187,7 @@ export default {
           let defaultShow = ['name', 'nickname', 'sex', 'region', 'phone', 'rate', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].includes(column.prop)
           column.checked = defaultShow
           column.show = defaultShow
+          column.minWidth = '150'
           column.editRender.attrs = {
             placeholder: `请输入${column.label}`
           }
@@ -210,7 +211,6 @@ export default {
               }
               break
             case 'rate':
-              column.minWidth = '90'
               column.editRender.type = 'visible'
               break
           }

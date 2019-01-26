@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;">自定义设置动态列</p>
+    <p style="color: red;font-size: 12px;">自定义设置动态列</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({flag3: false})">新增一行</el-button>

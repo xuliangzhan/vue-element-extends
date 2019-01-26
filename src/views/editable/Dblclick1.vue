@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;">如果是单击模式会在双击后激活列编辑</p>
+    <p style="color: red;font-size: 12px;">如果是单击模式会在双击后激活列编辑</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: `New ${Date.now()}`, flag: true, flag2: 'Y', status: [], createDate: Date.now()})">新增一行</el-button>

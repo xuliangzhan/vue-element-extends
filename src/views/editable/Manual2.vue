@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p style="color: red;">如果是手动模式会自动关闭触发激活</p>
-    <p style="color: red;">name字段（校验必填，校验3-10个字符；flag（校验必填）</p>
+    <p style="color: red;font-size: 12px;">如果是手动模式会自动关闭触发激活</p>
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符；flag（校验必填）</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字1'})">新增一行</el-button>

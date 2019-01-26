@@ -1,9 +1,9 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;">name字段（校验必填，校验最少3个字符）</p>
-    <p style="color: red;">第1行不允许勾选</p>
-    <p style="color: red;">第3行的年龄和出生日期不允许编辑</p>
-    <p style="color: red;">自定义渲染：attr4字段，选择唯一下拉选项；attr5字段，限制唯一下拉选项</p>
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
+    <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
+    <p style="color: red;font-size: 12px;">第3行的年龄和出生日期不允许编辑</p>
+    <p style="color: red;font-size: 12px;">自定义渲染：attr4字段，选择唯一下拉选项；attr5字段，限制唯一下拉选项</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
@@ -73,7 +73,6 @@
 <script>
 import XEUtils from 'xe-utils'
 import { MessageBox, Message } from 'element-ui'
-import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
 
@@ -126,21 +125,11 @@ export default {
     init () {
       this.attr4Options = XEUtils.clone(this.typeOptions)
       this.attr5Options = XEUtils.clone(this.typeOptions)
-      this.findList()
       this.getSexJSON().then(data => {
         this.sexList = data
       })
       this.getRegionJSON().then(data => {
         this.regionList = data
-      })
-    },
-    findList () {
-      this.loading = true
-      this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
       })
     },
     activeMethod (row, column, index) {
@@ -187,10 +176,7 @@ export default {
     submitEvent () {
       this.$refs.editable.validate(valid => {
         if (valid) {
-          let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
-          this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-            this.findList()
-          })
+          alert('成功')
         } else {
           console.log('error submit!!')
           return false
@@ -249,11 +235,6 @@ export default {
     getSexJSON () {
       return new Promise(resolve => {
         setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
-      })
-    },
-    getDataJSON () {
-      return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
       })
     },
     getRegionJSON () {

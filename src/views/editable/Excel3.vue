@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p style="color: red;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
+    <p style="color: red;font-size: 12px;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
     <p>
       <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
       <el-button size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>

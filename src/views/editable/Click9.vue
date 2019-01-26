@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;">name字段（校验必填，校验3-10个字符）attr1字段（校验数字）attr2字段（校验必填，校验数字）sex字段（校验必填）age字段（自定义校验，18-28之间）rate字段（校验最少选中3颗星）</p>
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符）attr1字段（校验数字）attr2字段（校验必填，校验数字）sex字段（校验必填）age字段（自定义校验，18-28之间）rate字段（校验最少选中3颗星）</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert()">新增一行</el-button>

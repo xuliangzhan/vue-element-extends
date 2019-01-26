@@ -251,6 +251,12 @@ export default {
     _cellDBLclick (row, column, cell, event) {
       this._cellHandleEvent('dblclick', row, column, cell, event)
     },
+    /**
+     * 触发编辑事件
+     * 行模式和列模式可编辑，如果是只读列不能编辑
+     * 触发时先校验活动行或列，如果存在校验规则且校验不通过
+     * 停止激活新行，聚焦到校验错误行
+     */
     _cellHandleEvent (type, row, column, cell, event) {
       if (!this.isClearlActivate && this._hasClass(cell, 'editable-col_edit')) {
         this._validActiveCell().then(() => {
@@ -328,6 +334,10 @@ export default {
         this._addClass(elem, ['el-tooltip'])
       })
     },
+    /**
+     * 阻止带有 tooltip 组件的列
+     * 如果行或列被激活编辑时，关闭 tooltip 提示并禁用
+     */
     _disabledTooltip (cell) {
       let tElems = ['row', 'manual'].includes(this.mode) ? cell.parentNode.querySelectorAll('td.editable-col_edit>.cell.el-tooltip') : cell.querySelectorAll('.cell.el-tooltip')
       if (this.$refs.refElTable) {
@@ -373,6 +383,12 @@ export default {
       })
       cell.className = classList.join(' ')
     },
+    /**
+     * 设置列聚焦
+     * 默认对文本款类的激活后自动聚焦
+     * 如果是自定义渲染，也可以指定 class=editable-custom_input 使该列自动聚焦
+     * 允许通过列渲染配置指定 autofocus 来打开或关闭自动聚焦
+     */
     _setFocus (cell) {
       let inpElem = cell.querySelector('.el-input>input')
       if (!inpElem) {

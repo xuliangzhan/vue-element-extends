@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;">自定义行样式</p>
-    <p style="color: red;">使用分页组件</p>
+    <p style="color: red;font-size: 12px;">自定义行样式</p>
+    <p style="color: red;font-size: 12px;">使用分页组件</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>

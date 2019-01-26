@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p style="color: red;">A字段（必填校验）</p>
+    <p style="color: red;font-size: 12px;">A字段（必填校验）</p>
 
     <p>
       <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>

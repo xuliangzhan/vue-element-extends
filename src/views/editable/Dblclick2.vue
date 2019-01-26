@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;">name字段（校验必填，校验最少3个字符）sex字段（校验必填）age字段（自定义校验，18-28之间）rate字段（校验最少选中3颗星）</p>
-    <p style="color: red;">使用分页组件</p>
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）sex字段（校验必填）age字段（自定义校验，18-28之间）rate字段（校验最少选中3颗星）</p>
+    <p style="color: red;font-size: 12px;">使用分页组件</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>

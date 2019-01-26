@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;">第1行不允许勾选</p>
+    <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>

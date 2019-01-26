@@ -65,7 +65,7 @@ export default {
 }
 .apimenu-link {
   margin: 2px;
-  padding: 4px 6px;
+  padding: 2px;
   color: #606266;
   border: 1px solid #dcdfe6;
   display: inline-block;

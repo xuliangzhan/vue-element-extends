@@ -34,7 +34,7 @@
       </template>
       <el-editable-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
+          <el-button size="mini" type="danger" @click="removeEvent(scope)">删除</el-button>
         </template>
       </el-editable-column>
     </el-editable>
@@ -213,13 +213,7 @@ export default {
                 name: 'ElSelect',
                 options: this.attr4Options,
                 events: {
-                  change: (scope, val) => {
-                    let list = this.$refs.editable.getRecords()
-                    this.attr4Options.forEach(item => {
-                      item.attrs.disabled = list.some(row => row.attr4 === item.value)
-                    })
-                    this.$refs.editable.updateStatus(scope)
-                  }
+                  change: this.attr4ChangeEvent
                 }
               })
               break
@@ -229,11 +223,7 @@ export default {
                 name: 'ElSelect',
                 options: this.attr5Options,
                 events: {
-                  change: (scope, val) => {
-                    let list = this.$refs.editable.getRecords()
-                    editRender.options = this.attr5Options.filter(item => !list.some(row => row.attr5 === item.label))
-                    this.$refs.editable.updateStatus(scope)
-                  }
+                  change: this.attr5ChangeEvent
                 }
               })
               break
@@ -256,8 +246,29 @@ export default {
       // 对新增行进行校验提示
       this.$nextTick(() => this.$refs.editable.validateRow(row).catch(e => e))
     },
-    removeEvent (row) {
-      this.$refs.editable.remove(row)
+    removeEvent (scope) {
+      MessageBox.confirm('确定删除该数据?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$refs.editable.remove(scope.row)
+        this.attr4ChangeEvent(scope)
+        this.attr5ChangeEvent(scope)
+      }).catch(e => e)
+    },
+    attr4ChangeEvent (scope) {
+      let list = this.$refs.editable.getRecords()
+      this.attr4Options.forEach(item => {
+        item.attrs.disabled = list.some(row => row.attr4 === item.value)
+      })
+      this.$refs.editable.updateStatus(scope)
+    },
+    attr5ChangeEvent (scope) {
+      let column = this.columnConfigs.find(item => item.prop === 'attr5')
+      let list = this.$refs.editable.getRecords()
+      column.editRender.options = this.attr5Options.filter(item => !list.some(row => row.attr5 === item.label))
+      this.$refs.editable.updateStatus(scope)
     },
     validEvent () {
       this.$refs.editable.validate().then(valid => {

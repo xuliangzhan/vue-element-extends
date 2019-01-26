@@ -63,7 +63,7 @@
       </el-editable-column>
       <el-editable-column label="操作" width="80" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
+          <el-button size="mini" type="danger" @click="removeEvent(scope)">删除</el-button>
         </template>
       </el-editable-column>
     </el-editable>
@@ -139,13 +139,15 @@ export default {
       }
       return true
     },
-    removeEvent (row) {
+    removeEvent (scope) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$refs.editable.remove(row)
+        this.$refs.editable.remove(scope.row)
+        this.attr4ChangeEvent(scope)
+        this.attr5ChangeEvent(scope)
       }).catch(e => e)
     },
     indexMethod (index) {

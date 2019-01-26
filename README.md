@@ -130,7 +130,7 @@ edit-render 渲染参数配置
 
 1. 依赖库 npm install vuex xe-utils
 2. 需要依赖 vuex 中的 globalClick 属性，该属性值为响应全局 click  事件 (具体实现方式可以参考 store/modules/event.js)
-3. 将 Editable.vue 和 EditableColumn.vue 复制到项目中，（例如：components 目录下），然后注册组件（全局或者局部）
+3. 将 Editable.vue 和 EditableColumn.vue 复制到项目中，（例如：components 目录下），然后注册组件（全局或局部）
 
 到此结束，[开始玩耍吧](https://xuliangzhan.github.io/vue-element-extends/)，特殊需求也可以自行根据项目需求去修改  
 如果有更好优化建议或遇到问题欢迎提 Issues 和讨论

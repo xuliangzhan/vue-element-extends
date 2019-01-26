@@ -29,6 +29,13 @@
     }
   },
   {
+    "prop": "phone",
+    "label": "手机号码",
+    "editRender": {
+      "name": "ElInput"
+    }
+  },
+  {
     "prop": "region",
     "label": "地区",
     "editRender": {
@@ -47,6 +54,13 @@
     "label": "评分",
     "editRender": {
       "name": "ElRate"
+    }
+  },
+  {
+    "prop": "url",
+    "label": "URL路径",
+    "editRender": {
+      "name": "ElInput"
     }
   },
   {

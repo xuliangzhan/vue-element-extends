@@ -38,14 +38,15 @@
 
 edit-rules 校验规则配置
 
-| 属性 | 描述 | 类型 | 可选值 |
+| 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|
-| required | 是否必填 | Boolean | — |
-| min  | 校验值最小长度（如果配置 type=number 则比较值大小） | Number | — |
-| max  | 校验值最大长度（如果配置 type=number 则比较值大小） | Number | — |
-| type | 类型校验 | String | number |
-| validator  | 自定义校验方法 | Function(rule, value, callback) | — |
-| trigger  | 触发校验方式 | String | blur / change |
+| required | 是否必填 | Boolean | — | — |
+| min  | 校验值最小长度（如果 type=number 则比较值大小） | Number | — | — |
+| max  | 校验值最大长度（如果 type=number 则比较值大小） | Number | — | — |
+| type | 类型校验 | String | number / string | — | string |
+| pattern | 正则校验 | RegExp | — | — |
+| validator  | 自定义校验方法 | Function(rule, value, callback) | — | — |
+| trigger  | 触发校验方式 | String | blur / change | blur |
 
 edit-config 编辑参数配置
 

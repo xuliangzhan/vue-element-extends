@@ -25,20 +25,6 @@ import { MessageBox } from 'element-ui'
 export default {
   data () {
     let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
-    const checkB = (rule, value, callback) => {
-      if (value && !/^[\u4e00-\u9fa5]{1,5}$/.test(value)) {
-        callback(new Error('请输入1-5个汉字'))
-      } else {
-        callback()
-      }
-    }
-    const checkC = (rule, value, callback) => {
-      if (value && !/^[a-zA-Z]{1,5}$/.test(value)) {
-        callback(new Error('请输入1-5个字母'))
-      } else {
-        callback()
-      }
-    }
     const checkD = (rule, value, callback) => {
       if (!value || XEUtils.isInteger(Number(value))) {
         callback()
@@ -91,13 +77,13 @@ export default {
       }),
       validRules: {
         a: [
-          { type: 'number', message: '该列必须输入数字', trigger: 'change' }
+          { type: 'number', message: '必须输入数字', trigger: 'change' }
         ],
         b: [
-          { validator: checkB, trigger: 'blur' }
+          { pattern: /^[\u4e00-\u9fa5]{1,5}$/, message: '校验1-5个汉字', trigger: 'change' }
         ],
         c: [
-          { validator: checkC, trigger: 'blur' }
+          { pattern: /^[a-zA-Z]{1,5}$/, message: '校验1-5个字母', trigger: 'blur' }
         ],
         d: [
           { validator: checkD, trigger: 'blur' }

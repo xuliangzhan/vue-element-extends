@@ -1,7 +1,6 @@
 <template>
   <div v-loading="loading">
-    <el-button type="success" size="mini" @click="$refs.editable.insert()">新增一行</el-button>
-    <el-button type="success" size="mini" @click="$refs.editable.insertAt(null, -1)">在最后新增一行</el-button>
+    <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
     <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -12,7 +11,7 @@
     <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
 
-    <p style="color: red;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（自定义校验，18-28之间）rate字段（校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
+    <p style="color: red;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-28之间）phone字段（校验必填，校验手机号码）rate字段（校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
 
     <el-editable ref="editable" class="my-table11" stripe border size="medium" height="480" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" width="55">
@@ -55,7 +54,6 @@
 <script>
 import XEUtils from 'xe-utils'
 import { MessageBox } from 'element-ui'
-import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
 import columnsData from '@/common/json/editable/columns.json'
@@ -85,13 +83,6 @@ export default {
         callback()
       }
     }
-    const checkURL = (rule, value, callback) => {
-      if (!value || /^((ht|f)tps?):\/\/([\w-]+(\.[\w-]+)*\/)*[\w-]+(\.[\w-]+)*\/?(\?([\w\-.,@?^=%&:/~+#]*)+)?/.test(value)) {
-        callback()
-      } else {
-        callback(new Error('格式：http(s)://xxx.com'))
-      }
-    }
     const checkAttr2 = (rule, value, callback) => {
       if (!value || XEUtils.isInteger(Number(value))) {
         callback()
@@ -114,7 +105,7 @@ export default {
       regionList: [],
       validRules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'change' },
+          { required: true, message: '名称必须填写', trigger: 'change' },
           { min: 3, max: 10, message: '名称长度在 3 到 10 个字符', trigger: 'change' }
         ],
         nickname: [
@@ -124,16 +115,22 @@ export default {
           { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         age: [
+          { required: true, message: '年龄必须填写', trigger: 'blur' },
           { validator: checkAge, trigger: 'blur' }
         ],
+        phone: [
+          { required: true, message: '手机号码必须填写', trigger: 'blur' },
+          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
+        ],
         birthdate: [
-          { required: true, message: '请选择日期', trigger: 'blur' }
+          { message: '请选择日期', trigger: 'blur' }
         ],
         rate: [
           { validator: checkRate, trigger: 'blur' }
         ],
         url: [
-          { validator: checkURL, trigger: 'change' }
+          { required: true, message: 'URL必须填写', trigger: 'change' },
+          { pattern: /^((ht|f)tps?):\/\/([\w-]+(\.[\w-]+)*\/)*[\w-]+(\.[\w-]+)*\/?(\?([\w\-.,@?^=%&:/~+#]*)+)?/, message: '格式：http(s)://xxx.com', trigger: 'change' }
         ],
         attr1: [
           { type: 'number', message: '请输入数字', trigger: 'change' }
@@ -157,9 +154,11 @@ export default {
       this.findList()
       this.getColumnConfigs().then(data => {
         this.columnConfigs = data.map(column => {
-          let defaultShow = ['name', 'nickname', 'region', 'rate'].includes(column.prop)
-          column.checked = defaultShow
-          column.show = defaultShow
+          column.checked = true
+          column.show = true
+          column.editRender.attrs = {
+            placeholder: `请输入${column.label}`
+          }
           switch (column.prop) {
             case 'sex':
               column.editRender.options = []
@@ -195,6 +194,11 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    insertEvent () {
+      let row = this.$refs.editable.insert()
+      // 对新增行进行校验提示
+      this.$nextTick(() => this.$refs.editable.validateRow(row).catch(e => e))
     },
     removeEvent (row) {
       this.$refs.editable.remove(row)
@@ -271,7 +275,7 @@ export default {
     },
     getDataJSON () {
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
+        setTimeout(() => resolve([]), 350)
       })
     },
     getRegionJSON () {

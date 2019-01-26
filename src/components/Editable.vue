@@ -191,7 +191,7 @@ export default {
       this.$nextTick(() => this.$refs.refElTable.doLayout())
     },
     insert (newRecord) {
-      this.insertAt(newRecord, 0)
+      return this.insertAt(newRecord, 0)
     },
     /**************************/
     /* Original methods end */
@@ -511,7 +511,6 @@ export default {
             validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
               let rule = rules[rIndex]
               let isRequired = rule.required === true
-              let isNumber = rule.type === 'number'
               if ((type === 'all' || !rule.trigger || rule.trigger === 'change' || type === rule.trigger) && (isRequired || value)) {
                 if (XEUtils.isFunction(rule.validator)) {
                   rule.validator(rule, value, e => {
@@ -522,13 +521,20 @@ export default {
                     return resolve(rule)
                   })
                 } else {
-                  let strVal = '' + (value || '')
+                  let restVal
+                  let isNumber = rule.type === 'number'
+                  if (isNumber) {
+                    restVal = XEUtils.toNumber(value)
+                  } else {
+                    restVal = '' + (value || '')
+                  }
                   if (isRequired && !value) {
                     reject(rule)
                   } else if (value &&
                     ((isNumber && isNaN(value)) ||
-                    (XEUtils.isNumber(rule.min) && (isNumber ? parseFloat(value) < rule.min : strVal.length < rule.min)) ||
-                    (XEUtils.isNumber(rule.max) && (isNumber ? parseFloat(value) > rule.max : strVal.length > rule.max)))
+                    (XEUtils.isRegExp(rule.pattern) && !rule.pattern.test(value)) ||
+                    (XEUtils.isNumber(rule.min) && (isNumber ? restVal < rule.min : restVal.length < rule.min)) ||
+                    (XEUtils.isNumber(rule.max) && (isNumber ? restVal > rule.max : restVal.length > rule.max)))
                   ) {
                     reject(rule)
                   } else {
@@ -580,7 +586,9 @@ export default {
             this.deleteRecords.push(item)
           }
         })
+        return items
       }
+      return []
     },
     _clearAllOpers () {
       this.clearSelection()
@@ -646,6 +654,7 @@ export default {
         this.datas.unshift(recordItem)
       }
       this._updateData()
+      return recordItem.data
     },
     /**
      * 根据索引删除行数据
@@ -653,23 +662,27 @@ export default {
     removeByIndex (rowIndex) {
       let row = this.tableData[rowIndex]
       if (row) {
-        this.remove(row.data)
+        return this.remove(row.data)
       }
+      return null
     },
     removeByIndexs (rowIndexs) {
-      this.removes(rowIndexs.map(index => this.tableData[index] ? this.tableData[index].data : null))
+      return this.removes(rowIndexs.map(index => this.tableData[index] ? this.tableData[index].data : null))
     },
     remove (record) {
-      this._deleteData(XEUtils.findIndexOf(this.datas, item => item.data === record))
+      let items = this._deleteData(XEUtils.findIndexOf(this.datas, item => item.data === record))
       this._updateData()
+      return items.length ? items[0].data : null
     },
     removes (records) {
+      let items = []
       XEUtils.lastEach(this.datas, (item, index) => {
         if (records.includes(item.data)) {
-          this._deleteData(index)
+          items = items.concat(this._deleteData(index))
         }
       })
       this._updateData()
+      return items.map(item => item.data)
     },
     getSelecteds () {
       return this.$refs.refElTable.selection.map(item => item.data)
@@ -806,36 +819,33 @@ export default {
      * 对表格某一行进行校验的方法
      * 返回 Promise 对象，或者使用回调方式
      */
-    validateRow (record, fn) {
+    validateRow (record, cb) {
       let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
       return new Promise((resolve, reject) => {
         let row = this.tableData[rowIndex]
-        if (row && this.mode === 'row') {
-          this._validRowRules('all', row).then(rest => {
-            if (fn) {
-              fn(true)
-            }
-            resolve(true)
-          }).catch(({ rule, row, column, cell }) => {
-            let status = false
-            this._toValidError(rule, row, column, cell)
-            if (fn) {
-              fn(status, {[column.property]: [new Error(rule.message)]})
-              resolve(status)
-            } else {
-              reject(status)
-            }
-          })
-        } else {
-          resolve()
-        }
+        this._validRowRules('all', row).then(rest => {
+          let valid = true
+          if (cb) {
+            cb(valid)
+          }
+          resolve(true)
+        }).catch(({ rule, row, column, cell }) => {
+          let valid = false
+          this._toValidError(rule, row, column, cell)
+          if (cb) {
+            cb(valid, {[column.property]: [new Error(rule.message)]})
+            resolve(valid)
+          } else {
+            reject(valid)
+          }
+        })
       })
     },
     /**
      * 对整个表格数据进行校验
      * 返回 Promise 对象，或者使用回调方式
      */
-    validate (fn) {
+    validate (cb) {
       let validPromise = Promise.resolve(true)
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
@@ -857,21 +867,23 @@ export default {
           })
         })
         return validPromise.then(() => {
-          if (fn) {
-            fn(true)
+          let valid = true
+          if (cb) {
+            cb(valid)
           }
           return true
         }).catch(({ rule, row, column, cell }) => {
-          let status = false
+          let valid = false
           this._toValidError(rule, row, column, cell)
-          if (fn) {
-            fn(status, {[column.property]: [new Error(rule.message)]})
+          if (cb) {
+            cb(valid, {[column.property]: [new Error(rule.message)]})
           }
-          return fn ? Promise.resolve(status) : Promise.reject(status)
+          return cb ? Promise.resolve(valid) : Promise.reject(valid)
         })
       } else {
-        if (fn) {
-          fn(true)
+        let valid = true
+        if (cb) {
+          cb(valid)
         }
       }
       return validPromise

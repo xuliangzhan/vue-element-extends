@@ -14,6 +14,7 @@
     "status": [
       "error"
     ],
+    "phone": "13600000000",
     "rate": 2,
     "color": "#409EFF",
     "slider": 10,
@@ -32,6 +33,7 @@
         "content": ""
       }
     ],
+    "url": null,
     "updateDate": 1548473367666,
     "createDate": 1548473367666,
     "attr1": null,
@@ -58,6 +60,7 @@
       "success",
       "error"
     ],
+    "phone": "13600000000",
     "rate": 3,
     "color": "#04F918",
     "slider": 20,
@@ -76,6 +79,7 @@
         "content": ""
       }
     ],
+    "url": null,
     "updateDate": 1548473367666,
     "createDate": 1548473367666,
     "attr1": null,
@@ -101,6 +105,7 @@
     "status": [
       "success"
     ],
+    "phone": "13600000000",
     "rate": 4,
     "color": null,
     "slider": 50,
@@ -119,6 +124,7 @@
         "content": ""
       }
     ],
+    "url": null,
     "updateDate": 1548473367666,
     "createDate": 1548473367666,
     "attr1": null,
@@ -144,6 +150,7 @@
     "status": [
       "success"
     ],
+    "phone": "13600000000",
     "rate": 5,
     "color": null,
     "slider": 80,
@@ -162,6 +169,7 @@
         "content": ""
       }
     ],
+    "url": null,
     "updateDate": 1548473367666,
     "createDate": 1548473367666,
     "attr1": null,
@@ -187,6 +195,7 @@
     "status": [
       "error"
     ],
+    "phone": "13600000000",
     "rate": 1,
     "color": "#04F918",
     "slider": 15,
@@ -205,6 +214,7 @@
         "content": ""
       }
     ],
+    "url": null,
     "updateDate": 1548473367666,
     "createDate": 1548473367666,
     "attr1": null,

@@ -342,6 +342,8 @@ export default {
 }
 .editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error {
   top: auto;
+  bottom: -moz-calc(100% + 10px);
+  bottom: -webkit-calc(100% + 10px);
   bottom: calc(100% + 10px);
 }
 .editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error:before {
@@ -359,8 +361,11 @@ export default {
   line-height: 1;
   padding: 4px 10px;
   position: absolute;
+  top: -moz-calc(100% + 10px);
+  top: -webkit-calc(100% + 10px);
   top: calc(100% + 10px);
   left: 10px;
+  bottom: auto;
   z-index: 9;
   font-size: 12px;
   min-width: 10px;

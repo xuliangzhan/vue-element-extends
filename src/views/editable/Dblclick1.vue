@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
-    <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
-    <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
+    <el-button type="success" size="mini" @click="$refs.editable.insert({name: `New ${Date.now()}`, flag: true, flag2: 'Y', status: [], createDate: Date.now()})">新增一行</el-button>
+    <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: `New last ${Date.now()}`, flag: true, flag2: 'Y', status: [], createDate: Date.now()}, -1)">在最后新增一行</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
     <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
     <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
@@ -14,7 +14,6 @@
       <el-editable-column prop="sex" label="性别" width="100" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期（只读）" width="220" :formatter="formatterBirthdate"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{type: 'visible'}">
@@ -42,6 +41,7 @@
         </template>
       </el-editable-column>
       <el-editable-column prop="remark" label="备注" :editRender="{name: 'ElInput', attrs: {type: 'textarea', rows: 1}}"></el-editable-column>
+      <el-editable-column prop="createDate" label="创建时间（只读）" :formatter="formatterCreateDate"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
@@ -93,8 +93,8 @@ export default {
         this.loading = false
       })
     },
-    formatterBirthdate (row, column, cellValue, index) {
-      return XEUtils.toDateString(row.birthdate, 'yyyy-MM-dd')
+    formatterCreateDate (row, column, cellValue, index) {
+      return XEUtils.toDateString(row.createDate, 'yyyy-MM-dd hh:mm:ss')
     },
     submitEvent () {
       let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()

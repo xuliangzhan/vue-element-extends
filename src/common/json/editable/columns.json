@@ -48,5 +48,26 @@
     "editRender": {
       "name": "ElRate"
     }
+  },
+  {
+    "prop": "attr1",
+    "label": "属性1",
+    "editRender": {
+      "name": "ElInput"
+    }
+  },
+  {
+    "prop": "attr2",
+    "label": "属性2",
+    "editRender": {
+      "name": "ElInput"
+    }
+  },
+  {
+    "prop": "attr3",
+    "label": "属性3",
+    "editRender": {
+      "name": "ElInput"
+    }
   }
 ]

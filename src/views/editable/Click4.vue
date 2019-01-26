@@ -12,7 +12,6 @@
     <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
 
-    <p style="color: red;">多级表头</p>
     <p style="color: red;">region字段（校验必填）</p>
     <p style="color: red;">第1行不允许勾选</p>
 

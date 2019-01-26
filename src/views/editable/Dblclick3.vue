@@ -12,7 +12,7 @@
     <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
     <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
 
-    <p style="color: red;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）age字段（自定义校验，18-28之间）rate字段（校验最少选中2颗星）</p>
+    <p style="color: red;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）age字段（自定义校验，18-28之间）rate字段（校验最少选中2颗星）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
 
     <el-editable ref="editable" class="my-table11" stripe border size="medium" height="480" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" width="55">
@@ -24,7 +24,7 @@
         <template v-if="item.show">
           <el-editable-column v-if="index === 0" :key="index" v-bind="item">
             <template slot="valid" slot-scope="scope">
-              <span class="error-msg">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段</span>
+              <span class="error-msg">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段<br><a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">参考API说明</a></span>
             </template>
           </el-editable-column>
           <el-editable-column v-else :key="index" v-bind="item"></el-editable-column>
@@ -85,6 +85,20 @@ export default {
         callback()
       }
     }
+    const checkAttr2 = (rule, value, callback) => {
+      if (!value || XEUtils.isInteger(Number(value))) {
+        callback()
+      } else {
+        callback(new Error('请输入整数'))
+      }
+    }
+    const checkAttr3 = (rule, value, callback) => {
+      if (!value || XEUtils.isFloat(Number(value))) {
+        callback()
+      } else {
+        callback(new Error('请输入小数'))
+      }
+    }
     return {
       loading: false,
       dialogVisible: false,
@@ -110,6 +124,15 @@ export default {
         ],
         rate: [
           { validator: checkRate, trigger: 'blur' }
+        ],
+        attr1: [
+          { type: 'number', message: '请输入数字', trigger: 'change' }
+        ],
+        attr2: [
+          { validator: checkAttr2, trigger: 'change' }
+        ],
+        attr3: [
+          { validator: checkAttr3, trigger: 'change' }
         ]
       }
     }
@@ -255,10 +278,10 @@ export default {
   display: block;
   color: #fff;
   background-color: red;
-  border-radius: 2px;
+  border-radius: 8px;
   font-size: 12px;
   line-height: 1;
-  padding: 4px 10px;
+  padding: 10px;
   position: absolute;
   top: calc(100% + 10px);
   left: 10px;

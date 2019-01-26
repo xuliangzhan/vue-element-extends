@@ -6,9 +6,9 @@
     <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
     <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
 
-    <p style="color: red;">渲染成 Excel 表格</p>
+    <p style="color: red;">A字段（必填校验）</p>
 
-    <el-editable ref="editable" class="excel-table2" :data.sync="list" border tooltip-effect="light" size="customSize" style="width: 100%" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
+    <el-editable ref="editable" class="excel-table2" :data.sync="list" border tooltip-effect="light" size="customSize" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" align="center" width="50"></el-editable-column>
       <template v-for="(column, index) in columnConfigs">
         <el-editable-column :key="index" v-bind="column" header-align="center" min-width="60" show-overflow-tooltip></el-editable-column>
@@ -38,7 +38,12 @@ export default {
           sortable: name === 'A',
           editRender: {name: 'ElInput'}
         }
-      })
+      }),
+      validRules: {
+        a: [
+          { required: true, message: '必填字段', trigger: 'change' }
+        ]
+      }
     }
   },
   methods: {

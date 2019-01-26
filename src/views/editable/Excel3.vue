@@ -7,8 +7,7 @@
     <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
     <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
 
-    <p style="color: red;">渲染成 Excel 表格</p>
-    <p style="color: red;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）</p>
+    <p style="color: red;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
 
     <el-editable ref="editable" class="excel-table2" :data.sync="list" border tooltip-effect="light" size="customSize" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
       <el-editable-column type="index" align="center" width="50"></el-editable-column>
@@ -20,6 +19,7 @@
 </template>
 
 <script>
+import XEUtils from 'xe-utils'
 import { MessageBox } from 'element-ui'
 
 export default {
@@ -37,6 +37,20 @@ export default {
         callback(new Error('请输入1-5个字母'))
       } else {
         callback()
+      }
+    }
+    const checkD = (rule, value, callback) => {
+      if (!value || XEUtils.isInteger(Number(value))) {
+        callback()
+      } else {
+        callback(new Error('请输入整数'))
+      }
+    }
+    const checkE = (rule, value, callback) => {
+      if (!value || XEUtils.isFloat(Number(value))) {
+        callback()
+      } else {
+        callback(new Error('请输入小数'))
       }
     }
     return {
@@ -64,6 +78,14 @@ export default {
             column.filters = [{text: 'a开头', value: 'a'}, {text: 'b开头', value: 'b'}, {text: 'c开头', value: 'c'}]
             column.filterMethod = (value, row, column) => (row[column.property] || '').substring(0, 1) === value
             break
+          case 'D':
+            column.filters = [{text: '大于0', value: 0}, {text: '大于20', value: 20}, {text: '大于200', value: 200}]
+            column.filterMethod = (value, row, column) => Number(row[column.property] || 0) > value
+            break
+          case 'E':
+            column.filters = [{text: '大于2.5', value: 2.5}, {text: '大于7.8', value: 7.8}, {text: '大于9.5', value: 9.5}]
+            column.filterMethod = (value, row, column) => Number(row[column.property] || 0) > value
+            break
         }
         return column
       }),
@@ -76,6 +98,12 @@ export default {
         ],
         c: [
           { validator: checkC, trigger: 'blur' }
+        ],
+        d: [
+          { validator: checkD, trigger: 'blur' }
+        ],
+        e: [
+          { validator: checkE, trigger: 'change' }
         ]
       }
     }

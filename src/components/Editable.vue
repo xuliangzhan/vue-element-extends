@@ -385,8 +385,11 @@ export default {
         inpElem.focus()
       }
     },
+    _isEditCell (row, column) {
+      return this.editConfig && this.editConfig.activeMethod ? this.editConfig.activeMethod(row, this.mode === 'row' ? null : column, XEUtils.findIndexOf(this.tableData, item => item === row)) : true
+    },
     _triggerActive (row, column, cell, event) {
-      if (this.editConfig && this.editConfig.activeMethod ? this.editConfig.activeMethod(row, this.mode === 'row' ? null : column, XEUtils.findIndexOf(this.tableData, item => item === row)) : true) {
+      if (this._isEditCell(row, column)) {
         let clss = ['editable-col_active']
         if (row.validActive === column.property) {
           clss.push('valid-error')
@@ -452,9 +455,9 @@ export default {
     _spanMethod ({ row, column, rowIndex, columnIndex }) {
       let rowspan = 1
       let colspan = 1
-      let fn = this.spanMethod
-      if (XEUtils.isFunction(fn)) {
-        var result = fn({ row: row.data, column, rowIndex, columnIndex })
+      let spanMethod = this.spanMethod
+      if (XEUtils.isFunction(spanMethod)) {
+        var result = spanMethod({ row: row.data, column, rowIndex, columnIndex })
         if (XEUtils.isArray(result)) {
           rowspan = result[0]
           colspan = result[1]

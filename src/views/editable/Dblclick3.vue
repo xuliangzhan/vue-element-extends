@@ -180,6 +180,7 @@ export default {
               }
               break
             case 'rate':
+              column.minWidth = '90'
               column.editRender.type = 'visible'
               break
           }

@@ -18,9 +18,10 @@
   </el-table-column>
   <el-table-column v-else-if="editRender" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store}">
+      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store, editRender}">
         <i v-if="checkRequired(scope)" class="editable-required-icon"></i>
-        <i v-if="checkIcon(scope)" class="el-icon-edit-outline editable-header-icon"></i>{{ scope.column.label }}
+        <i v-if="checkIcon(scope)" class="el-icon-edit-outline editable-header-icon"></i>
+        {{ scope.column.label }}
       </slot>
     </template>
     <template slot-scope="scope">

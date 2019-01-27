@@ -26,6 +26,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>双击、行编辑、筛选、分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>双击、个性化列、校验、自定义校验提示</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>双击、个性化列、下拉选项唯一性、完整校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>双击、个性化列、自定义头列、完整校验</router-link>
       </div>
       <div class="apimenu-row">
         <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>Excel表格、单击、带状态</router-link>

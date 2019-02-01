@@ -192,7 +192,7 @@ export default {
             return this.getSelectLabel(scope)
           case 'ElCascader':
             return this.getCascaderLabel(scope)
-          case 'ElTimePicker':
+          case 'ElDatePicker':
             return this.getDatePickerLabel(scope)
         }
       }

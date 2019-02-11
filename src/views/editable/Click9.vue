@@ -1,10 +1,11 @@
 <template>
   <div v-loading="loading">
+    <p style="color: red;font-size: 12px;">如果存在校验不通过的列则不允许新增</p>
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符）attr1字段（校验数字）attr2字段（校验必填，校验数字）sex字段（校验必填）age字段（自定义校验，18-28之间）rate字段（校验最少选中3颗星）</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert()">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt(null, -1)">在最后新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -114,6 +115,11 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    insertEvent (index) {
+      if (!this.$refs.editable.checkValid().error) {
+        this.$refs.editable.insertAt(null, index)
+      }
     },
     removeEvent (row) {
       this.$refs.editable.remove(row)

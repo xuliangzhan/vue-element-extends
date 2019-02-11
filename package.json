@@ -1,8 +1,8 @@
 {
   "name": "vue-element-extends",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A Vue.js project",
-  "author": "xuliangzhan <xu_liangzhan@163.com>",
+  "author": "xuliangzhan",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -11,10 +11,10 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "element-ui": "^2.4.11",
-    "vue": "^2.5.2",
+    "element-ui": "^2.5.4",
+    "vue": "^2.5.16",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1",
+    "vuex": "^3.1.0",
     "xe-utils": "^1.7.10"
   },
   "devDependencies": {
@@ -60,7 +60,7 @@
     "url-loader": "^0.5.8",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.5.2",
+    "vue-template-compiler": "^2.5.16",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.11.3",

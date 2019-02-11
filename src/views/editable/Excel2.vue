@@ -10,7 +10,16 @@
       <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
     </p>
 
-    <el-editable ref="editable" class="excel-table2" :data.sync="list" border tooltip-effect="light" size="customSize" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
+    <el-editable
+      ref="editable"
+      class="excel-table2"
+      :data.sync="list"
+      border
+      tooltip-effect="light"
+      size="customSize"
+      :editRules="validRules"
+      :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      style="width: 100%" >
       <el-editable-column type="index" align="center" width="50"></el-editable-column>
       <template v-for="(column, index) in columnConfigs">
         <el-editable-column :key="index" v-bind="column" header-align="center" min-width="60" show-overflow-tooltip></el-editable-column>

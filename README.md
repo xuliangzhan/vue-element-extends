@@ -1,13 +1,12 @@
 # vue-element-extends
 
 * 功能点：
-  * 支持单列编辑
-  * 支持整行编辑
+  * 支持（单元格、整行）编辑方式
   * 支持手动、单击、双击编辑模式
-  * 支持渲染简化的内置组件
-  * 支持渲染任意自定义组件
+  * 支持渲染简化的 ElementUI 组件
+  * 支持渲染任意自定义 Vue 组件
   * 支持动态列渲染
-  * 支持数据校验（同步、异步）
+  * 支持（同步、异步）数据校验
   * 支持显示列数据 change 状态
   * 支持增/删/改/查/还原
   * 支持原 ElTable 所有参数及功能
@@ -30,7 +29,7 @@
 <el-editable
   ref="editable"
   edit-config="{trigger: 'click', mode: 'cell'}"
-  :edit-rules="{name: [required: true, message: '请输入名称', trigger: 'blur']}">
+  :edit-rules="{name: [{required: true, message: '请输入名称', trigger: 'blur'}]}">
   <el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput'}"></el-editable-column>
   <el-editable-column prop="age" label="年龄" edit-render="{name: 'ElInputNumber'}"></el-editable-column>
 </el-editable>
@@ -88,6 +87,7 @@ edit-config 编辑参数配置
 | getInsertRecords | 获取新增数据 | — |
 | getRemoveRecords | 获取已删除数据 | — |
 | getUpdateRecords| 获取已修改数据 | — |
+| checkValid | 检测是否有校验不通过的列信息 | — |
 | validateRow | 对表格某一行进行校验的方法，参数为行数据和一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | row, callback |
 | validate | 对整个表格进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | callback |
 | clearSelection | 用于多选表格，清空用户的选择 | — |
@@ -128,9 +128,9 @@ edit-render 渲染参数配置
 
 步骤：
 
-1. 依赖库 npm install vuex xe-utils
+1. 基于 ElementUI 2.x，依赖库 npm install vue vuex element-ui xe-utils
 2. 需要依赖 vuex 中的 globalClick 属性，该属性值为响应全局 click  事件 (具体实现方式可以参考 store/modules/event.js)
-3. 将 Editable.vue 和 EditableColumn.vue 复制到项目中，（例如：components 目录下），然后注册组件（全局或局部）
+3. 将 Editable.vue 和 EditableColumn.vue 复制到项目中，（例：components 目录下），然后注册组件（全局或局部）
 
 到此结束，[开始玩耍吧](https://xuliangzhan.github.io/vue-element-extends/)，特殊需求也可以自行根据项目需求去修改  
 如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
@@ -152,7 +152,7 @@ Vue.component(EditableColumn.name, EditableColumn)
     <el-editable ref="editable" :data.sync="list">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字"></el-editable-column>
+      <el-editable-column prop="name" label="名字（只读）"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
@@ -194,8 +194,8 @@ export default {
                   label: '龙岗区'
                 },
                 {
-                  value: 'lhq',
-                  label: '罗湖区'
+                  value: 'nsq',
+                  label: '南山区'
                 }
               ]
             }

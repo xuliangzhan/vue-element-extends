@@ -765,9 +765,9 @@ export default {
         let { row, column } = this.lastActive
         let index = XEUtils.findIndexOf(this.datas, item => item === row)
         if (this.mode === 'row') {
-          return { row, $index: index }
+          return { row: row.data, $index: index, _row: row }
         }
-        return { row, column, $index: index }
+        return { row: row.data, column, $index: index, _row: row }
       }
       return null
     },
@@ -830,6 +830,14 @@ export default {
           }
         })
       }
+    },
+    checkValid () {
+      let row = this.datas.find(item => item.validActive)
+      if (row) {
+        let index = XEUtils.findIndexOf(this.datas, item => item === row)
+        return { error: true, row: row.data, prop: row.validActive, rule: row.validRule, $index: index, _row: row }
+      }
+      return { error: false }
     },
     /**
      * 对表格某一行进行校验的方法

@@ -16,19 +16,27 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable ref="editable" stripe border :span-method="arraySpanMethod" @edit-active="editActiveEvent" @clear-active="clearActiveEvent" size="medium" style="width: 100%">
+    <el-editable
+      ref="editable"
+      stripe
+      border
+      size="medium"
+      :span-method="arraySpanMethod"
+      @edit-active="editActiveEvent"
+      @clear-active="clearActiveEvent"
+      style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
       </el-editable-column>
       <template v-for="(item, index) in columnConfigs">
-        <el-editable-column v-if="item.show" :key="index" v-bind="item"></el-editable-column>
+        <el-editable-column v-if="item.customShow" :key="index" v-bind="item"></el-editable-column>
       </template>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-popover placement="top" width="160" v-model="scope.row.flag3">
-            <p>这是一段内容这是一段内容确定删除吗？</p>
+            <p>确定删除吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button type="text" size="mini" @click="scope.row.flag3 = false">取消</el-button>
               <el-button type="primary" size="mini" @click="removeEvent(scope.row)">确定</el-button>
@@ -42,7 +50,7 @@
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
       <ul>
         <li v-for="(item, index) in columnConfigs" :key="index">
-          <el-checkbox v-model="item.checked">{{ item.label }}</el-checkbox>
+          <el-checkbox v-model="item.customChecked">{{ item.label }}</el-checkbox>
         </li>
       </ul>
       <span slot="footer" class="dialog-footer">
@@ -81,9 +89,11 @@ export default {
       let regionPromise = this.getRegionJSON()
       this.findList()
       this.getColumnConfigs().then(data => {
-        this.columnConfigs = data.map(column => {
-          column.checked = true
-          column.show = true
+        this.columnConfigs = data.map((column, index) => {
+          let defaultShow = index < 8
+          column.customDefault = defaultShow
+          column.customChecked = defaultShow
+          column.customShow = defaultShow
           column.minWidth = '150'
           switch (column.prop) {
             case 'sex':
@@ -152,18 +162,18 @@ export default {
     },
     openCustomEvent () {
       this.columnConfigs.forEach(column => {
-        column.checked = column.show
+        column.customChecked = column.customShow
       })
     },
     resetCustomEvent () {
       this.columnConfigs.forEach(column => {
-        column.checked = true
+        column.customChecked = column.customDefault
       })
     },
     saveCustomEvent () {
       this.dialogVisible = false
       this.columnConfigs.forEach(column => {
-        column.show = column.checked
+        column.customShow = column.customChecked
       })
     },
     getInsertEvent () {

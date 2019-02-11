@@ -20,7 +20,17 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable ref="editable" height="600" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editRules="validRules" :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, activeMethod}" style="width: 100%">
+    <el-editable
+      ref="editable"
+      stripe
+      border
+      height="600"
+      size="medium"
+      @select="selectEvent"
+      @current-change="currentChangeEvent"
+      :editRules="validRules"
+      :editConfig="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, activeMethod}"
+      style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">
@@ -48,7 +58,7 @@
       <el-editable-column prop="date3" label="任意时间点" width="160" sortable :editRender="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>
       <el-editable-column prop="slider" label="滑块" width="200" :editRender="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{type: 'visible'}">
+      <el-editable-column prop="flag2" label="是否启用2" width="200" :editRender="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-radio label="N" border>值1</el-radio>

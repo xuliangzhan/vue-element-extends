@@ -13,7 +13,13 @@
       <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
     </p>
 
-    <el-editable ref="editable" :data.sync="list" border size="mini" style="width: 100%" :editConfig="{trigger: 'manual', mode: 'row'}">
+    <el-editable
+      ref="editable"
+      :data.sync="list"
+      border
+      size="mini"
+      :editConfig="{trigger: 'manual', mode: 'row'}"
+      style="width: 100%" >
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>

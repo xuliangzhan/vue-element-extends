@@ -22,6 +22,7 @@ import EditableDblclick5 from '@/views/editable/Dblclick5'
 import EditableExcel1 from '@/views/editable/Excel1'
 import EditableExcel2 from '@/views/editable/Excel2'
 import EditableExcel3 from '@/views/editable/Excel3'
+import EditableExcel4 from '@/views/editable/Excel4'
 
 Vue.use(Router)
 
@@ -137,6 +138,11 @@ export default new Router({
       path: '/demo/editable/excel3',
       name: 'EditableExcel3',
       component: EditableExcel3
+    },
+    {
+      path: '/demo/editable/excel4',
+      name: 'EditableExcel4',
+      component: EditableExcel4
     }
   ]
 })

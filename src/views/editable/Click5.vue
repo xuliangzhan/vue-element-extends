@@ -21,7 +21,7 @@
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-popover placement="top" width="160" v-model="scope.row.flag3">
-            <p>这是一段内容这是一段内容确定删除吗？</p>
+            <p>确定删除吗？</p>
             <div style="text-align: right; margin: 0">
               <el-button type="text" size="mini" @click="scope.row.flag3 = false">取消</el-button>
               <el-button type="primary" size="mini" @click="removeEvent(scope.row)">确定</el-button>

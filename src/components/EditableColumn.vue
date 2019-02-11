@@ -4,21 +4,21 @@
   </el-table-column>
   <el-table-column v-else-if="type === 'index'" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store, editRender}">#</slot>
+      <slot name="head" v-bind="getHeadScope(scope)">#</slot>
     </template>
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="type === 'expand'" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store, editRender}"></slot>
+      <slot name="head" v-bind="getHeadScope(scope)"></slot>
     </template>
     <template slot-scope="scope">
-      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}"></slot>
+      <slot v-bind="getRowScope(scope)"></slot>
     </template>
   </el-table-column>
   <el-table-column v-else-if="editRender" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="{$index: scope.$index, column: scope.column, store: scope.store, editRender}">
+      <slot name="head" v-bind="getHeadScope(scope)">
         <i v-if="checkRequired(scope)" class="editable-required-icon"></i>
         <i v-if="checkIcon(scope)" class="el-icon-edit-outline editable-header-icon"></i>
         {{ scope.column.label }}
@@ -26,7 +26,7 @@
     </template>
     <template slot-scope="scope">
       <template v-if="editRender.type === 'visible'">
-        <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">
+        <slot name="edit" v-bind="getRowScope(scope)">
           <template v-if="editRender.name === 'ElSelect'">
             <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
               <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="item.attrs"></el-option>
@@ -42,7 +42,7 @@
       </template>
       <template v-else>
         <template v-if="scope.row.editActive && (scope.row.config.mode === 'row' ? scope.row.editActive : scope.row.editActive === scope.column.property)">
-          <slot name="edit" v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">
+          <slot name="edit" v-bind="getRowScope(scope)">
             <template v-if="editRender.name === 'ElSelect'">
               <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
                 <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="item.attrs"></el-option>
@@ -57,11 +57,11 @@
           </slot>
         </template>
         <template v-else>
-          <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">{{ formatColumnLabel(scope) }}</slot>
+          <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
         </template>
       </template>
       <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
-        <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">
+        <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _self: scope._self, _row: scope.row}">
           <div class="editable-valid_error">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</div>
         </slot>
       </template>
@@ -69,7 +69,7 @@
   </el-table-column>
   <el-table-column v-else v-bind="attrs">
     <template slot-scope="scope">
-      <slot v-bind="{$index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _row: scope.row}">{{ formatColumnLabel(scope) }}</slot>
+      <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
     </template>
   </el-table-column>
 </template>
@@ -118,7 +118,7 @@ export default {
   ],
   data () {
     return {
-      comps: ['ElInput', 'ElSelect', 'ElCascader', 'ElDatePicker', 'ElInputNumber', 'ElSwitch', 'ElRate', 'ElColorPicker', 'ElSlider']
+      comps: ['ElInput', 'ElSelect', 'ElCascader', 'ElTimePicker', 'ElDatePicker', 'ElInputNumber', 'ElSwitch', 'ElRate', 'ElColorPicker', 'ElSlider']
     }
   },
   computed: {
@@ -167,6 +167,12 @@ export default {
     }
   },
   methods: {
+    getHeadScope (scope) {
+      return { $index: scope.$index, column: scope.column, store: scope.store, editRender: this.editRender, _self: scope._self }
+    },
+    getRowScope (scope) {
+      return { $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender: this.editRender, _self: scope._self, _row: scope.row }
+    },
     getRendAttrs (scope) {
       let size = scope.row.config.size
       return Object.assign({ size }, this.editRender.attrs)
@@ -192,6 +198,8 @@ export default {
             return this.getSelectLabel(scope)
           case 'ElCascader':
             return this.getCascaderLabel(scope)
+          case 'ElTimePicker':
+            return this.getTimePickerLabel(scope)
           case 'ElDatePicker':
             return this.getDatePickerLabel(scope)
         }

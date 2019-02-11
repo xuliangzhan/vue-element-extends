@@ -5,33 +5,38 @@
     </h1>
     <div class="apimenu-header">
       <div class="apimenu-row">
-        <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>手动模式、行编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>手动模式、行编辑、校验</router-link>
+        <a class="apimenu-title">手动模式</a>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>行编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>行编辑+校验</router-link>
       </div>
       <div class="apimenu-row">
-        <router-link class="apimenu-link" :to="{name: 'EditableClick1'}" replace>单击、列编辑、mini</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>单击、行样式、分页</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>单击、行编辑、排序</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>单击、多级表头、必填</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>单击、动态列渲染</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>单击、动态列渲染、自定义列</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>单击、表尾合计行</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>单击、合并行或列</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>单击、基本校验</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>单击、行编辑、排序、禁用行编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>单击、列编辑、排序、禁用列编辑、下拉选项唯一性</router-link>
+        <a class="apimenu-title">单击模式</a>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick1'}" replace>列编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>行样式+分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>行编辑+排序</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>多级表头+校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>动态列渲染</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>动态列渲染+自定义列</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>表尾合计行</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>合并行或列</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>基本校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>行编辑+排序+禁用行编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>列编辑+排序+禁用列编辑+唯一下拉选项</router-link>
       </div>
       <div class="apimenu-row">
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>双击、列编辑、small</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>双击、行编辑、筛选、分页</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>双击、个性化列、校验、自定义校验提示</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>双击、个性化列、下拉选项唯一性、完整校验</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>双击、个性化列、自定义头列、完整校验</router-link>
+        <a class="apimenu-title">双击模式</a>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>列编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+筛选+分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>个性化列+校验+自定义校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>个性化列+唯一下拉选项+完整校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>个性化列+自定义列头+完整校验</router-link>
       </div>
       <div class="apimenu-row">
-        <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>Excel表格、单击、带状态</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableExcel2'}" replace>Excel表格、双击、排序</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>Excel表格、双击、校验、排序、筛选</router-link>
+        <a class="apimenu-title">Excel表格</a>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>带状态</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel2'}" replace>排序</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>校验+排序+筛选</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel4'}" replace>校验+排序+筛选+个性化列</router-link>
       </div>
     </div>
     <router-view/>
@@ -56,7 +61,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -64,9 +69,13 @@ export default {
 .apimenu-header {
   margin-bottom: 10px;
 }
+.apimenu-title {
+  font-weight: 700;
+  font-size: 14px;
+}
 .apimenu-link {
   margin: 2px;
-  padding: 2px;
+  padding: 2px 4px;
   color: #606266;
   border: 1px solid #dcdfe6;
   display: inline-block;

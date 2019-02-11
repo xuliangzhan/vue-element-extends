@@ -21,7 +21,17 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable ref="editable" height="480" stripe border @select="selectEvent" size="medium" @current-change="currentChangeEvent" :editRules="validRules" :editConfig="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, activeMethod}" style="width: 100%">
+    <el-editable
+      ref="editable"
+      stripe
+      border
+      height="480"
+      size="medium"
+      @select="selectEvent"
+      @current-change="currentChangeEvent"
+      :editRules="validRules"
+      :editConfig="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, activeMethod}"
+      style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p style="color: red;font-size: 12px;">自定义设置动态列</p>
     <p style="color: red;font-size: 12px;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
 
     <p>
@@ -21,11 +22,30 @@
       :editRules="validRules"
       :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}"
       style="width: 100%" >
-      <el-editable-column type="index" align="center" width="50"></el-editable-column>
-      <template v-for="(column, index) in columnConfigs">
-        <el-editable-column :key="index" v-bind="column" header-align="center" min-width="60" show-overflow-tooltip></el-editable-column>
+      <el-editable-column type="index" align="center" width="50">
+        <template slot="head">
+          <i class="el-icon-setting" @click="dialogVisible = true"></i>
+        </template>
+      </el-editable-column>
+      <template v-for="(item, index) in columnConfigs">
+        <template v-if="item.customShow">
+          <el-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip></el-editable-column>
+        </template>
       </template>
     </el-editable>
+
+    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
+      <ul class="custom-wrapper">
+        <li v-for="(item, index) in columnConfigs" :key="index">
+          <el-checkbox v-model="item.customChecked">{{ item.label }}</el-checkbox>
+        </li>
+      </ul>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="resetCustomEvent">重 置</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -35,7 +55,7 @@ import { MessageBox } from 'element-ui'
 
 export default {
   data () {
-    let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
+    let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     const checkD = (rule, value, callback) => {
       if (!value || XEUtils.isInteger(Number(value))) {
         callback()
@@ -51,6 +71,7 @@ export default {
       }
     }
     return {
+      dialogVisible: false,
       list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach(name => {
@@ -58,8 +79,12 @@ export default {
         })
         return rest
       }),
-      columnConfigs: columns.map(name => {
+      columnConfigs: columns.map((name, index) => {
+        let defaultShow = index < 20
         let column = {
+          customDefault: defaultShow,
+          customChecked: defaultShow,
+          customShow: defaultShow,
           prop: name.toLowerCase(),
           label: name,
           minWidth: '80',
@@ -117,6 +142,22 @@ export default {
     getResultEvent () {
       let rest = this.$refs.editable.getRecords().filter(item => Object.keys(item).some(key => item[key]))
       MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` })
+    },
+    openCustomEvent () {
+      this.columnConfigs.forEach(column => {
+        column.customChecked = column.customShow
+      })
+    },
+    resetCustomEvent () {
+      this.columnConfigs.forEach(column => {
+        column.customChecked = column.customDefault
+      })
+    },
+    saveCustomEvent () {
+      this.dialogVisible = false
+      this.columnConfigs.forEach(column => {
+        column.customShow = column.customChecked
+      })
     }
   }
 }
@@ -156,5 +197,9 @@ export default {
   border-radius: 0;
   padding: 0 2px;
   line-height: 30px;
+}
+.custom-wrapper {
+  height: 300px;
+  overflow: auto;
 }
 </style>

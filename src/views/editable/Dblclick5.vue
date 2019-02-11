@@ -1,7 +1,8 @@
 <template>
   <div v-loading="loading">
+    <p style="color: red;font-size: 12px;">如果存在校验不通过的列则不允许新增</p>
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-28之间）phone字段（校验必填，校验手机号码）rate字段（校验必填，校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
-    <p style="color: red;font-size: 12px;">自定义列头：attr4字段</p>
+    <p style="color: red;font-size: 12px;">自定义列头：attr4字段、attr5字段</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
@@ -16,14 +17,22 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable ref="editable" class="my-table11" stripe border size="medium" height="480" style="width: 100%" :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}">
+    <el-editable
+      ref="editable"
+      class="my-table11"
+      stripe
+      border
+      size="medium"
+      height="480"
+      :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
       </el-editable-column>
       <template v-for="(item, index) in columnConfigs">
-        <template v-if="item.show">
+        <template v-if="item.customShow">
           <el-editable-column v-if="index === 0" :key="index" v-bind="item">
             <template slot="head" slot-scope="scope">
               <i class="editable-required-icon"></i>
@@ -70,7 +79,7 @@
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
       <ul>
         <li v-for="(item, index) in columnConfigs" :key="index">
-          <el-checkbox v-model="item.checked">{{ item.label }}</el-checkbox>
+          <el-checkbox v-model="item.customChecked">{{ item.label }}</el-checkbox>
         </li>
       </ul>
       <span slot="footer" class="dialog-footer">
@@ -191,8 +200,9 @@ export default {
         this.columnConfigs = data.map(column => {
           let defaultShow = ['name', 'nickname', 'sex', 'region', 'phone', 'rate', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].includes(column.prop)
           let editRender = column.editRender
-          column.checked = defaultShow
-          column.show = defaultShow
+          column.customDefault = defaultShow
+          column.customChecked = defaultShow
+          column.customShow = defaultShow
           column.minWidth = '150'
           editRender.attrs = {
             placeholder: `请输入${column.label}`
@@ -234,9 +244,11 @@ export default {
       })
     },
     insertEvent () {
-      let row = this.$refs.editable.insert()
-      // 对新增行进行校验提示
-      this.$nextTick(() => this.$refs.editable.validateRow(row).catch(e => e))
+      if (!this.$refs.editable.checkValid().error) {
+        let row = this.$refs.editable.insert()
+        // 对新增行进行校验提示
+        this.$nextTick(() => this.$refs.editable.validateRow(row).catch(e => e))
+      }
     },
     removeEvent (scope) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {
@@ -266,18 +278,18 @@ export default {
     },
     openCustomEvent () {
       this.columnConfigs.forEach(column => {
-        column.checked = column.show
+        column.customChecked = column.customShow
       })
     },
     resetCustomEvent () {
       this.columnConfigs.forEach(column => {
-        column.checked = true
+        column.customChecked = column.customDefault
       })
     },
     saveCustomEvent () {
       this.dialogVisible = false
       this.columnConfigs.forEach(column => {
-        column.show = column.checked
+        column.customShow = column.customChecked
       })
     },
     getInsertEvent () {

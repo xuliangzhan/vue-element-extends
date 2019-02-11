@@ -18,7 +18,17 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable ref="editable" height="540" stripe border @select="selectEvent" size="small" @current-change="currentChangeEvent" :editRules="validRules" :editConfig="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true}" style="width: 100%">
+    <el-editable
+      ref="editable"
+      stripe
+      border
+      height="540"
+      size="small"
+      @select="selectEvent"
+      @current-change="currentChangeEvent"
+      :editRules="validRules"
+      :editConfig="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true}"
+      style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column type="expand">
@@ -46,7 +56,7 @@
       <el-editable-column prop="date2" label="选择时间范围" width="260" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetimerange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" min-width="180" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
       <el-editable-column prop="color" label="选择颜色" width="100" :editRender="{name: 'ElColorPicker', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="是否启用2" width="180" :editRender="{type: 'visible'}">
+      <el-editable-column prop="flag2" label="是否启用2" width="200" :editRender="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-radio label="N" border>值1</el-radio>

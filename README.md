@@ -42,7 +42,7 @@ edit-rules 校验规则配置
 | required | 是否必填 | Boolean | — | — |
 | min  | 校验值最小长度（如果 type=number 则比较值大小） | Number | — | — |
 | max  | 校验值最大长度（如果 type=number 则比较值大小） | Number | — | — |
-| type | 类型校验 | String | number / string | — | string |
+| type | 类型校验 | String | number / string | string |
 | pattern | 正则校验 | RegExp | — | — |
 | validator  | 自定义校验方法 | Function(rule, value, callback) | — | — |
 | trigger  | 触发校验方式 | String | blur / change | blur |
@@ -109,7 +109,7 @@ edit-render 渲染参数配置
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
 | name | 渲染内置的组件名称（如果是自定义渲染不需要传） | String | ElInput / ElSelect / ElCascader / ElDatePicker / ElInputNumber / ElSwitch / ElRate / ElColorPicker / ElSlider | ElInput |
-| type | 渲染类型 | String | default（组件触发后可视） / visible（组件一直可视，如果设置为类型则不支持自动校验） | default |
+| type | 渲染类型 | String | default（组件触发后可视） / visible（组件一直可视） | default |
 | autofocus  | 该列在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | — |
 | attrs | 渲染组件附加属性，参数请查看被渲染的 Component attrs | Object | — | {} |
 | events | 渲染组件附加事件，参数为 ( { rule, row, column, $index }, ...Component arguments ) | Object | — | {} |
@@ -165,8 +165,6 @@ Vue.component(EditableColumn.name, EditableColumn)
 </template>
 
 <script>
-import { MessageBox } from 'element-ui'
-
 export default {
   data () {
     return {
@@ -219,4 +217,5 @@ export default {
   }
 }
 </script>
+
 ```

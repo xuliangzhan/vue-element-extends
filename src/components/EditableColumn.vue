@@ -227,7 +227,7 @@ export default {
       let labels = []
       let attrs = this.editRender.attrs || {}
       this.matchCascaderData(values, 0, attrs.options || [], labels)
-      return labels.join(attrs.separator || '/')
+      return labels.join(attrs.separator || ' / ')
     },
     getTimePickerLabel ({ row, column }) {
       let value = row.data[column.property]

@@ -267,13 +267,9 @@ export default {
           if (this.trigger === type) {
             this._triggerActive(row, column, cell, event)
             if (row && this.mode === 'row') {
-              this._validRowRules('change', row).catch(({ rule, row, column, cell }) => {
-                this._toValidError(rule, row, column, cell)
-              })
+              this._validRowRules('change', row).catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
             } else {
-              this._validColRules('change', row, column).catch(rule => {
-                this._toValidError(rule, row, column, cell)
-              })
+              this._validColRules('change', row, column).catch(rule => this._toValidError(rule, row, column, cell))
             }
           } else {
             if (row.editActive !== column.property) {
@@ -857,7 +853,7 @@ export default {
           let valid = false
           this._toValidError(rule, row, column, cell)
           if (cb) {
-            cb(valid, {[column.property]: [new Error(rule.message)]})
+            cb(valid, { [column.property]: [new Error(rule.message)] })
             resolve(valid)
           } else {
             reject(valid)
@@ -900,7 +896,7 @@ export default {
           let valid = false
           this._toValidError(rule, row, column, cell)
           if (cb) {
-            cb(valid, {[column.property]: [new Error(rule.message)]})
+            cb(valid, { [column.property]: [new Error(rule.message)] })
           }
           return cb ? Promise.resolve(valid) : Promise.reject(valid)
         })

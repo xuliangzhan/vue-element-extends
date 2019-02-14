@@ -12,8 +12,8 @@
       <div class="apimenu-row">
         <a class="apimenu-title">单击模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableClick1'}" replace>列编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>行样式+分页</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>行编辑+排序</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>行样式+自定义渲染+分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>行编辑+自定义渲染+排序</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>多级表头+校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>动态列渲染</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>动态列渲染+自定义列</router-link>
@@ -26,8 +26,8 @@
       <div class="apimenu-row">
         <a class="apimenu-title">双击模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>列编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+筛选+分页</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>个性化列+校验+自定义校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+自定义渲染+筛选+分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>个性化列+自定义渲染+自定义校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>个性化列+唯一下拉选项+完整校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>个性化列+自定义列头+完整校验</router-link>
       </div>

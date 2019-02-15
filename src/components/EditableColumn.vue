@@ -237,10 +237,25 @@ export default {
     getDatePickerLabel ({ row, column }) {
       let value = row.data[column.property]
       let attrs = this.editRender.attrs || {}
-      if (attrs.type === 'datetimerange') {
-        return XEUtils.toArray(value).map(date => XEUtils.toDateString(date, attrs.format)).join(attrs.rangeSeparator)
+      switch (attrs.type) {
+        case 'week':
+          return this.getFormatDate(value, attrs, 'yyyy-WW').replace('-', 'w') // 参数兼容性处理
+        case 'month':
+          return this.getFormatDate(value, attrs, 'yyyy-MM')
+        case 'year':
+          return this.getFormatDate(value, attrs, 'yyyy')
+        case 'dates':
+          return this.getFormatDates(value, attrs, ', ', 'yyyy-MM-dd')
+        case 'datetimerange':
+          return this.getFormatDates(value, attrs, ` ${attrs.rangeSeparator || '-'} `, 'yyyy-MM-dd HH:ss:mm')
       }
-      return XEUtils.toDateString(value, attrs.format, 'yyyy-MM-dd')
+      return this.getFormatDate(value, attrs, 'yyyy-MM-dd')
+    },
+    getFormatDate (value, attrs, defaultFormat) {
+      return XEUtils.toDateString(value, attrs.format || defaultFormat)
+    },
+    getFormatDates (values, attrs, separator, defaultFormat) {
+      return XEUtils.toArray(values).map(date => this.getFormatDate(date, attrs, defaultFormat)).join(separator)
     },
     checkRequired ({ column, store }) {
       if (column.property && this.$editable && this.$editable.editRules) {

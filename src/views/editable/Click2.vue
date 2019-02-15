@@ -16,9 +16,13 @@
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" width="100" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="140" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
       <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
+      <el-editable-column prop="date2" label="多个日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'dates'}}"></el-editable-column>
+      <el-editable-column prop="date3" label="周日期" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'week', format: 'yyyy 第 WW 周'}}"></el-editable-column>
+      <el-editable-column prop="date4" label="月日期" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'month'}}"></el-editable-column>
+      <el-editable-column prop="date5" label="年日期" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'year'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="order" label="自定义渲染" width="120" :editRender="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
@@ -28,7 +32,7 @@
           <span>自定义：{{ scope.row.order }}</span>
         </template>
       </el-editable-column>
-      <el-editable-column prop="remark" label="备注（只读）"></el-editable-column>
+      <el-editable-column prop="remark" label="备注（只读）" min-width="140"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>

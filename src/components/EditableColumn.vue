@@ -246,6 +246,7 @@ export default {
           return this.getFormatDate(value, attrs, 'yyyy')
         case 'dates':
           return this.getFormatDates(value, attrs, ', ', 'yyyy-MM-dd')
+        case 'daterange':
         case 'datetimerange':
           return this.getFormatDates(value, attrs, ` ${attrs.rangeSeparator || '-'} `, 'yyyy-MM-dd HH:ss:mm')
       }

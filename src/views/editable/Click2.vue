@@ -20,9 +20,9 @@
       <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="date2" label="多个日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'dates'}}"></el-editable-column>
-      <el-editable-column prop="date3" label="周日期" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'week', format: 'yyyy 第 WW 周'}}"></el-editable-column>
-      <el-editable-column prop="date4" label="月日期" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'month'}}"></el-editable-column>
-      <el-editable-column prop="date5" label="年日期" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'year'}}"></el-editable-column>
+      <el-editable-column prop="date3" label="选择周" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'week', format: 'yyyy 第 WW 周'}}"></el-editable-column>
+      <el-editable-column prop="date4" label="选择月" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'month'}}"></el-editable-column>
+      <el-editable-column prop="date5" label="选择年" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'year'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="order" label="自定义渲染" width="120" :editRender="{type: 'default'}">
         <template slot="edit" slot-scope="scope">

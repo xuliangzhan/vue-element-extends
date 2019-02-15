@@ -239,7 +239,7 @@ export default {
       let attrs = this.editRender.attrs || {}
       switch (attrs.type) {
         case 'week':
-          return this.getFormatDate(value, attrs, 'yyyy-WW').replace('-', 'w') // 参数兼容性处理
+          return this.getFormatDate(value, attrs, 'yyyywWW')
         case 'month':
           return this.getFormatDate(value, attrs, 'yyyy-MM')
         case 'year':

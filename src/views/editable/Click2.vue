@@ -13,7 +13,7 @@
 
     <el-editable ref="editable" height="540" size="small" border :row-class-name="tableRowClassName" :editConfig="{trigger: 'click', showStatus: false}" style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
+      <el-editable-column prop="name" label="名字（只读）" min-width="140" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" width="100" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" min-width="140" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>

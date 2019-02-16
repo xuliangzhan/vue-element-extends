@@ -1,4 +1,4 @@
-import * as types from '../mutations'
+import * as types from '../mutation-types'
 
 const state = {
   click: null

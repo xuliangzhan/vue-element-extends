@@ -179,7 +179,7 @@ export default {
     },
     getRendEvents ({ $index, row, column, store }) {
       let editRender = this.editRender
-      let scope = {$index, row: row.data, column, store, editRender, _row: row}
+      let scope = { $index, row: row.data, column, store, editRender, _row: row }
       let defEvent = { change: () => this.$editable.updateStatus(scope) }
       if (editRender.events) {
         return Object.assign(defEvent, XEUtils.objectMap(editRender.events, cb => function () {

@@ -43,7 +43,7 @@ export default {
         return {
           prop: name.toLowerCase(),
           label: name,
-          editRender: {name: 'ElInput'}
+          editRender: { name: 'ElInput' }
         }
       })
     }

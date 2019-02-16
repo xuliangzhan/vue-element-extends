@@ -105,7 +105,7 @@ export default {
                 })
                 break
               case 'region':
-                column.editRender.attrs = {options: []}
+                column.editRender.attrs = { options: [] }
                 regionPromise.then(rest => {
                   column.editRender.attrs.options = rest
                 })

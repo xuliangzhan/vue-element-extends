@@ -206,7 +206,7 @@ export default {
                 })
                 break
               case 'region':
-                editRender.attrs = {options: []}
+                editRender.attrs = { options: [] }
                 regionPromise.then(rest => {
                   editRender.attrs.options = rest
                 })

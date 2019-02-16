@@ -110,9 +110,15 @@ export default {
       sexList: [],
       regionList: [],
       orderDataList: [
-        { value: '136' },
-        { value: '1362' },
-        { value: '13886' }
+        {
+          value: '136'
+        },
+        {
+          value: '1362'
+        },
+        {
+          value: '13886'
+        }
       ],
       ageFilterList: [
         {

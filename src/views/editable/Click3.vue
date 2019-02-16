@@ -54,8 +54,8 @@
       <el-editable-column prop="birthdate" label="出生日期" width="220" sortable :sort-method="birthdateSortHandler" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd hh:mm'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" width="220" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="date3" label="任意时间点" width="160" sortable :editRender="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>
-      <el-editable-column prop="date2" label="选择日期范围" width="250" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'daterange', pickerOptions: pickerOptions2, rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期'}}"></el-editable-column>
-      <el-editable-column prop="date2" label="选择日期范围" width="380" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetimerange', pickerOptions: pickerOptions2, rangeSeparator: '到', startPlaceholder: '开始日期', endPlaceholder: '结束日期', align: 'right'}}"></el-editable-column>
+      <el-editable-column prop="date2" label="选择日期范围1" width="250" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'daterange', pickerOptions: pickerOptions2, rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期'}}"></el-editable-column>
+      <el-editable-column prop="date7" label="选择日期范围2" width="380" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetimerange', pickerOptions: pickerOptions2, rangeSeparator: '到', startPlaceholder: '开始日期', endPlaceholder: '结束日期', align: 'right'}}"></el-editable-column>
       <el-editable-column prop="slider" label="滑块" width="200" :editRender="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" width="140" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="flag2" label="是否启用2" width="200" :editRender="{type: 'visible'}">

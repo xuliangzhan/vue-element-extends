@@ -27,6 +27,8 @@ import EditableExcel4 from '@/views/editable/Excel4'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'hash',
+  base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
@@ -35,112 +37,112 @@ export default new Router({
       }
     },
     {
-      path: '/demo/editable/manual1',
+      path: '/editable/manual1',
       name: 'EditableManual1',
       component: EditableManual1
     },
     {
-      path: '/demo/editable/manual2',
+      path: '/editable/manual2',
       name: 'EditableManual2',
       component: EditableManual2
     },
     {
-      path: '/demo/editable/click1',
+      path: '/editable/click1',
       name: 'EditableClick1',
       component: EditableClick1
     },
     {
-      path: '/demo/editable/click2',
+      path: '/editable/click2',
       name: 'EditableClick2',
       component: EditableClick2
     },
     {
-      path: '/demo/editable/click3',
+      path: '/editable/click3',
       name: 'EditableClick3',
       component: EditableClick3
     },
     {
-      path: '/demo/editable/click4',
+      path: '/editable/click4',
       name: 'EditableClick4',
       component: EditableClick4
     },
     {
-      path: '/demo/editable/click5',
+      path: '/editable/click5',
       name: 'EditableClick5',
       component: EditableClick5
     },
     {
-      path: '/demo/editable/click6',
+      path: '/editable/click6',
       name: 'EditableClick6',
       component: EditableClick6
     },
     {
-      path: '/demo/editable/click7',
+      path: '/editable/click7',
       name: 'EditableClick7',
       component: EditableClick7
     },
     {
-      path: '/demo/editable/click8',
+      path: '/editable/click8',
       name: 'EditableClick8',
       component: EditableClick8
     },
     {
-      path: '/demo/editable/click9',
+      path: '/editable/click9',
       name: 'EditableClick9',
       component: EditableClick9
     },
     {
-      path: '/demo/editable/click10',
+      path: '/editable/click10',
       name: 'EditableClick10',
       component: EditableClick10
     },
     {
-      path: '/demo/editable/click11',
+      path: '/editable/click11',
       name: 'EditableClick11',
       component: EditableClick11
     },
     {
-      path: '/demo/editable/dblclick1',
+      path: '/editable/dblclick1',
       name: 'EditableDblclick1',
       component: EditableDblclick1
     },
     {
-      path: '/demo/editable/dblclick2',
+      path: '/editable/dblclick2',
       name: 'EditableDblclick2',
       component: EditableDblclick2
     },
     {
-      path: '/demo/editable/dblclick3',
+      path: '/editable/dblclick3',
       name: 'EditableDblclick3',
       component: EditableDblclick3
     },
     {
-      path: '/demo/editable/dblclick4',
+      path: '/editable/dblclick4',
       name: 'EditableDblclick4',
       component: EditableDblclick4
     },
     {
-      path: '/demo/editable/dblclick5',
+      path: '/editable/dblclick5',
       name: 'EditableDblclick5',
       component: EditableDblclick5
     },
     {
-      path: '/demo/editable/excel1',
+      path: '/editable/excel1',
       name: 'EditableExcel1',
       component: EditableExcel1
     },
     {
-      path: '/demo/editable/excel2',
+      path: '/editable/excel2',
       name: 'EditableExcel2',
       component: EditableExcel2
     },
     {
-      path: '/demo/editable/excel3',
+      path: '/editable/excel3',
       name: 'EditableExcel3',
       component: EditableExcel3
     },
     {
-      path: '/demo/editable/excel4',
+      path: '/editable/excel4',
       name: 'EditableExcel4',
       component: EditableExcel4
     }

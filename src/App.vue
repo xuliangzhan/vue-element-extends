@@ -52,7 +52,7 @@ export default {
         return this.$route.name
       },
       set (value) {
-        this.$router.replace({name: value})
+        this.$router.replace({ name: value })
       }
     }
   }

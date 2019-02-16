@@ -64,23 +64,23 @@ export default {
           label: name,
           minWidth: '80',
           sortable: true,
-          editRender: {name: 'ElInput'}
+          editRender: { name: 'ElInput' }
         }
         switch (name) {
           case 'A':
-            column.filters = [{text: '大于10', value: 10}, {text: '大于50', value: 50}, {text: '大于100', value: 100}]
+            column.filters = [{ text: '大于10', value: 10 }, { text: '大于50', value: 50 }, { text: '大于100', value: 100 }]
             column.filterMethod = (value, row, column) => Number(row[column.property] || 0) > value
             break
           case 'C':
-            column.filters = [{text: 'a开头', value: 'a'}, {text: 'b开头', value: 'b'}, {text: 'c开头', value: 'c'}]
+            column.filters = [{ text: 'a开头', value: 'a' }, { text: 'b开头', value: 'b' }, { text: 'c开头', value: 'c' }]
             column.filterMethod = (value, row, column) => (row[column.property] || '').substring(0, 1) === value
             break
           case 'D':
-            column.filters = [{text: '大于0', value: 0}, {text: '大于20', value: 20}, {text: '大于200', value: 200}]
+            column.filters = [{ text: '大于0', value: 0 }, { text: '大于20', value: 20 }, { text: '大于200', value: 200 }]
             column.filterMethod = (value, row, column) => Number(row[column.property] || 0) > value
             break
           case 'E':
-            column.filters = [{text: '大于2.5', value: 2.5}, {text: '大于7.8', value: 7.8}, {text: '大于9.5', value: 9.5}]
+            column.filters = [{ text: '大于2.5', value: 2.5 }, { text: '大于7.8', value: 7.8 }, { text: '大于9.5', value: 9.5 }]
             column.filterMethod = (value, row, column) => Number(row[column.property] || 0) > value
             break
         }

@@ -67,9 +67,9 @@ export default {
       sexList: [],
       regionList: [],
       orderDataList: [
-        {value: '136'},
-        {value: '1362'},
-        {value: '13886'}
+        { value: '136' },
+        { value: '1362' },
+        { value: '13886' }
       ],
       pageVO: {
         currentPage: 1,
@@ -109,7 +109,7 @@ export default {
       this.pageVO.currentPage = currentPage
       this.findList()
     },
-    tableRowClassName ({row, rowIndex}) {
+    tableRowClassName ({ row, rowIndex }) {
       if (rowIndex === 2 || rowIndex === 3 || rowIndex === 4) {
         return 'warning-row'
       } else if (rowIndex === 6 || rowIndex === 7) {

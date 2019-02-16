@@ -47,7 +47,7 @@ export default {
           prop: name.toLowerCase(),
           label: name,
           sortable: name === 'A',
-          editRender: {name: 'ElInput'}
+          editRender: { name: 'ElInput' }
         }
       }),
       validRules: {

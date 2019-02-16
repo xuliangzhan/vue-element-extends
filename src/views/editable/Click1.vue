@@ -19,6 +19,11 @@
       <el-editable-column prop="attr1" label="文本输入" :editRender="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="attr2" label="文本域" :editRender="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
       <el-editable-column prop="createDate" label="创建时间（只读）" :formatter="formatterCreateDate"></el-editable-column>
+      <el-editable-column prop="attr3" label="链接">
+        <template>
+          <a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">打开链接</a>
+        </template>
+      </el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>

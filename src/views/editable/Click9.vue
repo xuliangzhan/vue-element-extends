@@ -158,6 +158,7 @@ export default {
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
     },
     postJSON (data) {
+      // 提交请求
       return new Promise(resolve => {
         setTimeout(() => {
           resolve('保存成功')
@@ -165,16 +166,19 @@ export default {
       })
     },
     getSexJSON () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
+        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 200)
       })
     },
     getDataJSON () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
+        setTimeout(() => resolve(XEUtils.clone(listData, true)), 400)
       })
     },
     getRegionJSON () {
+      // 模拟数据
       return new Promise(resolve => {
         setTimeout(() => resolve(XEUtils.clone(regionData, true)), 200)
       })

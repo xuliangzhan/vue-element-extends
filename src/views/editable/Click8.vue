@@ -87,48 +87,59 @@ export default {
     init () {
       let sexPromise = this.getSexJSON()
       let regionPromise = this.getRegionJSON()
-      this.findList()
-      this.getColumnConfigs().then(data => {
-        this.columnConfigs = data.map((column, index) => {
-          let defaultShow = index < 8
-          column.customDefault = defaultShow
-          column.customChecked = defaultShow
-          column.customShow = defaultShow
-          column.minWidth = '150'
-          switch (column.prop) {
-            case 'sex':
-              column.editRender.options = []
-              sexPromise.then(rest => {
-                column.editRender.options = rest
-              })
-              break
-            case 'region':
-              column.editRender.attrs = {options: []}
-              regionPromise.then(rest => {
-                column.editRender.attrs.options = rest
-              })
-              break
-            case 'birthdate':
-              column.editRender.attrs = {
-                type: 'date',
-                format: 'yyyy-MM-dd'
-              }
-              break
-            case 'rate':
-              column.editRender.type = 'visible'
-              break
-          }
-          return column
+      this.loading = true
+      Promise.all([
+        this.loadList(),
+        this.getColumnConfigs().then(data => {
+          this.columnConfigs = data.map((column, index) => {
+            let defaultShow = index < 8
+            column.customDefault = defaultShow
+            column.customChecked = defaultShow
+            column.customShow = defaultShow
+            column.minWidth = '150'
+            switch (column.prop) {
+              case 'sex':
+                column.editRender.options = []
+                sexPromise.then(rest => {
+                  column.editRender.options = rest
+                })
+                break
+              case 'region':
+                column.editRender.attrs = {options: []}
+                regionPromise.then(rest => {
+                  column.editRender.attrs.options = rest
+                })
+                break
+              case 'birthdate':
+                column.editRender.attrs = {
+                  type: 'date',
+                  format: 'yyyy-MM-dd'
+                }
+                break
+              case 'rate':
+                column.editRender.type = 'visible'
+                break
+            }
+            return column
+          })
         })
+      ]).then(datas => {
+        this.loading = false
+      }).catch(e => {
+        this.loading = false
       })
     },
     findList () {
       this.loading = true
-      this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
+      return this.loadList().then(data => {
         this.loading = false
       }).catch(e => {
         this.loading = false
+      })
+    },
+    loadList () {
+      return this.getDataJSON().then(data => {
+        this.$refs.editable.reload(data)
       })
     },
     editActiveEvent (row, column, cell, event) {
@@ -193,6 +204,7 @@ export default {
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
     },
     postJSON (data) {
+      // 提交请求
       return new Promise(resolve => {
         setTimeout(() => {
           resolve('保存成功')
@@ -200,21 +212,25 @@ export default {
       })
     },
     getSexJSON () {
+      // 模拟数据
       return new Promise(resolve => {
         setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
       })
     },
     getColumnConfigs () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 100)
+        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 500)
       })
     },
     getDataJSON () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
+        setTimeout(() => resolve(XEUtils.clone(listData, true)), 300)
       })
     },
     getRegionJSON () {
+      // 模拟数据
       return new Promise(resolve => {
         setTimeout(() => resolve(XEUtils.clone(regionData, true)), 200)
       })

@@ -58,36 +58,54 @@ export default {
     init () {
       let sexPromise = this.getSexJSON()
       let regionPromise = this.getRegionJSON()
-      this.findList()
-      this.getColumnConfigs().then(data => {
-        let sexItem = data.find(column => column.prop === 'sex')
-        sexItem.editRender.options = []
-        sexPromise.then(rest => {
-          sexItem.editRender.options = rest
+      this.loading = true
+      Promise.all([
+        this.loadList(),
+        this.getColumnConfigs().then(data => {
+          this.columnConfigs = data.filter((column, index) => index <= 8).map(column => {
+            switch (column.prop) {
+              case 'sex':
+                column.editRender.options = []
+                sexPromise.then(rest => {
+                  column.editRender.options = rest
+                })
+                break
+              case 'region':
+                column.editRender.attrs = {options: []}
+                regionPromise.then(rest => {
+                  column.editRender.attrs.options = rest
+                })
+                break
+              case 'birthdate':
+                column.editRender.attrs = {
+                  type: 'date',
+                  format: 'yyyy-MM-dd'
+                }
+                break
+              case 'rate':
+                column.editRender.type = 'visible'
+                break
+            }
+            return column
+          })
         })
-        let regionItem = data.find(column => column.prop === 'region')
-        regionItem.editRender.attrs = {options: []}
-        regionPromise.then(rest => {
-          regionItem.editRender.attrs.options = rest
-        })
-        let birthdateItem = data.find(column => column.prop === 'birthdate')
-        birthdateItem.editRender.attrs = {
-          type: 'date',
-          format: 'yyyy-MM-dd'
-        }
-        let rateItem = data.find(column => column.prop === 'rate')
-        rateItem.editRender.type = 'visible'
-
-        this.columnConfigs = data
+      ]).then(datas => {
+        this.loading = false
+      }).catch(e => {
+        this.loading = false
       })
     },
     findList () {
       this.loading = true
-      this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
+      return this.loadList().then(data => {
         this.loading = false
       }).catch(e => {
         this.loading = false
+      })
+    },
+    loadList () {
+      return this.getDataJSON().then(data => {
+        this.$refs.editable.reload(data)
       })
     },
     removeEvent (row) {
@@ -117,6 +135,7 @@ export default {
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
     },
     postJSON (data) {
+      // 提交请求
       return new Promise(resolve => {
         setTimeout(() => {
           resolve('保存成功')
@@ -124,21 +143,25 @@ export default {
       })
     },
     getSexJSON () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
+        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 300)
       })
     },
     getColumnConfigs () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 100)
+        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 700)
       })
     },
     getDataJSON () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
+        setTimeout(() => resolve(XEUtils.clone(listData, true)), 500)
       })
     },
     getRegionJSON () {
+      // 模拟数据
       return new Promise(resolve => {
         setTimeout(() => resolve(XEUtils.clone(regionData, true)), 200)
       })

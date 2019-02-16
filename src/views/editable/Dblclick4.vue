@@ -184,71 +184,82 @@ export default {
       })
       let sexPromise = this.getSexJSON()
       let regionPromise = this.getRegionJSON()
-      this.findList()
-      this.getColumnConfigs().then(data => {
-        this.columnConfigs = data.map(column => {
-          let defaultShow = ['name', 'nickname', 'sex', 'region', 'phone', 'rate', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].includes(column.prop)
-          let editRender = column.editRender
-          column.customDefault = defaultShow
-          column.customChecked = defaultShow
-          column.customShow = defaultShow
-          column.minWidth = '150'
-          editRender.attrs = {
-            placeholder: `请输入${column.label}`
-          }
-          switch (column.prop) {
-            case 'sex':
-              editRender.options = []
-              sexPromise.then(rest => {
-                editRender.options = rest
-              })
-              break
-            case 'region':
-              editRender.attrs = {options: []}
-              regionPromise.then(rest => {
-                editRender.attrs.options = rest
-              })
-              break
-            case 'birthdate':
-              editRender.attrs = {
-                type: 'date',
-                format: 'yyyy-MM-dd'
-              }
-              break
-            case 'rate':
-              editRender.type = 'visible'
-              break
-            case 'attr4':
-              Object.assign(editRender, {
-                name: 'ElSelect',
-                options: this.attr4Options,
-                events: {
-                  change: this.attr4ChangeEvent
+      this.loading = true
+      Promise.all([
+        this.loadList(),
+        this.getColumnConfigs().then(data => {
+          this.columnConfigs = data.map(column => {
+            let defaultShow = ['name', 'nickname', 'sex', 'region', 'phone', 'rate', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].includes(column.prop)
+            let editRender = column.editRender
+            column.customDefault = defaultShow
+            column.customChecked = defaultShow
+            column.customShow = defaultShow
+            column.minWidth = '150'
+            editRender.attrs = {
+              placeholder: `请输入${column.label}`
+            }
+            switch (column.prop) {
+              case 'sex':
+                editRender.options = []
+                sexPromise.then(rest => {
+                  editRender.options = rest
+                })
+                break
+              case 'region':
+                editRender.attrs = {options: []}
+                regionPromise.then(rest => {
+                  editRender.attrs.options = rest
+                })
+                break
+              case 'birthdate':
+                editRender.attrs = {
+                  type: 'date',
+                  format: 'yyyy-MM-dd'
                 }
-              })
-              break
-            case 'attr5':
-              column.formatter = (row, column, cellValue, index) => cellValue
-              Object.assign(editRender, {
-                name: 'ElSelect',
-                options: this.attr5Options,
-                events: {
-                  change: this.attr5ChangeEvent
-                }
-              })
-              break
-          }
-          return column
+                break
+              case 'rate':
+                editRender.type = 'visible'
+                break
+              case 'attr4':
+                Object.assign(editRender, {
+                  name: 'ElSelect',
+                  options: this.attr4Options,
+                  events: {
+                    change: this.attr4ChangeEvent
+                  }
+                })
+                break
+              case 'attr5':
+                column.formatter = (row, column, cellValue, index) => cellValue
+                Object.assign(editRender, {
+                  name: 'ElSelect',
+                  options: this.attr5Options,
+                  events: {
+                    change: this.attr5ChangeEvent
+                  }
+                })
+                break
+            }
+            return column
+          })
         })
+      ]).then(datas => {
+        this.loading = false
+      }).catch(e => {
+        this.loading = false
       })
     },
     findList () {
       this.loading = true
-      this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
+      return this.loadList().then(data => {
         this.loading = false
       }).catch(e => {
         this.loading = false
+      })
+    },
+    loadList () {
+      return this.getDataJSON().then(data => {
+        this.$refs.editable.reload(data)
       })
     },
     insertEvent () {
@@ -336,6 +347,7 @@ export default {
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
     },
     postJSON (data) {
+      // 提交请求
       return new Promise(resolve => {
         setTimeout(() => {
           resolve('保存成功')
@@ -343,23 +355,27 @@ export default {
       })
     },
     getSexJSON () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
+        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 200)
       })
     },
     getColumnConfigs () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 100)
+        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 500)
       })
     },
     getDataJSON () {
+      // 模拟数据
       return new Promise(resolve => {
         setTimeout(() => resolve([]), 350)
       })
     },
     getRegionJSON () {
+      // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(regionData, true)), 200)
+        setTimeout(() => resolve(XEUtils.clone(regionData, true)), 300)
       })
     }
   }

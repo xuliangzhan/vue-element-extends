@@ -238,6 +238,7 @@ export default {
       }
     },
     postJSON (data) {
+      // 提交请求
       return new Promise(resolve => {
         setTimeout(() => {
           resolve('保存成功')
@@ -245,11 +246,13 @@ export default {
       })
     },
     getSexJSON () {
+      // 模拟数据
       return new Promise(resolve => {
         setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
       })
     },
     getRegionJSON () {
+      // 模拟数据
       return new Promise(resolve => {
         setTimeout(() => resolve(XEUtils.clone(regionData, true)), 200)
       })

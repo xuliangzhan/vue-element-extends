@@ -210,7 +210,7 @@ export default {
       return (datas || this.datas).map(item => item.data)
     },
     _toData (item, status) {
-      return item._EDITABLE_PROTO === this.editProto ? item : {
+      return item && item._EDITABLE_PROTO === this.editProto ? item : {
         _EDITABLE_PROTO: this.editProto,
         data: item,
         store: XEUtils.clone(item, true),

@@ -39,9 +39,6 @@
               <i class="el-icon-edit editable-header-icon"></i>
               {{ scope.column.label }}
             </template>
-            <template slot="valid" slot-scope="scope">
-              <span class="error-msg">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段<br><a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">参考API说明</a></span>
-            </template>
           </el-editable-column>
           <el-editable-column v-else-if="item.prop === 'attr4'" :key="index" v-bind="item">
             <template slot="head" slot-scope="scope">

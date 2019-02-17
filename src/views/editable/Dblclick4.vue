@@ -33,12 +33,7 @@
       </el-editable-column>
       <template v-for="(item, index) in columnConfigs">
         <template v-if="item.customShow">
-          <el-editable-column v-if="index === 0" :key="index" v-bind="item">
-            <template slot="valid" slot-scope="scope">
-              <span class="error-msg">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段<br><a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">参考API说明</a></span>
-            </template>
-          </el-editable-column>
-          <el-editable-column v-else :key="index" v-bind="item"></el-editable-column>
+          <el-editable-column :key="index" v-bind="item"></el-editable-column>
         </template>
       </template>
       <el-editable-column label="操作">

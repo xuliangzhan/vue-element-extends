@@ -589,6 +589,9 @@ export default {
       row.validRule = rule
       row.validActive = column.property
       this._triggerActive(row, column, cell, { type: 'valid' })
+      if (cell && cell.scrollIntoView) {
+        this.$nextTick(() => cell.scrollIntoView())
+      }
     },
     _deleteData (index) {
       if (index > -1) {

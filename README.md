@@ -129,7 +129,7 @@ edit-render 渲染参数配置
 步骤：
 
 1. 基于 ElementUI 2.x，依赖库 npm install vuex element-ui xe-utils
-2. 依赖 vuex 中的 globalClick 属性，该属性值为响应全局 click  事件 (具体实现方式可以参考 store/modules/event.js)
+2. 依赖 vuex 中的 globalClick 属性，该属性值为响应全局 click  事件 (具体实现方式可以参考 store.js)
 3. 将 Editable.vue 和 EditableColumn.vue 复制到项目中，（例：components 目录下），然后注册组件（全局或局部）
 
 该组件不做发布，有需要都可以自行获取，也可以根据自身项目需求去做修改  

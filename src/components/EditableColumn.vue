@@ -61,11 +61,12 @@
         </template>
       </template>
       <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
-        <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _self: scope._self, _row: scope.row}">
-          <div class="editable-valid_error">
-            <span class="valid-message">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</span>
+        <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
+          <div class="editable-valid_error"></div>
+          <div slot="content">
+            <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _self: scope._self, _row: scope.row}">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</slot>
           </div>
-        </slot>
+        </el-tooltip>
       </template>
     </template>
   </el-table-column>
@@ -124,12 +125,14 @@ export default {
     }
   },
   computed: {
+    isDefaultInput () {
+      return this.editRender ? ['ElInput', 'ElInputNumber'].includes(this.editRender.name) : false
+    },
     attrs () {
       let sortBy
-      let isDefaultFocus = this.editRender ? ['ElInput', 'ElInputNumber'].includes(this.editRender.name) : false
       let className = this.className ? ` ${this.className}` : ''
       let editTypeClass = this.editRender ? ' editable-col_edit' : ' editable-col_readonly'
-      let autofocusClass = this.editRender ? (this.editRender.autofocus === true || isDefaultFocus ? ' autofocus' : '') : (isDefaultFocus ? ' autofocus' : '')
+      let autofocusClass = this.editRender ? (this.editRender.autofocus === true || this.isDefaultInput ? ' autofocus' : '') : (this.isDefaultInput ? ' autofocus' : '')
       if (XEUtils.isFunction(this.sortBy)) {
         sortBy = this.sortBy
       } else if (XEUtils.isString(this.sortBy)) {
@@ -182,7 +185,7 @@ export default {
     getRendEvents ({ $index, row, column, store }) {
       let editRender = this.editRender
       let scope = { $index, row: row.data, column, store, editRender, _row: row }
-      let defEvent = { change: () => this.$editable.updateStatus(scope) }
+      let defEvent = { [this.isDefaultInput ? 'input' : 'change']: () => this.$editable.updateStatus(scope) }
       if (editRender.events) {
         return Object.assign(defEvent, XEUtils.objectMap(editRender.events, cb => function () {
           cb.apply(null, [scope].concat(Array.from(arguments)))
@@ -338,57 +341,38 @@ export default {
   -ms-user-select: none;
   user-select: none;
 }
-.editable .editable-column .editable-valid_error {
-  display: none;
-}
 .editable .editable-column.valid-error .el-input__inner,
 .editable .editable-column.valid-error .el-input__inner:focus,
 .editable .editable-column.valid-error .el-textarea__inner,
 .editable .editable-column.valid-error .el-textarea__inner:focus {
   border-color: #f56c6c;
 }
-.editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error {
-  top: auto;
-  bottom: -moz-calc(100% + 10px);
-  bottom: -webkit-calc(100% + 10px);
-  bottom: calc(100% + 10px);
-}
-.editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error:before {
-  top: auto;
-  bottom: -8px;
-  border-color: #f56c6c transparent transparent transparent;
-}
-.editable .editable-column.valid-error .editable-valid_error,
-.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error {
+.editable .editable-column .editable-valid_error {
   display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   position: absolute;
-  top: -moz-calc(100% + 10px);
-  top: -webkit-calc(100% + 10px);
-  top: calc(100% + 10px);
-  left: 10px;
-  bottom: auto;
-  z-index: 9;
-  min-width: 300px;
+  z-index: -1;
 }
-.editable .editable-column.valid-error .editable-valid_error>.valid-message,
-.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error>.valid-message {
-  display: inline-block;
-  padding: 4px 10px;
-  line-height: 1.5;
-  color: #fff;
-  background-color: #f56c6c;
-  border-radius: 2px;
-  font-size: 12px;
-  word-wrap: break-word;
+.el-tooltip__popper.editable-valid_tooltip {
+  background: #f56c6c;
 }
-.editable .editable-column .editable-valid_error:before,
-.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error:before {
-  content: "";
-  position: absolute;
-  top: -8px;
-  left: 20px;
-  bottom: auto;
-  border: 4px solid;
-  border-color: transparent transparent #f56c6c transparent;
+.el-tooltip__popper.editable-valid_tooltip[x-placement^=top] .popper__arrow,
+.el-tooltip__popper.editable-valid_tooltip[x-placement^=top] .popper__arrow::after {
+  border-top-color: #f56c6c;
+}
+.el-tooltip__popper.editable-valid_tooltip[x-placement^=bottom] .popper__arrow,
+.el-tooltip__popper.editable-valid_tooltip[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: #f56c6c;
+}
+.el-tooltip__popper.editable-valid_tooltip[x-placement^=left] .popper__arrow,
+.el-tooltip__popper.editable-valid_tooltip[x-placement^=left] .popper__arrow::after {
+  border-left-color: #f56c6c;
+}
+.el-tooltip__popper.editable-valid_tooltip[x-placement^=right] .popper__arrow,
+.el-tooltip__popper.editable-valid_tooltip[x-placement^=right] .popper__arrow::after {
+  border-right-color: #f56c6c;
 }
 </style>

@@ -23,7 +23,8 @@
       border
       size="medium"
       height="480"
-      :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      :editRules="validRules"
+      :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false, validTooltip: { placement: 'right', popperClass: 'dbl3-validtip' }}"
       style="width: 100%" >
       <el-editable-column type="index" width="55">
         <template slot="head">
@@ -33,9 +34,7 @@
       <template v-for="(item, index) in columnConfigs">
         <template v-if="item.customShow">
           <el-editable-column v-if="index === 0" :key="index" v-bind="item">
-            <template slot="valid" slot-scope="scope">
-              <span class="error-msg">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段<br><a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">参考API说明</a></span>
-            </template>
+            <template slot="valid" slot-scope="scope">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段<br><a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">参考API说明</a></template>
           </el-editable-column>
           <el-editable-column v-else :key="index" v-bind="item"></el-editable-column>
         </template>
@@ -311,26 +310,12 @@ export default {
 }
 </script>
 
-<style scoped>
-.my-table11 .error-msg {
-  display: block;
-  color: #fff;
-  background-color: red;
-  border-radius: 8px;
-  font-size: 12px;
-  line-height: 1;
-  padding: 10px;
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 10px;
-  z-index: 9;
+<style>
+.el-tooltip__popper.editable-valid_tooltip.dbl3-validtip {
+  background: red;
 }
-.my-table11 .error-msg:before {
-  content: "";
-  position: absolute;
-  border: 4px solid;
-  top: -8px;
-  left: 20%;
-  border-color: transparent transparent red transparent;
+.el-tooltip__popper.editable-valid_tooltip.dbl3-validtip[x-placement^=right] .popper__arrow,
+.el-tooltip__popper.editable-valid_tooltip.dbl3-validtip[x-placement^=right] .popper__arrow::after {
+  border-right-color: red;
 }
 </style>

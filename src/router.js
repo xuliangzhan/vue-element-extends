@@ -19,6 +19,7 @@ import EditableDblclick2 from '@/views/editable/Dblclick2'
 import EditableDblclick3 from '@/views/editable/Dblclick3'
 import EditableDblclick4 from '@/views/editable/Dblclick4'
 import EditableDblclick5 from '@/views/editable/Dblclick5'
+import EditableDblclick6 from '@/views/editable/Dblclick6'
 import EditableExcel1 from '@/views/editable/Excel1'
 import EditableExcel2 from '@/views/editable/Excel2'
 import EditableExcel3 from '@/views/editable/Excel3'
@@ -125,6 +126,11 @@ export default new Router({
       path: '/editable/dblclick5',
       name: 'EditableDblclick5',
       component: EditableDblclick5
+    },
+    {
+      path: '/editable/dblclick6',
+      name: 'EditableDblclick6',
+      component: EditableDblclick6
     },
     {
       path: '/editable/excel1',

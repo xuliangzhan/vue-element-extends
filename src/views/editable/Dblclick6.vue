@@ -23,8 +23,9 @@
       stripe
       border
       size="medium"
+      @valid-error="validErrorEvent"
       :editRules="validRules"
-      :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false, validTooltip: { disabled: true }}"
       style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
@@ -90,7 +91,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
 import columnsData from '@/common/json/editable/columns.json'
@@ -142,8 +143,8 @@ export default {
       regionList: [],
       validRules: {
         name: [
-          { required: true, message: '名称必须填写', trigger: 'change' },
-          { min: 3, max: 10, message: '名称长度在 3 到 10 个字符', trigger: 'change' }
+          { required: true, message: '名称必须填写', trigger: 'blur' },
+          { min: 3, max: 10, message: '名称长度在 3 到 10 个字符', trigger: 'blur' }
         ],
         nickname: [
           { min: 5, max: 20, message: '名称长度在 5 到 20 个字符', trigger: 'blur' }
@@ -167,17 +168,17 @@ export default {
           { validator: checkRate, trigger: 'blur' }
         ],
         url: [
-          { required: true, message: 'URL必须填写', trigger: 'change' },
-          { pattern: /^((ht|f)tps?):\/\/([\w-]+(\.[\w-]+)*\/)*[\w-]+(\.[\w-]+)*\/?(\?([\w\-.,@?^=%&:/~+#]*)+)?/, message: '格式：http(s)://xxx.com', trigger: 'change' }
+          { required: true, message: 'URL必须填写', trigger: 'blur' },
+          { pattern: /^((ht|f)tps?):\/\/([\w-]+(\.[\w-]+)*\/)*[\w-]+(\.[\w-]+)*\/?(\?([\w\-.,@?^=%&:/~+#]*)+)?/, message: '格式：http(s)://xxx.com', trigger: 'blur' }
         ],
         attr1: [
-          { type: 'number', message: '请输入数字', trigger: 'change' }
+          { type: 'number', message: '请输入数字', trigger: 'blur' }
         ],
         attr2: [
-          { validator: checkAttr2, trigger: 'change' }
+          { validator: checkAttr2, trigger: 'blur' }
         ],
         attr3: [
-          { validator: checkAttr3, trigger: 'change' }
+          { validator: checkAttr3, trigger: 'blur' }
         ],
         attr4: [
           { required: true, message: 'attr4必须填写', trigger: 'blur' }
@@ -250,6 +251,9 @@ export default {
       return this.getDataJSON().then(data => {
         this.$refs.editable.reload(data)
       })
+    },
+    validErrorEvent (rule, row, column) {
+      Message({ message: rule.message, type: 'error' })
     },
     insertEvent () {
       if (!this.$refs.editable.checkValid().error) {

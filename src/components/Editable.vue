@@ -1,7 +1,7 @@
 <template>
   <el-table
     ref="refElTable"
-    :class="['editable', `editable_${trigger}`, {'editable_icon': showIcon}]"
+    :class="['editable', `editable_${configs.trigger}`, {'editable_icon': configs.showIcon}]"
     :data="datas"
     :height="height"
     :maxHeight="maxHeight"
@@ -106,7 +106,8 @@ export default {
       deleteRecords: [],
       lastActive: null,
       isClearlActivate: false,
-      isManualActivate: false
+      isManualActivate: false,
+      isValidActivate: false
     }
   },
   computed: {
@@ -116,17 +117,21 @@ export default {
     tableData () {
       return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
     },
-    trigger () {
-      return this.editConfig ? this.editConfig.trigger : 'click'
-    },
-    showIcon () {
-      return this.editConfig ? !(this.editConfig.showIcon === false) : true
-    },
-    showStatus () {
-      return this.editConfig ? !(this.editConfig.showStatus === false) : true
-    },
-    mode () {
-      return this.editConfig ? (this.editConfig.mode || 'cell') : 'cell'
+    configs () {
+      let tipConf = this.editConfig ? (this.editConfig.validTooltip || {}) : {}
+      return Object.assign({
+        trigger: 'click',
+        showIcon: true,
+        showStatus: true,
+        mode: 'cell'
+      }, this.editConfig, {
+        validTooltip: Object.assign({
+          placement: 'bottom'
+        }, tipConf, {
+          manual: true,
+          popperClass: ['editable-valid_tooltip'].concat(tipConf.popperClass ? tipConf.popperClass.split(' ') : []).join(' ')
+        })
+      })
     }
   },
   watch: {
@@ -135,11 +140,11 @@ export default {
      * 用于处理点击表格外清除激活状态
      */
     globalClick (evnt) {
-      if (!this.isManualActivate && this.lastActive) {
+      if (!this.isManualActivate && !this.isValidActivate && this.lastActive) {
         let target = evnt.target
         let { row, column, cell } = this.lastActive
         while (target && target.nodeType && target !== document) {
-          if (this.mode === 'row' ? target === cell.parentNode : target === cell) {
+          if (this.configs.mode === 'row' ? target === cell.parentNode : target === cell) {
             return
           }
           target = target.parentNode
@@ -152,6 +157,7 @@ export default {
           this.$emit('clear-active', row.data, column, cell, evnt)
         }).catch(e => e)
       } else {
+        this.isValidActivate = false
         this.isManualActivate = false
       }
     },
@@ -216,13 +222,15 @@ export default {
         store: XEUtils.clone(item, true),
         validActive: null,
         validRule: null,
+        showValidMsg: false,
         editActive: null,
         editStatus: status || 'initial',
         config: {
           size: this.size,
-          showIcon: this.showIcon,
-          showStatus: this.showStatus,
-          mode: this.mode,
+          showIcon: this.configs.showIcon,
+          showStatus: this.configs.showStatus,
+          mode: this.configs.mode,
+          validTooltip: this.configs.validTooltip,
           rules: this.editRules
         }
       }
@@ -264,9 +272,9 @@ export default {
             this._clearValidError(this.lastActive.row)
             this._removeClass(this.lastActive.cell, ['valid-error'])
           }
-          if (this.trigger === type) {
+          if (this.configs.trigger === type) {
             this._triggerActive(row, column, cell, event)
-            if (row && this.mode === 'row') {
+            if (row && this.configs.mode === 'row') {
               this._validRowRules('change', row).catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
             } else {
               this._validColRules('change', row, column).catch(rule => this._toValidError(rule, row, column, cell))
@@ -335,7 +343,7 @@ export default {
      * 如果行或列被激活编辑时，关闭 tooltip 提示并禁用
      */
     _disabledTooltip (cell) {
-      let tElems = ['row', 'manual'].includes(this.mode) ? cell.parentNode.querySelectorAll('td.editable-col_edit>.cell.el-tooltip') : cell.querySelectorAll('.cell.el-tooltip')
+      let tElems = ['row', 'manual'].includes(this.configs.mode) ? cell.parentNode.querySelectorAll('td.editable-col_edit>.cell.el-tooltip') : cell.querySelectorAll('.cell.el-tooltip')
       if (this.$refs.refElTable) {
         let refElTableBody = this.$refs.refElTable.$children.find(comp => this._hasClass(comp.$el, 'el-table__body'))
         if (refElTableBody && refElTableBody.$refs.tooltip) {
@@ -398,7 +406,7 @@ export default {
       }
     },
     _isEditCell (row, column) {
-      return this.editConfig && this.editConfig.activeMethod ? this.editConfig.activeMethod(row, this.mode === 'row' ? null : column, XEUtils.findIndexOf(this.tableData, item => item === row)) : true
+      return this.editConfig && this.editConfig.activeMethod ? this.editConfig.activeMethod(row, this.configs.mode === 'row' ? null : column, XEUtils.findIndexOf(this.tableData, item => item === row)) : true
     },
     _triggerActive (row, column, cell, event) {
       if (this._isEditCell(row, column)) {
@@ -565,7 +573,7 @@ export default {
     _validActiveCell () {
       if (this.lastActive && !XEUtils.isEmpty(this.editRules)) {
         let { row, column, cell } = this.lastActive
-        if (row && this.mode === 'row') {
+        if (row && this.configs.mode === 'row') {
           return this._validRowRules('blur', row).catch(({ rule, row, column, cell }) => {
             let rest = { rule, row, column, cell }
             this._toValidError(rule, row, column, cell)
@@ -582,6 +590,7 @@ export default {
       return Promise.resolve()
     },
     _clearValidError (row) {
+      row.showValidMsg = false
       row.validRule = null
       row.validActive = null
     },
@@ -589,9 +598,13 @@ export default {
       row.validRule = rule
       row.validActive = column.property
       this._triggerActive(row, column, cell, { type: 'valid' })
-      if (cell && cell.scrollIntoView) {
-        this.$nextTick(() => cell.scrollIntoView())
-      }
+      this.$nextTick(() => {
+        if (cell && cell.scrollIntoView) {
+          cell.scrollIntoView()
+        }
+        row.showValidMsg = true
+      })
+      this.$emit('valid-error', rule, row, column)
     },
     _deleteData (index) {
       if (index > -1) {
@@ -740,7 +753,7 @@ export default {
     setActiveRow (record) {
       let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
       let row = this.tableData[rowIndex]
-      if (rowIndex > -1 && this.mode === 'row') {
+      if (rowIndex > -1 && this.configs.mode === 'row') {
         this.isManualActivate = true
         this._validRowRules('all', row).then(valid => {
           let columns = this.$refs.refElTable.columns
@@ -763,7 +776,7 @@ export default {
       if (this.lastActive) {
         let { row, column } = this.lastActive
         let index = XEUtils.findIndexOf(this.datas, item => item === row)
-        if (this.mode === 'row') {
+        if (this.configs.mode === 'row') {
           return { row: row.data, $index: index, _row: row }
         }
         return { row: row.data, column, $index: index, _row: row }
@@ -777,7 +790,7 @@ export default {
      */
     updateStatus (scope) {
       if (arguments.length === 0) {
-        if (this.showStatus) {
+        if (this.configs.showStatus) {
           this.$nextTick(() => {
             let trElems = this.$el.querySelectorAll('.el-table__row')
             if (trElems.length) {
@@ -812,7 +825,7 @@ export default {
             let trElem = trElems[$index]
             let tdElem = trElem.querySelector(`.${column.id}`)
             if (tdElem) {
-              if (this.showStatus) {
+              if (this.configs.showStatus) {
                 if (XEUtils.isEqual(_row.data[column.property], _row.store[column.property])) {
                   this._removeClass(tdElem, ['editable-col_dirty'])
                 } else {
@@ -844,6 +857,7 @@ export default {
      */
     validateRow (record, cb) {
       let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
+      this.isValidActivate = true
       return new Promise((resolve, reject) => {
         let row = this.tableData[rowIndex]
         this._validRowRules('all', row).then(rest => {
@@ -870,6 +884,7 @@ export default {
      */
     validate (cb) {
       let validPromise = Promise.resolve(true)
+      this.isValidActivate = true
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
         let datas = this.tableData

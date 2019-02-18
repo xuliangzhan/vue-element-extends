@@ -60,7 +60,7 @@
           <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
         </template>
       </template>
-      <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
+      <template v-if="!scope.row.config.validTooltip.disabled && scope.row.validActive && scope.row.validActive === scope.column.property">
         <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
           <div class="editable-valid_error"></div>
           <div slot="content">

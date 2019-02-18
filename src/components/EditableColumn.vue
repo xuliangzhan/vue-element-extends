@@ -62,7 +62,9 @@
       </template>
       <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
         <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _self: scope._self, _row: scope.row}">
-          <div class="editable-valid_error">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</div>
+          <div class="editable-valid_error">
+            <span class="valid-message">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</span>
+          </div>
         </slot>
       </template>
     </template>
@@ -359,12 +361,6 @@ export default {
 .editable .editable-column.valid-error .editable-valid_error,
 .editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error {
   display: block;
-  color: #fff;
-  background-color: #f56c6c;
-  border-radius: 2px;
-  font-size: 12px;
-  line-height: 1;
-  padding: 4px 10px;
   position: absolute;
   top: -moz-calc(100% + 10px);
   top: -webkit-calc(100% + 10px);
@@ -372,8 +368,17 @@ export default {
   left: 10px;
   bottom: auto;
   z-index: 9;
+  min-width: 300px;
+}
+.editable .editable-column.valid-error .editable-valid_error>.valid-message,
+.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error>.valid-message {
+  display: inline-block;
+  padding: 4px 10px;
+  line-height: 1.5;
+  color: #fff;
+  background-color: #f56c6c;
+  border-radius: 2px;
   font-size: 12px;
-  min-width: 10px;
   word-wrap: break-word;
 }
 .editable .editable-column .editable-valid_error:before,
@@ -381,7 +386,7 @@ export default {
   content: "";
   position: absolute;
   top: -8px;
-  left: 20%;
+  left: 20px;
   bottom: auto;
   border: 4px solid;
   border-color: transparent transparent #f56c6c transparent;

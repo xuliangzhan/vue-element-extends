@@ -54,7 +54,7 @@ edit-config 编辑参数配置
 | trigger | 触发方式 | String | manual（手动触发方式，只能用于 mode=row） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑方式 | String | cell（列编辑模式） / row（行编辑模式） | cell |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
-| showStatus | 是否显示列的 change 状态 | Boolean | — | true |
+| showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
 | activeMethod | 仅对 type=default 的列有效，Function((row, column, index) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
 
 ### Editable Events
@@ -81,7 +81,7 @@ edit-config 编辑参数配置
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |
 | setActiveRow | 设置活动行为可编辑状态（只对 mode=row 有效） | row |
 | isActiveRow | 判断当前是否活动行 | row |
-| updateStatus | 更新列状态（当使用自定义组件时，值发生改变时需要调用来更新列状态），如果不传参数则更新整个表格 | scope |
+| updateStatus | 更新单元格编辑状态（只对 showStatus=true 并且使用自定义渲染时，当值发生改变时才需要调用） | scope |
 | getAllRecords | 获取表格数据集合 | — |
 | getRecords | 获取表格数据，也可以指定索引获取某条数据 | index |
 | getInsertRecords | 获取新增数据 | — |

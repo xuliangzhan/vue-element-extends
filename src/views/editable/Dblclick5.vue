@@ -3,7 +3,8 @@
     <p style="color: red;font-size: 12px;">如果存在校验不通过的列则不允许新增</p>
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-28之间）phone字段（校验必填，校验手机号码）rate字段（校验必填，校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
     <p style="color: red;font-size: 12px;">自定义列头：attr4字段、attr5字段</p>
-
+    <p style="color: red;font-size: 12px;">如果不设置表格高度，可以通过样式给表格设置最少两条数据的高度解决校验信息被遮住的问题（也可以通过将校验信息元素插入表格外部再通过定位方式解决）</p>
+    
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
@@ -23,7 +24,6 @@
       stripe
       border
       size="medium"
-      height="480"
       :editRules="validRules" :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}"
       style="width: 100%">
       <el-editable-column type="index" width="55">
@@ -355,6 +355,15 @@ export default {
   }
 }
 </script>
+
+<style>
+.my-table11 .el-table__body-wrapper {
+  min-height: 124px;
+}
+.my-table11 .el-table__body-wrapper .el-table__empty-block {
+  margin-top: 30px;
+}
+</style>
 
 <style scoped>
 .my-table11 .error-msg {

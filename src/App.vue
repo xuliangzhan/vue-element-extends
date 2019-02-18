@@ -29,7 +29,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+自定义渲染+筛选+分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>个性化列+自定义渲染+自定义校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>个性化列+唯一下拉选项+完整校验</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>个性化列+自定义列头+完整校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>个性化列+自定义列头+完整校验+不设置高度</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">Excel表格</a>

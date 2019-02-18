@@ -56,6 +56,7 @@ edit-config 编辑参数配置
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
 | activeMethod | 仅对 type=default 的列有效，Function((row, column, index) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
+| useDefaultValidTip | 如果使用了数据校验和 fixed 列，请设置为 true | Boolean | — | false |
 | validTooltip | 设置校验 tooltip 提示消息的参数 | Object | — | { placement: 'bottom' } |
 
 ### Editable Events

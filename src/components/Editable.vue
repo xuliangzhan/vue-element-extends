@@ -123,7 +123,8 @@ export default {
         trigger: 'click',
         showIcon: true,
         showStatus: true,
-        mode: 'cell'
+        mode: 'cell',
+        useDefaultValidTip: false
       }, this.editConfig, {
         validTooltip: Object.assign({
           disabled: false,
@@ -231,6 +232,7 @@ export default {
           showIcon: this.configs.showIcon,
           showStatus: this.configs.showStatus,
           mode: this.configs.mode,
+          useDefaultValidTip: this.configs.useDefaultValidTip,
           validTooltip: this.configs.validTooltip,
           rules: this.editRules
         }

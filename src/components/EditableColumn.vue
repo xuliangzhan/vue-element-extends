@@ -60,13 +60,22 @@
           <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
         </template>
       </template>
-      <template v-if="!scope.row.config.validTooltip.disabled && scope.row.validActive && scope.row.validActive === scope.column.property">
-        <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
-          <div class="editable-valid_error"></div>
-          <div slot="content">
-            <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _self: scope._self, _row: scope.row}">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</slot>
-          </div>
-        </el-tooltip>
+      <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
+        <template v-if="scope.row.config.useDefaultValidTip">
+          <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _self: scope._self, _row: scope.row}">
+            <div class="editable-valid_error">
+              <span class="valid-message">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</span>
+            </div>
+          </slot>
+        </template>
+        <template v-else-if="!scope.row.config.validTooltip.disabled">
+          <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
+            <div class="editable-valid_wrapper"></div>
+            <div slot="content">
+              <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _self: scope._self, _row: scope.row}">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</slot>
+            </div>
+          </el-tooltip>
+        </template>
       </template>
     </template>
   </el-table-column>
@@ -185,7 +194,7 @@ export default {
     getRendEvents ({ $index, row, column, store }) {
       let editRender = this.editRender
       let scope = { $index, row: row.data, column, store, editRender, _row: row }
-      let defEvent = { [this.isDefaultInput ? 'input' : 'change']: () => this.$editable.updateStatus(scope) }
+      let defEvent = { [this.isDefaultInput ? 'input' : 'change']: val => this.$editable.updateStatus(scope) }
       if (editRender.events) {
         return Object.assign(defEvent, XEUtils.objectMap(editRender.events, cb => function () {
           cb.apply(null, [scope].concat(Array.from(arguments)))
@@ -347,7 +356,62 @@ export default {
 .editable .editable-column.valid-error .el-textarea__inner:focus {
   border-color: #f56c6c;
 }
+/* custom tip */
 .editable .editable-column .editable-valid_error {
+  display: none;
+}
+.editable .editable-column.valid-error .el-input__inner,
+.editable .editable-column.valid-error .el-input__inner:focus,
+.editable .editable-column.valid-error .el-textarea__inner,
+.editable .editable-column.valid-error .el-textarea__inner:focus {
+  border-color: #f56c6c;
+}
+.editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error {
+  top: auto;
+  bottom: -moz-calc(100% + 10px);
+  bottom: -webkit-calc(100% + 10px);
+  bottom: calc(100% + 10px);
+}
+.editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error:before {
+  top: auto;
+  bottom: -12px;
+  border-color: #f56c6c transparent transparent transparent;
+}
+.editable .editable-column.valid-error .editable-valid_error,
+.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error {
+  display: block;
+  position: absolute;
+  top: -moz-calc(100% + 10px);
+  top: -webkit-calc(100% + 10px);
+  top: calc(100% + 10px);
+  left: 10px;
+  bottom: auto;
+  z-index: 9;
+  min-width: 300px;
+}
+.editable .editable-column.valid-error .editable-valid_error>.valid-message,
+.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error>.valid-message {
+  display: inline-block;
+  padding: 8px 10px;
+  line-height: 1.5;
+  color: #fff;
+  background-color: #f56c6c;
+  border-radius: 4px;
+  font-size: 12px;
+  word-wrap: break-word;
+}
+.editable .editable-column .editable-valid_error:before,
+.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error:before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  bottom: auto;
+  border: 6px solid;
+  border-color: transparent transparent #f56c6c transparent;
+}
+/* el tip */
+.editable .editable-column .editable-valid_wrapper {
   display: block;
   width: 100%;
   height: 100%;

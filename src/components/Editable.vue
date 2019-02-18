@@ -126,6 +126,7 @@ export default {
         mode: 'cell'
       }, this.editConfig, {
         validTooltip: Object.assign({
+          disabled: false,
           placement: 'bottom'
         }, tipConf, {
           manual: true,

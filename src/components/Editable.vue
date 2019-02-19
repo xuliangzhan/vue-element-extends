@@ -650,12 +650,18 @@ export default {
       this._updateData()
     },
     /**
-     * 还原更改
-     * 还原为最后一次 reload 的数据
+     * 还原更改，以最后一次 reload 的数据为源数据或者初始值 data
+     * 还原指定行数据
+     * 还原整个表格数据
      */
-    revert () {
-      this._clearAllOpers()
-      this.reload(this.initialStore)
+    revert (row) {
+      if (row) {
+        let { data, store } = this.datas.find(item => item.data === row)
+        XEUtils.destructuring(data, XEUtils.clone(store, true))
+      } else {
+        this._clearAllOpers()
+        this.reload(this.initialStore)
+      }
     },
     /**
      * 清空

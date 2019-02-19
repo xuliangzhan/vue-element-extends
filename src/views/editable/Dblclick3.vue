@@ -42,6 +42,7 @@
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
+          <el-button size="mini" type="warning" @click="revertEvent(scope.row)">还原</el-button>
         </template>
       </el-editable-column>
     </el-editable>
@@ -220,6 +221,15 @@ export default {
     },
     removeEvent (row) {
       this.$refs.editable.remove(row)
+    },
+    revertEvent (row) {
+      MessageBox.confirm('确定还原该行数据?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$refs.editable.revert(row)
+      }).catch(e => e)
     },
     validEvent () {
       this.$refs.editable.validate().then(valid => {

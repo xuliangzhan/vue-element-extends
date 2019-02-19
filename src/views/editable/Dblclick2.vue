@@ -78,15 +78,17 @@
         </template>
       </el-editable-column>
       <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column label="操作" width="160" fixed="right">
+      <el-editable-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
           <template v-if="$refs.editable.isActiveRow(scope.row)">
             <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
+            <el-button size="mini" type="warning" @click="$refs.editable.revert(scope.row)">还原</el-button>
           </template>
           <template v-else>
             <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
+            <el-button size="mini" type="warning" @click="$refs.editable.revert(scope.row)">还原</el-button>
           </template>
         </template>
       </el-editable-column>

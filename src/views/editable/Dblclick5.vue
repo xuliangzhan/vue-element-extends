@@ -160,7 +160,7 @@ export default {
           { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
         ],
         birthdate: [
-          { message: '请选择日期', trigger: 'blur' }
+          { required: true, message: '请选择日期', trigger: 'blur' }
         ],
         rate: [
           { required: true, message: '请选择评分', trigger: 'blur' },

@@ -609,8 +609,12 @@ export default {
       row.validActive = column.property
       this._triggerActive(row, column, cell, { type: 'valid' })
       this.$nextTick(() => {
-        if (cell && cell.scrollIntoView) {
-          cell.scrollIntoView()
+        if (this.configs.useDefaultValidTip && this.isValidActivate && cell) {
+          if (cell.scrollIntoViewIfNeeded) {
+            cell.scrollIntoViewIfNeeded()
+          } else if (cell.scrollIntoView) {
+            cell.scrollIntoView()
+          }
         }
         row.showValidMsg = true
       })

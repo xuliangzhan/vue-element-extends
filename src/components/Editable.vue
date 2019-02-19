@@ -319,9 +319,9 @@ export default {
       if (currentRow && oldCurrentRow) {
         this.$emit('current-change', currentRow.data, oldCurrentRow.data)
       } else if (currentRow) {
-        this.$emit('current-change', currentRow.data)
+        this.$emit('current-change', currentRow.data, null)
       } else if (oldCurrentRow) {
-        this.$emit('current-change', oldCurrentRow.data)
+        this.$emit('current-change', null, oldCurrentRow.data)
       }
     },
     _headerDragend (newWidth, oldWidth, column, event) {

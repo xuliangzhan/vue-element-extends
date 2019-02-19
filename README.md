@@ -28,7 +28,7 @@
 ```html
 <el-editable
   ref="editable"
-  edit-config="{trigger: 'click', mode: 'cell'}"
+  :edit-config="{trigger: 'click', mode: 'cell'}"
   :edit-rules="{name: [{required: true, message: '请输入名称', trigger: 'blur'}]}">
   <el-editable-column prop="name" label="名字" edit-render="{name: 'ElInput'}"></el-editable-column>
   <el-editable-column prop="age" label="年龄" edit-render="{name: 'ElInputNumber'}"></el-editable-column>

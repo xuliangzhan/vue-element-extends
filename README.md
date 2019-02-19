@@ -72,7 +72,7 @@ edit-config 编辑参数配置
 | 方法名 | 描述 | 参数 |
 |------|------|-----|
 | reload | 初始化加载数据 | datas |
-| revert | 放弃更改，还原指定行修改之前数据(如果不传参数则还原整个表格) | row |
+| revert | 放弃更改，还原指定行或者整个表格的数据) | row |
 | insert | 新增一行新数据 | data |
 | insertAt | 第二个参数如果是 row 或 $index 则在指定位置新增一条数据，如果是 -1 则从最后新增一条数据 | data, rowOrIndex |
 | remove | 根据数据删除 | row |

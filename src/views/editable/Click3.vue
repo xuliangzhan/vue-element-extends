@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少5个字符）</p>
     <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
-    <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
@@ -154,7 +154,7 @@ export default {
       validRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
-          { min: 3, message: '名称长度最小 3 个字符', trigger: 'change' }
+          { min: 3, message: '名称长度最小 5 个字符', trigger: 'change' }
         ]
       }
     }

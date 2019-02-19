@@ -27,13 +27,13 @@
     <template slot-scope="scope">
       <template v-if="editRender.type === 'visible'">
         <slot name="edit" v-bind="getRowScope(scope)">
-          <template v-if="editRender.name === 'ElSelect'">
+          <template v-if="compName === 'ElSelect'">
             <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
               <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="item.attrs"></el-option>
             </el-select>
           </template>
-          <template v-else-if="comps.includes(editRender.name)">
-            <component :is="editRender.name" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></component>
+          <template v-else-if="comps.includes(compName)">
+            <component :is="compName" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></component>
           </template>
           <template v-else>
             <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-input>
@@ -43,13 +43,13 @@
       <template v-else>
         <template v-if="scope.row.editActive && (scope.row.config.mode === 'row' ? scope.row.editActive : scope.row.editActive === scope.column.property)">
           <slot name="edit" v-bind="getRowScope(scope)">
-            <template v-if="editRender.name === 'ElSelect'">
+            <template v-if="compName === 'ElSelect'">
               <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
                 <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="item.attrs"></el-option>
               </el-select>
             </template>
-            <template v-else-if="comps.includes(editRender.name)">
-              <component :is="editRender.name" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></component>
+            <template v-else-if="comps.includes(compName)">
+              <component :is="compName" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></component>
             </template>
             <template v-else>
               <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-input>
@@ -138,8 +138,11 @@ export default {
     }
   },
   computed: {
+    compName () {
+      return this.editRender && this.editRender.name ? this.editRender.name : null
+    },
     isDefaultInput () {
-      return this.editRender ? ['ElInput', 'ElInputNumber'].includes(this.editRender.name) : false
+      return this.editRender ? ['ElInput', 'ElInputNumber'].includes(this.compName) : false
     },
     attrs () {
       let sortBy
@@ -186,10 +189,27 @@ export default {
   },
   methods: {
     getHeadScope (scope) {
-      return { $index: scope.$index, column: scope.column, store: scope.store, editRender: this.editRender, _self: scope._self }
+      return {
+        $index: scope.$index,
+        column: scope.column,
+        store: scope.store,
+        editRender: this.editRender,
+        _self: scope._self
+      }
     },
     getRowScope (scope) {
-      return { $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender: this.editRender, _self: scope._self, _row: scope.row }
+      return {
+        $index: scope.$index,
+        row: scope.row.data,
+        column: scope.column,
+        store: scope.store,
+        editRender: this.editRender,
+        _self: scope._self,
+        _row: scope.row
+      }
+    },
+    getRowIdentity (row, column) {
+      return XEUtils.get(row.data, column.property)
     },
     getRendAttrs (scope) {
       let size = scope.row.config.size
@@ -208,10 +228,10 @@ export default {
     },
     formatColumnLabel (scope) {
       if (this.formatter) {
-        return this.formatter(scope.row.data, scope.column, scope.row.data[scope.column.property], scope.$index)
+        return this.formatter(scope.row.data, scope.column, this.getRowIdentity(scope.row, scope.column), scope.$index)
       }
       if (this.editRender) {
-        switch (this.editRender.name) {
+        switch (this.compName) {
           case 'ElSelect':
             return this.getSelectLabel(scope)
           case 'ElCascader':
@@ -222,10 +242,10 @@ export default {
             return this.getDatePickerLabel(scope)
         }
       }
-      return scope.row.data[scope.column.property]
+      return this.getRowIdentity(scope.row, scope.column)
     },
     getSelectLabel ({ row, column }) {
-      let value = row.data[column.property]
+      let value = this.getRowIdentity(row, column)
       let selectItem = this.editRender.options.find(item => item.value === value)
       return selectItem ? selectItem.label : null
     },
@@ -241,19 +261,19 @@ export default {
       }
     },
     getCascaderLabel ({ row, column }) {
-      let values = row.data[column.property] || []
+      let values = this.getRowIdentity(row, column) || []
       let labels = []
       let attrs = this.editRender.attrs || {}
       this.matchCascaderData(values, 0, attrs.options || [], labels)
       return labels.join(` ${attrs.separator || '/'} `)
     },
     getTimePickerLabel ({ row, column }) {
-      let value = row.data[column.property]
+      let value = this.getRowIdentity(row, column)
       let attrs = this.editRender.attrs || {}
       return XEUtils.toDateString(value, attrs.format || 'hh:mm:ss')
     },
     getDatePickerLabel ({ row, column }) {
-      let value = row.data[column.property]
+      let value = this.getRowIdentity(row, column)
       let attrs = this.editRender.attrs || {}
       switch (attrs.type) {
         case 'week':

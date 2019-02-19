@@ -658,6 +658,7 @@ export default {
       if (row) {
         let { data, store } = this.datas.find(item => item.data === row)
         XEUtils.destructuring(data, XEUtils.clone(store, true))
+        this.updateStatus()
       } else {
         this._clearAllOpers()
         this.reload(this.initialStore)
@@ -683,7 +684,7 @@ export default {
       let len = this.datas.length
       this.$refs.refElTable.columns.forEach(column => {
         if (column.property) {
-          recordItem[column.property] = null
+          XEUtils.set(recordItem, column.property, null)
         }
       })
       recordItem = this._toData(Object.assign(recordItem, newRecord), 'insert')
@@ -822,7 +823,7 @@ export default {
                     columns.forEach((column, cIndex) => {
                       let tdElem = trElem.children[cIndex]
                       if (tdElem) {
-                        if (XEUtils.isEqual(item.data[column.property], item.store[column.property])) {
+                        if (XEUtils.isEqual(XEUtils.get(item.data, column.property), XEUtils.get(item.store, column.property))) {
                           this._removeClass(tdElem, ['editable-col_dirty'])
                         } else {
                           this._updateColumnStatus(trElem, column, trElem.children[cIndex])

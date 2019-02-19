@@ -253,7 +253,7 @@ export default {
     },
     insertEvent () {
       if (!this.$refs.editable.checkValid().error) {
-        let row = this.$refs.editable.insert()
+        let row = this.$refs.editable.insert({ region: [19, 199, 1773] })
         // 对新增行进行校验提示
         this.$nextTick(() => this.$refs.editable.validateRow(row).catch(e => e))
       }

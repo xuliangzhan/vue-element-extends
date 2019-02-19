@@ -128,7 +128,8 @@ export default {
       }, this.editConfig, {
         validTooltip: Object.assign({
           disabled: false,
-          placement: 'bottom'
+          offset: 10,
+          placement: 'bottom-start'
         }, tipConf, {
           manual: true,
           popperClass: ['editable-valid_tooltip'].concat(tipConf.popperClass ? tipConf.popperClass.split(' ') : []).join(' ')
@@ -836,8 +837,10 @@ export default {
                 }
               }
               return this._validColRules('change', _row, column).then(rule => {
-                this._clearValidError(_row)
-                this._removeClass(tdElem, ['valid-error'])
+                if (this.configs.mode === 'row' ? _row.validActive && _row.validActive === column.property : true) {
+                  this._clearValidError(_row)
+                  this._removeClass(tdElem, ['valid-error'])
+                }
               }).catch(rule => {
                 this._toValidError(rule, _row, column, tdElem)
               })

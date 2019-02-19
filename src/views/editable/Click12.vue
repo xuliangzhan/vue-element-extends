@@ -52,7 +52,7 @@
         </template>
       </el-editable-column>
       <el-editable-column prop="slider" label="滑块" width="200" :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
-      <el-editable-column label="操作" width="180" fixed="right">
+      <el-editable-column label="操作" width="180">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope)">删除</el-button>
           <el-button size="mini" type="warning" @click="revertEvent(scope.row)">默认值</el-button>

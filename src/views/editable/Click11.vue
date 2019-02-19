@@ -71,7 +71,7 @@
           </el-select>
         </template>
       </el-editable-column>
-      <el-editable-column label="操作" width="80" fixed="right">
+      <el-editable-column label="操作" width="80">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope)">删除</el-button>
         </template>

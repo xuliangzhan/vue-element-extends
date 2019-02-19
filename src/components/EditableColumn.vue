@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { TableColumn } from 'element-ui'
 import XEUtils from 'xe-utils'
 
 export default {
@@ -124,6 +125,9 @@ export default {
     filterMultiple: { type: Boolean, default: true },
     filterMethod: Function,
     filteredValue: Array
+  },
+  components: {
+    ElTableColumn: TableColumn
   },
   inject: [
     '$editable'

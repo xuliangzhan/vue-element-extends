@@ -53,12 +53,10 @@
 <script>
 import { mapGetters } from 'vuex'
 import { Table } from 'element-ui'
-import Locale from 'element-ui/src/mixins/locale'
 import XEUtils from 'xe-utils'
 
 export default {
   name: 'ElEditable',
-  mixins: [Locale],
   props: {
     editConfig: Object,
     editRules: Object,
@@ -452,7 +450,7 @@ export default {
       } else {
         columns.forEach((column, index) => {
           if (index === 0) {
-            sums[index] = this.sumText || this.t('el.table.sumText')
+            sums[index] = this.sumText || '合计'
             return
           }
           let values = data.map(item => Number(item[column.property]))

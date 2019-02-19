@@ -26,8 +26,8 @@
       size="small"
       @select="selectEvent"
       @current-change="currentChangeEvent"
-      :editRules="validRules"
-      :editConfig="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true}"
+      :edit-rules="validRules"
+      :edit-config="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true}"
       style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
@@ -43,20 +43,20 @@
           </el-form>
         </template>
       </el-editable-column>
-      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="220" show-overflow-tooltip :editRender="{type: 'default', autofocus: true}">
+      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="220" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
         <template slot="edit" slot-scope="scope">
           <input class="editable-custom_input" type="text" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)">
         </template>
       </el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" align="center" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" min-width="180" :editRender="{name: 'ElCascader', attrs: {options: regionList, separator: '->'}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" width="220" sortable :sort-method="birthdateSortHandler" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy年MM月dd日'}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" width="220" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="date2" label="选择时间范围" width="260" sortable :editRender="{name: 'ElDatePicker', attrs: {type: 'datetimerange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" min-width="180" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="color" label="选择颜色" width="100" :editRender="{name: 'ElColorPicker', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="是否启用2" width="200" :editRender="{type: 'visible'}">
+      <el-editable-column prop="sex" label="性别" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '->'}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="出生日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy年MM月dd日'}}"></el-editable-column>
+      <el-editable-column prop="date1" label="选择日期" width="220" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
+      <el-editable-column prop="date2" label="选择时间范围" width="260" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetimerange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
+      <el-editable-column prop="color" label="选择颜色" width="100" :edit-render="{name: 'ElColorPicker', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="flag2" label="是否启用2" width="200" :edit-render="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-radio label="N" border>值1</el-radio>
@@ -64,7 +64,7 @@
           </el-radio-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="status" label="状态" width="160" :editRender="{type: 'visible'}">
+      <el-editable-column prop="status" label="状态" width="160" :edit-render="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-checkbox-group v-model="scope.row.status" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-checkbox-button label="success">成功</el-checkbox-button>
@@ -72,12 +72,12 @@
           </el-checkbox-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="order" label="自定义渲染" width="140" :formatter="formatterOrder" :editRender="{type: 'default'}">
+      <el-editable-column prop="order" label="自定义渲染" width="140" :formatter="formatterOrder" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
         </template>
       </el-editable-column>
-      <el-editable-column prop="remark" label="备注" min-width="180" :editRender="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column label="操作" width="160" fixed="right">
         <template slot-scope="scope">
           <template v-if="$refs.editable.isActiveRow(scope.row)">

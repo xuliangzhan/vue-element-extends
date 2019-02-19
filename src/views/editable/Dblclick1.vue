@@ -10,15 +10,20 @@
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
     </p>
 
-    <el-editable ref="editable" size="small" border :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}" style="width: 100%">
+    <el-editable
+      ref="editable"
+      size="small"
+      border
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="age" label="年龄" width="140" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="是否启用2" width="200" :editRender="{type: 'visible'}">
+      <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="age" label="年龄" width="140" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
+      <el-editable-column prop="date1" label="选择日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
+      <el-editable-column prop="flag" label="是否启用" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="flag2" label="是否启用2" width="200" :edit-render="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-radio label="N" border>值1</el-radio>
@@ -26,7 +31,7 @@
           </el-radio-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="status" label="状态" width="160" :editRender="{type: 'visible'}">
+      <el-editable-column prop="status" label="状态" width="160" :edit-render="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-checkbox-group v-model="scope.row.status" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-checkbox-button label="success">成功</el-checkbox-button>
@@ -34,7 +39,7 @@
           </el-checkbox-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="order" label="自定义渲染" width="120" :editRender="{type: 'default'}">
+      <el-editable-column prop="order" label="自定义渲染" width="120" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
         </template>
@@ -42,7 +47,7 @@
           <span>订单号：{{ scope.row.order }}</span>
         </template>
       </el-editable-column>
-      <el-editable-column prop="remark" label="备注" :editRender="{name: 'ElInput', attrs: {type: 'textarea', rows: 1}}"></el-editable-column>
+      <el-editable-column prop="remark" label="备注" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', rows: 1}}"></el-editable-column>
       <el-editable-column prop="createDate" label="创建时间（只读）" :formatter="formatterCreateDate"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">

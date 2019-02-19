@@ -24,8 +24,8 @@
       border
       size="medium"
       @valid-error="validErrorEvent"
-      :editRules="validRules"
-      :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false, validTooltip: { disabled: true }}"
+      :edit-rules="validRules"
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, validTooltip: { disabled: true }}"
       style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">

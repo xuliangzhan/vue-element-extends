@@ -15,12 +15,11 @@
     <el-editable
       ref="editable"
       class="excel-table2"
-      :data.sync="list"
       border
       tooltip-effect="light"
       size="customSize"
-      :editRules="validRules"
-      :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      :edit-rules="validRules"
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false}"
       style="width: 100%" >
       <el-editable-column type="index" align="center" width="50">
         <template slot="head">
@@ -129,6 +128,11 @@ export default {
         ]
       }
     }
+  },
+  created () {
+    this.$nextTick(() => {
+      this.$refs.editable.reload(this.list)
+    })
   },
   methods: {
     getAllEvent () {

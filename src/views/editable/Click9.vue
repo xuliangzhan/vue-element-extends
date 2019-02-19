@@ -17,14 +17,21 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable ref="editable" stripe border size="medium" height="480" style="width: 100%" :editRules="validRules">
+    <el-editable
+      ref="editable"
+      stripe
+      border
+      size="medium"
+      height="480"
+      :edit-rules="validRules"
+      style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字" show-overflow-tooltip :editRender="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="attr1" label="属性1" :editRender="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="attr2" label="属性2(必填)" :editRender="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="sex" label="性别" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="rate" label="评分" :editRender="{name: 'ElRate', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="attr1" label="属性1" :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="attr2" label="属性2(必填)" :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="出生日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="rate" label="评分" :edit-render="{name: 'ElRate', type: 'visible'}"></el-editable-column>
       <el-editable-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>

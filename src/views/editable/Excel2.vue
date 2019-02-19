@@ -13,12 +13,12 @@
     <el-editable
       ref="editable"
       class="excel-table2"
-      :data.sync="list"
       border
       tooltip-effect="light"
       size="customSize"
-      :editRules="validRules"
-      :editConfig="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      :data.sync="list"
+      :edit-rules="validRules"
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false}"
       style="width: 100%" >
       <el-editable-column type="index" align="center" width="50"></el-editable-column>
       <template v-for="(column, index) in columnConfigs">

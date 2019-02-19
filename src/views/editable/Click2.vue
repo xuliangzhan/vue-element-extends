@@ -11,20 +11,27 @@
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
     </p>
 
-    <el-editable ref="editable" height="540" size="small" border :row-class-name="tableRowClassName" :editConfig="{trigger: 'click', showStatus: false}" style="width: 100%">
+    <el-editable
+      ref="editable"
+      border
+      size="small"
+      height="540"
+      :row-class-name="tableRowClassName"
+      :edit-config="{trigger: 'click', showStatus: false}"
+      style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字（只读）" min-width="140" show-overflow-tooltip></el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" :editRender="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="age" label="年龄" width="140" :editRender="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" min-width="140" :editRender="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="date2" label="多个日期" width="220" :editRender="{name: 'ElDatePicker', attrs: {type: 'dates'}}"></el-editable-column>
-      <el-editable-column prop="date3" label="选择周" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'week', format: 'yyyy 第 WW 周'}}"></el-editable-column>
-      <el-editable-column prop="date4" label="选择月" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'month'}}"></el-editable-column>
-      <el-editable-column prop="date5" label="选择年" width="150" :editRender="{name: 'ElDatePicker', attrs: {type: 'year'}}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" width="100" :editRender="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="order" label="自定义渲染" width="120" :editRender="{type: 'default'}">
+      <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="age" label="年龄" width="140" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="140" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="出生日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="date1" label="选择日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
+      <el-editable-column prop="date2" label="多个日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'dates'}}"></el-editable-column>
+      <el-editable-column prop="date3" label="选择周" width="150" :edit-render="{name: 'ElDatePicker', attrs: {type: 'week', format: 'yyyy 第 WW 周'}}"></el-editable-column>
+      <el-editable-column prop="date4" label="选择月" width="150" :edit-render="{name: 'ElDatePicker', attrs: {type: 'month'}}"></el-editable-column>
+      <el-editable-column prop="date5" label="选择年" width="150" :edit-render="{name: 'ElDatePicker', attrs: {type: 'year'}}"></el-editable-column>
+      <el-editable-column prop="flag" label="是否启用" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="order" label="自定义渲染" width="120" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
         </template>

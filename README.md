@@ -52,7 +52,7 @@ edit-config 编辑参数配置
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
 | trigger | 触发方式 | String | manual（手动触发方式，只能用于 mode=row） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
-| mode  | 编辑方式 | String | cell（单元格编辑模式） / row（行编辑模式） | cell |
+| mode  | 编辑模式 | String | cell（单元格编辑模式） / row（行编辑模式） | cell |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
 | activeMethod | 只对 type=default 的列有效，该函数 Function((row, column, index) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |

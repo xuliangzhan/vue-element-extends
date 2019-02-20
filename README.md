@@ -121,8 +121,8 @@ edit-render 渲染参数配置
 | autofocus | 该单元格在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | — |
 | attrs | 渲染组件附加属性，参数请查看被渲染的 Component attrs | Object | — | {} |
 | events | 渲染组件附加事件，参数为 ( { rule, row, column, $index }, ...Component arguments ) | Object | — | {} |
-| options | 下拉组件选项列表（只对 name=ElSelect 有效） | Array | — | [] |
-| optionProps | 下拉组件选项列表（只对 name=ElSelect 有效） | Object | — | { value: 'value', label: 'label' } |
+| options | 只对 name=ElSelect 有效，下拉组件选项列表 | Array | — | [] |
+| optionProps | 只对 name=ElSelect 有效，下拉组件选项属性参数配置 | Object | — | { value: 'value', label: 'label' } |
 
 ### Editable-Column Scoped Slot
 

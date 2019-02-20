@@ -34,15 +34,15 @@
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"> </el-editable-column>
       <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="userInfo.sex1" label="方式1" width="100" :edit-render="{type: 'default'}">
+      <el-editable-column prop="userInfo.sex1" label="方式1" width="160" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
-          <el-select v-model="scope.row.userInfo.sex1" clearable>
+          <el-select v-model="scope.row.userInfo.sex1" placeholder="请选择性别" clearable>
             <el-option v-for="(item, index) in sexList" :key="index" :value="item.val" :label="item.spell"></el-option>
           </el-select>
         </template>
         <template slot-scope="scope">{{ getSelectLabel(scope.row, scope.row.userInfo.sex1, 'val', 'spell', sexList) }}</template>
       </el-editable-column>
-      <el-editable-column prop="userInfo.sex2" label="方式2" width="100" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true}}">
+      <el-editable-column prop="userInfo.sex2" label="方式2" width="160" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true, placeholder: '请选择性别'}}">
         <template slot="edit" slot-scope="scope">
           <el-select v-model="scope.row.userInfo.sex2" v-bind="scope.editRender.attrs">
             <el-option v-for="(item, index) in sexList" :key="index" :value="item.value" :label="item.spell"></el-option>

@@ -94,8 +94,9 @@ export default {
               this.updateRowEvent(activeInfo.row)
             }).catch(action => {
               if (action === 'cancel') {
+                this.$refs.editable.revert(activeInfo.row)
                 this.$refs.editable.setActiveRow(row)
-                Message({ message: '放弃保存并离开当前行', type: 'success' })
+                Message({ message: '放弃修改并离开当前行', type: 'success' })
               } else {
                 Message({ message: '停留在当前行编辑', type: 'success' })
               }

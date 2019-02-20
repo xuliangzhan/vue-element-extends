@@ -1,4 +1,9 @@
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? '/vue-element-extends/' : '/',
-  outputDir: 'docs'
+  outputDir: 'docs',
+  configureWebpack: {
+    performance: {
+      hints: false
+    }
+  }
 }

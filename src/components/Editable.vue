@@ -128,7 +128,8 @@ export default {
         showIcon: true,
         showStatus: true,
         mode: 'cell',
-        useDefaultValidTip: false
+        useDefaultValidTip: false,
+        autoClearActive: true
       }, this.editConfig, {
         validTooltip: Object.assign({
           disabled: false,
@@ -148,21 +149,23 @@ export default {
      */
     globalClick (evnt) {
       if (!this.isManualActivate && !this.isValidActivate && this.lastActive) {
-        let target = evnt.target
-        let { row, column, cell } = this.lastActive
-        while (target && target.nodeType && target !== document) {
-          if (this.configs.mode === 'row' ? target === cell.parentNode : target === cell) {
-            return
+        if (this.configs.autoClearActive) {
+          let target = evnt.target
+          let { row, column, cell } = this.lastActive
+          while (target && target.nodeType && target !== document) {
+            if (this.configs.mode === 'row' ? target === cell.parentNode : target === cell) {
+              return
+            }
+            target = target.parentNode
           }
-          target = target.parentNode
+          this._validActiveCell().then(() => {
+            this._clearValidError(row)
+            this._clearActiveData()
+            this._clearActiveCell(['editable-col_active', 'valid-error'])
+            this._restoreTooltip()
+            this.$emit('clear-active', row.data, column, cell, evnt)
+          }).catch(e => e)
         }
-        this._validActiveCell().then(() => {
-          this._clearValidError(row)
-          this._clearActiveData()
-          this._clearActiveCell(['editable-col_active', 'valid-error'])
-          this._restoreTooltip()
-          this.$emit('clear-active', row.data, column, cell, evnt)
-        }).catch(e => e)
       } else {
         this.isValidActivate = false
         this.isManualActivate = false
@@ -338,6 +341,7 @@ export default {
       this.lastActive = null
       this.datas.forEach(item => {
         item.editActive = null
+        item.showValidMsg = false
       })
     },
     _restoreTooltip (cell) {
@@ -614,7 +618,10 @@ export default {
             cell.scrollIntoView()
           }
         }
-        row.showValidMsg = true
+        // 解决 ElTooltip 无法自动弹出问题
+        setTimeout(() => {
+          row.showValidMsg = true
+        }, 50)
       })
       this.$emit('valid-error', rule, row, column)
     },
@@ -649,14 +656,19 @@ export default {
       this._initial(datas, true)
       this._updateData()
     },
+    reloadRow (record) {
+      let row = this.datas.find(item => item.data === record)
+      XEUtils.destructuring(row.data, record)
+      Object.assign(row, { store: XEUtils.clone(row.data, true) })
+    },
     /**
-     * 还原更改，以最后一次 reload 的数据为源数据或者初始值 data
+     * 还原更改，以最后一次 reload 或 reloadRow 的数据为源数据或者初始值 data
      * 还原指定行数据
      * 还原整个表格数据
      */
-    revert (row) {
-      if (row) {
-        let { data, store } = this.datas.find(item => item.data === row)
+    revert (record) {
+      if (record) {
+        let { data, store } = this.datas.find(item => item.data === record)
         XEUtils.destructuring(data, XEUtils.clone(store, true))
         this.updateStatus()
       } else {
@@ -774,6 +786,11 @@ export default {
       let row = this.tableData[rowIndex]
       if (rowIndex > -1 && this.configs.mode === 'row') {
         this.isManualActivate = true
+        this.datas.forEach(row => {
+          if (row.data !== record) {
+            this._clearValidError(row)
+          }
+        })
         this._validRowRules('all', row).then(valid => {
           let columns = this.$refs.refElTable.columns
           let colIndex = XEUtils.findIndexOf(columns, item => item.property)
@@ -794,11 +811,12 @@ export default {
     getActiveInfo () {
       if (this.lastActive) {
         let { row, column } = this.lastActive
+        let columns = this.$refs.refElTable.columns
         let index = XEUtils.findIndexOf(this.datas, item => item === row)
         if (this.configs.mode === 'row') {
-          return { row: row.data, $index: index, _row: row }
+          return { row: row.data, $index: index, _row: row, isUpdate: !columns.every(column => XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))) }
         }
-        return { row: row.data, column, $index: index, _row: row }
+        return { row: row.data, column, $index: index, _row: row, isUpdate: !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property)) }
       }
       return null
     },

@@ -8,6 +8,7 @@
         <a class="apimenu-title">手动模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>行编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>行编辑+校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual3'}" replace>行编辑+校验+禁用自动清除活动编辑</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">单击模式</a>
@@ -22,7 +23,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>基本校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>行编辑+排序+禁用行编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>列编辑+排序+禁用列编辑+唯一下拉选项</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick12'}" replace>列编辑+排序+禁用列编辑+多级属性</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick12'}" replace>列编辑+排序+多级属性</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">双击模式</a>

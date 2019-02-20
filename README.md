@@ -55,9 +55,11 @@ edit-config 编辑参数配置
 | mode  | 编辑方式 | String | cell（单元格编辑模式） / row（行编辑模式） | cell |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
-| activeMethod | 仅对 type=default 的列有效，Function((row, column, index) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
+| activeMethod | 只对 mode=row 或者 type=default 的列有效，Function((row, column, index) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
+| clearActiveMethod | 只对 mode=row 或者 type=default 的列有效，Function((row, column, index) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
 | useDefaultValidTip | 如果使用了数据校验和 fixed 列（因为 fixed 列也会被渲染，所以会导致同时出现多个校验提示），请设置为 true 使用默认提示  | Boolean | — | false |
-| validTooltip | 设置校验 tooltip 提示消息的参数（只对 useDefaultValidTip=false 有效） | Object | — | { offset: 10, placement: 'bottom-start' } |
+| validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
+| autoClearActive | 当点击其它地方后，自动清除最后活动行或列 | Boolean | — | true |
 
 ### Editable Events
 
@@ -65,13 +67,14 @@ edit-config 编辑参数配置
 |------|------|-----|
 | valid-error | 校验不通过时会触发该事件 | rule, row, column |
 | edit-active | 激活编辑状态之后会触发该事件 | row, column, cell, event |
-| clear-active | 当点击其它地方后，自动清除最后活动列之后会触发该事件 | row, column, cell, event |
+| clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row, column, cell, event |
 
 ### Editable Methods
 
 | 方法名 | 描述 | 参数 |
 |------|------|-----|
-| reload | 初始化加载数据 | datas |
+| reload | 初始化完整表格数据 | datas |
+| reloadRow | 初始化指定行数据 | row |
 | revert | 放弃更改，还原指定行 row 或者整个表格的数据 | row? |
 | insert | 新增一行新数据 | data |
 | insertAt | 第二个参数如果是 row 或 $index 则在指定位置新增一条数据，如果是 -1 则从最后新增一条数据 | data, row|index |
@@ -82,8 +85,9 @@ edit-config 编辑参数配置
 | removeSelecteds | 删除选中行数据 | — |
 | clear | 清空所有数据 | — |
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |
-| setActiveRow | 设置活动行为可编辑状态（只对 mode=row 有效） | row |
+| setActiveRow | 只对 mode=row 有效，设置活动行为可编辑状态 | row |
 | isActiveRow | 判断当前是否活动行 | row |
+| getActiveInfo | 获取当前活动行或列的信息 | — |
 | updateStatus | 更新单元格编辑状态（只对 showStatus=true 并且使用自定义渲染时，当值发生改变时才需要调用） | scope |
 | getAllRecords | 获取表格数据集合 | — |
 | getRecords | 获取表格数据，也可以指定索引获取某条数据 | index |

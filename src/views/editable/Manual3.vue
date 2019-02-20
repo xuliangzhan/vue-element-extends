@@ -21,7 +21,7 @@
       border
       :data.sync="list"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'manual', mode: 'row'}"
+      :edit-config="{trigger: 'manual', mode: 'row', autoClearActive: false}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
@@ -40,7 +40,7 @@
             <el-button size="mini" type="warning" @click="$refs.editable.revert(scope.row)">还原</el-button>
           </template>
           <template v-else>
-            <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.row)">编辑</el-button>
+            <el-button size="mini" type="primary" @click="openActiveRowEvent(scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
             <el-button size="mini" type="warning" @click="revertEvent(scope.row)">还原</el-button>
           </template>
@@ -75,28 +75,70 @@ export default {
     }
   },
   methods: {
+    isRowOperate (row) {
+      let activeInfo = this.$refs.editable.getActiveInfo()
+      return activeInfo ? activeInfo.row === row : true
+    },
+    openActiveRowEvent (row) {
+      let activeInfo = this.$refs.editable.getActiveInfo()
+      // 如果当前行正在编辑中，禁止编辑其他行
+      if (activeInfo) {
+        if (activeInfo.row === row || !this.$refs.editable.checkValid().error) {
+          if (activeInfo.isUpdate) {
+            MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
+              distinguishCancelAndClose: true,
+              confirmButtonText: '保存',
+              cancelButtonText: '放弃修改'
+            }).then(() => {
+              this.$refs.editable.setActiveRow(row)
+              this.updateRowEvent(activeInfo.row)
+            }).catch(action => {
+              if (action === 'cancel') {
+                this.$refs.editable.setActiveRow(row)
+                Message({ message: '放弃保存并离开当前行', type: 'success' })
+              } else {
+                Message({ message: '停留在当前行编辑', type: 'success' })
+              }
+            })
+          } else {
+            this.$refs.editable.setActiveRow(row)
+          }
+        }
+      } else {
+        this.$refs.editable.setActiveRow(row)
+      }
+    },
     removeEvent (row) {
-      MessageBox.confirm('确定删除该数据?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$refs.editable.remove(row)
-      }).catch(e => e)
+      if (this.isRowOperate(row)) {
+        MessageBox.confirm('确定删除该数据?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$refs.editable.remove(row)
+        }).catch(e => e)
+      }
     },
     revertEvent (row) {
-      MessageBox.confirm('确定还原该行数据?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$refs.editable.revert(row)
-      }).catch(e => e)
+      if (this.isRowOperate(row)) {
+        MessageBox.confirm('确定还原该行数据?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$refs.editable.revert(row)
+        }).catch(e => e)
+      }
+    },
+    updateRowEvent (row) {
+      this.$refs.editable.reloadRow(row)
+      Message({ message: '保存成功', type: 'success' })
     },
     saveRowEvent (row) {
       this.$refs.editable.validateRow(row, valid => {
         if (valid) {
           this.$refs.editable.clearActive()
+          this.$refs.editable.reloadRow(row)
           Message({ message: '保存成功', type: 'success' })
         } else {
           console.log('error row submit!!')
@@ -104,23 +146,22 @@ export default {
       })
     },
     cancelRowEvent (row) {
-      this.$refs.editable.validateRow(row, (valid, validErrs) => {
-        if (valid) {
-          this.$refs.editable.clearActive()
-        } else {
-          let message = <p>
-            <p>请正确填写以下信息！</p>
-            {
-              Object.keys(validErrs).map(name => {
-                let errors = validErrs[name]
-                let msg = `${name}：${errors.map(e => e.message).join(';')}`
-                return <p>{msg}</p>
-              })
-            }
-          </p>
-          Message({ message, dangerouslyUseHTMLString: true, type: 'error' })
-        }
-      })
+      let activeInfo = this.$refs.editable.getActiveInfo()
+      if (activeInfo && activeInfo.isUpdate) {
+        MessageBox.confirm('检测到未保存的内容，确定放弃修改?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '返回'
+        }).then(action => {
+          if (action === 'confirm') {
+            this.$refs.editable.clearActive()
+            this.$refs.editable.revert(row)
+          } else {
+            this.$refs.editable.setActiveRow(row)
+          }
+        }).catch(e => e)
+      } else {
+        this.$refs.editable.clearActive()
+      }
     },
     validEvent () {
       this.$refs.editable.validate().then(valid => {

@@ -1,9 +1,7 @@
 <template>
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
-    <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
-    <p style="color: red;font-size: 12px;">第3行的年龄和出生日期不允许编辑</p>
-    <p style="color: red;font-size: 12px;">多级属性：由于多级属性必须明确指定双向绑定的路径，所以只能配合自定义渲染使用</p>
+    <p style="color: red;font-size: 12px;">多级属性：由于 v-model 必须明确指定双向绑定的路径，所以需要配合自定义渲染使用</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2', age: 1, slider: 10})">新增一行</el-button>
@@ -30,12 +28,12 @@
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, activeMethod}"
+      :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true}"
       style="width: 100%">
-      <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
+      <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"> </el-editable-column>
+      <el-editable-column prop="name" label="名字" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"> </el-editable-column>
       <el-editable-column prop="userInfo.base.age" label="年龄" width="140" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}">
         <template slot="edit" slot-scope="scope">
           <el-input-number v-model="scope.row.userInfo.base.age" v-bind="scope.editRender.attrs"></el-input-number>
@@ -64,7 +62,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox, Message } from 'element-ui'
+import { MessageBox } from 'element-ui'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
 
@@ -107,13 +105,6 @@ export default {
       return this.getDataJSON().then(data => {
         this.$refs.editable.reload(data)
       })
-    },
-    activeMethod (row, column, index) {
-      if (index === 2 && ['age', 'birthdate'].includes(column.property)) {
-        Message({ message: '第3行的年龄和出生日期不允许编辑', type: 'warning' })
-        return false
-      }
-      return true
     },
     removeEvent (scope) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {
@@ -168,9 +159,6 @@ export default {
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
-    },
-    selectableEvent (row, index) {
-      return index >= 1
     },
     postJSON (data) {
       // 提交请求

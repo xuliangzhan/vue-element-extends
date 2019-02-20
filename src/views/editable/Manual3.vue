@@ -150,7 +150,7 @@ export default {
       let activeInfo = this.$refs.editable.getActiveInfo()
       if (activeInfo && activeInfo.isUpdate) {
         MessageBox.confirm('检测到未保存的内容，确定放弃修改?', '温馨提示', {
-          confirmButtonText: '确定',
+          confirmButtonText: '放弃更改',
           cancelButtonText: '返回'
         }).then(action => {
           if (action === 'confirm') {

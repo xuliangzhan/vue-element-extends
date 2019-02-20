@@ -163,7 +163,11 @@ export default {
             this._clearActiveData()
             this._clearActiveCell(['editable-col_active', 'valid-error'])
             this._restoreTooltip()
-            this.$emit('clear-active', row.data, column, cell, evnt)
+            if (this.configs.mode === 'row') {
+              this.$emit('clear-active', row.data, evnt)
+            } else {
+              this.$emit('clear-active', row.data, column, cell, evnt)
+            }
           }).catch(e => e)
         }
       } else {

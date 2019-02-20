@@ -66,7 +66,7 @@ edit-config 编辑参数配置
 |------|------|-----|
 | valid-error | 校验不通过时会触发该事件 | rule, row, column |
 | edit-active | 激活编辑状态之后会触发该事件 | row, column, cell, event |
-| clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row, column, cell, event |
+| clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row[, column, cell]?, event |
 
 ### Editable Methods
 
@@ -125,10 +125,10 @@ edit-render 渲染参数配置
 
 | name | 说明 |
 |------|------|
-| — | 自定义渲染显示内容，参数为 { row, column, $index } |
+| — | 自定义渲染显示内容，参数为 { row, column, $index, editRender } |
 | edit | 自定义渲染组件，参数为 { row, column, $index, editRender } |
-| head | 自定义表头的内容，参数为 { column, $index } |
-| valid | 自定义校验提示信息，参数为 { rule, row, column, $index } |
+| head | 自定义表头的内容，参数为 { column, $index, editRender } |
+| valid | 自定义校验提示信息，参数为 { rule, row, column, $index, editRender } |
 
 ## Example
 

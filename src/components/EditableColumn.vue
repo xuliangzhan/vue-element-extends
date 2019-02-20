@@ -179,7 +179,7 @@ export default {
         'ElColorPicker',
         'ElSlider'
       ],
-      isDefaultInput: ['ElInput', 'ElInputNumber'].includes(this.compName)
+      isDefaultInput: ['ElInput', 'ElInputNumber'].includes(this.editRender ? this.editRender.name : null)
     }
   },
   computed: {

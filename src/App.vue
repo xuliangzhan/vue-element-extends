@@ -8,7 +8,7 @@
         <a class="apimenu-title">手动模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>行编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>行编辑+校验</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual3'}" replace>行编辑+校验+表格操作</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual3'}" replace>行编辑+校验+行操作</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual4'}" replace>行编辑+校验+行操作+禁用自动清除活动编辑</router-link>
       </div>
       <div class="apimenu-row">

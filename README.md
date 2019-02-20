@@ -77,7 +77,7 @@ edit-config 编辑参数配置
 | reloadRow | 初始化指定行数据 | row |
 | revert | 放弃更改，还原指定行 row 或者整个表格的数据 | row? |
 | insert | 新增一行新数据 | data |
-| insertAt | 第二个参数如果是 row 或 $index 则在指定位置新增一条数据，如果是 -1 则从最后新增一条数据 | data, row|
+| insertAt | 第二个参数如果是 row 或 $index 则在指定位置新增一条数据，如果是 -1 则从最后新增一条数据 | data, rowOrIndex |
 | remove | 根据数据删除 | row |
 | removes | 根据多条数据删除 | rows |
 | removeByIndex | 根据行号删除一行数据 | $index |

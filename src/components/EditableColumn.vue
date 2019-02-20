@@ -87,7 +87,23 @@
 </template>
 
 <script>
-import { TableColumn } from 'element-ui'
+import {
+  TableColumn,
+  Autocomplete,
+  Input,
+  Select,
+  Option,
+  Cascader,
+  TimeSelect,
+  TimePicker,
+  DatePicker,
+  InputNumber,
+  Switch,
+  Rate,
+  ColorPicker,
+  Slider,
+  Tooltip
+} from 'element-ui'
 import XEUtils from 'xe-utils'
 
 export default {
@@ -127,14 +143,42 @@ export default {
     filteredValue: Array
   },
   components: {
-    ElTableColumn: TableColumn
+    ElTableColumn: TableColumn,
+    ElAutocomplete: Autocomplete,
+    ElInput: Input,
+    ElSelect: Select,
+    ElOption: Option,
+    ElCascader: Cascader,
+    ElTimeSelect: TimeSelect,
+    ElTimePicker: TimePicker,
+    ElDatePicker: DatePicker,
+    ElInputNumber: InputNumber,
+    ElSwitch: Switch,
+    ElRate: Rate,
+    ElColorPicker: ColorPicker,
+    ElSlider: Slider,
+    ElTooltip: Tooltip
   },
   inject: [
     '$editable'
   ],
   data () {
     return {
-      comps: ['ElInput', 'ElSelect', 'ElCascader', 'ElTimePicker', 'ElDatePicker', 'ElInputNumber', 'ElSwitch', 'ElRate', 'ElColorPicker', 'ElSlider']
+      // 支持内置组件
+      comps: [
+        'ElAutocomplete',
+        'ElInput',
+        'ElSelect',
+        'ElCascader',
+        'ElTimeSelect',
+        'ElTimePicker',
+        'ElDatePicker',
+        'ElInputNumber',
+        'ElSwitch',
+        'ElRate',
+        'ElColorPicker',
+        'ElSlider'
+      ]
     }
   },
   computed: {

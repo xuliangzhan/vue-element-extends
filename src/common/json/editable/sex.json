@@ -1,10 +1,14 @@
 [
   {
     "label": "男",
-    "value": "1"
+    "spell": "nan",
+    "value": "1",
+    "val": "x"
   },
   {
     "label": "女",
-    "value": "0"
+    "spell": "nv",
+    "value": "0",
+    "val": "o"
   }
 ]

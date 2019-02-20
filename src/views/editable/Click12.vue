@@ -32,8 +32,23 @@
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="name" label="名字" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"> </el-editable-column>
+      <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="userInfo.sex1" label="方式1" width="100" :edit-render="{type: 'default'}">
+        <template slot="edit" slot-scope="scope">
+          <el-select v-model="scope.row.userInfo.sex1" clearable>
+            <el-option v-for="(item, index) in sexList" :key="index" :value="item.val" :label="item.spell"></el-option>
+          </el-select>
+        </template>
+        <template slot-scope="scope">{{ getSelectLabel(scope.row, scope.row.userInfo.sex1, 'val', 'spell', sexList) }}</template>
+      </el-editable-column>
+      <el-editable-column prop="userInfo.sex2" label="方式2" width="100" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true}}">
+        <template slot="edit" slot-scope="scope">
+          <el-select v-model="scope.row.userInfo.sex2" v-bind="scope.editRender.attrs">
+            <el-option v-for="(item, index) in sexList" :key="index" :value="item.value" :label="item.spell"></el-option>
+          </el-select>
+        </template>
+      </el-editable-column>
       <el-editable-column prop="userInfo.base.age" label="年龄" width="140" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}">
         <template slot="edit" slot-scope="scope">
           <el-input-number v-model="scope.row.userInfo.base.age" v-bind="scope.editRender.attrs"></el-input-number>
@@ -105,6 +120,10 @@ export default {
       return this.getDataJSON().then(data => {
         this.$refs.editable.reload(data)
       })
+    },
+    getSelectLabel (row, value, key, label, list) {
+      let item = list.find(item => item[key] === value)
+      return item ? item[label] : null
     },
     removeEvent (scope) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {
@@ -185,6 +204,8 @@ export default {
             slider: 10,
             userInfo: {
               region: [1, 1, 3],
+              sex1: 'o',
+              sex2: '1',
               base: {
                 age: 24
               }
@@ -200,6 +221,8 @@ export default {
             slider: 20,
             userInfo: {
               region: [1, 1, 4],
+              sex1: 'x',
+              sex2: '0',
               base: {
                 age: 26
               }
@@ -215,6 +238,8 @@ export default {
             slider: 10,
             userInfo: {
               region: [1, 1, 5],
+              sex1: 'o',
+              sex2: '1',
               base: {
                 age: 28
               }

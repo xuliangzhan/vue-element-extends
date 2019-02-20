@@ -122,6 +122,7 @@ edit-render 渲染参数配置
 | attrs | 渲染组件附加属性，参数请查看被渲染的 Component attrs | Object | — | {} |
 | events | 渲染组件附加事件，参数为 ( { rule, row, column, $index }, ...Component arguments ) | Object | — | {} |
 | options | 下拉组件选项列表（只对 name=ElSelect 有效） | Array | — | [] |
+| optionProps | 下拉组件选项列表（只对 name=ElSelect 有效） | Object | — | { value: 'value', label: 'label' } |
 
 ### Editable-Column Scoped Slot
 

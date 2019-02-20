@@ -25,11 +25,11 @@
       </slot>
     </template>
     <template slot-scope="scope">
-      <template v-if="editRender.type === 'visible'">
+      <template v-if="renderOpts.type === 'visible'">
         <slot name="edit" v-bind="getRowScope(scope)">
           <template v-if="compName === 'ElSelect'">
             <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
-              <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="item.attrs"></el-option>
+              <el-option v-for="(item, index) in renderOpts.options" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.attrs"></el-option>
             </el-select>
           </template>
           <template v-else-if="comps.includes(compName)">
@@ -45,7 +45,7 @@
           <slot name="edit" v-bind="getRowScope(scope)">
             <template v-if="compName === 'ElSelect'">
               <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
-                <el-option v-for="(item, index) in editRender.options" :key="index" :value="item.value" :label="item.label" v-bind="item.attrs"></el-option>
+                <el-option v-for="(item, index) in renderOpts.options" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.attrs"></el-option>
               </el-select>
             </template>
             <template v-else-if="comps.includes(compName)">
@@ -62,7 +62,7 @@
       </template>
       <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
         <template v-if="scope.row.config.useDefaultValidTip">
-          <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _self: scope._self, _row: scope.row}">
+          <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender: renderOpts, _self: scope._self, _row: scope.row}">
             <div class="editable-valid_error">
               <span class="valid-message">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</span>
             </div>
@@ -72,7 +72,7 @@
           <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
             <div class="editable-valid_wrapper"></div>
             <div slot="content">
-              <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender, _self: scope._self, _row: scope.row}">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</slot>
+              <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender: renderOpts, _self: scope._self, _row: scope.row}">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</slot>
             </div>
           </el-tooltip>
         </template>
@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import XEUtils from 'xe-utils'
 import {
   TableColumn,
   Autocomplete,
@@ -104,7 +105,6 @@ import {
   Slider,
   Tooltip
 } from 'element-ui'
-import XEUtils from 'xe-utils'
 
 export default {
   name: 'ElEditableColumn',
@@ -178,21 +178,34 @@ export default {
         'ElRate',
         'ElColorPicker',
         'ElSlider'
-      ]
+      ],
+      isDefaultInput: ['ElInput', 'ElInputNumber'].includes(this.compName)
     }
   },
   computed: {
-    compName () {
-      return this.editRender && this.editRender.name ? this.editRender.name : null
+    renderOpts () {
+      let editRender = this.editRender
+      return Object.assign({
+        name: editRender ? 'ElInput' : null,
+        type: 'default',
+        autofocus: editRender && this.isDefaultInput,
+        optionProps: {
+          value: 'value',
+          label: 'label'
+        }
+      }, editRender)
     },
-    isDefaultInput () {
-      return this.editRender ? ['ElInput', 'ElInputNumber'].includes(this.compName) : false
+    isReadonly () {
+      return !this.editRender
+    },
+    compName () {
+      return this.renderOpts.name
     },
     attrs () {
       let sortBy
       let className = this.className ? ` ${this.className}` : ''
-      let editTypeClass = this.editRender ? ' editable-col_edit' : ' editable-col_readonly'
-      let autofocusClass = this.editRender ? (this.editRender.autofocus === true || this.isDefaultInput ? ' autofocus' : '') : (this.isDefaultInput ? ' autofocus' : '')
+      let editTypeClass = this.isReadonly ? ' editable-col_readonly' : ' editable-col_edit'
+      let autofocusClass = this.renderOpts.autofocus ? ' autofocus' : ''
       if (XEUtils.isFunction(this.sortBy)) {
         sortBy = this.sortBy
       } else if (XEUtils.isString(this.sortBy)) {
@@ -237,7 +250,7 @@ export default {
         $index: scope.$index,
         column: scope.column,
         store: scope.store,
-        editRender: this.editRender,
+        editRender: this.renderOpts,
         _self: scope._self
       }
     },
@@ -247,7 +260,7 @@ export default {
         row: scope.row.data,
         column: scope.column,
         store: scope.store,
-        editRender: this.editRender,
+        editRender: this.renderOpts,
         _self: scope._self,
         _row: scope.row
       }
@@ -257,14 +270,13 @@ export default {
     },
     getRendAttrs (scope) {
       let size = scope.row.config.size
-      return Object.assign({ size }, this.editRender.attrs)
+      return Object.assign({ size }, this.renderOpts.attrs)
     },
     getRendEvents ({ $index, row, column, store }) {
-      let editRender = this.editRender
-      let scope = { $index, row: row.data, column, store, editRender, _row: row }
+      let scope = { $index, row: row.data, column, store, editRender: this.renderOpts, _row: row }
       let defEvent = { [this.isDefaultInput ? 'input' : 'change']: val => this.$editable.updateStatus(scope) }
-      if (editRender.events) {
-        return Object.assign(defEvent, XEUtils.objectMap(editRender.events, cb => function () {
+      if (this.renderOpts.events) {
+        return Object.assign(defEvent, XEUtils.objectMap(this.renderOpts.events, cb => function () {
           cb.apply(null, [scope].concat(Array.from(arguments)))
         }))
       }
@@ -274,24 +286,24 @@ export default {
       if (this.formatter) {
         return this.formatter(scope.row.data, scope.column, this.getRowIdentity(scope.row, scope.column), scope.$index)
       }
-      if (this.editRender) {
-        switch (this.compName) {
-          case 'ElSelect':
-            return this.getSelectLabel(scope)
-          case 'ElCascader':
-            return this.getCascaderLabel(scope)
-          case 'ElTimePicker':
-            return this.getTimePickerLabel(scope)
-          case 'ElDatePicker':
-            return this.getDatePickerLabel(scope)
-        }
+      switch (this.compName) {
+        case 'ElSelect':
+          return this.getSelectLabel(scope)
+        case 'ElCascader':
+          return this.getCascaderLabel(scope)
+        case 'ElTimePicker':
+          return this.getTimePickerLabel(scope)
+        case 'ElDatePicker':
+          return this.getDatePickerLabel(scope)
       }
       return this.getRowIdentity(scope.row, scope.column)
     },
     getSelectLabel ({ row, column }) {
+      let labelProp = this.renderOpts.optionProps.label
+      let valueProp = this.renderOpts.optionProps.value
       let value = this.getRowIdentity(row, column)
-      let selectItem = this.editRender.options.find(item => item.value === value)
-      return selectItem ? selectItem.label : null
+      let selectItem = this.renderOpts.options.find(item => item[valueProp] === value)
+      return selectItem ? selectItem[labelProp] : null
     },
     matchCascaderData (values, index, list, labels) {
       let val = values[index]
@@ -307,18 +319,18 @@ export default {
     getCascaderLabel ({ row, column }) {
       let values = this.getRowIdentity(row, column) || []
       let labels = []
-      let attrs = this.editRender.attrs || {}
+      let attrs = this.renderOpts.attrs || {}
       this.matchCascaderData(values, 0, attrs.options || [], labels)
       return labels.join(` ${attrs.separator || '/'} `)
     },
     getTimePickerLabel ({ row, column }) {
       let value = this.getRowIdentity(row, column)
-      let attrs = this.editRender.attrs || {}
+      let attrs = this.renderOpts.attrs || {}
       return XEUtils.toDateString(value, attrs.format || 'hh:mm:ss')
     },
     getDatePickerLabel ({ row, column }) {
       let value = this.getRowIdentity(row, column)
-      let attrs = this.editRender.attrs || {}
+      let attrs = this.renderOpts.attrs || {}
       switch (attrs.type) {
         case 'week':
           return this.getFormatDate(value, attrs, 'yyyywWW')

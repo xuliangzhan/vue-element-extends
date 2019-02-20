@@ -411,10 +411,10 @@ export default {
       cell.className = classList.join(' ')
     },
     /**
-     * 设置列聚焦
+     * 设置单元格聚焦
      * 默认对文本款类的激活后自动聚焦
-     * 如果是自定义渲染，也可以指定 class=editable-custom_input 使该列自动聚焦
-     * 允许通过列渲染配置指定 autofocus 来打开或关闭自动聚焦
+     * 如果是自定义渲染，也可以指定 class=editable-custom_input 使该单元格自动聚焦
+     * 允许通过单元格渲染配置指定 autofocus 来打开或关闭自动聚焦
      */
     _setFocus (cell) {
       let inpElem = cell.querySelector('.el-input>input')

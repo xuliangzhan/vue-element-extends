@@ -62,7 +62,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox } from 'element-ui'
+import { MessageBox, Message } from 'element-ui'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
 
@@ -122,6 +122,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$refs.editable.revert(row)
+        Message({ message: '数据还原成功！', type: 'success' })
       }).catch(e => e)
     },
     selectEvent (selection, row) {

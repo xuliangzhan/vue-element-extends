@@ -151,24 +151,31 @@ export default {
       if (!this.isManualActivate && !this.isValidActivate && this.lastActive) {
         if (this.configs.autoClearActive) {
           let target = evnt.target
+          let clearActiveMethod = this.configs.clearActiveMethod
           let { row, column, cell } = this.lastActive
           while (target && target.nodeType && target !== document) {
-            if (this.configs.mode === 'row' ? target === cell.parentNode : target === cell) {
+            let trElem = cell.parentNode
+            if (this.configs.mode === 'row' ? target === trElem : target === cell) {
               return
+            }
+            if (this.configs.mode === 'row' && this._hasClass(target, 'el-table__row') && target.parentNode === trElem.parentNode) {
+              break
             }
             target = target.parentNode
           }
-          this._validActiveCell().then(() => {
-            this._clearValidError(row)
-            this._clearActiveData()
-            this._clearActiveCell(['editable-col_active', 'valid-error'])
-            this._restoreTooltip()
-            if (this.configs.mode === 'row') {
-              this.$emit('clear-active', row.data, evnt)
-            } else {
-              this.$emit('clear-active', row.data, column, cell, evnt)
-            }
-          }).catch(e => e)
+          if (XEUtils.isFunction(clearActiveMethod) ? (this.configs.mode === 'row' ? clearActiveMethod(row, evnt) : clearActiveMethod(row, column, evnt)) : true) {
+            this._validActiveCell().then(() => {
+              this._clearValidError(row)
+              this._clearActiveData()
+              this._clearActiveCell(['editable-col_active', 'valid-error'])
+              this._restoreTooltip()
+              if (this.configs.mode === 'row') {
+                this.$emit('clear-active', row.data, evnt)
+              } else {
+                this.$emit('clear-active', row.data, column, cell, evnt)
+              }
+            }).catch(e => e)
+          }
         }
       } else {
         this.isValidActivate = false
@@ -421,6 +428,13 @@ export default {
         inpElem.focus()
       }
     },
+    _isRowDataChange (row, column) {
+      let columns = this.$refs.refElTable.columns
+      if (column) {
+        return !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))
+      }
+      return !columns.every(column => XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property)))
+    },
     _isEditCell (row, column) {
       return this.editConfig && this.editConfig.activeMethod ? this.editConfig.activeMethod(row, this.configs.mode === 'row' ? null : column, XEUtils.findIndexOf(this.tableData, item => item === row)) : true
     },
@@ -662,8 +676,11 @@ export default {
     },
     reloadRow (record) {
       let row = this.datas.find(item => item.data === record)
-      XEUtils.destructuring(row.data, record)
-      Object.assign(row, { store: XEUtils.clone(row.data, true) })
+      if (row) {
+        XEUtils.destructuring(row.data, record)
+        Object.assign(row, { store: XEUtils.clone(row.data, true) })
+        this.$nextTick(() => this.updateStatus())
+      }
     },
     /**
      * 还原更改，以最后一次 reload 或 reloadRow 的数据为源数据或者初始值 data
@@ -815,14 +832,17 @@ export default {
     getActiveInfo () {
       if (this.lastActive) {
         let { row, column } = this.lastActive
-        let columns = this.$refs.refElTable.columns
         let index = XEUtils.findIndexOf(this.datas, item => item === row)
         if (this.configs.mode === 'row') {
-          return { row: row.data, $index: index, _row: row, isUpdate: !columns.every(column => XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))) }
+          return { row: row.data, $index: index, _row: row, isUpdate: this._isRowDataChange(row) }
         }
-        return { row: row.data, column, $index: index, _row: row, isUpdate: !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property)) }
+        return { row: row.data, column, $index: index, _row: row, isUpdate: this._isRowDataChange(row, column) }
       }
       return null
+    },
+    isRowChange (record, property) {
+      let row = this.datas.find(item => item.data === record)
+      return property ? this._isRowDataChange(row, { property }) : this._isRowDataChange(row)
     },
     /**
      * 更新列状态

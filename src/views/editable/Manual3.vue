@@ -1,17 +1,13 @@
 <template>
   <div>
-    <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符；flag（校验必填）</p>
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符</p>
 
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字1'})">新增一行</el-button>
       <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
-      <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
-      <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.toggleRowSelection($refs.editable.getRecords(1), true)">设置第二行为选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
     </p>
 
@@ -21,7 +17,8 @@
       border
       :data.sync="list"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'manual', mode: 'row', autoClearActive: false}"
+      :edit-config="{trigger: 'manual', mode: 'row', useDefaultValidTip: true, clearActiveMethod}"
+      @clear-active="clearActiveEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
@@ -63,13 +60,11 @@ export default {
       sexList: XEUtils.clone(sexData, true),
       regionList: XEUtils.clone(regionData, true),
       list: XEUtils.clone(listData, true),
+      isClearActiveFlag: true,
       validRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, max: 10, message: '名称长度 3-10 个字符', trigger: 'blur' }
-        ],
-        flag: [
-          { required: true, message: '必须选择启用才能保存', trigger: 'blur' }
         ]
       }
     }
@@ -79,16 +74,21 @@ export default {
       let activeInfo = this.$refs.editable.getActiveInfo()
       return activeInfo ? activeInfo.row === row : true
     },
+    clearActiveMethod (row, evnt) {
+      return this.isClearActiveFlag
+    },
     openActiveRowEvent (row) {
       let activeInfo = this.$refs.editable.getActiveInfo()
       // 如果当前行正在编辑中，禁止编辑其他行
       if (activeInfo) {
         if (activeInfo.row === row || !this.$refs.editable.checkValid().error) {
           if (activeInfo.isUpdate) {
+            this.isClearActiveFlag = false
             MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
               distinguishCancelAndClose: true,
               confirmButtonText: '保存',
-              cancelButtonText: '放弃修改'
+              cancelButtonText: '放弃修改',
+              type: 'warning'
             }).then(() => {
               this.$refs.editable.setActiveRow(row)
               this.updateRowEvent(activeInfo.row)
@@ -100,6 +100,8 @@ export default {
               } else {
                 Message({ message: '停留在当前行编辑', type: 'success' })
               }
+            }).then(() => {
+              this.isClearActiveFlag = true
             })
           } else {
             this.$refs.editable.setActiveRow(row)
@@ -122,14 +124,22 @@ export default {
     },
     revertEvent (row) {
       if (this.isRowOperate(row)) {
-        MessageBox.confirm('确定还原该行数据?', '温馨提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$refs.editable.revert(row)
-        }).catch(e => e)
+        if (this.$refs.editable.isRowChange(row)) {
+          MessageBox.confirm('确定还原该行数据?', '温馨提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$refs.editable.revert(row)
+            Message({ message: '数据还原成功！', type: 'success' })
+          }).catch(e => e)
+        } else {
+          Message({ message: '数据未改动！', type: 'info' })
+        }
       }
+    },
+    clearActiveEvent (row, event) {
+      this.updateRowEvent(row)
     },
     updateRowEvent (row) {
       this.$refs.editable.reloadRow(row)
@@ -151,7 +161,8 @@ export default {
       if (activeInfo && activeInfo.isUpdate) {
         MessageBox.confirm('检测到未保存的内容，确定放弃修改?', '温馨提示', {
           confirmButtonText: '放弃更改',
-          cancelButtonText: '返回'
+          cancelButtonText: '返回',
+          type: 'warning'
         }).then(action => {
           if (action === 'confirm') {
             this.$refs.editable.clearActive()
@@ -166,7 +177,7 @@ export default {
     },
     validEvent () {
       this.$refs.editable.validate().then(valid => {
-        alert('通过')
+        Message({ message: '校验通过', type: 'success' })
       }).catch(valid => {
         console.log('error submit!!')
       })

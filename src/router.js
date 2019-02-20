@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import EditableManual1 from '@/views/editable/Manual1'
 import EditableManual2 from '@/views/editable/Manual2'
 import EditableManual3 from '@/views/editable/Manual3'
+import EditableManual4 from '@/views/editable/Manual4'
 import EditableClick1 from '@/views/editable/Click1'
 import EditableClick2 from '@/views/editable/Click2'
 import EditableClick3 from '@/views/editable/Click3'
@@ -53,6 +54,11 @@ export default new Router({
       path: '/editable/manual3',
       name: 'EditableManual3',
       component: EditableManual3
+    },
+    {
+      path: '/editable/manual4',
+      name: 'EditableManual4',
+      component: EditableManual4
     },
     {
       path: '/editable/click1',

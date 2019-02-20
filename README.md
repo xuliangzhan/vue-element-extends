@@ -56,6 +56,7 @@ edit-config 编辑参数配置
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
 | activeMethod | 只对 mode=row 或者 type=default 的列有效，Function((row, column, index) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
+| clearActiveMethod | 只对 mode=row 或者 type=default 的列有效，Function((row[, column]?, index) 的返回值用来决定是否允许清除活动编辑 | Function | — | — |
 | useDefaultValidTip | 如果使用了数据校验和 fixed 列（因为 fixed 列也会被渲染，所以会导致同时出现多个校验提示），请设置为 true 使用默认提示  | Boolean | — | false |
 | validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
 | autoClearActive | 当点击其它地方后，自动清除最后活动行或列 | Boolean | — | true |
@@ -86,6 +87,7 @@ edit-config 编辑参数配置
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |
 | setActiveRow | 只对 mode=row 有效，设置活动行为可编辑状态 | row |
 | isActiveRow | 判断当前是否活动行 | row |
+| isRowChange | 检查行或列数据是否有改变 | row[, prop]? |
 | getActiveInfo | 获取当前活动行或列的信息 | — |
 | updateStatus | 更新单元格编辑状态（只对 showStatus=true 并且使用自定义渲染时，当值发生改变时才需要调用） | scope |
 | getAllRecords | 获取表格数据集合 | — |

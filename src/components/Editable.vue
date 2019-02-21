@@ -178,9 +178,10 @@ export default {
             }).catch(e => e)
           }
         }
+      } else {
+        this.isValidActivate = false
+        this.isManualActivate = false
       }
-      this.isValidActivate = false
-      this.isManualActivate = false
     },
     data (value) {
       if (!this.isEmitUpdateActivate) {
@@ -189,8 +190,9 @@ export default {
         } else {
           this.clear()
         }
+      } else {
+        this.isEmitUpdateActivate = false
       }
-      this.isEmitUpdateActivate = false
     },
     datas () {
       this.updateStatus()
@@ -328,8 +330,9 @@ export default {
           }
           this.$emit(`cell-${type}`, row.data, column, cell, event)
         }).catch(e => e)
+      } else {
+        this.isClearlActivate = false
       }
-      this.isClearlActivate = false
     },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)

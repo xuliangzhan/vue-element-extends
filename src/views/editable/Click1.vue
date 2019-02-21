@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <p style="color: red;font-size: 12px;">如果是单击模式会在点击后激活列编辑</p>
 
     <p>
@@ -43,10 +43,18 @@ import sexData from '@/common/json/editable/sex.json'
 export default {
   data () {
     return {
+      loading: false,
       sexList: XEUtils.clone(sexData, true),
       regionList: XEUtils.clone(regionData, true),
-      list: XEUtils.clone(listData, true)
+      list: []
     }
+  },
+  created () {
+    this.loading = true
+    setTimeout(() => {
+      this.list = XEUtils.clone(listData, true)
+      this.loading = false
+    }, 600)
   },
   methods: {
     formatterCreateDate (row, column, cellValue, index) {

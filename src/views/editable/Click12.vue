@@ -36,32 +36,32 @@
       <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="userInfo.sex1" label="方式1" width="160" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
-          <el-select v-model="scope.row.userInfo.sex1" placeholder="请选择性别" clearable>
+          <el-select v-model="scope.row.userInfo.sex1" placeholder="请选择性别" clearable @change="$refs.editable.updateStatus(scope)">
             <el-option v-for="(item, index) in sexList" :key="index" :value="item.val" :label="item.spell"></el-option>
           </el-select>
         </template>
-        <template slot-scope="scope">{{ getSelectLabel(scope.row, scope.row.userInfo.sex1, 'val', 'spell', sexList) }}</template>
+        <template slot-scope="scope">{{ getSelectLabel(scope.row.userInfo.sex1, 'val', 'spell', sexList) }}</template>
       </el-editable-column>
       <el-editable-column prop="userInfo.sex2" label="方式2" width="160" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true, placeholder: '请选择性别'}}">
         <template slot="edit" slot-scope="scope">
-          <el-select v-model="scope.row.userInfo.sex2" v-bind="scope.editRender.attrs">
+          <el-select v-model="scope.row.userInfo.sex2" v-bind="scope.editRender.attrs" @change="$refs.editable.updateStatus(scope)">
             <el-option v-for="(item, index) in sexList" :key="index" :value="item.value" :label="item.spell"></el-option>
           </el-select>
         </template>
       </el-editable-column>
-      <el-editable-column prop="userInfo.base.age" label="年龄" width="140" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}">
+      <el-editable-column prop="userInfo.base.age" label="年龄" width="160" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}">
         <template slot="edit" slot-scope="scope">
-          <el-input-number v-model="scope.row.userInfo.base.age" v-bind="scope.editRender.attrs"></el-input-number>
+          <el-input-number v-model="scope.row.userInfo.base.age" v-bind="scope.editRender.attrs" @input="$refs.editable.updateStatus(scope)"></el-input-number>
         </template>
       </el-editable-column>
       <el-editable-column prop="userInfo.region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}">
         <template slot="edit" slot-scope="scope">
-          <el-cascader v-model="scope.row.userInfo.region" v-bind="scope.editRender.attrs"></el-cascader>
+          <el-cascader v-model="scope.row.userInfo.region" v-bind="scope.editRender.attrs" @change="$refs.editable.updateStatus(scope)"></el-cascader>
         </template>
       </el-editable-column>
       <el-editable-column prop="dateObj.date1" label="选择日期" width="220" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}">
         <template slot="edit" slot-scope="scope">
-          <el-date-picker v-model="scope.row.dateObj.date1" v-bind="scope.editRender.attrs"></el-date-picker>
+          <el-date-picker v-model="scope.row.dateObj.date1" v-bind="scope.editRender.attrs" @change="$refs.editable.updateStatus(scope)"></el-date-picker>
         </template>
       </el-editable-column>
       <el-editable-column prop="slider" label="滑块" width="200" :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
@@ -121,9 +121,9 @@ export default {
         this.$refs.editable.reload(data)
       })
     },
-    getSelectLabel (row, value, key, label, list) {
-      let item = list.find(item => item[key] === value)
-      return item ? item[label] : null
+    getSelectLabel (value, valueProp, labelProp, list) {
+      let item = list.find(item => item[valueProp] === value)
+      return item ? item[labelProp] : null
     },
     removeEvent (scope) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {

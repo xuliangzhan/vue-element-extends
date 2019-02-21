@@ -21,7 +21,7 @@
       @clear-active="clearActiveEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList, optionProps: { value: 'value', label: 'label' }}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>

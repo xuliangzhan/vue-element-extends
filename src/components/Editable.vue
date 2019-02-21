@@ -904,7 +904,7 @@ export default {
             let tdElem = trElem.querySelector(`.${column.id}`)
             if (tdElem) {
               if (this.configs.showStatus) {
-                if (XEUtils.isEqual(_row.data[column.property], _row.store[column.property])) {
+                if (XEUtils.isEqual(XEUtils.get(_row.data, column.property), XEUtils.get(_row.store, column.property))) {
                   this._removeClass(tdElem, ['editable-col_dirty'])
                 } else {
                   this._updateColumnStatus(trElem, column, tdElem)

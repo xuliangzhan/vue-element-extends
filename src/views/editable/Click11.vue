@@ -62,7 +62,7 @@
             <el-option v-for="(item, index) in attr4Options" :key="index" :value="item.value" :label="item.label" :disabled="item.disabled"></el-option>
           </el-select>
         </template>
-        <template slot-scope="scope">{{ getAttr4Label(scope.row.attr4) }}</template>
+        <template slot-scope="scope">{{ getSelectLabel(scope.row.attr4, 'value', 'label', attr4Options) }}</template>
       </el-editable-column>
       <el-editable-column  prop="attr5" label="attr5 限制唯一下拉" width="200" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
@@ -182,9 +182,9 @@ export default {
       })
       this.$refs.editable.updateStatus(scope)
     },
-    getAttr4Label (value) {
-      let selectItem = this.attr4Options.find(item => item.value === value)
-      return selectItem ? selectItem.label : null
+    getSelectLabel (value, valueProp, labelProp, list) {
+      let item = list.find(item => item[valueProp] === value)
+      return item ? item[labelProp] : null
     },
     attr5ChangeEvent (scope) {
       let list = this.$refs.editable.getRecords()

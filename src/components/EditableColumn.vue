@@ -273,8 +273,18 @@ export default {
       return Object.assign({ size }, this.renderOpts.attrs)
     },
     getRendEvents ({ $index, row, column, store }) {
+      let type = 'change'
       let scope = { $index, row: row.data, column, store, editRender: this.renderOpts, _row: row }
-      let defEvent = { [this.isDefaultInput ? 'input' : 'change']: val => this.$editable.updateStatus(scope) }
+      switch (this.compName) {
+        case 'ElAutocomplete':
+          type = 'select'
+          break
+        case 'ElInput':
+        case 'ElInputNumber':
+          type = 'input'
+          break
+      }
+      let defEvent = { [type]: evnt => this.$editable.updateStatus(scope) }
       if (this.renderOpts.events) {
         return Object.assign(defEvent, XEUtils.objectMap(this.renderOpts.events, cb => function () {
           cb.apply(null, [scope].concat(Array.from(arguments)))

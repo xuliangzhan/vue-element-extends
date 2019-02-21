@@ -27,7 +27,7 @@
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true}"
+      :edit-config="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true, useDefaultValidTip: true}"
       style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>

@@ -186,7 +186,7 @@ export default {
     data (value) {
       if (!this.isEmitUpdateActivate) {
         if (value.length) {
-          this.reload(value.map(record => this.datas.some(row => row.data === record) ? record : Object.assign(record, this._defineProp(record))))
+          this.reload(value)
         } else {
           this.clear()
         }
@@ -243,7 +243,7 @@ export default {
       if (isReload) {
         this.initialStore = XEUtils.clone(datas, true)
       }
-      this.datas = (datas || []).map(item => this._toData(item))
+      this.datas = (datas || []).map(record => this._toData(this.datas.some(row => row.data === record) ? record : Object.assign(record, this._defineProp(record))))
     },
     _getData (datas) {
       return (datas || this.datas).map(item => item.data)

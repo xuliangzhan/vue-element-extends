@@ -347,7 +347,19 @@ export default {
     getDataJSON () {
       // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve([]), 350)
+        setTimeout(() => resolve([{
+          attr1: null,
+          attr2: null,
+          attr3: null,
+          attr4: '必填字段4',
+          attr5: '必填字段5',
+          name: '名称1',
+          nickname: '隔壁老王1',
+          phone: 13666666666,
+          rate: 3,
+          region: [19, 199, 1773],
+          sex: '1'
+        }]), 350)
       })
     },
     getRegionJSON () {

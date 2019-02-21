@@ -44,7 +44,7 @@
           </el-form>
         </template>
       </el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}}"></el-editable-column>
       <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="300" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
         <template slot="edit" slot-scope="scope">
           <textarea class="editable-custom_input" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)"></textarea>

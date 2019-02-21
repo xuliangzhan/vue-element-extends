@@ -48,7 +48,7 @@
       </el-editable-column>
       <el-editable-column label="更多信息" group>
         <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}"></el-editable-column>
-        <el-editable-column prop="birthdate" label="出生日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd hh:mm'}}"></el-editable-column>
+        <el-editable-column prop="birthdate" label="日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd hh:mm'}}"></el-editable-column>
         <el-editable-column label="其他" group>
           <el-editable-column prop="date1" label="选择日期" width="220" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
           <el-editable-column prop="date3" label="任意时间点" width="160" sortable :edit-render="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>

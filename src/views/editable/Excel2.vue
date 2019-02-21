@@ -81,7 +81,7 @@ export default {
 .excel-table2 .el-table__body .el-table__row>td {
   cursor: cell;
 }
-.excel-table2 th,
+.excel-table2 .el-table__header th,
 .excel-table2 .el-table__body .el-table__row>td:first-child,
 .excel-table2 .el-table__body .el-table__row:hover>td:first-child {
   background-color: #f5f5f5;
@@ -93,18 +93,18 @@ export default {
   background-color: inherit;
 }
 .excel-table2 .el-table__body .el-table__row>td.editable-col_checked,
-.excel-table2 .el-table__row>td .cell .el-input__inner:focus {
+.excel-table2 .el-table__body .el-table__row>td .cell .el-input__inner:focus {
   border: 1px solid #217346;
 }
-.excel-table2 .el-table__row>td .cell {
+.excel-table2 .el-table__body .el-table__row>td .cell {
   padding: 0;
 }
-.excel-table2 .el-table__row>td .cell,
-.excel-table2 .el-table__row>td .cell .el-input,
-.excel-table2 .el-table__row>td .cell .el-input__inner {
+.excel-table2 .el-table__body .el-table__row>td .cell,
+.excel-table2 .el-table__body .el-table__row>td .cell .el-input,
+.excel-table2 .el-table__body .el-table__row>td .cell .el-input__inner {
   height: 100%;
 }
-.excel-table2 .el-table__row>td .cell .el-input__inner {
+.excel-table2 .el-table__body .el-table__row>td .cell .el-input__inner {
   border-radius: 0;
   padding: 0 2px;
   line-height: 30px;

@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <h1>
-      <a href="https://github.com/xuliangzhan/vue-element-extends">Editable</a>
-    </h1>
     <div class="apimenu-header">
       <div class="apimenu-row">
         <a class="apimenu-title">手动模式</a>
@@ -18,7 +15,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>行编辑+自定义渲染+排序</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>多级表头+校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>动态列渲染</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>动态列渲染+自定义列</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>动态列渲染+自定义列+分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>表尾合计行</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>合并行或列</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>基本校验</router-link>

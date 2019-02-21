@@ -76,13 +76,13 @@ export default {
   background-color: inherit;
 }
 .excel-table1 .el-table__body .el-table__row>td.editable-col_checked,
-.excel-table1 .el-table__row>td .cell .el-input__inner:focus {
+.excel-table1 .el-table__body .el-table__row>td .cell .el-input__inner:focus {
   border: 1px solid #217346;
 }
-.excel-table1 .el-table__row>td .cell {
+.excel-table1 .el-table__body .el-table__row>td .cell {
   padding: 0;
 }
-.excel-table1 .el-table__row>td .cell .el-input__inner {
+.excel-table1 .el-table__body .el-table__row>td .cell .el-input__inner {
   border-radius: 0;
   padding: 0 2px;
 }

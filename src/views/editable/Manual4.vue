@@ -24,7 +24,7 @@
       <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="remark" label="备注" :edit-render="{name: 'ElInput'}"></el-editable-column>
@@ -90,9 +90,9 @@ export default {
               if (action === 'cancel') {
                 this.$refs.editable.revert(activeInfo.row)
                 this.$refs.editable.setActiveRow(row)
-                Message({ message: '放弃修改并离开当前行', type: 'success' })
+                Message({ message: '放弃修改并离开当前行', type: 'warning' })
               } else {
-                Message({ message: '停留在当前行编辑', type: 'success' })
+                Message({ message: '停留在当前行编辑', type: 'info' })
               }
             })
           } else {

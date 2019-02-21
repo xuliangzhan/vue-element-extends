@@ -52,7 +52,7 @@
       </el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd hh:mm'}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd hh:mm'}}"></el-editable-column>
       <el-editable-column prop="attr3" label="固定时间点" width="140" sortable :edit-render="{name: 'ElTimeSelect', attrs: {pickerOptions: {start: '08:30', step: '00:15', end: '18:30'}, placeholder: '选择时间'}}"></el-editable-column>
       <el-editable-column prop="date3" label="任意时间点" width="160" sortable :edit-render="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>
       <el-editable-column prop="date3" label="任意时间点" width="160" sortable :edit-render="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>

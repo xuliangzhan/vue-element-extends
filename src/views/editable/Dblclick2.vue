@@ -51,7 +51,7 @@
       <el-editable-column prop="sex" label="性别" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '->'}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy年MM月dd日'}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy年MM月dd日'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" width="220" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="date2" label="选择时间范围" width="260" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetimerange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
@@ -99,7 +99,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
-      :page-sizes="[10, 15, 20, 50, 100, 150, 200]"
+      :page-sizes="[5, 10, 15, 20, 50, 100, 150, 200]"
       :page-size="pageVO.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pageVO.totalResult">
@@ -353,16 +353,17 @@ export default {
     getDataJSON () {
       // 模拟分页数据
       return new Promise(resolve => {
-        let list = XEUtils.clone(listData, true)
+        let list = []
         Array.from(new Array(50)).map(item => {
-          list = list.concat(XEUtils.clone(listData, true))
+          list = list.concat(listData)
         })
+        list = XEUtils.shuffle(XEUtils.clone(list, true))
         list.length = this.pageVO.pageSize
         setTimeout(() => resolve({
           page: {
-            total: 100
+            total: 1000
           },
-          result: XEUtils.shuffle(list)
+          result: list
         }), 350)
       })
     },

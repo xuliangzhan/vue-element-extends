@@ -29,7 +29,7 @@
       <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="attr1" label="属性1" :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="attr2" label="属性2(必填)" :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="rate" label="评分" :edit-render="{name: 'ElRate', type: 'visible'}"></el-editable-column>
       <el-editable-column label="操作">

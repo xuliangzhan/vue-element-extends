@@ -15,7 +15,7 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable ref="editable" stripe border size="medium" style="width: 100%">
+    <el-editable ref="editable" stripe border size="medium" height="540" style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="head">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
@@ -37,6 +37,17 @@
         </template>
       </el-editable-column>
     </el-editable>
+
+    <el-pagination
+      class="my-pagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageVO.currentPage"
+      :page-sizes="[5, 10, 15, 20, 50, 100, 150, 200]"
+      :page-size="pageVO.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pageVO.totalResult">
+    </el-pagination>
 
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
       <ul>
@@ -68,7 +79,12 @@ export default {
       dialogVisible: false,
       columnConfigs: [],
       sexList: [],
-      regionList: []
+      regionList: [],
+      pageVO: {
+        currentPage: 1,
+        pageSize: 10,
+        totalResult: 0
+      }
     }
   },
   created () {
@@ -115,8 +131,6 @@ export default {
         })
       ]).then(datas => {
         this.loading = false
-      }).catch(e => {
-        this.loading = false
       })
     },
     findList () {
@@ -127,9 +141,22 @@ export default {
         this.loading = false
       })
     },
+    handleSizeChange (pageSize) {
+      this.pageVO.pageSize = pageSize
+      this.findList()
+    },
+    handleCurrentChange (currentPage) {
+      this.pageVO.currentPage = currentPage
+      this.findList()
+    },
     loadList () {
-      return this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
+      this.loading = true
+      this.getDataJSON().then(({ page, result }) => {
+        this.pageVO.totalResult = page.total
+        this.$refs.editable.reload(result)
+        this.loading = false
+      }).catch(e => {
+        this.loading = false
       })
     },
     removeEvent (row) {
@@ -195,9 +222,20 @@ export default {
       })
     },
     getDataJSON () {
-      // 模拟数据
+      // 模拟分页数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 300)
+        let list = []
+        Array.from(new Array(50)).map(item => {
+          list = list.concat(listData)
+        })
+        list = XEUtils.shuffle(XEUtils.clone(list, true))
+        list.length = this.pageVO.pageSize
+        setTimeout(() => resolve({
+          page: {
+            total: 1000
+          },
+          result: list
+        }), 350)
       })
     },
     getRegionJSON () {
@@ -209,3 +247,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.my-pagination {
+  margin: 15px 20px 0 0;
+  text-align: right;
+}
+</style>

@@ -44,7 +44,7 @@
   },
   {
     "prop": "birthdate",
-    "label": "出生日期",
+    "label": "日期",
     "editRender": {
       "name": "ElDatePicker"
     }

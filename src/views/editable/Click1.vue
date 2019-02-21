@@ -48,9 +48,6 @@ export default {
       list: XEUtils.clone(listData, true)
     }
   },
-  created () {
-    window.aa = this
-  },
   methods: {
     formatterCreateDate (row, column, cellValue, index) {
       return XEUtils.toDateString(row.createDate, 'yyyy-MM-dd hh:mm:ss')

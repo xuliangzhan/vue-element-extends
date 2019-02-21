@@ -109,6 +109,7 @@ export default {
       initialStore: [],
       deleteRecords: [],
       lastActive: null,
+      isEmitUpdateActivate: false,
       isClearlActivate: false,
       isManualActivate: false,
       isValidActivate: false
@@ -177,10 +178,19 @@ export default {
             }).catch(e => e)
           }
         }
-      } else {
-        this.isValidActivate = false
-        this.isManualActivate = false
       }
+      this.isValidActivate = false
+      this.isManualActivate = false
+    },
+    data (value) {
+      if (!this.isEmitUpdateActivate) {
+        if (value.length) {
+          this.reload(value.map(record => this.datas.some(row => row.data === record) ? record : Object.assign(record, this._defineProp(record))))
+        } else {
+          this.clear()
+        }
+      }
+      this.isEmitUpdateActivate = false
     },
     datas () {
       this.updateStatus()
@@ -236,6 +246,15 @@ export default {
     _getData (datas) {
       return (datas || this.datas).map(item => item.data)
     },
+    _defineProp (record) {
+      let recordItem = Object.assign({}, record)
+      this.$refs.refElTable.columns.forEach(column => {
+        if (column.property && !XEUtils.has(recordItem, column.property)) {
+          XEUtils.set(recordItem, column.property, null)
+        }
+      })
+      return recordItem
+    },
     _toData (item, status) {
       return item && item._EDITABLE_PROTO === this.editProto ? item : {
         _EDITABLE_PROTO: this.editProto,
@@ -258,6 +277,7 @@ export default {
       }
     },
     _updateData () {
+      this.isEmitUpdateActivate = true
       this.$emit('update:data', this.datas.map(item => item.data))
     },
     _select (selection, row) {
@@ -308,9 +328,8 @@ export default {
           }
           this.$emit(`cell-${type}`, row.data, column, cell, event)
         }).catch(e => e)
-      } else {
-        this.isClearlActivate = false
       }
+      this.isClearlActivate = false
     },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)
@@ -713,14 +732,8 @@ export default {
      * 如果是 -1 或 大于行索引 则使用 push 到表格最后
      */
     insertAt (newRecord, recordOrIndex) {
-      let recordItem = {}
       let len = this.datas.length
-      this.$refs.refElTable.columns.forEach(column => {
-        if (column.property) {
-          XEUtils.set(recordItem, column.property, null)
-        }
-      })
-      recordItem = this._toData(Object.assign(recordItem, newRecord), 'insert')
+      let recordItem = this._toData(this._defineProp(newRecord), 'insert')
       if (recordOrIndex) {
         if (!XEUtils.isNumber(recordOrIndex)) {
           recordOrIndex = XEUtils.findIndexOf(this.datas, item => item.data === recordOrIndex)
@@ -801,12 +814,13 @@ export default {
      * 指定某一行为激活状态
      * 只有当指定为 mode='row' 行编辑模式时
      * 才可以根据索引激活行为编辑状态
+     * 如果 preventDefault=false 不阻止 clearActive 行为
      */
-    setActiveRow (record) {
+    setActiveRow (record, preventDefault) {
       let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
       let row = this.tableData[rowIndex]
       if (rowIndex > -1 && this.configs.mode === 'row') {
-        this.isManualActivate = true
+        this.isManualActivate = preventDefault !== false
         this.datas.forEach(row => {
           if (row.data !== record) {
             this._clearValidError(row)

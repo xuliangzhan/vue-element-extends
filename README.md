@@ -85,7 +85,7 @@ edit-config 编辑参数配置
 | removeSelecteds | 删除选中行数据 | — |
 | clear | 清空所有数据 | — |
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |
-| setActiveRow | 只对 mode=row 有效，设置活动行为可编辑状态 | row |
+| setActiveRow | 只对 mode=row 有效，设置活动行为可编辑状态 | row, preventDefault? |
 | isActiveRow | 判断当前是否活动行 | row |
 | isRowChange | 检查行或列数据是否有改变 | row[, prop]? |
 | getActiveInfo | 获取当前活动行或列的信息 | — |
@@ -141,7 +141,7 @@ edit-render 渲染参数配置
 2. 依赖 vuex 中的 globalClick 属性，该属性值为响应全局 click  事件 (具体实现方式可以参考 store.js)
 3. 将 Editable.vue 和 EditableColumn.vue 复制到项目中，（例：components 目录下），然后注册组件（全局或局部）
 
-😱封装可编辑表格对渲染的性能要求更高，建议数据不要超过 200 行，使用分页加载😱  
+😱可编辑表格对组件数据双向绑定属性多，渲染性能开销大，建议数据不要超过 200 行，使用分页加载😱  
 该组件不做发布，有需要都可以自行获取，也可以根据自身项目需求去做修改  
 如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
 

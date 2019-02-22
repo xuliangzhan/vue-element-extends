@@ -56,7 +56,7 @@ edit-config 编辑参数配置
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
 | activeMethod | 只对 type=default 的列有效，该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
-| clearActiveMethod | 该函数 Function(({row, rowIndex, column?, columnIndex?}) 的返回值用来决定是否允许清除活动编辑 | Function | — | — |
+| clearActiveMethod | 该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定是否允许清除活动编辑 | Function | — | — |
 | useDefaultValidTip | 如果使用了数据校验和 fixed 列（因为 fixed 列也会被渲染，所以会导致同时出现多个校验提示），请设置为 true 使用默认提示  | Boolean | — | false |
 | validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
 | autoClearActive | 当点击其它地方后，自动清除最后活动行或列 | Boolean | — | true |

@@ -31,7 +31,7 @@
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, activeMethod}"
       style="width: 100%">
-      <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
+      <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
       <el-editable-column type="expand">
         <template slot-scope="props">
@@ -258,9 +258,6 @@ export default {
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
-    },
-    selectableEvent (row, index) {
-      return index >= 1
     },
     birthdateSortHandler (a, b) {
       return a.birthdate > b.birthdate ? 1 : -1

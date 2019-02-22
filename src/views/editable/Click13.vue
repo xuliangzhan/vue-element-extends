@@ -22,7 +22,6 @@
     <el-editable
       ref="editable"
       class="c-table13"
-      stripe
       border
       height="600"
       size="medium"
@@ -33,15 +32,12 @@
       :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, activeMethod}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="name" label="名字" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column type="index" width="55"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="name" label="名字" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {clearable: true}}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd hh:mm'}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" width="220" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="date3" label="任意时间点" width="160" sortable :edit-render="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>
-      <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', rows: 2}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {clearable: true, options: regionList, separator: '-'}}"></el-editable-column>
+      <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput', attrs: {clearable: true}}"></el-editable-column>
     </el-editable>
   </div>
 </template>
@@ -188,9 +184,6 @@ export default {
         }
       })
     },
-    indexMethod (index) {
-      return index * 2
-    },
     selectEvent (selection, row) {
       console.log(selection)
     },
@@ -293,5 +286,20 @@ export default {
 .c-table13 .delete-row {
   color: #f56c6c;
   text-decoration: line-through;
+}
+.c-table13 .editable-col_active .cell {
+  padding: 0 5px;
+}
+.c-table13 .el-input .el-input__inner {
+  padding: 0 15px 0 4px;
+}
+.c-table13 .el-input-number .el-input__inner {
+  padding: 0 43px;
+}
+.c-table13 .el-cascader .el-cascader__label {
+  padding: 0 25px 0 5px;
+}
+.c-table13 .el-date-editor .el-input__inner {
+  padding: 0 30px;
 }
 </style>

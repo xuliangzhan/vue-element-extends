@@ -250,7 +250,8 @@ export default {
     },
     _defineProp (record) {
       let recordItem = Object.assign({}, record)
-      this.$refs.refElTable.columns.forEach(column => {
+      let columns = this.$refs.refElTable ? this.$refs.refElTable.columns : []
+      columns.forEach(column => {
         if (column.property && !XEUtils.has(recordItem, column.property)) {
           XEUtils.set(recordItem, column.property, null)
         }

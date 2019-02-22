@@ -1,51 +1,8 @@
 <template>
   <el-table
     ref="refElTable"
-    :class="['editable', `editable_${configs.trigger}`, {'editable_icon': configs.showIcon}]"
-    :data="datas"
-    :height="height"
-    :maxHeight="maxHeight"
-    :stripe="stripe"
-    :border="border"
-    :size="size"
-    :fit="fit"
-    :showHeader="showHeader"
-    :highlightCurrentRow="highlightCurrentRow"
-    :currentRowKey="currentRowKey"
-    :rowClassName="rowClassName"
-    :rowStyle="rowStyle"
-    :headerRowClassName="headerRowClassName"
-    :headerRowStyle="headerRowStyle"
-    :headerCellClassName="headerCellClassName"
-    :headerCellStyle="headerCellStyle"
-    :rowKey="rowKey"
-    :emptyText="emptyText"
-    :defaultExpandAll="defaultExpandAll"
-    :expandRowKeys="expandRowKeys"
-    :defaultSort="defaultSort"
-    :tooltipEffect="tooltipEffect"
-    :showSummary="showSummary"
-    :sumText="sumText"
-    :summaryMethod="_summaryMethod"
-    :selectOnIndeterminate="selectOnIndeterminate"
-    :spanMethod="_spanMethod"
-    @select="_select"
-    @select-all="_selectAll"
-    @selection-change="_selectionChange"
-    @cell-mouse-enter="_cellMouseEnter"
-    @cell-mouse-leave="_cellMouseLeave"
-    @cell-click="_cellClick"
-    @cell-dblclick="_cellDBLclick"
-    @row-click="_rowClick"
-    @row-contextmenu="_rowContextmenu"
-    @row-dblclick="_rowDBLclick"
-    @header-click="_headerClick"
-    @header-contextmenu="_headerContextmenu"
-    @sort-change="_sortChange"
-    @filter-change="_filterChange"
-    @current-change="_currentChange"
-    @header-dragend="_headerDragend"
-    @expand-change="_expandChange">
+    v-bind="attrs"
+    v-on="events">
     <slot></slot>
   </el-table>
 </template>
@@ -119,6 +76,61 @@ export default {
     ...mapGetters([
       'globalClick'
     ]),
+    attrs () {
+      return {
+        class: ['editable', `editable_${this.configs.trigger}`, { 'editable_icon': this.configs.showIcon }],
+        data: this.datas,
+        height: this.height,
+        maxHeight: this.maxHeight,
+        stripe: this.stripe,
+        border: this.border,
+        size: this.size,
+        fit: this.fit,
+        showHeader: this.showHeader,
+        highlightCurrentRow: this.highlightCurrentRow,
+        currentRowKey: this.currentRowKey,
+        rowClassName: XEUtils.isFunction(this.rowClassName) ? this._rowClassName : this.rowClassName,
+        rowStyle: XEUtils.isFunction(this.rowStyle) ? this._rowStyle : this.rowStyle,
+        cellClassName: XEUtils.isFunction(this.cellClassName) ? this._cellClassName : this.cellClassName,
+        cellStyle: XEUtils.isFunction(this.cellStyle) ? this._cellStyle : this.cellStyle,
+        headerRowClassName: XEUtils.isFunction(this.headerRowClassName) ? this._headerRowClassName : this.headerRowClassName,
+        headerRowStyle: XEUtils.isFunction(this.headerRowStyle) ? this._headerRowStyle : this.headerRowStyle,
+        headerCellClassName: XEUtils.isFunction(this.headerCellClassName) ? this._headerCellClassName : this.headerCellClassName,
+        headerCellStyle: XEUtils.isFunction(this.headerCellStyle) ? this._headerCellStyle : this.headerCellStyle,
+        rowKey: XEUtils.isFunction(this.rowKey) ? this._rowKey : this.rowKey,
+        emptyText: this.emptyText,
+        defaultExpandAll: this.defaultExpandAll,
+        expandRowKeys: this.expandRowKeys,
+        defaultSort: this.defaultSort,
+        tooltipEffect: this.tooltipEffect,
+        showSummary: this.showSummary,
+        sumText: this.sumText,
+        summaryMethod: this._summaryMethod,
+        selectOnIndeterminate: this.selectOnIndeterminate,
+        spanMethod: this._spanMethod
+      }
+    },
+    events () {
+      return {
+        'select': this._select,
+        'select-all': this._selectAll,
+        'selection-change': this._selectionChange,
+        'cell-mouse-enter': this._cellMouseEnter,
+        'cell-mouse-leave': this._cellMouseLeave,
+        'cell-click': this._cellClick,
+        'cell-dblclick': this._cellDBLclick,
+        'row-click': this._rowClick,
+        'row-contextmenu': this._rowContextmenu,
+        'row-dblclick': this._rowDBLclick,
+        'header-click': this._headerClick,
+        'header-contextmenu': this._headerContextmenu,
+        'sort-change': this._sortChange,
+        'filter-change': this._filterChange,
+        'current-change': this._currentChange,
+        'header-dragend': this._headerDragend,
+        'expand-change': this._expandChange
+      }
+    },
     tableData () {
       return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
     },
@@ -282,6 +294,33 @@ export default {
     _updateData () {
       this.isEmitUpdateActivate = true
       this.$emit('update:data', this.datas.map(item => item.data))
+    },
+    _rowClassName ({ row, rowIndex }) {
+      return this.rowClassName({ row: row.data, rowIndex })
+    },
+    _rowStyle ({ row, rowIndex }) {
+      return this.rowStyle({ row: row.data, rowIndex })
+    },
+    _cellClassName ({ row, column, rowIndex, columnIndex }) {
+      return this.cellClassName({ row: row.data, column, rowIndex, columnIndex })
+    },
+    _cellStyle ({ row, column, rowIndex, columnIndex }) {
+      return this.cellStyle({ row: row.data, column, rowIndex, columnIndex })
+    },
+    _headerRowClassName ({ row, rowIndex }) {
+      return this.headerRowClassName({ row: row.data, rowIndex })
+    },
+    _headerRowStyle ({ row, rowIndex }) {
+      return this.headerRowStyle({ row: row.data, rowIndex })
+    },
+    _headerCellClassName ({ row, column, rowIndex, columnIndex }) {
+      return this.headerCellClassName({ row: row.data, column, rowIndex, columnIndex })
+    },
+    _headerCellStyle ({ row, column, rowIndex, columnIndex }) {
+      return this.headerCellStyle({ row: row.data, column, rowIndex, columnIndex })
+    },
+    _rowKey (row) {
+      return this.rowKey(row.data)
     },
     _select (selection, row) {
       this.$emit('select', selection.map(item => item ? item.data : item), row.data)

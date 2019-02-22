@@ -23,6 +23,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>行编辑+排序+禁用行编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>列编辑+排序+禁用列编辑+唯一下拉选项</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick12'}" replace>列编辑+排序+多级属性</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick13'}" replace>列编辑+排序+标记删除</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">双击模式</a>

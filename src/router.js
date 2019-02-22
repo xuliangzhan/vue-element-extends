@@ -17,6 +17,7 @@ import EditableClick9 from '@/views/editable/Click9'
 import EditableClick10 from '@/views/editable/Click10'
 import EditableClick11 from '@/views/editable/Click11'
 import EditableClick12 from '@/views/editable/Click12'
+import EditableClick13 from '@/views/editable/Click13'
 import EditableDblclick1 from '@/views/editable/Dblclick1'
 import EditableDblclick2 from '@/views/editable/Dblclick2'
 import EditableDblclick3 from '@/views/editable/Dblclick3'
@@ -119,6 +120,11 @@ export default new Router({
       path: '/editable/click12',
       name: 'EditableClick12',
       component: EditableClick12
+    },
+    {
+      path: '/editable/click13',
+      name: 'EditableClick13',
+      component: EditableClick13
     },
     {
       path: '/editable/dblclick1',

@@ -176,7 +176,7 @@ export default {
             }
             target = target.parentNode
           }
-          if (clearActiveMethod ? (this.configs.mode === 'row' ? clearActiveMethod(row, evnt) : clearActiveMethod(row, column, evnt)) : true) {
+          if (clearActiveMethod ? (this.configs.mode === 'row' ? clearActiveMethod(row.data, evnt) : clearActiveMethod(row.data, column, evnt)) : true) {
             this._validActiveCell().then(() => {
               this._clearValidError(row)
               this._clearActiveData()
@@ -498,7 +498,7 @@ export default {
       return !columns.every(column => XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property)))
     },
     _isEditCell (row, column) {
-      return this.configs.activeMethod ? this.configs.activeMethod(row, this.configs.mode === 'row' ? null : column, XEUtils.findIndexOf(this.tableData, item => item === row)) : true
+      return this.configs.activeMethod ? this.configs.activeMethod(row.data, this.configs.mode === 'row' ? null : column, XEUtils.findIndexOf(this.tableData, item => item === row)) : true
     },
     _triggerActive (row, column, cell, event) {
       if (this._isEditCell(row, column)) {

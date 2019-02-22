@@ -1,12 +1,11 @@
 <template>
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
-    <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
-    <p style="color: red;font-size: 12px;">限制第2行不允许编辑</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
+      <el-button type="success" size="mini" @click="$refs.editable.insert({name: '隔壁老徐'})">新增一行</el-button>
+      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '隔壁老王'}, -1)">在最后新增一行</el-button>
+      <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -22,76 +21,27 @@
 
     <el-editable
       ref="editable"
+      class="c-table13"
       stripe
       border
       height="600"
       size="medium"
+      :row-class-name="tableRowClassName"
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, activeMethod}"
+      :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, activeMethod}"
       style="width: 100%">
-      <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
+      <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
-      <el-editable-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" inline>
-            <el-form-item label="名称">
-              <span>{{ props.row.name }}</span>
-            </el-form-item>
-            <el-form-item label="描述">
-              <span>{{ props.row.desc }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-editable-column>
       <el-editable-column prop="sex" label="性别" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="220" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
-        <template slot="edit" slot-scope="scope">
-          <textarea class="editable-custom_input" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)"></textarea>
-        </template>
-      </el-editable-column>
+      <el-editable-column prop="name" label="名字" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}"></el-editable-column>
       <el-editable-column prop="birthdate" label="日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd hh:mm'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" width="220" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="date3" label="任意时间点" width="160" sortable :edit-render="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>
-      <el-editable-column prop="slider" label="滑块" width="200" :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="是否启用2" width="200" :edit-render="{type: 'visible'}">
-        <template slot="edit" slot-scope="scope">
-          <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
-            <el-radio label="N" border>值1</el-radio>
-            <el-radio label="Y" border>值2</el-radio>
-          </el-radio-group>
-        </template>
-      </el-editable-column>
-      <el-editable-column prop="status" label="状态" width="160" :edit-render="{type: 'visible'}">
-        <template slot="edit" slot-scope="scope">
-          <el-checkbox-group v-model="scope.row.status" size="mini" @change="$refs.editable.updateStatus(scope)">
-            <el-checkbox-button label="success">成功</el-checkbox-button>
-            <el-checkbox-button label="error">失败</el-checkbox-button>
-          </el-checkbox-group>
-        </template>
-      </el-editable-column>
-      <el-editable-column prop="order" label="自定义渲染" width="140" :formatter="formatterOrder" :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
-          <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
-        </template>
-      </el-editable-column>
       <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', rows: 2}}"></el-editable-column>
-      <el-editable-column label="操作" width="160">
-        <template slot-scope="scope">
-          <template v-if="$refs.editable.isActiveRow(scope.row)">
-            <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
-            <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
-          </template>
-          <template v-else>
-            <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
-          </template>
-        </template>
-      </el-editable-column>
     </el-editable>
   </div>
 </template>
@@ -109,6 +59,7 @@ export default {
       loading: false,
       sexList: [],
       regionList: [],
+      pendingRemoveList: [],
       orderDataList: [
         {
           value: '136'
@@ -164,21 +115,57 @@ export default {
         this.loading = false
       })
     },
+    tableRowClassName ({ row, rowIndex }) {
+      if (this.pendingRemoveList.some(item => item === row)) {
+        return 'delete-row'
+      }
+      return ''
+    },
     activeMethod (row, column, index) {
-      if (index === 1) {
-        Message({ message: '第2行不允许编辑', type: 'warning' })
+      if (this.pendingRemoveList.some(item => item === row)) {
+        Message({ message: '已标记为删除的行不允许编辑', type: 'warning' })
         return false
       }
       return true
     },
-    removeEvent (row) {
-      MessageBox.confirm('确定删除该数据?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$refs.editable.remove(row)
-      }).catch(e => e)
+    pendingRemoveEvent () {
+      let selection = this.$refs.editable.getSelecteds()
+      if (selection.length) {
+        let plus = []
+        let minus = []
+        selection.forEach(data => {
+          if (this.pendingRemoveList.some(item => data === item)) {
+            minus.push(data)
+          } else {
+            plus.push(data)
+          }
+        })
+        if (minus.length) {
+          this.pendingRemoveList = this.pendingRemoveList.filter(item => minus.some(data => data !== item)).concat(plus)
+        } else if (plus) {
+          this.pendingRemoveList = this.pendingRemoveList.concat(plus)
+        }
+        this.$refs.editable.clearSelection()
+      } else {
+        Message({
+          type: 'info',
+          message: '请至少选择一条数据！'
+        })
+      }
+    },
+    deleteSelectedEvent () {
+      let selection = this.$refs.editable.getSelecteds()
+      if (selection.length) {
+        this.postJSON('url', { selection }).then(data => {
+          Message({ message: '删除成功', type: 'success' })
+          this.findList()
+        })
+      } else {
+        Message({
+          type: 'info',
+          message: '请至少选择一条数据！'
+        })
+      }
     },
     saveRowEvent (row) {
       this.$refs.editable.validateRow(row, valid => {
@@ -213,24 +200,11 @@ export default {
     formatterOrder (row, column, cellValue, index) {
       return `订单号：${cellValue}`
     },
-    deleteSelectedEvent () {
-      let selection = this.$refs.editable.getSelecteds()
-      if (selection.length) {
-        this.postJSON('url', { selection }).then(data => {
-          Message({ message: '删除成功', type: 'success' })
-          this.findList()
-        })
-      } else {
-        Message({
-          type: 'info',
-          message: '请至少选择一条数据！'
-        })
-      }
-    },
     submitEvent () {
       this.$refs.editable.validate(valid => {
         if (valid) {
-          let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          let removeRecords = this.pendingRemoveList
+          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
           this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
             this.findList()
           })
@@ -259,9 +233,6 @@ export default {
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
-    },
-    selectableEvent (row, index) {
-      return index >= 1
     },
     birthdateSortHandler (a, b) {
       return a.birthdate > b.birthdate ? 1 : -1
@@ -315,5 +286,12 @@ export default {
 <style scoped>
 .editable-custom_input {
   width: 95%;
+}
+</style>
+
+<style>
+.c-table13 .delete-row {
+  color: #f56c6c;
+  text-decoration: line-through;
 }
 </style>

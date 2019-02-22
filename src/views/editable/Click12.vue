@@ -6,7 +6,7 @@
     <p>
       <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2', age: 1, slider: 10})">新增一行</el-button>
       <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字2', age: 3, slider: 20}, -1)">在最后新增一行</el-button>
-      <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
+      <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
@@ -149,6 +149,20 @@ export default {
     },
     currentChangeEvent (currentRow, oldCurrentRow) {
       console.log(oldCurrentRow)
+    },
+    deleteSelectedEvent () {
+      let selection = this.$refs.editable.getSelecteds()
+      if (selection.length) {
+        this.postJSON('url', { selection }).then(data => {
+          Message({ message: '删除成功', type: 'success' })
+          this.findList()
+        })
+      } else {
+        Message({
+          type: 'info',
+          message: '请至少选择一条数据！'
+        })
+      }
     },
     submitEvent () {
       this.$refs.editable.validate(valid => {

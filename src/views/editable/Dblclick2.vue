@@ -54,7 +54,6 @@
       <el-editable-column prop="birthdate" label="日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy年MM月dd日'}}"></el-editable-column>
       <el-editable-column prop="date1" label="选择日期" width="220" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
       <el-editable-column prop="date2" label="选择时间范围" width="260" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetimerange', rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
       <el-editable-column prop="color" label="选择颜色" width="100" :edit-render="{name: 'ElColorPicker', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="flag2" label="是否启用2" width="200" :edit-render="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">

@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
-    <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
+    <p style="color: red;font-size: 12px;">第2行不允许勾选</p>
     <p style="color: red;font-size: 12px;">限制第2行不允许编辑</p>
 
     <p>
@@ -164,9 +164,8 @@ export default {
         this.loading = false
       })
     },
-    activeMethod (row, column, index) {
-      if (index === 1) {
-        Message({ message: '第2行不允许编辑', type: 'warning' })
+    activeMethod ({ row, rowIndex }) {
+      if (rowIndex === 1) {
         return false
       }
       return true

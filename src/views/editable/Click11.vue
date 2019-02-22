@@ -2,7 +2,7 @@
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
     <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
-    <p style="color: red;font-size: 12px;">第3行的年龄和出生日期不允许编辑</p>
+    <p style="color: red;font-size: 12px;">第3行的年龄不允许编辑</p>
     <p style="color: red;font-size: 12px;">自定义渲染：attr4字段，选择唯一下拉选项；attr5字段，限制唯一下拉选项</p>
 
     <p>
@@ -82,7 +82,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox, Message } from 'element-ui'
+import { MessageBox } from 'element-ui'
 import regionData from '@/common/json/editable/region.json'
 import sexData from '@/common/json/editable/sex.json'
 
@@ -148,9 +148,8 @@ export default {
         this.regionList = data
       })
     },
-    activeMethod (row, column, index) {
-      if (index === 2 && ['age', 'birthdate'].includes(column.property)) {
-        Message({ message: '第3行的年龄和出生日期不允许编辑', type: 'warning' })
+    activeMethod ({ row, column, rowIndex }) {
+      if (rowIndex === 2 && ['age'].includes(column.property)) {
         return false
       }
       return true
@@ -223,9 +222,6 @@ export default {
     },
     selectableEvent (row, index) {
       return index >= 1
-    },
-    birthdateSortHandler (a, b) {
-      return a.birthdate > b.birthdate ? 1 : -1
     },
     filterHandler (value, row, column) {
       return row[column.property] === value

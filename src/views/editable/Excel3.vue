@@ -140,12 +140,8 @@ export default {
 .excel-table3 .el-table__body .el-table__row:hover>td {
   background-color: inherit;
 }
-.excel-table3 .el-table__body .el-table__row>td.editable-col_checked,
-.excel-table3 .el-table__body .el-table__row>td .cell .el-input__inner:focus {
+.excel-table3 .el-table__body .el-table__row>td.editable-col_checked {
   border: 1px solid #217346;
-}
-.excel-table3 .el-table__body .el-table__row>td .cell {
-  padding-left: 0;
 }
 .excel-table3 .el-table__body .el-table__row>td .cell,
 .excel-table3 .el-table__body .el-table__row>td .cell .el-input,
@@ -156,5 +152,6 @@ export default {
   border-radius: 0;
   padding: 0 2px;
   line-height: 30px;
+  border-color: #217346;
 }
 </style>

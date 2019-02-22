@@ -89,9 +89,9 @@ export default {
         showHeader: this.showHeader,
         highlightCurrentRow: this.highlightCurrentRow,
         currentRowKey: this.currentRowKey,
-        rowClassName: XEUtils.isFunction(this.rowClassName) ? this._rowClassName : this.rowClassName,
+        rowClassName: this._rowClassName,
         rowStyle: XEUtils.isFunction(this.rowStyle) ? this._rowStyle : this.rowStyle,
-        cellClassName: XEUtils.isFunction(this.cellClassName) ? this._cellClassName : this.cellClassName,
+        cellClassName: this._cellClassName,
         cellStyle: XEUtils.isFunction(this.cellStyle) ? this._cellStyle : this.cellStyle,
         headerRowClassName: XEUtils.isFunction(this.headerRowClassName) ? this._headerRowClassName : this.headerRowClassName,
         headerRowStyle: XEUtils.isFunction(this.headerRowStyle) ? this._headerRowStyle : this.headerRowStyle,
@@ -166,21 +166,28 @@ export default {
           let target = evnt.target
           let clearActiveMethod = this.configs.clearActiveMethod
           let { row, column, cell } = this.lastActive
+          let isClearActive = true
           while (target && target.nodeType && target !== document) {
             let trElem = cell.parentNode
             if (this.configs.mode === 'row' ? target === trElem : target === cell) {
               return
             }
-            if (this.configs.mode === 'row' && this._hasClass(target, 'el-table__row') && target.parentNode === trElem.parentNode) {
+            if (this.configs.mode === 'row' && this._hasClass(target, 'editable-row') && target.parentNode === trElem.parentNode) {
               break
             }
             target = target.parentNode
           }
-          if (clearActiveMethod ? (this.configs.mode === 'row' ? clearActiveMethod(row.data, evnt) : clearActiveMethod(row.data, column, evnt)) : true) {
+          if (clearActiveMethod) {
+            let param = { row: row.data, rowIndex: XEUtils.findIndexOf(this.tableData, item => item === row) }
+            if (this.configs.mode === 'cell') {
+              Object.assign(param, { column, columnIndex: this.$refs.refElTable ? XEUtils.findIndexOf(this.$refs.refElTable.columns, item => item === column) : null })
+            }
+            isClearActive = clearActiveMethod(param)
+          }
+          if (isClearActive) {
             this._validActiveCell().then(() => {
               this._clearValidError(row)
               this._clearActiveData()
-              this._clearActiveCell(['editable-col_active', 'valid-error'])
               this._restoreTooltip()
               if (this.configs.mode === 'row') {
                 this.$emit('clear-active', row.data, evnt)
@@ -205,9 +212,6 @@ export default {
       } else {
         this.isEmitUpdateActivate = false
       }
-    },
-    datas () {
-      this.updateStatus()
     }
   },
   created () {
@@ -278,6 +282,7 @@ export default {
         validActive: null,
         validRule: null,
         showValidMsg: false,
+        checked: false,
         editActive: null,
         editStatus: status || 'initial',
         config: {
@@ -296,13 +301,45 @@ export default {
       this.$emit('update:data', this.datas.map(item => item.data))
     },
     _rowClassName ({ row, rowIndex }) {
-      return this.rowClassName({ row: row.data, rowIndex })
+      let clsName = 'editable-row '
+      let rowClassName = this.rowClassName
+      if (this.configs.mode === 'row' && this._isDisabledEdit(row)) {
+        clsName = 'editable-row_disabled '
+      }
+      if (XEUtils.isFunction(rowClassName)) {
+        clsName += rowClassName({ row: row.data, rowIndex }) || ''
+      } else if (XEUtils.isString(rowClassName)) {
+        clsName += `${rowClassName}`
+      }
+      return clsName
     },
     _rowStyle ({ row, rowIndex }) {
       return this.rowStyle({ row: row.data, rowIndex })
     },
     _cellClassName ({ row, column, rowIndex, columnIndex }) {
-      return this.cellClassName({ row: row.data, column, rowIndex, columnIndex })
+      let clsName = ''
+      let cellClassName = this.cellClassName
+      if (this.configs.mode === 'cell' && row.editActive && row.editActive === column.property) {
+        clsName = 'editable-col_active '
+      }
+      if (this.configs.showStatus && !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))) {
+        clsName = 'editable-col_dirty '
+      }
+      if (row.checked && row.checked === column.property) {
+        clsName = 'editable-col_checked '
+      }
+      if (row.validActive && row.validActive === column.property) {
+        clsName += 'valid-error '
+      }
+      if (this.configs.mode === 'cell' && this._isDisabledEdit(row, column, columnIndex)) {
+        clsName = 'editable-col_disabled '
+      }
+      if (XEUtils.isFunction(cellClassName)) {
+        clsName += cellClassName({ row: row.data, column, rowIndex, columnIndex }) || ''
+      } else if (XEUtils.isString(cellClassName)) {
+        clsName += `${cellClassName}`
+      }
+      return clsName
     },
     _cellStyle ({ row, column, rowIndex, columnIndex }) {
       return this.cellStyle({ row: row.data, column, rowIndex, columnIndex })
@@ -354,7 +391,6 @@ export default {
         this._validActiveCell().then(() => {
           if (this.lastActive) {
             this._clearValidError(this.lastActive.row)
-            this._removeClass(this.lastActive.cell, ['valid-error'])
           }
           if (this.configs.trigger === type) {
             this._triggerActive(row, column, cell, event)
@@ -365,7 +401,8 @@ export default {
             }
           } else {
             if (row.editActive !== column.property) {
-              this._checkedActiveCell(cell, ['editable-col_checked'])
+              this._clearActiveData()
+              row.checked = column.property
             }
           }
           this.$emit(`cell-${type}`, row.data, column, cell, event)
@@ -415,6 +452,7 @@ export default {
       this.datas.forEach(item => {
         item.editActive = null
         item.showValidMsg = false
+        item.checked = null
       })
     },
     _restoreTooltip (cell) {
@@ -439,17 +477,6 @@ export default {
         this._removeClass(elem, ['el-tooltip'])
         this._addClass(elem, ['disabled-el-tooltip'])
       })
-    },
-    _clearActiveColumns () {
-      this._clearActiveData()
-      this._clearActiveCell(['editable-col_active', 'editable-col_checked', 'valid-error'])
-    },
-    _clearActiveCell (clss) {
-      Array.from(this.$el.querySelectorAll(`.${clss.join('.editable-column,.')}.editable-column`)).forEach(elem => this._removeClass(elem, clss))
-    },
-    _checkedActiveCell (cell, clss) {
-      this._clearActiveCell(clss)
-      this._addClass(cell, clss)
     },
     _addClass (cell, clss) {
       let classList = cell.className.split(' ')
@@ -478,7 +505,7 @@ export default {
      * 如果是自定义渲染，也可以指定 class=editable-custom_input 使该单元格自动聚焦
      * 允许通过单元格渲染配置指定 autofocus 来打开或关闭自动聚焦
      */
-    _setFocus (cell) {
+    _setCellFocus (cell) {
       let inpElem = cell.querySelector('.el-input>input')
       if (!inpElem) {
         inpElem = cell.querySelector('.el-textarea>textarea')
@@ -486,7 +513,7 @@ export default {
           inpElem = cell.querySelector('.editable-custom_input')
         }
       }
-      if (inpElem && this._hasClass(cell, 'autofocus')) {
+      if (inpElem && this._hasClass(cell, 'editable-col_autofocus')) {
         inpElem.focus()
       }
     },
@@ -497,32 +524,26 @@ export default {
       }
       return !columns.every(column => XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property)))
     },
-    _isEditCell (row, column) {
-      return this.configs.activeMethod ? this.configs.activeMethod(row.data, this.configs.mode === 'row' ? null : column, XEUtils.findIndexOf(this.tableData, item => item === row)) : true
+    _isDisabledEdit (row, column, columnIndex) {
+      let param = { row: row.data, rowIndex: XEUtils.findIndexOf(this.tableData, item => item === row) }
+      if (this.configs.mode === 'cell') {
+        Object.assign(param, { column, columnIndex })
+      }
+      return this.configs.activeMethod ? !this.configs.activeMethod(param) : false
     },
     _triggerActive (row, column, cell, event) {
-      if (this._isEditCell(row, column)) {
-        let clss = ['editable-col_active']
-        if (row.validActive === column.property) {
-          clss.push('valid-error')
-        }
+      if (!this._isDisabledEdit(row, column)) {
         this._restoreTooltip(cell)
         this._disabledTooltip(cell)
-        this._clearActiveColumns()
-        this._addClass(cell, clss)
+        this._clearActiveData()
         this.lastActive = { row, column, cell }
         row.editActive = column.property
         this.$nextTick(() => {
-          this._setFocus(cell)
+          this._setCellFocus(cell)
           if (row.editActive !== column.property) {
             this.$emit('edit-active', row.data, column, cell, event)
           }
         })
-      }
-    },
-    _updateColumnStatus (trElem, column, tdElem) {
-      if (this._hasClass(column, 'editable-col_edit')) {
-        this._addClass(tdElem, ['editable-col_dirty'])
       }
     },
     _summaryMethod (param) {
@@ -537,29 +558,7 @@ export default {
             sums[index] = this.sumText || (this.$t ? this.$t('el.table.sumText') : '合计')
             return
           }
-          let values = data.map(item => Number(item[column.property]))
-          let precisions = []
-          let notNumber = true
-          values.forEach(value => {
-            if (!isNaN(value)) {
-              notNumber = false
-              let decimal = ('' + value).split('.')[1]
-              precisions.push(decimal ? decimal.length : 0)
-            }
-          })
-          let precision = Math.max.apply(null, precisions)
-          if (!notNumber) {
-            sums[index] = values.reduce((prev, curr) => {
-              let value = Number(curr)
-              if (!isNaN(value)) {
-                return parseFloat((prev + curr).toFixed(Math.min(precision, 20)))
-              } else {
-                return prev
-              }
-            }, 0)
-          } else {
-            sums[index] = ''
-          }
+          sums[index] = data.some(item => isNaN(Number(item[column.property]))) ? '' : XEUtils.sum(data, column.property)
         })
       }
       return sums
@@ -587,7 +586,7 @@ export default {
         let datas = this.tableData
         let columns = this.$refs.refElTable.columns
         let ruleKeys = Object.keys(editRules)
-        let trElems = this.$el.querySelectorAll('.el-table__row')
+        let trElems = this.$el.querySelectorAll('.editable-row')
         let index = XEUtils.findIndexOf(datas, item => item === row)
         this._clearValidError(row)
         columns.forEach((column, cIndex) => {
@@ -732,7 +731,7 @@ export default {
     reload (datas) {
       this.deleteRecords = []
       this._clearAllOpers()
-      this._clearActiveColumns()
+      this._clearActiveData()
       this._initial(datas, true)
       this._updateData()
     },
@@ -741,7 +740,6 @@ export default {
       if (row) {
         XEUtils.destructuring(row.data, record)
         Object.assign(row, { store: XEUtils.clone(row.data, true) })
-        this.$nextTick(() => this.updateStatus())
       }
     },
     /**
@@ -753,7 +751,6 @@ export default {
       if (record) {
         let { data, store } = this.datas.find(item => item.data === record)
         XEUtils.destructuring(data, XEUtils.clone(store, true))
-        this.updateStatus()
       } else {
         this._clearAllOpers()
         this.reload(this.initialStore)
@@ -764,7 +761,7 @@ export default {
      */
     clear () {
       this.deleteRecords = []
-      this._clearActiveColumns()
+      this._clearActiveData()
       this._initial([])
       this._updateData()
     },
@@ -850,7 +847,7 @@ export default {
     },
     clearActive () {
       this.isClearlActivate = true
-      this._clearActiveColumns()
+      this._clearActiveData()
       this._restoreTooltip()
     },
     /**
@@ -873,7 +870,7 @@ export default {
           let columns = this.$refs.refElTable.columns
           let colIndex = XEUtils.findIndexOf(columns, item => item.property)
           let column = columns[colIndex]
-          let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
+          let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
           let cell = trElemList[rowIndex].children[colIndex]
           this._triggerActive(row, column, cell, { type: 'edit' })
         }).catch(({ rule, row, column, cell }) => {
@@ -907,61 +904,23 @@ export default {
      * 由于缓存策略，但行数据发生增加或删除时，需要更新所有行
      */
     updateStatus (scope) {
-      if (arguments.length === 0) {
-        if (this.configs.showStatus) {
-          this.$nextTick(() => {
-            let trElems = this.$el.querySelectorAll('.el-table__row')
-            if (trElems.length) {
-              let columns = this.$refs.refElTable.columns
-              this.tableData.forEach((item, index) => {
-                let trElem = trElems[index]
-                if (trElem.children.length) {
-                  if (item.editStatus === 'insert') {
-                    columns.forEach((column, cIndex) => this._updateColumnStatus(trElem, column, trElem.children[cIndex]))
-                  } else {
-                    columns.forEach((column, cIndex) => {
-                      let tdElem = trElem.children[cIndex]
-                      if (tdElem) {
-                        if (XEUtils.isEqual(XEUtils.get(item.data, column.property), XEUtils.get(item.store, column.property))) {
-                          this._removeClass(tdElem, ['editable-col_dirty'])
-                        } else {
-                          this._updateColumnStatus(trElem, column, trElem.children[cIndex])
-                        }
-                      }
-                    })
-                  }
-                }
-              })
-            }
-          })
-        }
-      } else {
-        this.$nextTick(() => {
-          let { $index, _row, column, store } = scope
-          let trElems = store.table.$el.querySelectorAll('.el-table__row')
-          if (trElems.length) {
-            let trElem = trElems[$index]
-            let tdElem = trElem.querySelector(`.${column.id}`)
-            if (tdElem) {
-              if (this.configs.showStatus) {
-                if (XEUtils.isEqual(XEUtils.get(_row.data, column.property), XEUtils.get(_row.store, column.property))) {
-                  this._removeClass(tdElem, ['editable-col_dirty'])
-                } else {
-                  this._updateColumnStatus(trElem, column, tdElem)
-                }
+      this.$nextTick(() => {
+        let { $index, _row, column, store } = scope
+        let trElems = store.table.$el.querySelectorAll('.editable-row')
+        if (trElems.length) {
+          let trElem = trElems[$index]
+          let cell = trElem.querySelector(`.${column.id}`)
+          if (cell) {
+            return this._validColRules('change', _row, column).then(rule => {
+              if (this.configs.mode === 'row' ? _row.validActive && _row.validActive === column.property : true) {
+                this._clearValidError(_row)
               }
-              return this._validColRules('change', _row, column).then(rule => {
-                if (this.configs.mode === 'row' ? _row.validActive && _row.validActive === column.property : true) {
-                  this._clearValidError(_row)
-                  this._removeClass(tdElem, ['valid-error'])
-                }
-              }).catch(rule => {
-                this._toValidError(rule, _row, column, tdElem)
-              })
-            }
+            }).catch(rule => {
+              this._toValidError(rule, _row, column, cell)
+            })
           }
-        })
-      }
+        }
+      })
     },
     checkValid () {
       let row = this.datas.find(item => item.validActive)
@@ -1010,7 +969,7 @@ export default {
         let datas = this.tableData
         let columns = this.$refs.refElTable.columns
         let ruleKeys = Object.keys(editRules)
-        let trElems = this.$el.querySelectorAll('.el-table__row')
+        let trElems = this.$el.querySelectorAll('.editable-row')
         datas.forEach((row, index) => {
           this._clearValidError(row)
           columns.forEach((column, cIndex) => {

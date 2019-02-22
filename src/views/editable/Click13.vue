@@ -117,9 +117,8 @@ export default {
       }
       return ''
     },
-    activeMethod (row, column, index) {
+    activeMethod ({ row, column, rowIndex }) {
       if (this.pendingRemoveList.some(item => item === row)) {
-        Message({ message: '已标记为删除的行不允许编辑', type: 'warning' })
         return false
       }
       return true

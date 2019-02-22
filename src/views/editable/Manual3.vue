@@ -74,7 +74,7 @@ export default {
       let activeInfo = this.$refs.editable.getActiveInfo()
       return activeInfo ? activeInfo.row === row : true
     },
-    clearActiveMethod (row, evnt) {
+    clearActiveMethod ({ row }) {
       return this.isClearActiveFlag
     },
     openActiveRowEvent (row) {

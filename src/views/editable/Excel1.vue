@@ -75,8 +75,7 @@ export default {
 .excel-table1 .el-table__body .el-table__row:hover>td {
   background-color: inherit;
 }
-.excel-table1 .el-table__body .el-table__row>td.editable-col_checked,
-.excel-table1 .el-table__body .el-table__row>td .cell .el-input__inner:focus {
+.excel-table1 .el-table__body .el-table__row>td.editable-col_checked {
   border: 1px solid #217346;
 }
 .excel-table1 .el-table__body .el-table__row>td .cell {
@@ -85,5 +84,6 @@ export default {
 .excel-table1 .el-table__body .el-table__row>td .cell .el-input__inner {
   border-radius: 0;
   padding: 0 2px;
+  border-color: #217346;
 }
 </style>

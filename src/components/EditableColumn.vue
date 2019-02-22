@@ -205,7 +205,7 @@ export default {
       let sortBy
       let className = this.className ? ` ${this.className}` : ''
       let editTypeClass = this.isReadonly ? ' editable-col_readonly' : ' editable-col_edit'
-      let autofocusClass = this.renderOpts.autofocus ? ' autofocus' : ''
+      let autofocusClass = this.renderOpts.autofocus ? ' editable-col_autofocus' : ''
       if (XEUtils.isFunction(this.sortBy)) {
         sortBy = this.sortBy
       } else if (XEUtils.isString(this.sortBy)) {
@@ -428,6 +428,10 @@ export default {
 .editable .editable-column .cell > .el-select {
   width: 100%;
 }
+.editable .editable-row_disabled,
+.editable .editable-column.editable-col_edit.editable-col_disabled {
+  cursor: not-allowed;
+}
 .editable .editable-column.editable-col_edit.editable-col_active .cell {
   line-height: inherit;
   overflow: inherit;
@@ -456,19 +460,19 @@ export default {
 .editable .editable-column.valid-error .el-textarea__inner:focus {
   border-color: #f56c6c;
 }
-.editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error {
+.editable .editable-row:last-child .editable-column.valid-error .editable-valid_error {
   top: auto;
   bottom: -moz-calc(100% + 10px);
   bottom: -webkit-calc(100% + 10px);
   bottom: calc(100% + 10px);
 }
-.editable .el-table__row:last-child .editable-column.valid-error .editable-valid_error:before {
+.editable .editable-row:last-child .editable-column.valid-error .editable-valid_error:before {
   top: auto;
   bottom: -12px;
   border-color: #f56c6c transparent transparent transparent;
 }
 .editable .editable-column.valid-error .editable-valid_error,
-.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error {
+.editable .editable-row:first-child .editable-column.valid-error .editable-valid_error {
   display: block;
   position: absolute;
   top: -moz-calc(100% + 10px);
@@ -480,7 +484,7 @@ export default {
   min-width: 300px;
 }
 .editable .editable-column.valid-error .editable-valid_error>.valid-message,
-.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error>.valid-message {
+.editable .editable-row:first-child .editable-column.valid-error .editable-valid_error>.valid-message {
   display: inline-block;
   padding: 8px 10px;
   line-height: 1.5;
@@ -491,7 +495,7 @@ export default {
   word-wrap: break-word;
 }
 .editable .editable-column .editable-valid_error:before,
-.editable .el-table__row:first-child .editable-column.valid-error .editable-valid_error:before {
+.editable .editable-row:first-child .editable-column.valid-error .editable-valid_error:before {
   content: "";
   position: absolute;
   top: -12px;

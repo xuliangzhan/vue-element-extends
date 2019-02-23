@@ -8,6 +8,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>行编辑+校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual3'}" replace>行编辑+校验+行操作</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual4'}" replace>行编辑+校验+行操作+禁用自动清除活动编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual5'}" replace>行编辑+校验+行操作+树表格</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">单击模式</a>
@@ -31,8 +32,8 @@
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+自定义渲染+筛选+分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>个性化列+自定义渲染+自定义校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>个性化列+唯一下拉选项+完整校验</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>个性化列+自定义列头+完整校验+自适应高度</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>个性化列+自定义列头+完整校验+关闭默认校验方式</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>个性化列+自定义列头+校验+自适应高度</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>个性化列+自定义列头+校验+关闭默认校验方式</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">Excel表格</a>

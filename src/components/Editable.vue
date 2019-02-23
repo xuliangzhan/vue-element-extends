@@ -304,14 +304,14 @@ export default {
       let clsName = 'editable-row '
       let rowClassName = this.rowClassName
       if (this.configs.mode === 'row' && this._isDisabledEdit(row)) {
-        clsName = 'editable-row_disabled '
+        clsName += 'editable-row_disabled '
       }
       if (XEUtils.isFunction(rowClassName)) {
         clsName += rowClassName({ row: row.data, rowIndex }) || ''
       } else if (XEUtils.isString(rowClassName)) {
         clsName += `${rowClassName}`
       }
-      return clsName
+      return XEUtils.trimRight(clsName)
     },
     _rowStyle ({ row, rowIndex }) {
       return this.rowStyle({ row: row.data, rowIndex })
@@ -320,10 +320,10 @@ export default {
       let clsName = ''
       let cellClassName = this.cellClassName
       if (this.configs.mode === 'cell' && row.editActive && row.editActive === column.property) {
-        clsName = 'editable-col_active '
+        clsName += 'editable-col_active '
       }
       if (this.configs.showStatus && !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))) {
-        clsName = 'editable-col_dirty '
+        clsName += 'editable-col_dirty '
       }
       if (row.checked && row.checked === column.property) {
         clsName = 'editable-col_checked '
@@ -332,14 +332,14 @@ export default {
         clsName += 'valid-error '
       }
       if (this.configs.mode === 'cell' && this._isDisabledEdit(row, column, columnIndex)) {
-        clsName = 'editable-col_disabled '
+        clsName += 'editable-col_disabled '
       }
       if (XEUtils.isFunction(cellClassName)) {
         clsName += cellClassName({ row: row.data, column, rowIndex, columnIndex }) || ''
       } else if (XEUtils.isString(cellClassName)) {
         clsName += `${cellClassName}`
       }
-      return clsName
+      return XEUtils.trimRight(clsName)
     },
     _cellStyle ({ row, column, rowIndex, columnIndex }) {
       return this.cellStyle({ row: row.data, column, rowIndex, columnIndex })
@@ -405,10 +405,10 @@ export default {
               row.checked = column.property
             }
           }
-          this.$emit(`cell-${type}`, row.data, column, cell, event)
-        }).catch(e => e)
+        }).catch(e => e).then(() => this.$emit(`cell-${type}`, row.data, column, cell, event))
       } else {
         this.isClearlActivate = false
+        this.$emit(`cell-${type}`, row.data, column, cell, event)
       }
     },
     _rowClick (row, event, column) {

@@ -80,6 +80,9 @@
     </template>
   </el-table-column>
   <el-table-column v-else v-bind="attrs">
+    <template slot="header" slot-scope="scope">
+      <slot name="head" v-bind="getHeadScope(scope)">{{ scope.column.label }}</slot>
+    </template>
     <template slot-scope="scope">
       <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
     </template>
@@ -203,9 +206,13 @@ export default {
     },
     attrs () {
       let sortBy
-      let className = this.className ? ` ${this.className}` : ''
-      let editTypeClass = this.isReadonly ? ' editable-col_readonly' : ' editable-col_edit'
-      let autofocusClass = this.renderOpts.autofocus ? ' editable-col_autofocus' : ''
+      let clsName = this.isReadonly ? 'editable-col_readonly ' : 'editable-col_edit '
+      if (this.className) {
+        clsName += `${this.className} `
+      }
+      if (this.renderOpts.autofocus) {
+        clsName += 'editable-col_autofocus '
+      }
       if (XEUtils.isFunction(this.sortBy)) {
         sortBy = this.sortBy
       } else if (XEUtils.isString(this.sortBy)) {
@@ -232,7 +239,7 @@ export default {
         showOverflowTooltip: this.showOverflowTooltip,
         align: this.align,
         headerAlign: this.headerAlign,
-        className: `editable-column${editTypeClass}${autofocusClass}${className}`,
+        className: `editable-column ${XEUtils.trimRight(clsName)}`,
         labelClassName: this.labelClassName,
         selectable: this.selectable ? this.selectableEvent : this.selectable,
         reserveSelection: this.reserveSelection,

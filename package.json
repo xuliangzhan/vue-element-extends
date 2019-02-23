@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "element-ui": "^2.4.5",
+    "font-awesome": "^4.7.0",
     "vue": "^2.5.22",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",

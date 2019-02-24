@@ -43,14 +43,14 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
-      :page-sizes="[5, 10, 15, 20, 50, 100, 150, 200]"
+      :page-sizes="[5, 10, 15, 20, 50, 100, 150, 200, 250, 300]"
       :page-size="pageVO.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pageVO.totalResult">
     </el-pagination>
 
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
-      <ul>
+      <ul class="custom-wrapper">
         <li v-for="(item, index) in columnConfigs" :key="index">
           <el-checkbox v-model="item.customChecked">{{ item.label }}</el-checkbox>
         </li>
@@ -187,19 +187,19 @@ export default {
     },
     getInsertEvent () {
       let rest = this.$refs.editable.getInsertRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` }).catch(e => e)
     },
     getUpdateEvent () {
       let rest = this.$refs.editable.getUpdateRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` }).catch(e => e)
     },
     getRemoveEvent () {
       let rest = this.$refs.editable.getRemoveRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` }).catch(e => e)
     },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
     },
     postJSON (data) {
       // 提交请求
@@ -225,7 +225,7 @@ export default {
       // 模拟分页数据
       return new Promise(resolve => {
         let list = []
-        Array.from(new Array(50)).map(item => {
+        Array.from(new Array(80)).map(item => {
           list = list.concat(listData)
         })
         list = XEUtils.shuffle(XEUtils.clone(list, true))
@@ -252,5 +252,13 @@ export default {
 .my-pagination {
   margin: 15px 20px 0 0;
   text-align: right;
+}
+</style>
+
+<style>
+.custom-wrapper {
+  height: 200px;
+  overflow: auto;
+  list-style: decimal;
 }
 </style>

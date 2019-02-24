@@ -25,7 +25,7 @@
       </slot>
     </template>
     <template slot-scope="scope">
-      <template v-if="renderOpts.type === 'visible'">
+      <template v-if="isEditRender(scope)">
         <slot name="edit" v-bind="getRowScope(scope)">
           <template v-if="compName === 'ElSelect'">
             <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
@@ -41,28 +41,11 @@
         </slot>
       </template>
       <template v-else>
-        <template v-if="scope.row.editActive && (scope.row.config.mode === 'row' ? scope.row.editActive : scope.row.editActive === scope.column.property)">
-          <slot name="edit" v-bind="getRowScope(scope)">
-            <template v-if="compName === 'ElSelect'">
-              <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
-                <el-option v-for="(item, index) in renderOpts.options" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.attrs"></el-option>
-              </el-select>
-            </template>
-            <template v-else-if="comps.includes(compName)">
-              <component :is="compName" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></component>
-            </template>
-            <template v-else>
-              <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-input>
-            </template>
-          </slot>
-        </template>
-        <template v-else>
-          <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
-        </template>
+        <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
       </template>
       <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
         <template v-if="scope.row.config.useDefaultValidTip">
-          <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender: renderOpts, _self: scope._self, _row: scope.row}">
+          <slot name="valid" v-bind="getVaildScope(scope)">
             <div class="editable-valid_error">
               <span class="valid-message">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</span>
             </div>
@@ -72,7 +55,7 @@
           <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
             <div class="editable-valid_wrapper"></div>
             <div slot="content">
-              <slot name="valid" v-bind="{rule: scope.row.validRule || {}, $index: scope.$index, row: scope.row.data, column: scope.column, store: scope.store, editRender: renderOpts, _self: scope._self, _row: scope.row}">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</slot>
+              <slot name="valid" v-bind="getVaildScope(scope)">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</slot>
             </div>
           </el-tooltip>
         </template>
@@ -272,6 +255,18 @@ export default {
         _row: scope.row
       }
     },
+    getVaildScope (scope) {
+      return {
+        rule: scope.row.validRule || {},
+        $index: scope.$index,
+        row: scope.row.data,
+        column: scope.column,
+        store: scope.store,
+        editRender: this.renderOpts,
+        _self: scope._self,
+        _row: scope.row
+      }
+    },
     getRowIdentity (row, column) {
       return XEUtils.get(row.data, column.property)
     },
@@ -378,6 +373,9 @@ export default {
         }
       }
       return false
+    },
+    isEditRender ({ row, column }) {
+      return this.renderOpts.type === 'visible' || (row.editActive && (row.config.mode === 'row' ? row.editActive : row.editActive === column.property))
     },
     checkIcon ({ column, store }) {
       return column.property && this.$editable && this.$editable.editConfig ? !(this.$editable.editConfig.showIcon === false) : true

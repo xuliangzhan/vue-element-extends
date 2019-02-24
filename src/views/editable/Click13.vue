@@ -14,8 +14,8 @@
       <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
       <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
       <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
-      <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
-      <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
+      <el-button type="primary" size="mini" @click="getPendingRemoveEvent">获取已标记删除数据</el-button>
+      <el-button type="primary" size="mini" @click="getSelectedEvent">获取已选中数据</el-button>
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
@@ -104,6 +104,7 @@ export default {
     },
     findList () {
       this.loading = true
+      this.pendingRemoveList = []
       this.getDataJSON().then(data => {
         this.$refs.editable.reload(data)
         this.loading = false
@@ -208,23 +209,27 @@ export default {
     },
     getInsertEvent () {
       let rest = this.$refs.editable.getInsertRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` }).catch(e => e)
     },
     getUpdateEvent () {
       let rest = this.$refs.editable.getUpdateRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` }).catch(e => e)
+    },
+    getPendingRemoveEvent () {
+      let rest = this.pendingRemoveList
+      MessageBox({ message: JSON.stringify(rest), title: `获取已标记删除数据(${rest.length}条)` }).catch(e => e)
     },
     getRemoveEvent () {
       let rest = this.$refs.editable.getRemoveRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` }).catch(e => e)
     },
     getSelectedEvent () {
       let rest = this.$refs.editable.getSelecteds()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已选中数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取已选中数据(${rest.length}条)` }).catch(e => e)
     },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
     },
     birthdateSortHandler (a, b) {
       return a.birthdate > b.birthdate ? 1 : -1

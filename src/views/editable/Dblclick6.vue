@@ -75,7 +75,7 @@
     </el-editable>
 
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
-      <ul>
+      <ul class="custom-wrapper">
         <li v-for="(item, index) in columnConfigs" :key="index">
           <el-checkbox v-model="item.customChecked">{{ item.label }}</el-checkbox>
         </li>
@@ -306,23 +306,23 @@ export default {
     },
     getInsertEvent () {
       let rest = this.$refs.editable.getInsertRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` }).catch(e => e)
     },
     getUpdateEvent () {
       let rest = this.$refs.editable.getUpdateRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` }).catch(e => e)
     },
     getRemoveEvent () {
       let rest = this.$refs.editable.getRemoveRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` }).catch(e => e)
     },
     getSelectedEvent () {
       let rest = this.$refs.editable.getSelecteds()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已选中数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取已选中数据(${rest.length}条)` }).catch(e => e)
     },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
     },
     postJSON (data) {
       // 提交请求
@@ -393,5 +393,13 @@ export default {
   top: -8px;
   left: 20%;
   border-color: transparent transparent red transparent;
+}
+</style>
+
+<style>
+.custom-wrapper {
+  height: 200px;
+  overflow: auto;
+  list-style: decimal;
 }
 </style>

@@ -697,7 +697,7 @@ export default {
             cell.scrollIntoView()
           }
         }
-        // 解决 ElTooltip 无法自动弹出问题
+        // 解决 ElTooltip 默认无法自动弹出问题
         setTimeout(() => {
           row.showValidMsg = true
         }, 50)
@@ -757,7 +757,7 @@ export default {
       }
     },
     /**
-     * 清空
+     * 清空表格
      */
     clear () {
       this.deleteRecords = []

@@ -353,7 +353,7 @@ export default {
     },
     getInsertEvent () {
       let rest = this.treeList.filter(item => item.isNew)
-      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
     },
     getDataJSON () {
       // 模拟数据

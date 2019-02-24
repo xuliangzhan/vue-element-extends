@@ -13,7 +13,7 @@
       ref="editable"
       class="excel-table1"
       border
-      size="mini"
+      size="customSize"
       :data.sync="list"
       :edit-config="{trigger: 'click', showIcon: false}"
       style="width: 100%" >
@@ -51,25 +51,33 @@ export default {
   methods: {
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
     },
     getUpdateEvent () {
       let rest = this.$refs.editable.getUpdateRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` }).catch(e => e)
     },
     getResultEvent () {
       let rest = this.$refs.editable.getRecords().filter(item => Object.keys(item).some(key => item[key]))
-      MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` })
+      MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` }).catch(e => e)
     }
   }
 }
 </script>
 
 <style>
+.excel-table1.el-table--customSize .editable-column {
+  height: 30px;
+}
 .excel-table1 .el-table__body .el-table__row>td {
   cursor: cell;
 }
-.excel-table2 .el-table__body .el-table__row>td:first-child {
+.excel-table1 .el-table__header th,
+.excel-table1 .el-table__body .el-table__row>td:first-child,
+.excel-table1 .el-table__body .el-table__row:hover>td:first-child {
+  background-color: #f5f5f5;
+}
+.excel-table1 .el-table__body .el-table__row>td:first-child {
   cursor: default;
 }
 .excel-table1 .el-table__body .el-table__row:hover>td {
@@ -80,6 +88,11 @@ export default {
 }
 .excel-table1 .el-table__body .el-table__row>td .cell {
   padding: 0;
+}
+.excel-table1 .el-table__body .el-table__row>td .cell,
+.excel-table1 .el-table__body .el-table__row>td .cell .el-input,
+.excel-table1 .el-table__body .el-table__row>td .cell .el-input__inner {
+  height: 100%;
 }
 .excel-table1 .el-table__body .el-table__row>td .cell .el-input__inner {
   border-radius: 0;

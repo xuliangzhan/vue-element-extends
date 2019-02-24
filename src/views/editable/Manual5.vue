@@ -3,9 +3,9 @@
     <p style="color: red;font-size: 12px;">表格树：自动保存</p>
 
     <p>
-      <el-button size="mini" @click="insertEvent('0')">新增目录</el-button>
-      <el-button size="mini" @click="insertEvent('1')">新增文件</el-button>
-      <el-button size="mini" @click="getInsertEvent">获取新增数据</el-button>
+      <el-button type="success" size="mini" @click="insertEvent('0')">新增目录</el-button>
+      <el-button type="success" size="mini" @click="insertEvent('1')">新增文件</el-button>
+      <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
     </p>
 
     <el-editable

@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     insertEvent () {
-      let row = this.$refs.editable.insert({ name: '默认名字1', age: 26 })
+      let row = this.$refs.editable.insert({ age: 26 })
       this.$nextTick(() => this.$refs.editable.setActiveRow(row))
     },
     isRowOperate (row) {

@@ -229,7 +229,7 @@ export default {
       this.$refs.editable.remove(row)
     },
     revertEvent (row) {
-      if (this.$refs.editable.isRowChange(row)) {
+      if (this.$refs.editable.hasRowChange(row)) {
         MessageBox.confirm('确定还原该行数据?', '温馨提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

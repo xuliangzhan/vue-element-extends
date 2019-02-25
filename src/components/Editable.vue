@@ -753,6 +753,22 @@ export default {
     /***************************/
 
     /***************************/
+    /* Discard methods start     */
+    /***************************/
+    isActiveRow (record) {
+      return this.hasActiveRow(record)
+    },
+    getActiveInfo () {
+      return this.getActiveRow()
+    },
+    isRowChange (record, property) {
+      return this.hasRowChange(record, property)
+    },
+    /***************************/
+    /* Discard methods end     */
+    /***************************/
+
+    /***************************/
     /* Public methods start    */
     /***************************/
     reload (datas) {
@@ -898,10 +914,10 @@ export default {
       }
       return false
     },
-    isActiveRow (record) {
+    hasActiveRow (record) {
       return this.lastActive ? this.lastActive.row.data === record : false
     },
-    getActiveInfo () {
+    getActiveRow () {
       if (this.lastActive) {
         let { row, column } = this.lastActive
         let index = XEUtils.findIndexOf(this.datas, item => item === row)
@@ -912,7 +928,7 @@ export default {
       }
       return null
     },
-    isRowChange (record, property) {
+    hasRowChange (record, property) {
       let row = this.datas.find(item => item.data === record)
       return property ? this._isRowDataChange(row, { property }) : this._isRowDataChange(row)
     },

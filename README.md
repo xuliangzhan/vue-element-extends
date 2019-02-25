@@ -81,16 +81,16 @@ edit-config 编辑参数配置
 | insertAt | 第二个参数如果是 row 或 $index 则在指定位置新增一条数据，如果是 -1 则从最后新增一条数据 | data, rowOrIndex |
 | remove | 根据数据删除 | row |
 | removes | 根据多条数据删除 | rows |
-| removeByIndex | 根据行号删除一行数据 | $index |
+| removeByIndex | 根据行号删除某一行数据 | $index |
 | removeByIndexs | 根据多个行号删除多行数据 | $indexs |
 | removeSelecteds | 删除选中行数据 | — |
 | clear | 清空所有数据 | — |
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |
+| hasActiveRow | 判断当前是否活动行 | row |
+| getActiveRow | 获取当前活动行或列的信息 | — |
 | setActiveRow | 只对 mode=row 有效，激活指定行行为可编辑状态 | row, preventDefault? |
-| setActiveCell | 只对 mode=cell 有效，激活指定一行的单元格为可编辑状态 | row, prop?, preventDefault? |
-| isActiveRow | 判断当前是否活动行 | row |
-| isRowChange | 检查行或列数据是否有改变 | row[, prop]? |
-| getActiveInfo | 获取当前活动行或列的信息 | — |
+| setActiveCell | 只对 mode=cell 有效，激活指定某一行的单元格为可编辑状态 | row, prop?, preventDefault? |
+| hasRowChange | 检查行或列数据是否有改变 | row, prop? |
 | updateStatus | 更新单元格编辑状态（只对 showStatus=true 并且使用自定义渲染时，当值发生改变时才需要调用） | scope |
 | getAllRecords | 获取表格数据集合 | — |
 | getRecords | 获取表格数据，也可以指定索引获取某条数据 | index |

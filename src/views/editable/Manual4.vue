@@ -29,7 +29,7 @@
       <el-editable-column prop="remark" label="备注" :edit-render="{name: 'ElInput', attrs: {clearable: true}}"></el-editable-column>
       <el-editable-column label="操作" width="220">
         <template slot-scope="scope">
-          <template v-if="$refs.editable.isActiveRow(scope.row)">
+          <template v-if="$refs.editable.hasActiveRow(scope.row)">
             <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
             <el-button size="mini" type="warning" @click="$refs.editable.revert(scope.row)">还原</el-button>
@@ -119,7 +119,7 @@ export default {
     },
     revertEvent (row) {
       if (this.isRowOperate(row)) {
-        if (this.$refs.editable.isRowChange(row)) {
+        if (this.$refs.editable.hasRowChange(row)) {
           MessageBox.confirm('确定还原该行数据?', '温馨提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',

@@ -80,7 +80,7 @@
       <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column label="操作" width="160" fixed="right">
         <template slot-scope="scope">
-          <template v-if="$refs.editable.isActiveRow(scope.row)">
+          <template v-if="$refs.editable.hasActiveRow(scope.row)">
             <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
           </template>

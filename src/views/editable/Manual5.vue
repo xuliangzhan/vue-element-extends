@@ -267,7 +267,7 @@ export default {
             this.treeList.push(row)
           }
           this.reloedTreeList(this.treeList)
-          this.$nextTick(() => this.$refs.editable.validateRow(row).catch(e => e))
+          this.$nextTick(() => this.$refs.editable.setActiveRow(row))
         })
       }
     },

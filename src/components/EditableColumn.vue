@@ -458,6 +458,7 @@ export default {
 /* custom tip */
 .editable .editable-column .editable-valid_error {
   display: none;
+  text-align: left;
 }
 .editable .editable-column.valid-error .el-input__inner,
 .editable .editable-column.valid-error .el-input__inner:focus,

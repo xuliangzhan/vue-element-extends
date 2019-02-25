@@ -3,8 +3,7 @@
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字1'})">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字1'}, -1)">在最后新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent">新增一行</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
@@ -70,6 +69,10 @@ export default {
     }
   },
   methods: {
+    insertEvent () {
+      let row = this.$refs.editable.insert({ name: '默认名字1' })
+      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+    },
     isRowOperate (row) {
       let activeInfo = this.$refs.editable.getActiveInfo()
       return activeInfo ? activeInfo.row === row : true

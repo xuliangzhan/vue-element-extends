@@ -4,8 +4,8 @@
     <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2', region: [19, 199, 1773]})">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字2', region: [1, 1, 2]}, -1)">在最后新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent()">新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -182,6 +182,10 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    insertEvent (index) {
+      let row = this.$refs.editable.insertAt({ name: '默认名字1' }, index)
+      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
     },
     removeEvent (row) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {

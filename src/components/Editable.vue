@@ -1,8 +1,5 @@
 <template>
-  <el-table
-    ref="refElTable"
-    v-bind="attrs"
-    v-on="events">
+  <el-table ref="refElTable" v-bind="attrs" v-on="events">
     <slot></slot>
   </el-table>
 </template>
@@ -753,7 +750,7 @@ export default {
     /***************************/
 
     /***************************/
-    /* Discard methods start     */
+    /* Discard methods start   */
     /***************************/
     isActiveRow (record) {
       return this.hasActiveRow(record)

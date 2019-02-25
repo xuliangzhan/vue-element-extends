@@ -258,7 +258,7 @@ export default {
     insertEvent () {
       if (!this.$refs.editable.checkValid().error) {
         let row = this.$refs.editable.insert()
-        this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+        this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
       }
     },
     removeEvent (scope) {

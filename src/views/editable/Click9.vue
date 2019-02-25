@@ -125,7 +125,8 @@ export default {
     },
     insertEvent (index) {
       if (!this.$refs.editable.checkValid().error) {
-        this.$refs.editable.insertAt(null, index)
+        let row = this.$refs.editable.insertAt(null, index)
+        this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
       }
     },
     removeEvent (row) {

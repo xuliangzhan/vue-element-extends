@@ -3,8 +3,8 @@
     <p style="color: red;font-size: 12px;">自定义设置动态列</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert({flag3: false})">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt({flag3: false}, -1)">在最后新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -158,6 +158,10 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    insertEvent (index) {
+      let row = this.$refs.editable.insertAt({ rate: 2 }, index)
+      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
     },
     removeEvent (row) {
       row.flag3 = false

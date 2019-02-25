@@ -5,7 +5,7 @@
     <p style="color: red;font-size: 12px;">自定义渲染：attr4字段，选择唯一下拉选项；attr5字段，限制唯一下拉选项</p>
 
     <p>
-      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
+      <el-button type="success" size="mini" @click="insertEvent()">新增</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -261,7 +261,7 @@ export default {
     insertEvent () {
       if (!this.$refs.editable.checkValid().error) {
         let row = this.$refs.editable.insert()
-        this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+        this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
       }
     },
     removeEvent (scope) {

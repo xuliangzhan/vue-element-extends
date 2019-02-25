@@ -6,8 +6,8 @@
     <p style="color: red;font-size: 12px;">自定义渲染：attr4字段，选择唯一下拉选项；attr5字段，限制唯一下拉选项</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2', age: 1, slider: 10})">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字2', age: 3, slider: 20}, -1)">在最后新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -153,6 +153,10 @@ export default {
         return false
       }
       return true
+    },
+    insertEvent (index) {
+      let row = this.$refs.editable.insertAt({ name: '默认名字2', age: 1, slider: 30 }, index)
+      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'sex'))
     },
     removeEvent (scope) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {

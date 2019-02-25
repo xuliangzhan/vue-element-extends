@@ -27,7 +27,7 @@
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true, useDefaultValidTip: true}"
+      :edit-config="{trigger: 'dblclick', mode: 'row', showIcon: true, showStatus: true, useDefaultValidTip: true, autoScrollIntoView: true}"
       style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
@@ -221,8 +221,10 @@ export default {
       this.findList()
     },
     insertEvent (index) {
-      let row = this.$refs.editable.insertAt({ name: '默认名字1' }, index)
-      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+      if (!this.$refs.editable.checkValid().error) {
+        let row = this.$refs.editable.insertAt({ name: '默认名字1', age: 26 }, index)
+        this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+      }
     },
     removeEvent (row) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {

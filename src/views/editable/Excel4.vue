@@ -16,7 +16,6 @@
       ref="editable"
       class="excel-table4"
       border
-      tooltip-effect="light"
       size="customSize"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false}"
@@ -187,6 +186,10 @@ export default {
 }
 .excel-table4 .el-table__body .el-table__row>td.editable-col_checked {
   border: 1px solid #217346;
+}
+.excel-table4 .el-table__body .el-table__row>td .cell {
+  width: 100% !important;
+  padding: 0;
 }
 .excel-table4 .el-table__body .el-table__row>td .cell,
 .excel-table4 .el-table__body .el-table__row>td .cell .el-input,

@@ -60,14 +60,15 @@ edit-config 编辑参数配置
 | useDefaultValidTip | 如果使用了数据校验和 fixed 列（因为 fixed 列也会被渲染，所以会导致同时出现多个校验提示），请设置为 true 使用默认提示  | Boolean | — | false |
 | validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
 | autoClearActive | 当点击其它地方后，自动清除最后活动行或列 | Boolean | — | true |
+| autoScrollIntoView | 当单元格被激活时，自动将单元格滚动到可视区域内 | Boolean | — | false |
 
 ### Editable Events
 
 | 事件名 | 说明 | 参数 |
 |------|------|-----|
-| valid-error | 校验不通过时会触发该事件 | rule, row, column |
+| valid-error | 校验不通过时会触发该事件 | rule, row, column, cell |
 | edit-active | 激活编辑状态之后会触发该事件 | row, column, cell, event |
-| clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row[, column, cell]?, event |
+| clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row, column?, cell?, event |
 
 ### Editable Methods
 
@@ -85,7 +86,8 @@ edit-config 编辑参数配置
 | removeSelecteds | 删除选中行数据 | — |
 | clear | 清空所有数据 | — |
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |
-| setActiveRow | 只对 mode=row 有效，设置活动行为可编辑状态 | row, preventDefault? |
+| setActiveRow | 只对 mode=row 有效，激活指定行行为可编辑状态 | row, preventDefault? |
+| setActiveCell | 只对 mode=cell 有效，激活指定一行的单元格为可编辑状态 | row, prop?, preventDefault? |
 | isActiveRow | 判断当前是否活动行 | row |
 | isRowChange | 检查行或列数据是否有改变 | row[, prop]? |
 | getActiveInfo | 获取当前活动行或列的信息 | — |

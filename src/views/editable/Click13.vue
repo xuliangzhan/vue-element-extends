@@ -3,8 +3,8 @@
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert({name: '隔壁老徐'})">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '隔壁老王'}, -1)">在最后新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
@@ -111,6 +111,10 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    insertEvent (index) {
+      let row = this.$refs.editable.insertAt({ name: '隔壁老徐', age: 26 }, index)
+      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'sex'))
     },
     tableRowClassName ({ row, rowIndex }) {
       if (this.pendingRemoveList.some(item => item === row)) {

@@ -3,8 +3,8 @@
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（自定义校验，18-28之间）rate字段（校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert()">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt(null, -1)">在最后新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent()">新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -218,6 +218,12 @@ export default {
       return this.getDataJSON().then(data => {
         this.$refs.editable.reload(data)
       })
+    },
+    insertEvent (index) {
+      if (!this.$refs.editable.checkValid().error) {
+        let row = this.$refs.editable.insertAt(null, index)
+        this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
+      }
     },
     removeEvent (row) {
       this.$refs.editable.remove(row)

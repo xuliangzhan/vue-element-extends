@@ -4,8 +4,8 @@
     <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -25,7 +25,7 @@
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, useDefaultValidTip: true}"
+      :edit-config="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, useDefaultValidTip: true, autoScrollIntoView: true}"
       style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
@@ -160,6 +160,10 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    insertEvent (index) {
+      let row = this.$refs.editable.insertAt(null, index)
+      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
     },
     removeEvent (row) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {

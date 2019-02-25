@@ -143,6 +143,10 @@ export default {
 .excel-table3 .el-table__body .el-table__row>td.editable-col_checked {
   border: 1px solid #217346;
 }
+.excel-table3 .el-table__body .el-table__row>td .cell {
+  width: 100% !important;
+  padding: 0;
+}
 .excel-table3 .el-table__body .el-table__row>td .cell,
 .excel-table3 .el-table__body .el-table__row>td .cell .el-input,
 .excel-table3 .el-table__body .el-table__row>td .cell .el-input__inner {

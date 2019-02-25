@@ -5,7 +5,7 @@
     <p style="color: red;font-size: 12px;">自定义列头：attr4字段、attr5字段</p>
 
     <p>
-      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
+      <el-button type="success" size="mini" @click="insertEvent()">新增</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
@@ -254,7 +254,7 @@ export default {
     insertEvent () {
       if (!this.$refs.editable.checkValid().error) {
         let row = this.$refs.editable.insert({ region: [19, 199, 1773] })
-        this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+        this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
       }
     },
     removeEvent (scope) {

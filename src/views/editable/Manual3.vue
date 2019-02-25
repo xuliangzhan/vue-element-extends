@@ -16,7 +16,7 @@
       border
       :data.sync="list"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'manual', mode: 'row', useDefaultValidTip: true, clearActiveMethod}"
+      :edit-config="{trigger: 'manual', mode: 'row', useDefaultValidTip: true, autoScrollIntoView: true, clearActiveMethod}"
       @clear-active="clearActiveEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     insertEvent () {
-      let row = this.$refs.editable.insert({ name: '默认名字1' })
+      let row = this.$refs.editable.insert({ name: '默认名字1', age: 26 })
       this.$nextTick(() => this.$refs.editable.setActiveRow(row))
     },
     isRowOperate (row) {

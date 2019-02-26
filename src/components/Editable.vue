@@ -768,7 +768,7 @@ export default {
         let trElem = trElemList[rowIndex]
         columns.forEach(column => {
           let cell = trElem.querySelector(`.${column.id}`)
-          item[column.property || column.id] = cell.innerText.trim()
+          item[column.id] = cell.innerText.trim()
         })
         return item
       })
@@ -779,18 +779,22 @@ export default {
       if (opts.columnMethod) {
         columns = columns.filter(opts.columnMethod)
       }
-      let datas = opts.original ? this._getData(this.tableData) : this._getCsvLabelData(opts, columns)
+      let datas = isOriginal ? this._getData(this.tableData) : this._getCsvLabelData(opts, columns)
       if (opts.dataMethod) {
         datas = datas.filter(opts.dataMethod)
       }
       let content = '\ufeff'
       datas.forEach((record, rowIndex) => {
-        content += columns.map((column, columnIndex) => {
-          if (column.type === 'index') {
-            return isOriginal ? (column.index ? column.index(rowIndex) : rowIndex + 1) : record[column.id] || ''
-          }
-          return XEUtils.get(record, column.property) || ''
-        }).join(',') + '\n'
+        if (isOriginal) {
+          content += columns.map((column, columnIndex) => {
+            if (column.type === 'index') {
+              return column.index ? column.index(rowIndex) : rowIndex + 1
+            }
+            return XEUtils.get(record, column.property) || ''
+          }).join(',') + '\n'
+        } else {
+          content += columns.map((column, columnIndex) => record[column.id]).join(',') + '\n'
+        }
       })
       return content
     },

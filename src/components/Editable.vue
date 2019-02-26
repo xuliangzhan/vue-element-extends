@@ -754,6 +754,67 @@ export default {
       this.clearFilter()
       this.clearSort()
     },
+    _getCsvUrl (opts, content) {
+      let browse = XEUtils.browse()
+      if (window.Blob && window.URL && window.URL.createObjectURL && !browse.safari) {
+        return URL.createObjectURL(new Blob([content], { type: 'text/csv' }))
+      }
+      return `data:attachment/csv;charset=utf-8,${encodeURIComponent(content)}`
+    },
+    _getCsvLabelData (opts, columns) {
+      let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
+      return this.tableData.map((row, rowIndex) => {
+        let item = {}
+        let trElem = trElemList[rowIndex]
+        columns.forEach(column => {
+          let cell = trElem.querySelector(`.${column.id}`)
+          item[column.property || column.id] = cell.innerText.trim()
+        })
+        return item
+      })
+    },
+    _getCsvContent (opts) {
+      let isOriginal = opts.original
+      let columns = this.$refs.refElTable.columns.filter(column => ['selection', 'expand'].indexOf(column.type) === -1)
+      if (opts.columnMethod) {
+        columns = columns.filter(opts.columnMethod)
+      }
+      let datas = opts.original ? this._getData(this.tableData) : this._getCsvLabelData(opts, columns)
+      if (opts.dataMethod) {
+        datas = datas.filter(opts.dataMethod)
+      }
+      let content = '\ufeff'
+      datas.forEach((record, rowIndex) => {
+        content += columns.map((column, columnIndex) => {
+          if (column.type === 'index') {
+            return isOriginal ? (column.index ? column.index(rowIndex) : rowIndex + 1) : record[column.id] || ''
+          }
+          return XEUtils.get(record, column.property) || ''
+        }).join(',') + '\n'
+      })
+      return content
+    },
+    _downloadCsc (opts, content) {
+      let browse = XEUtils.browse()
+      if (navigator.msSaveBlob && window.Blob) {
+        navigator.msSaveBlob(new Blob([content], { type: 'text/csv' }), opts.filename)
+      } else if (browse['-ms']) {
+        var win = window.top.open('about:blank', '_blank')
+        win.document.charset = 'utf-8'
+        win.document.write(content)
+        win.document.close()
+        win.document.execCommand('SaveAs', opts.filename)
+        win.close()
+      } else {
+        var linkElem = document.createElement('a')
+        linkElem.target = '_blank'
+        linkElem.download = opts.filename
+        linkElem.href = this._getCsvUrl(opts, content)
+        document.body.appendChild(linkElem)
+        linkElem.click()
+        document.body.removeChild(linkElem)
+      }
+    },
     /***************************/
     /* Interior methods end    */
     /***************************/
@@ -1040,6 +1101,21 @@ export default {
         }
       }
       return validPromise
+    },
+    /**
+     * 导出 csv 文件
+     */
+    exportCsv (options) {
+      let opts = Object.assign({
+        filename: 'table.csv',
+        original: false,
+        columnMethod: null,
+        dataMethod: null
+      }, options)
+      if (opts.filename.indexOf('.csv') === -1) {
+        opts.filename += '.csv'
+      }
+      this._downloadCsc(opts, this._getCsvContent(opts))
     }
     /***************************/
     /* Public methods end      */

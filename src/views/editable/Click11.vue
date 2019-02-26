@@ -176,7 +176,7 @@ export default {
       console.log(selection)
     },
     currentChangeEvent (currentRow, oldCurrentRow) {
-      console.log(oldCurrentRow)
+      console.log(currentRow)
     },
     attr4ChangeEvent (scope) {
       let list = this.$refs.editable.getRecords()

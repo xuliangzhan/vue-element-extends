@@ -152,7 +152,7 @@ export default {
       console.log(selection)
     },
     currentChangeEvent (currentRow, oldCurrentRow) {
-      console.log(oldCurrentRow)
+      console.log(currentRow)
     },
     deleteSelectedEvent () {
       let selection = this.$refs.editable.getSelecteds()

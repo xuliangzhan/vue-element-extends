@@ -207,7 +207,7 @@ export default {
       console.log(selection)
     },
     currentChangeEvent (currentRow, oldCurrentRow) {
-      console.log(oldCurrentRow)
+      console.log(currentRow)
     },
     formatterOrder (row, column, cellValue, index) {
       return `订单号：${cellValue}`

@@ -5,6 +5,15 @@
     <p>
       <el-button type="success" size="mini" @click="insertEvent('0')">新增目录</el-button>
       <el-button type="success" size="mini" @click="insertEvent('1')">新增文件</el-button>
+      <el-upload
+        class="upload-demo"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        :before-upload="handleFileBeforeUpload"
+        :on-success="handleFileSuccess"
+        :on-error="handleFileError"
+        :show-file-list="false">
+        <el-button type="primary" size="mini">上传文件</el-button>
+      </el-upload>
       <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
     </p>
 
@@ -39,8 +48,10 @@
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
           </template>
           <template v-else>
-            <el-button size="mini" type="primary" @click="openActiveRowEvent(scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
+            <el-button size="mini" type="info" icon="el-icon-edit" circle @click="openActiveRowEvent(scope.row)"></el-button>
+            <el-button size="mini" type="primary" icon="el-icon-download" circle></el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="removeEvent(scope.row)"></el-button>
+            <el-button size="mini" type="success" icon="el-icon-share" circle></el-button>
           </template>
         </template>
       </el-editable-column>
@@ -50,7 +61,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { Message, MessageBox } from 'element-ui'
+import { Loading, Message, MessageBox } from 'element-ui'
 
 export default {
   data () {
@@ -61,6 +72,7 @@ export default {
       treeAllIndeterminate: false,
       currentRow: null,
       list: [],
+      fileLoading: null,
       treeNode: [],
       treeList: [],
       validRules: {
@@ -93,7 +105,31 @@ export default {
         this.initTreeList(data)
       })
     },
-    /** Tree func start */
+    handleFileBeforeUpload (file) {
+      this.fileLoading = Loading.service({
+        lock: true,
+        text: '上传中...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      return true
+    },
+    handleFileSuccess (response, file, fileList) {
+      this.insertEvent('1', {
+        fileName: file.name
+      })
+      if (this.fileLoading) {
+        this.fileLoading.close()
+      }
+    },
+    handleFileError (err, file, fileList) {
+      if (err) {
+
+      }
+      if (this.fileLoading) {
+        this.fileLoading.close()
+      }
+    },
     getChildren (row) {
       return this.treeList.filter(item => item.parentId === row.id)
     },
@@ -139,6 +175,7 @@ export default {
         } else {
           let type = (row.fileName || '').split('.').pop()
           switch (type) {
+            case 'xlsx':
             case 'excel':
               clsName = 'fa-file-excel-o'
               break
@@ -153,6 +190,9 @@ export default {
               break
             case 'zip':
               clsName = 'fa-file-zip-o'
+              break
+            case 'mp4':
+              clsName = 'fa-file-video-o'
               break
             default:
               clsName = 'fa-file'
@@ -200,7 +240,7 @@ export default {
     },
     treeCollapseNode (parent, expand) {
       let children = this.treeList.filter(item => item.parentId === parent.id)
-      parent.expandNode = expand && children.length
+      parent.expandNode = !!(expand && children.length)
       children.forEach((child, index) => {
         child.treeIndex = index
         child.treeLevel = parent.treeLevel + 1
@@ -222,7 +262,6 @@ export default {
       this.treeCollapseNode(row, !row.expandNode)
       this.loadTree()
     },
-    /** Tree func end */
     rowClickEvent (row, event, column) {
       this.currentRow = row
     },
@@ -232,11 +271,13 @@ export default {
     formatColumnSize (row, column, cellValue, index) {
       return cellValue ? `${cellValue} KB` : ''
     },
-    insertEvent (type) {
+    insertEvent (type, file) {
       if (!this.$refs.editable.checkValid().error) {
         let selectRow = this.currentRow
+        let children = []
+        let isAppand = false
         let index = selectRow ? XEUtils.findIndexOf(this.list, item => item.id === selectRow.id) : 0
-        let data = {
+        let data = Object.assign({
           isNew: true,
           id: Date.now(),
           fileType: type,
@@ -247,9 +288,11 @@ export default {
           showNode: true,
           isCheck: false,
           indeterminate: false
-        }
+        }, file)
         if (selectRow) {
-          if (selectRow.fileType === '0' && (selectRow.expandNode || !this.getChildren(selectRow).length)) {
+          children = this.getChildren(selectRow)
+          isAppand = selectRow.fileType === '0' && (selectRow.expandNode || !children.length)
+          if (isAppand) {
             selectRow.expandNode = true
             data.parentId = selectRow.id
             data.treeLevel = selectRow.treeLevel + 1
@@ -258,16 +301,19 @@ export default {
             data.treeLevel = selectRow.treeLevel
           }
         }
-        let row = this.$refs.editable.insertAt(data, selectRow ? index + 1 : 0)
+        let row = this.$refs.editable.insertAt(data, isAppand ? index + children.length + 1 : index)
+        this.currentRow = row
         this.$nextTick(() => {
           if (selectRow) {
             let dataIndex = XEUtils.findIndexOf(this.treeList, item => item.id === selectRow.id)
-            this.treeList.splice(dataIndex + 1, 0, row)
+            this.treeList.splice(isAppand ? dataIndex + children.length + 1 : dataIndex, 0, row)
           } else {
             this.treeList.push(row)
           }
           this.reloedTreeList(this.treeList)
-          this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+          if (!file) {
+            this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+          }
         })
       }
     },
@@ -443,8 +489,17 @@ export default {
           {
             id: 401,
             parentId: null,
-            fileName: '文件401.pdf',
+            fileName: '嘿嘿401.mp4',
             fileSize: 2048,
+            fileType: '1',
+            createDate: 1550923830095,
+            updateDate: 1550923830095
+          },
+          {
+            id: 501,
+            parentId: null,
+            fileName: '文件501.pdf',
+            fileSize: 512,
             fileType: '1',
             createDate: 1550923830095,
             updateDate: 1550923830095
@@ -457,6 +512,10 @@ export default {
 </script>
 
 <style scoped>
+.upload-demo {
+  display: inline-block;
+  margin: 0 10px;
+}
 .my-table11 .error-msg {
   display: block;
   color: #fff;

@@ -377,12 +377,23 @@ export default {
     },
     /**
      * 触发编辑事件
-     * 行模式和列模式可编辑，如果是只读列不能编辑
-     * 触发时先校验活动行或列，如果存在校验规则且校验不通过
-     * 停止激活新行，聚焦到校验错误行
+     * 如果调用清除函数则不激活编辑
+     * 如果是手动模式则不激活编辑
+     * 如果是非渲染列则不激活编辑
+     * 行模式和列模式，如果当前列已是激活状态不重复激活编辑
+     * 激活编辑时先校验活动行或列的配置规则是否全部通过
+     * 如果配置了规则且校验不通过，则停止激活新行，聚焦到校验错误行
      */
     _cellHandleEvent (type, row, column, cell, event) {
-      if (!this.isClearlActivate && this._hasClass(cell, 'editable-col_edit')) {
+      if (!this.isClearlActivate &&
+        this.configs.trigger !== 'manual' &&
+        this._hasClass(cell, 'editable-col_edit') &&
+        (row.editActive
+          ? this.configs.mode === 'row' && this.lastActive
+            ? this.lastActive.column.property !== column.property
+            : (this.configs.mode === 'cell' && row.editActive !== column.property)
+          : true
+        )) {
         this._validActiveCell().then(() => {
           if (this.lastActive) {
             this._clearValidError(this.lastActive.row)
@@ -395,10 +406,8 @@ export default {
               this._validCellRules('change', row, column).catch(rule => this._toValidError(rule, row, column, cell))
             }
           } else {
-            if (this.configs.mode === 'cell' && row.editActive !== column.property) {
-              this._clearActiveData()
-              row.checked = column.property
-            }
+            this._clearActiveData()
+            row.checked = column.property
           }
         }).catch(e => e).then(() => this.$emit(`cell-${type}`, row.data, column, cell, event))
       } else {

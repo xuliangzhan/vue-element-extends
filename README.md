@@ -9,6 +9,7 @@
   * 支持（同步、异步）数据校验
   * 支持显示单元格值的修改状态
   * 支持增/删/改/查/还原
+  * 支持导出数据.csv
   * 支持原 ElTable 所有参数及功能
 
 ![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable1.gif?raw=true)

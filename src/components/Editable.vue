@@ -775,7 +775,7 @@ export default {
     },
     _getCsvContent (opts) {
       let isOriginal = opts.original
-      let columns = this.$refs.refElTable.columns.filter(column => ['selection', 'expand'].indexOf(column.type) === -1)
+      let columns = this.$refs.refElTable.columns
       if (opts.columnMethod) {
         columns = columns.filter(opts.columnMethod)
       }
@@ -1113,7 +1113,7 @@ export default {
       let opts = Object.assign({
         filename: 'table.csv',
         original: false,
-        columnMethod: null,
+        columnMethod: column => column.type === 'index' || (['selection', 'expand'].indexOf(column.type) === -1 && column.property),
         dataMethod: null
       }, options)
       if (opts.filename.indexOf('.csv') === -1) {

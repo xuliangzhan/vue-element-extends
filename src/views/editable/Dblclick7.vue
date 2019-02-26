@@ -15,8 +15,8 @@
       <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
       <el-button type="primary" size="mini" @click="getPendingRemoveEvent">获取已标记删除数据</el-button>
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.exportCsv()">导出显示数据</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.exportCsv({original: true})">导出实际数据</el-button>
+      <el-button type="success" size="mini" @click="customExportCsvEvent()">导出显示数据</el-button>
+      <el-button type="success" size="mini" @click="customExportCsvEvent({original: true})">导出实际数据</el-button>
     </p>
 
     <el-editable
@@ -225,6 +225,9 @@ export default {
     },
     validErrorEvent (rule, row, column) {
       Message({ message: rule.message, type: 'error' })
+    },
+    customExportCsvEvent (opts) {
+      this.$refs.editable.exportCsv(opts)
     },
     insertEvent () {
       if (!this.$refs.editable.checkValid().error) {

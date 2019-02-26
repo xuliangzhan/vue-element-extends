@@ -8,8 +8,8 @@
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.exportCsv({filename: '显示数据.csv'})">导出显示数据</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.exportCsv({filename: '实际数据.csv', original: true})">导出实际数据</el-button>
+      <el-button type="success" size="mini" @click="customExportCsvEvent({filename: '显示数据.csv'})">导出显示数据</el-button>
+      <el-button type="success" size="mini" @click="customExportCsvEvent({filename: '实际数据.csv', original: true})">导出实际数据</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出指定行和列数据</el-button>
     </p>
 
@@ -77,6 +77,9 @@ export default {
     insertEvent () {
       let row = this.$refs.editable.insert({ name: '默认名字1', age: 26 })
       this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+    },
+    customExportCsvEvent (opts) {
+      this.$refs.editable.exportCsv(opts)
     },
     exportCsvEvent () {
       this.$refs.editable.exportCsv({

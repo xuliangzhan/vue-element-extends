@@ -7,6 +7,25 @@
 <script>
 import XEUtils from 'xe-utils'
 
+// 用于监听全局点击事件
+var EventListening = {
+  list: [],
+  on (comp, type, cb) {
+    EventListening.list.push({ comp, type, cb })
+  },
+  off (comp, type) {
+    XEUtils.remove(EventListening.list, item => item.comp === comp && item.type === type)
+  },
+  trigger (evnt) {
+    EventListening.list.forEach(({ comp, type, cb }) => {
+      if (type === evnt.type) {
+        cb.call(comp, evnt)
+      }
+    })
+  }
+}
+window.addEventListener('click', EventListening.trigger)
+
 export default {
   name: 'ElEditable',
   props: {
@@ -65,10 +84,6 @@ export default {
     }
   },
   computed: {
-    globalClick () {
-      // 依赖 Vuex 中 getters 属性 globalClick
-      return this.$store && this.$store.getters.globalClick
-    },
     attrs () {
       return {
         class: ['editable', `editable_${this.configs.trigger}`, { 'editable_icon': this.configs.showIcon }],
@@ -151,52 +166,6 @@ export default {
     }
   },
   watch: {
-    /**
-     * 监听全局 click 事件
-     * 用于处理点击表格外清除激活状态
-     */
-    globalClick (evnt) {
-      if (!this.isManualActivate && !this.isValidActivate && this.lastActive) {
-        if (this.configs.autoClearActive) {
-          let target = evnt.target
-          let clearActiveMethod = this.configs.clearActiveMethod
-          let { row, column, cell } = this.lastActive
-          let isClearActive = true
-          while (target && target.nodeType && target !== document) {
-            let trElem = cell.parentNode
-            if (this.configs.mode === 'row' ? target === trElem : target === cell) {
-              return
-            }
-            if (this.configs.mode === 'row' && this._hasClass(target, 'editable-row') && target.parentNode === trElem.parentNode) {
-              break
-            }
-            target = target.parentNode
-          }
-          if (clearActiveMethod) {
-            let param = { row: row.data, rowIndex: XEUtils.findIndexOf(this.tableData, item => item === row) }
-            if (this.configs.mode === 'cell') {
-              Object.assign(param, { column, columnIndex: this.$refs.refElTable ? XEUtils.findIndexOf(this.$refs.refElTable.columns, item => item === column) : null })
-            }
-            isClearActive = clearActiveMethod(param)
-          }
-          if (isClearActive) {
-            this._validActiveCell().then(() => {
-              this._clearValidError(row)
-              this._clearActiveData()
-              this._restoreTooltip()
-              if (this.configs.mode === 'row') {
-                this.$emit('clear-active', row.data, evnt)
-              } else {
-                this.$emit('clear-active', row.data, column, cell, evnt)
-              }
-            }).catch(e => e)
-          }
-        }
-      } else {
-        this.isValidActivate = false
-        this.isManualActivate = false
-      }
-    },
     data (value) {
       if (!this.isEmitUpdateActivate) {
         if (value.length) {
@@ -211,6 +180,10 @@ export default {
   },
   created () {
     this._initial(this.data, true)
+    EventListening.on(this, 'click', evnt => this._triggerClear(evnt))
+  },
+  destroyed () {
+    EventListening.off(this, 'click')
   },
   methods: {
     /**************************/
@@ -374,6 +347,51 @@ export default {
     },
     _cellDBLclick (row, column, cell, event) {
       this._cellHandleEvent('dblclick', row, column, cell, event)
+    },
+    /**
+     * 监听处理点击表格外清除激活状态
+     */
+    _triggerClear (evnt) {
+      if (!this.isManualActivate && !this.isValidActivate && this.lastActive) {
+        if (this.configs.autoClearActive) {
+          let target = evnt.target
+          let clearActiveMethod = this.configs.clearActiveMethod
+          let { row, column, cell } = this.lastActive
+          let isClearActive = true
+          while (target && target.nodeType && target !== document) {
+            let trElem = cell.parentNode
+            if (this.configs.mode === 'row' ? target === trElem : target === cell) {
+              return
+            }
+            if (this.configs.mode === 'row' && this._hasClass(target, 'editable-row') && target.parentNode === trElem.parentNode) {
+              break
+            }
+            target = target.parentNode
+          }
+          if (clearActiveMethod) {
+            let param = { row: row.data, rowIndex: XEUtils.findIndexOf(this.tableData, item => item === row) }
+            if (this.configs.mode === 'cell') {
+              Object.assign(param, { column, columnIndex: this.$refs.refElTable ? XEUtils.findIndexOf(this.$refs.refElTable.columns, item => item === column) : null })
+            }
+            isClearActive = clearActiveMethod(param)
+          }
+          if (isClearActive) {
+            this._validActiveCell().then(() => {
+              this._clearValidError(row)
+              this._clearActiveData()
+              this._restoreTooltip()
+              if (this.configs.mode === 'row') {
+                this.$emit('clear-active', row.data, evnt)
+              } else {
+                this.$emit('clear-active', row.data, column, cell, evnt)
+              }
+            }).catch(e => e)
+          }
+        }
+      } else {
+        this.isValidActivate = false
+        this.isManualActivate = false
+      }
     },
     /**
      * 触发编辑事件

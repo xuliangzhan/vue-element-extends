@@ -141,17 +141,16 @@ edit-render 渲染参数配置
 
 😏步骤：
 
-1. 基于 ElementUI 2.x，依赖库 npm install vuex element-ui xe-utils
-2. 依赖 vuex 中的 globalClick 属性，该属性值为响应全局 click  事件 (具体实现方式可以参考 store.js)
-3. 将 Editable.vue 和 EditableColumn.vue 复制到自己项目中，（例：components 目录下），然后注册组件
+1. 基于 ElementUI 2.x，依赖库 npm install xe-utils
+2. 将 packages/editable/src 中的 editable.vue 和 editable-column.vue 复制到自己项目中，（例：components 目录下），然后注册组件
 
 😱编辑表格依赖组件中双向绑定的属性较多，渲染性能开销大，建议数据不要超过 200 行，使用分页加载😱  
 该组件不做发布，有需要都可以自行获取，也可以根据自己项目需求去做修改  
 如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
 
 ```javascript
-import Editable from '@/components/Editable.vue'
-import EditableColumn from '@/components/EditableColumn.vue'
+import Editable from '@/components/editable.vue'
+import EditableColumn from '@/components/editable-column.vue'
 
 Vue.component(Editable.name, Editable)
 Vue.component(EditableColumn.name, EditableColumn)

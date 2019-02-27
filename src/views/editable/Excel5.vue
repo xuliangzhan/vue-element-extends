@@ -50,7 +50,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 
 export default {
   data () {
@@ -160,6 +160,12 @@ export default {
       this.selectColumns = this.columnConfigs.filter(column => column.customDefault).map(column => column.prop)
     },
     saveCustomEvent () {
+      if (!this.selectColumns.length) {
+        return Message({
+          type: 'error',
+          message: '请至少选择一列！'
+        })
+      }
       this.dialogVisible = false
       this.columnConfigs.forEach(column => {
         column.customShow = this.selectColumns.includes(column.prop)

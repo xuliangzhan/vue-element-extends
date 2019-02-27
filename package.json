@@ -1,6 +1,7 @@
 {
   "name": "vue-element-extends",
-  "version": "0.0.1-beta.0",
+  "version": "0.1.0",
+  "description": "基于 ElementUI 2.x 的扩展组件：Editable.vue、EditableColumn.vue",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

@@ -12,12 +12,6 @@
   * 支持数据导出 .csv 文件
   * 支持原 ElTable 所有参数及功能
 
-![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable1.gif?raw=true)
-![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable2.gif?raw=true)
-![editable3](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable3.gif?raw=true)
-![editable4](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable4.gif?raw=true)
-![editable5](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable5.gif?raw=true)
-
 ## Docs
 
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)
@@ -60,134 +54,7 @@ Vue.use(VueElementExtends)
 
 ```
 
-## API
-
-### Editable Attributes
-
-```html
-<el-editable
-  ref="editable"
-  :edit-config="{trigger: 'click', mode: 'cell'}"
-  :edit-rules="{name: [{required: true, message: '请输入名称', trigger: 'blur'}]}">
-  <el-editable-column prop="name" label="名字" :edit-render="{name: 'ElInput'}"></el-editable-column>
-  <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
-</el-editable>
-```
-
-edit-rules 校验规则配置
-
-| 属性 | 描述 | 类型 | 可选值 | 默认值 |
-|------|------|-----|-----|-----|
-| required | 是否必填 | Boolean | — | — |
-| min  | 校验值最小长度（如果 type=number 则比较值大小） | Number | — | — |
-| max  | 校验值最大长度（如果 type=number 则比较值大小） | Number | — | — |
-| type | 类型校验 | String | number / string | string |
-| pattern | 正则校验 | RegExp | — | — |
-| validator  | 自定义校验方法 | Function(rule, value, callback) | — | — |
-| trigger  | 触发校验方式 | String | blur / change | blur |
-
-edit-config 编辑参数配置
-
-| 属性 | 描述 | 类型 | 可选值 | 默认值 |
-|------|------|-----|-----|-----|
-| trigger | 触发方式 | String | manual（手动触发方式，只能用于 mode=row） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
-| mode  | 编辑模式 | String | cell（单元格编辑模式） / row（行编辑模式） | cell |
-| showIcon | 是否显示列头编辑图标 | Boolean | — | true |
-| showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
-| activeMethod | 只对 type=default 的列有效，该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
-| clearActiveMethod | 该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定是否允许清除活动编辑 | Function | — | — |
-| useDefaultValidTip | 如果使用了数据校验和 fixed 列（因为 fixed 列也会被渲染，所以会导致同时出现多个校验提示），请设置为 true 使用默认提示  | Boolean | — | false |
-| validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
-| autoClearActive | 当点击其它地方后，自动清除最后活动行或列 | Boolean | — | true |
-| autoScrollIntoView | 当单元格被激活时，自动将单元格滚动到可视区域内 | Boolean | — | false |
-
-### Editable Events
-
-| 事件名 | 说明 | 参数 |
-|------|------|-----|
-| valid-error | 校验不通过时会触发该事件 | rule, row, column, cell |
-| edit-active | 激活编辑状态之后会触发该事件 | row, column, cell, event |
-| clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row[, column, cell]?, event |
-
-### Editable Methods
-
-| 方法名 | 描述 | 参数 |
-|------|------|-----|
-| reload | 初始化完整表格数据 | datas |
-| reloadRow | 初始化指定行数据 | row |
-| revert | 放弃更改，还原指定行 row 或者整个表格的数据 | row? |
-| insert | 新增一行新数据 | data |
-| insertAt | 第二个参数如果是 row 或 $index 则在指定位置新增一条数据，如果是 -1 则从最后新增一条数据 | data, rowOrIndex |
-| remove | 根据数据删除 | row |
-| removes | 根据多条数据删除 | rows |
-| removeByIndex | 根据行号删除某一行数据 | $index |
-| removeByIndexs | 根据多个行号删除多行数据 | $indexs |
-| removeSelecteds | 删除选中行数据 | — |
-| clear | 清空所有数据 | — |
-| clearActive | 清除所有活动行或列为不可编辑状态 | — |
-| hasActiveRow | 判断当前是否活动行 | row |
-| getActiveRow | 获取当前活动行或列的信息 | — |
-| setActiveRow | 只对 mode=row 有效，激活指定行行为可编辑状态 | row, preventDefault? |
-| setActiveCell | 只对 mode=cell 有效，激活指定某一行的单元格为可编辑状态 | row, prop?, preventDefault? |
-| hasRowChange | 检查行或列数据是否有改变 | row, prop? |
-| updateStatus | 更新单元格编辑状态（只对 showStatus=true 并且使用自定义渲染时，当值发生改变时才需要调用） | scope |
-| getAllRecords | 获取表格数据集合 | — |
-| getRecords | 获取表格数据，也可以指定索引获取某条数据 | index |
-| getInsertRecords | 获取新增数据 | — |
-| getRemoveRecords | 获取已删除数据 | — |
-| getUpdateRecords| 获取已修改数据 | — |
-| checkValid | 检测是否有校验不通过的列信息 | — |
-| validateRow | 对表格某一行进行校验的方法，参数为行数据和一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | row, callback |
-| validate | 对整个表格进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | callback |
-| exportCsv| 将表格数据导出为 .csv 文件，说明：支持IE9+、Edge、Chrome、Firefox 等常用浏览器。IE11以下可能存在中文乱码问题，部分浏览器需要手动修改后缀名为 .csv | options |
-| clearSelection | 用于多选表格，清空用户的选择 | — |
-| toggleRowSelection | 用于多选表格，切换某一行的选中状态，如果使用了第二个参数，则是设置这一行选中与否（selected 为 true 则选中） | row, selected |
-| toggleAllSelection | 用于多选表格，切换所有行的选中状态 | — |
-| toggleRowExpansion | 用于可展开表格，切换某一行的展开状态，如果使用了第二个参数，则是设置这一行展开与否（expanded 为 true 则展开） | row, expanded |
-| clearSort | 用于清空排序条件，数据会恢复成未排序的状态 | — |
-| clearFilter | 不传入参数时用于清空所有过滤条件，数据会恢复成未过滤的状态，也可传入由columnKey组成的数组以清除指定列的过滤条件 | — |
-| doLayout | 对 Table 进行重新布局。当 Table 或其祖先元素由隐藏切换为显示时，可能需要调用此方法 | — |
-
-### Editable-Column Attributes
-
-```html
-<el-editable-column prop="name" label="名字" :edit-render="{name: 'ElInput'}"></el-editable-column>
-```
-
-edit-render 渲染参数配置
-
-| 属性 | 描述 | 类型 | 可选值 | 默认值 |
-|------|------|-----|-----|-----|
-| name | 渲染内置的组件名称（如果是自定义渲染不需要传） | String | ElAutocomplete / ElInput / ElSelect / ElCascader / ElTimeSelect / ElTimePicker / ElDatePicker / ElInputNumber / ElSwitch / ElRate / ElColorPicker / ElSlider | ElInput |
-| type | 渲染类型 | String | default（组件触发后可视） / visible（组件一直可视） | default |
-| autofocus | 该单元格在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=editable-custom_input 才会自动获得焦点） | Boolean | — | — |
-| attrs | 渲染组件附加属性，参数请查看被渲染的 Component attrs | Object | — | {} |
-| events | 渲染组件附加事件，参数为 ( { rule, row, column, $index }, ...Component arguments ) | Object | — | {} |
-| options | 只对 name=ElSelect 有效，下拉组件选项列表 | Array | — | [] |
-| optionProps | 只对 name=ElSelect 有效，下拉组件选项属性参数配置 | Object | — | { value: 'value', label: 'label' } |
-
-### Editable-Column Scoped Slot
-
-| name | 说明 |
-|------|------|
-| — | 自定义渲染显示内容，参数为 { row, column, $index, editRender } |
-| edit | 自定义渲染组件，参数为 { row, column, $index, editRender } |
-| head | 自定义表头的内容，参数为 { column, $index, editRender } |
-| valid | 自定义校验提示信息，参数为 { rule, row, column, $index, editRender } |
-
-## Example
-
-😱编辑表格依赖组件中双向绑定的属性较多，渲染性能开销大，建议数据不要超过 200 行，使用分页加载😱  
-该组件不做发布，有需要都可以自行获取，也可以根据自己项目需求去做修改  
-如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
-
-```javascript
-import Vue from 'vue'
-import VueElementExtends from 'vue-element-extends'
-import 'vue-element-extends/lib/index.css'
-
-Vue.use(VueElementExtends)
-```
+## [Example](https://jsfiddle.net/xjq29w3d/)
 
 ```html
 <template>

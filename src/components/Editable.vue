@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import Vuex from 'vuex'
 import XEUtils from 'xe-utils'
 
 export default {
@@ -66,9 +65,10 @@ export default {
     }
   },
   computed: {
-    ...Vuex.mapGetters([
-      'globalClick'
-    ]),
+    globalClick () {
+      // 依赖 Vuex 中 getters 属性 globalClick
+      return this.$store && this.$store.getters.globalClick
+    },
     attrs () {
       return {
         class: ['editable', `editable_${this.configs.trigger}`, { 'editable_icon': this.configs.showIcon }],

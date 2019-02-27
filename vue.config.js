@@ -26,22 +26,22 @@ module.exports = {
     config.output
       .set('libraryExport', 'default')
       .set('library', 'VueElementExtends')
-    if (process.env.NODE_ENV === 'production') {
-      let XEUtils = {
-        root: 'XEUtils',
-        commonjs: 'xe-utils',
-        commonjs2: 'xe-utils',
-        amd: 'xe-utils'
-      }
-      if (config.has('externals')) {
-        config.externals
-          .set('xe-utils', XEUtils)
-      } else {
-        config
-          .set('externals', {
-            'xe-utils': XEUtils
-          })
-      }
-    }
+    // if (process.env.NODE_ENV === 'production') {
+    //   let XEUtils = {
+    //     root: 'XEUtils',
+    //     commonjs: 'xe-utils',
+    //     commonjs2: 'xe-utils',
+    //     amd: 'xe-utils'
+    //   }
+    //   if (config.has('externals')) {
+    //     config.externals
+    //       .set('xe-utils', XEUtils)
+    //   } else {
+    //     config
+    //       .set('externals', {
+    //         'xe-utils': XEUtils
+    //       })
+    //   }
+    // }
   }
 }

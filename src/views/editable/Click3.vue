@@ -60,9 +60,16 @@
       <el-editable-column prop="date3" label="任意时间点" width="160" sortable :edit-render="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>
       <el-editable-column prop="date2" label="选择日期范围1" width="250" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'daterange', pickerOptions: pickerOptions2, rangeSeparator: '至', startPlaceholder: '开始日期', endPlaceholder: '结束日期'}}"></el-editable-column>
       <el-editable-column prop="date7" label="选择日期范围2" width="380" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetimerange', pickerOptions: pickerOptions2, rangeSeparator: '到', startPlaceholder: '开始日期', endPlaceholder: '结束日期', align: 'right'}}"></el-editable-column>
+      <el-editable-column prop="order" label="el-autocomplete 自定义渲染" width="240" :formatter="formatterOrder" :edit-render="{type: 'default'}">
+        <template slot="edit" slot-scope="scope">
+          <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
+        </template>
+      </el-editable-column>
+      <el-editable-column prop="attr4" label="带输入建议" width="140" :edit-render="{name: 'ElAutocomplete', attrs: {fetchSuggestions: querySearchAsync}}"></el-editable-column>
+      <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', rows: 2}}"></el-editable-column>
       <el-editable-column prop="slider" label="滑块" width="200" :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" width="140" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="是否启用2" width="200" :edit-render="{type: 'visible'}">
+      <el-editable-column prop="flag" label="开关" width="140" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="flag2" label="单选" width="200" :edit-render="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-radio label="N" border>值1</el-radio>
@@ -70,7 +77,12 @@
           </el-radio-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="status" label="状态" width="160" :edit-render="{type: 'visible'}">
+      <el-editable-column prop="flag2" label="标签" width="200" :edit-render="{type: 'visible'}">
+        <template slot="edit" slot-scope="scope">
+          <el-tag type="success" v-for="(item, index) in scope.row.tag1" :key="index">{{ item }}</el-tag>
+        </template>
+      </el-editable-column>
+      <el-editable-column prop="status" label="多选" width="160" :edit-render="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-checkbox-group v-model="scope.row.status" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-checkbox-button label="success">成功</el-checkbox-button>
@@ -78,13 +90,6 @@
           </el-checkbox-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="order" label="el-autocomplete 自定义渲染" width="140" :formatter="formatterOrder" :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
-          <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
-        </template>
-      </el-editable-column>
-      <el-editable-column prop="attr4" label="带输入建议" width="140" :edit-render="{name: 'ElAutocomplete', attrs: {fetchSuggestions: querySearchAsync}}"></el-editable-column>
-      <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', rows: 2}}"></el-editable-column>
       <el-editable-column label="操作" width="160" fixed="left">
         <template slot-scope="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">

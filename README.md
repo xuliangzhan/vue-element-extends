@@ -12,11 +12,11 @@
   * 支持数据导出 .csv 文件
   * 支持原 ElTable 所有参数及功能
 
-![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable1.gif?raw=true)
-![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable2.gif?raw=true)
-![editable3](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable3.gif?raw=true)
-![editable4](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable4.gif?raw=true)
-![editable5](https://github.com/xuliangzhan/vue-element-extends/blob/master/src/assets/editable5.gif?raw=true)
+![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable1.gif?raw=true)
+![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable2.gif?raw=true)
+![editable3](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable3.gif?raw=true)
+![editable4](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable4.gif?raw=true)
+![editable5](https://github.com/xuliangzhan/vue-element-extends/blob/master/examples/assets/editable5.gif?raw=true)
 
 ## Docs
 

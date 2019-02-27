@@ -54,7 +54,7 @@ Vue.use(VueElementExtends)
 
 ```
 
-## [Example](https://jsfiddle.net/xjq29w3d/)
+## [Example](https://jsfiddle.net/xjq29w3d/1/)
 
 ```html
 <template>

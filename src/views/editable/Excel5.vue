@@ -33,7 +33,7 @@
       </template>
     </el-editable>
 
-    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="700px" append-to-body @open="openCustomEvent">
+    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
       <el-transfer
         v-model="selectColumns"
         :data="columnConfigs"

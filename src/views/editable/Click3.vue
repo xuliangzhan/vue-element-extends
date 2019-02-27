@@ -77,7 +77,7 @@
           </el-radio-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="flag2" label="标签" width="200" :edit-render="{type: 'visible'}">
+      <el-editable-column prop="tag1" label="标签" width="200" :edit-render="{type: 'visible'}">
         <template slot="edit" slot-scope="scope">
           <el-tag type="success" v-for="(item, index) in scope.row.tag1" :key="index">{{ item }}</el-tag>
         </template>

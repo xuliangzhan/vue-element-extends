@@ -49,7 +49,7 @@
       :total="pageVO.totalResult">
     </el-pagination>
 
-    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="700px" append-to-body @open="openCustomEvent">
+    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
       <el-transfer
         filterable
         v-model="selectColumns"

@@ -1,17 +1,28 @@
 {
   "name": "vue-element-extends",
-  "version": "0.0.15",
-  "private": true,
+  "version": "0.0.1-beta.0",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lib": "vue-cli-service build --target lib --name index --dest lib packages/index.js"
   },
+  "files": [
+    "lib",
+    "packages"
+  ],
+  "main": "lib/index.common.js",
+  "style": "lib/index.css",
+  "unpkg": "lib/index.umd.min.js",
   "dependencies": {
     "element-ui": "^2.4.5",
     "font-awesome": "^4.7.0",
     "vue": "^2.5.22",
     "vue-router": "^3.0.1",
+    "xe-utils": "^1.8.8"
+  },
+  "peerDependencies": {
+    "element-ui": "^>=2.1.0",
     "xe-utils": "^1.8.8"
   },
   "devDependencies": {
@@ -29,6 +40,22 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^5.0.0",
     "vue-cli-plugin-element": "^1.0.1",
-    "vue-template-compiler": "^2.5.21"
-  }
+    "vue-template-compiler": "^2.5.22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xuliangzhan/vue-element-extends.git"
+  },
+  "keywords": [
+    "vue-element-extends"
+  ],
+  "author": {
+    "name": "Xu Liangzhan",
+    "email": "xu_liangzhan@163.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xuliangzhan/vue-element-extends/issues"
+  },
+  "homepage": "https://github.com/xuliangzhan/vue-element-extends#readme"
 }

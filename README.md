@@ -22,6 +22,44 @@
 
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)
 
+## Installing
+
+```javascript
+npm install xe-utils vue-element-extends --save
+```
+
+[Using unpkg](https://unpkg.com/vue-element-extends/)
+
+```HTML
+<script src="https://unpkg.com/vue-element-extends/lib/index.umd.min.js"></script>
+```
+
+Using requirejs
+
+```javascript
+// require 配置
+require.config({
+  paths: {
+    // ...,
+    'vue-element-extends': './vue-element-extends/lib/index.umd.min'
+  }
+})
+define(['vue', 'vue-element-extends'], function (Vue, VueElementExtends) {
+  Vue.use(VueElementExtends)
+})
+```
+
+### ES6 Module import
+
+```javascript
+import Vue from 'vue'
+import VueElementExtends from 'vue-element-extends'
+import 'vue-element-extends/lib/index.css'
+
+Vue.use(VueElementExtends)
+
+```
+
 ## API
 
 ### Editable Attributes
@@ -139,21 +177,16 @@ edit-render 渲染参数配置
 
 ## Example
 
-😏步骤：
-
-1. 基于 ElementUI 2.x，依赖库 npm install xe-utils
-2. 将 packages/editable/src 中的 editable.vue 和 editable-column.vue 复制到自己项目中，（例：components 目录下），然后注册组件
-
 😱编辑表格依赖组件中双向绑定的属性较多，渲染性能开销大，建议数据不要超过 200 行，使用分页加载😱  
 该组件不做发布，有需要都可以自行获取，也可以根据自己项目需求去做修改  
 如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
 
 ```javascript
-import Editable from '@/components/editable.vue'
-import EditableColumn from '@/components/editable-column.vue'
+import Vue from 'vue'
+import VueElementExtends from 'vue-element-extends'
+import 'vue-element-extends/lib/index.css'
 
-Vue.component(Editable.name, Editable)
-Vue.component(EditableColumn.name, EditableColumn)
+Vue.use(VueElementExtends)
 ```
 
 ```html

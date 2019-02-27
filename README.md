@@ -1,5 +1,10 @@
 # vue-element-extends
 
+[![npm version](https://img.shields.io/npm/v/vue-element-extends.svg?style=flat-square)](https://www.npmjs.org/package/vue-element-extends)
+[![npm build](https://travis-ci.org/xuliangzhan/vue-element-extends.svg?branch=master)](https://travis-ci.org/xuliangzhan/vue-element-extends)
+[![npm downloads](https://img.shields.io/npm/dm/vue-element-extends.svg?style=flat-square)](http://npm-stat.com/charts.html?package=vue-element-extends)
+[![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xuliangzhan/vue-element-extends/blob/master/LICENSE)
+
 * 功能点：
   * 支持只读、单元格编辑、整行编辑
   * 支持手动、单击、双击编辑模式

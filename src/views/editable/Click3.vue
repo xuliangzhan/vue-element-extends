@@ -32,22 +32,24 @@
       style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
-      <el-editable-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" inline>
-            <el-form-item label="名称">
-              <span>{{ props.row.name }}</span>
-            </el-form-item>
-            <el-form-item label="描述">
-              <span>{{ props.row.desc }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
+      <el-editable-column prop="sex" label="单选下拉" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}}"></el-editable-column>
+      <el-editable-column prop="attr6" label="多选下拉" width="200" :edit-render="{name: 'ElSelect', options: attrOptions, attrs: {multiple: true}}"></el-editable-column>
+      <el-editable-column prop="attr7" label="多选下拉" width="200" :edit-render="{name: 'ElSelect', options: attrOptions, attrs: {multiple: true, collapseTags: true}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {clearable: true, options: regionList, separator: '-'}}"></el-editable-column>
+      <el-editable-column prop="attr8" label="ElSelect 自定义显示内容" width="200" :edit-render="{name: 'ElSelect', options: attrOptions, attrs: {multiple: true, collapseTags: true}}">
+        <template slot-scope="scope">{{ getAttr8Label(scope.row.attr8) }}</template>
       </el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}}"></el-editable-column>
-      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="300" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
+      <el-editable-column prop="name" label="textarea 自定义渲染" min-width="200" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
         <template slot="edit" slot-scope="scope">
           <textarea class="editable-custom_input" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)"></textarea>
+        </template>
+      </el-editable-column>
+      <el-editable-column prop="nickname" label="textarea 自定义渲染和内容" min-width="200" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
+        <template slot="edit" slot-scope="scope">
+          <textarea class="editable-custom_input" v-model="scope.row.nickname" @input="$refs.editable.updateStatus(scope)"></textarea>
+        </template>
+        <template slot-scope="scope">
+          <span>自定义内容：{{ scope.row.nickname }}</span>
         </template>
       </el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
@@ -76,7 +78,7 @@
           </el-checkbox-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="order" label="自定义渲染" width="140" :formatter="formatterOrder" :edit-render="{type: 'default'}">
+      <el-editable-column prop="order" label="el-autocomplete 自定义渲染" width="140" :formatter="formatterOrder" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
         </template>
@@ -113,6 +115,20 @@ export default {
       loading: false,
       sexList: [],
       regionList: [],
+      attrOptions: [
+        {
+          value: '111',
+          label: '值1'
+        },
+        {
+          value: '222',
+          label: '值2'
+        },
+        {
+          value: '333',
+          label: '值3'
+        }
+      ],
       orderDataList: [
         {
           value: '136'
@@ -182,6 +198,12 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    getAttr8Label (value) {
+      return value.map(value => {
+        let selectItem = this.attrOptions.find(item => item.value === value)
+        return selectItem ? selectItem.value : null
+      }).join(' / ')
     },
     insertEvent (index) {
       let row = this.$refs.editable.insertAt({ name: '默认名字1', age: 26 }, index)

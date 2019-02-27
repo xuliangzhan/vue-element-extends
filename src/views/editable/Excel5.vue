@@ -33,17 +33,17 @@
       </template>
     </el-editable>
 
-    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
-      <ul class="custom-wrapper">
-        <li v-for="(item, index) in columnConfigs" :key="index">
-          <el-checkbox v-model="item.customChecked">{{ item.label }}</el-checkbox>
-        </li>
-      </ul>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="resetCustomEvent">重 置</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
-      </span>
+    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="700px" append-to-body @open="openCustomEvent">
+      <el-transfer
+        v-model="selectColumns"
+        :data="columnConfigs"
+        :titles="['隐藏列', '显示列']"
+        :props="{key: 'prop', label: 'label'}"></el-transfer>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="resetCustomEvent">重 置</el-button>
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
+        </span>
     </el-dialog>
   </div>
 </template>
@@ -71,6 +71,7 @@ export default {
     }
     return {
       dialogVisible: false,
+      selectColumns: [],
       list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach((name, index) => {
@@ -82,7 +83,6 @@ export default {
         let defaultShow = index < 20
         let column = {
           customDefault: defaultShow,
-          customChecked: defaultShow,
           customShow: defaultShow,
           prop: name.toLowerCase(),
           label: name,
@@ -154,19 +154,15 @@ export default {
       MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` }).catch(e => e)
     },
     openCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.customChecked = column.customShow
-      })
+      this.selectColumns = this.columnConfigs.filter(column => column.customShow).map(column => column.prop)
     },
     resetCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.customChecked = column.customDefault
-      })
+      this.selectColumns = this.columnConfigs.filter(column => column.customDefault).map(column => column.prop)
     },
     saveCustomEvent () {
       this.dialogVisible = false
       this.columnConfigs.forEach(column => {
-        column.customShow = column.customChecked
+        column.customShow = this.selectColumns.includes(column.prop)
       })
     }
   }

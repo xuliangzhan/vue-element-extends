@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import Vuex from 'vuex'
 import XEUtils from 'xe-utils'
 
 export default {
@@ -66,7 +66,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
+    ...Vuex.mapGetters([
       'globalClick'
     ]),
     attrs () {

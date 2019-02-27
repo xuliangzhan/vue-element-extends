@@ -49,17 +49,20 @@
       :total="pageVO.totalResult">
     </el-pagination>
 
-    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
-      <ul class="custom-wrapper">
-        <li v-for="(item, index) in columnConfigs" :key="index">
-          <el-checkbox v-model="item.customChecked">{{ item.label }}</el-checkbox>
-        </li>
-      </ul>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="resetCustomEvent">重 置</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
-      </span>
+    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="700px" append-to-body @open="openCustomEvent">
+      <el-transfer
+        filterable
+        v-model="selectColumns"
+        :data="columnConfigs"
+        :titles="['隐藏列', '显示列']"
+        :props="{key: 'prop', label: 'label'}"
+        :filter-method="filterColumnMethod"
+        filter-placeholder="请输入列"></el-transfer>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="resetCustomEvent">重 置</el-button>
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
+        </span>
     </el-dialog>
   </div>
 </template>
@@ -78,6 +81,7 @@ export default {
       loading: false,
       dialogVisible: false,
       columnConfigs: [],
+      selectColumns: [],
       sexList: [],
       regionList: [],
       pageVO: {
@@ -101,7 +105,6 @@ export default {
           this.columnConfigs = data.map(column => {
             let defaultShow = ['name', 'region', 'rate'].includes(column.prop)
             column.customDefault = defaultShow
-            column.customChecked = defaultShow
             column.customShow = defaultShow
             switch (column.prop) {
               case 'sex':
@@ -173,20 +176,19 @@ export default {
         this.findList()
       })
     },
+    filterColumnMethod (query, item) {
+      return item.label.indexOf(query) > -1
+    },
     openCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.customChecked = column.customShow
-      })
+      this.selectColumns = this.columnConfigs.filter(column => column.customShow).map(column => column.prop)
     },
     resetCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.customChecked = column.customDefault
-      })
+      this.selectColumns = this.columnConfigs.filter(column => column.customDefault).map(column => column.prop)
     },
     saveCustomEvent () {
       this.dialogVisible = false
       this.columnConfigs.forEach(column => {
-        column.customShow = column.customChecked
+        column.customShow = this.selectColumns.includes(column.prop)
       })
     },
     getInsertEvent () {

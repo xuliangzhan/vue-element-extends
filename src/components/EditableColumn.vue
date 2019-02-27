@@ -277,11 +277,17 @@ export default {
       return this.getRowIdentity(scope.row, scope.column)
     },
     getSelectLabel ({ row, column }) {
+      let attrs = this.renderOpts.attrs || {}
       let labelProp = this.renderOpts.optionProps.label
       let valueProp = this.renderOpts.optionProps.value
       let value = this.getRowIdentity(row, column)
-      let selectItem = this.renderOpts.options.find(item => item[valueProp] === value)
-      return selectItem ? selectItem[labelProp] : null
+      if (value) {
+        return (attrs.multiple ? value : [value]).map(value => {
+          let selectItem = this.renderOpts.options.find(item => item[valueProp] === value)
+          return selectItem ? selectItem[labelProp] : null
+        }).join(';')
+      }
+      return null
     },
     matchCascaderData (values, index, list, labels) {
       let val = values[index]

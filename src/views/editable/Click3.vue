@@ -1,6 +1,5 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少5个字符）</p>
     <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
 
     <p>
@@ -11,7 +10,7 @@
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
-      <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
+      <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
       <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
       <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
       <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
@@ -27,11 +26,22 @@
       size="medium"
       @select="selectEvent"
       @current-change="currentChangeEvent"
-      :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, useDefaultValidTip: true, autoScrollIntoView: true}"
       style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
+      <el-editable-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline>
+            <el-form-item label="名称">
+              <span>{{ props.row.name }}</span>
+            </el-form-item>
+            <el-form-item label="描述">
+              <span>{{ props.row.desc }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-editable-column>
       <el-editable-column prop="sex" label="单选下拉" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}}"></el-editable-column>
       <el-editable-column prop="attr6" label="多选下拉" width="200" :edit-render="{name: 'ElSelect', options: attrOptions, attrs: {multiple: true}}"></el-editable-column>
       <el-editable-column prop="attr7" label="多选下拉" width="200" :edit-render="{name: 'ElSelect', options: attrOptions, attrs: {multiple: true, collapseTags: true}}"></el-editable-column>
@@ -173,13 +183,7 @@ export default {
           text: '22',
           value: 22
         }
-      ],
-      validRules: {
-        name: [
-          { required: true, message: '请输入名称', trigger: 'change' },
-          { min: 3, message: '名称长度最小 5 个字符', trigger: 'change' }
-        ]
-      }
+      ]
     }
   },
   created () {

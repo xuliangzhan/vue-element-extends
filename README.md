@@ -50,8 +50,6 @@ import VueElementExtends from 'vue-element-extends'
 import 'vue-element-extends/lib/index.css'
 
 Vue.use(VueElementExtends)
-
-// 或者直接将 packages/editable/src 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，也可以根据自己项目需求去做修改
 ```
 
 ## API
@@ -174,6 +172,7 @@ edit-render 渲染参数配置
 [Run this demo on jsfiddle.net](https://jsfiddle.net/1yu8e37L/)
 
 😱编辑表格组件中涉及双向绑定的属性较多，渲染性能开销大，建议数据不要超过 200 行，使用分页加载😱  
+也可以把 packages/* 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，再根据自己项目需求去做修改  
 如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
 
 ```html

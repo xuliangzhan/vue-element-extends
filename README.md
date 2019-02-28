@@ -165,7 +165,7 @@ edit-render 渲染参数配置
 
 ## Example
 
-[Run this demo on jsfiddle.net](https://jsfiddle.net/xjq29w3d/3/)
+[Run this demo on jsfiddle.net](https://jsfiddle.net/fmwrptdo/)
 
 ```html
 <template>

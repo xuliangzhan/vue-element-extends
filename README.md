@@ -25,7 +25,7 @@
 
 ## Installing
 
-```javascript
+```shell
 npm install xe-utils vue-element-extends --save
 ```
 

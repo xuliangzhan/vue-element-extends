@@ -176,7 +176,7 @@ edit-render 渲染参数配置
 
 ## Example
 
-[在线运行](https://jsfiddle.net/xjq29w3d/1/)
+[前往 jsfiddle.net 运行此示例](https://jsfiddle.net/xjq29w3d/3/)
 
 ```html
 <template>
@@ -184,17 +184,15 @@ edit-render 渲染参数配置
     <el-button @click="$refs.editable.insert({name: 'new1'})">新增</el-button>
     <el-button @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button @click="$refs.editable.clear()">清空</el-button>
-    <el-editable ref="editable" :data.sync="list">
+    <el-editable ref="editable" :data.sync="tableData">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字（只读）"></el-editable-column>
+      <el-editable-column prop="name" label="只读"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="出生日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否生效" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
-      <el-editable-column prop="remark" label="备注" :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="age" label="数值" :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
+      <el-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="flag" label="开关" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="remark" label="文本" :edit-render="{name: 'ElInput'}"></el-editable-column>
     </el-editable>
   </div>
 </template>
@@ -203,49 +201,22 @@ edit-render 渲染参数配置
 export default {
   data () {
     return {
+      tableData: [{
+        date: 1551322088449,
+        name: '小徐',
+        sex: '1',
+        age: '26',
+        flag: false,
+        remark: '备注'
+      }],
       sexList: [
         {
-          label: '男',
-          value: '1'
+          'label': '男',
+          'value': '1'
         },
         {
-          label: '女',
-          value: '0'
-        }
-      ],
-      regionList: [
-        {
-          value: 'gds',
-          label: '广东省',
-          children: [
-            {
-              value: 'szs',
-              label: '深圳市',
-              children: [
-                {
-                  value: 'lgq',
-                  label: '龙岗区'
-                },
-                {
-                  value: 'nsq',
-                  label: '南山区'
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      list: [
-        {
-          name: 'test11',
-          height: 176,
-          age: 26,
-          sex: '1',
-          region: null,
-          birthdate: new Date(1994, 0, 1),
-          date1: new Date(2019, 0, 1, 20, 0, 30),
-          remark: '备注1',
-          flag: false
+          'label': '女',
+          'value': '0'
         }
       ]
     }

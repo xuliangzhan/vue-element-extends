@@ -50,13 +50,14 @@ define(['vue', 'vue-element-extends'], function (Vue, VueElementExtends) {
 
 ### ES6 Module import
 
+通过 npm 方式注册或者直接将 packages/editable/src 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册
+
 ```javascript
 import Vue from 'vue'
 import VueElementExtends from 'vue-element-extends'
 import 'vue-element-extends/lib/index.css'
 
 Vue.use(VueElementExtends)
-
 ```
 
 ## API

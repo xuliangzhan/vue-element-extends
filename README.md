@@ -51,7 +51,7 @@ import 'vue-element-extends/lib/index.css'
 
 Vue.use(VueElementExtends)
 
-// 或者直接将 packages/editable/src 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册
+// 或者直接将 packages/editable/src 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，也可以根据自己项目需求去做修改
 ```
 
 ## API

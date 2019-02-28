@@ -41,8 +41,6 @@ npm install xe-utils vue-element-extends --save
 <script src="https://unpkg.com/vue-element-extends/lib/index.umd.min.js"></script>
 ```
 
-### Import
-
 ```javascript
 import Vue from 'vue'
 import VueElementExtends from 'vue-element-extends'

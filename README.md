@@ -165,7 +165,7 @@ edit-render 渲染参数配置
 
 ## Example
 
-[Run this demo on jsfiddle.net](https://jsfiddle.net/fmwrptdo/)
+[Run this demo on jsfiddle.net](https://jsfiddle.net/1yu8e37L/)
 
 ```html
 <template>
@@ -177,7 +177,7 @@ edit-render 渲染参数配置
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="只读"></el-editable-column>
-      <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="sex" label="下拉" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="数值" :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
       <el-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="flag" label="开关" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>

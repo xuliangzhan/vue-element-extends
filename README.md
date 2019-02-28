@@ -30,27 +30,11 @@ npm install xe-utils vue-element-extends --save
 [Using unpkg](https://unpkg.com/vue-element-extends/)
 
 ```HTML
+<link rel="stylesheet" href="https://unpkg.com/vue-element-extends/lib/index.css">
 <script src="https://unpkg.com/vue-element-extends/lib/index.umd.min.js"></script>
 ```
 
-Using requirejs
-
-```javascript
-// require 配置
-require.config({
-  paths: {
-    // ...,
-    'vue-element-extends': './vue-element-extends/lib/index.umd.min'
-  }
-})
-define(['vue', 'vue-element-extends'], function (Vue, VueElementExtends) {
-  Vue.use(VueElementExtends)
-})
-```
-
 ### ES6 Module import
-
-通过 npm 方式注册或者直接将 packages/editable/src 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册
 
 ```javascript
 import Vue from 'vue'
@@ -58,6 +42,8 @@ import VueElementExtends from 'vue-element-extends'
 import 'vue-element-extends/lib/index.css'
 
 Vue.use(VueElementExtends)
+
+// 或者直接将 packages/editable/src 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册
 ```
 
 ## API

@@ -34,7 +34,7 @@ npm install xe-utils vue-element-extends --save
 <script src="https://unpkg.com/vue-element-extends/lib/index.umd.min.js"></script>
 ```
 
-### ES6 Module import
+### Import
 
 ```javascript
 import Vue from 'vue'
@@ -54,9 +54,9 @@ Vue.use(VueElementExtends)
 <el-editable
   ref="editable"
   :edit-config="{trigger: 'click', mode: 'cell'}"
-  :edit-rules="{name: [{required: true, message: '请输入名称', trigger: 'blur'}]}">
-  <el-editable-column prop="name" label="名字" :edit-render="{name: 'ElInput'}"></el-editable-column>
-  <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
+  :edit-rules="{name: [{required: true, message: 'Please enter a name.', trigger: 'blur'}]}">
+  <el-editable-column prop="name" label="Name" :edit-render="{name: 'ElInput'}"></el-editable-column>
+  <el-editable-column prop="age" label="Age" :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
 </el-editable>
 ```
 
@@ -137,7 +137,7 @@ edit-config 编辑参数配置
 ### Editable-Column Attributes
 
 ```html
-<el-editable-column prop="name" label="名字" :edit-render="{name: 'ElInput'}"></el-editable-column>
+<el-editable-column prop="name" label="Name" :edit-render="{name: 'ElInput'}"></el-editable-column>
 ```
 
 edit-render 渲染参数配置
@@ -163,7 +163,7 @@ edit-render 渲染参数配置
 
 ## Example
 
-[前往 jsfiddle.net 运行此示例](https://jsfiddle.net/xjq29w3d/3/)
+[Run this demo on jsfiddle.net](https://jsfiddle.net/xjq29w3d/3/)
 
 ```html
 <template>

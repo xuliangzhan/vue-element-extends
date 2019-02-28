@@ -25,7 +25,7 @@
   },
   "peerDependencies": {
     "element-ui": "^>=2.1.0",
-    "xe-utils": "^1.8.8"
+    "xe-utils": "^>=1.8.8"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",

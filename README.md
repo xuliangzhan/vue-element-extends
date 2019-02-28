@@ -212,3 +212,7 @@ export default {
 </script>
 
 ```
+
+## License
+
+Copyright (c) 2017-present, Xu Liangzhan

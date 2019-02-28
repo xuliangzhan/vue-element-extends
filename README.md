@@ -174,7 +174,9 @@ edit-render 渲染参数配置
 | head | 自定义表头的内容，参数为 { column, $index, editRender } |
 | valid | 自定义校验提示信息，参数为 { rule, row, column, $index, editRender } |
 
-## [Example](https://jsfiddle.net/xjq29w3d/1/)
+## Example
+
+[在线运行](https://jsfiddle.net/xjq29w3d/1/)
 
 ```html
 <template>

@@ -4,13 +4,13 @@
   </el-table-column>
   <el-table-column v-else-if="type === 'index'" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="getHeadScope(scope)">#</slot>
+      <slot name="header" v-bind="getHeadScope(scope)">#</slot>
     </template>
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="type === 'expand'" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="getHeadScope(scope)"></slot>
+      <slot name="header" v-bind="getHeadScope(scope)"></slot>
     </template>
     <template slot-scope="scope">
       <slot v-bind="getRowScope(scope)"></slot>
@@ -18,7 +18,7 @@
   </el-table-column>
   <el-table-column v-else-if="editRender" v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="getHeadScope(scope)">
+      <slot name="header" v-bind="getHeadScope(scope)">
         <i v-if="checkRequired(scope)" class="editable-required-icon"></i>
         <i v-if="checkIcon(scope)" class="el-icon-edit-outline editable-header-icon"></i>
         {{ scope.column.label }}
@@ -64,7 +64,7 @@
   </el-table-column>
   <el-table-column v-else v-bind="attrs">
     <template slot="header" slot-scope="scope">
-      <slot name="head" v-bind="getHeadScope(scope)">{{ scope.column.label }}</slot>
+      <slot name="header" v-bind="getHeadScope(scope)">{{ scope.column.label }}</slot>
     </template>
     <template slot-scope="scope">
       <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>

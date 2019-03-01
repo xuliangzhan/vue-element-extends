@@ -1,6 +1,9 @@
 <template>
   <el-table ref="refElTable" v-bind="attrs" v-on="events">
     <slot></slot>
+    <template slot="append">
+      <slot name="append"></slot>
+    </template>
   </el-table>
 </template>
 
@@ -168,6 +171,9 @@ export default {
     EventListening.off(this, 'click')
   },
   methods: {
+    aaa (a) {
+      debugger
+    },
     /**************************/
     /* Original methods statrt */
     /**************************/
@@ -194,6 +200,9 @@ export default {
     },
     doLayout () {
       this.$nextTick(() => this.$refs.refElTable.doLayout())
+    },
+    sort (prop, order) {
+      this.$nextTick(() => this.$refs.refElTable.sort(prop, order))
     },
     insert (newRecord) {
       return this.insertAt(newRecord, 0)
@@ -728,6 +737,7 @@ export default {
       row.validRule = null
       row.validActive = null
       this.isValidActivate = false
+      this.isManualActivate = false
     },
     _toValidError (rule, row, column, cell) {
       row.validRule = rule

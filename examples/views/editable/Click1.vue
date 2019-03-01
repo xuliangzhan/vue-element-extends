@@ -29,6 +29,7 @@
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
       </el-editable-column>
+      <template slot="append">ffff</template>
     </el-editable>
   </div>
 </template>

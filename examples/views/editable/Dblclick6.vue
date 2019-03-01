@@ -28,21 +28,21 @@
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, validTooltip: { disabled: true }}"
       style="width: 100%">
       <el-editable-column type="index" width="55">
-        <template slot="head">
+        <template slot="header">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
       </el-editable-column>
       <template v-for="(item, index) in columnConfigs">
         <template v-if="item.customShow">
           <el-editable-column v-if="index === 0" :key="index" v-bind="item">
-            <template slot="head" slot-scope="scope">
+            <template slot="header" slot-scope="scope">
               <i class="editable-required-icon"></i>
               <i class="el-icon-edit editable-header-icon"></i>
               {{ scope.column.label }}
             </template>
           </el-editable-column>
           <el-editable-column v-else-if="item.prop === 'attr4'" :key="index" v-bind="item">
-            <template slot="head" slot-scope="scope">
+            <template slot="header" slot-scope="scope">
               <i class="editable-required-icon"></i>
               {{ scope.column.label }}
               <el-tooltip class="item" placement="top">
@@ -52,7 +52,7 @@
             </template>
           </el-editable-column>
           <el-editable-column v-else-if="item.prop === 'attr5'" :key="index" v-bind="item">
-            <template slot="head" slot-scope="scope">
+            <template slot="header" slot-scope="scope">
               {{ scope.column.label }}
               <el-tooltip class="item" content="说明：attr5字段为自定义列头" placement="top">
                 <i class="el-icon-warning"></i>
@@ -60,7 +60,7 @@
             </template>
           </el-editable-column>
           <el-editable-column v-else :key="index" v-bind="item">
-            <template slot="head" slot-scope="scope">
+            <template slot="header" slot-scope="scope">
               <i class="el-icon-edit editable-header-icon"></i>
               {{ scope.column.label }}
             </template>

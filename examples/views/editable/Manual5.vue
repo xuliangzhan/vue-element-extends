@@ -29,7 +29,7 @@
       @row-click="rowClickEvent"
       style="width: 100%">
       <el-editable-column class-name="tree-operate-node" width="200">
-        <template slot="head">
+        <template slot="header">
           <el-checkbox v-model="treeAllCheck" :indeterminate="treeAllIndeterminate" @change="treeAllChange(treeAllCheck)"></el-checkbox>
         </template>
         <template slot-scope="scope">

@@ -27,7 +27,7 @@
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, validTooltip: { placement: 'right', popperClass: 'dbl3-validtip' }}"
       style="width: 100%" >
       <el-editable-column type="index" width="55">
-        <template slot="head">
+        <template slot="header">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
       </el-editable-column>

@@ -2,7 +2,7 @@
   <el-table ref="refElTable" v-bind="attrs" v-on="events">
     <slot></slot>
     <template slot="append">
-      <slot name="append"></slot>
+      <slot name="append" v-bind="{editConfig: configs}"></slot>
     </template>
   </el-table>
 </template>

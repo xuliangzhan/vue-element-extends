@@ -134,6 +134,12 @@ edit-config 编辑参数配置
 
 ### Editable-Column Attributes
 
+### Editable-Column Scoped Slot
+
+| name | 说明 |
+|------|------|
+| append | 插入至表格最后一行之后的内容，如果需要对表格的内容进行无限滚动操作，可能需要用到这个 slot。若表格有合计行，该 slot 会位于合计行之上，参数为 { editConfig } |
+
 ```html
 <el-editable-column prop="name" label="Name" :edit-render="{name: 'ElInput'}"></el-editable-column>
 ```

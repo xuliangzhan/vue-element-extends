@@ -20,7 +20,7 @@
     "font-awesome": "^4.7.0",
     "vue": "^2.5.22",
     "vue-router": "^3.0.1",
-    "xe-utils": "^1.8.8"
+    "xe-utils": "^1.8.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",

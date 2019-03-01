@@ -414,6 +414,7 @@ export default {
         this.isClearlActivate = false
         this.$emit(`cell-${type}`, row.data, column, cell, event)
       }
+      this.isManualActivate = false
     },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)
@@ -726,6 +727,7 @@ export default {
       row.showValidMsg = false
       row.validRule = null
       row.validActive = null
+      this.isValidActivate = false
     },
     _toValidError (rule, row, column, cell) {
       row.validRule = rule
@@ -978,6 +980,7 @@ export default {
     /**
      * 激活指定某一行的单元格为可编辑状态
      * 只有当指定为 mode='cell' 模式时有效
+     * 如果 preventDefault=false 不阻止 clearActive 行为
      */
     setActiveCell (record, prop, preventDefault) {
       if (this.configs.mode === 'cell') {
@@ -1021,6 +1024,7 @@ export default {
             this._toValidError(rule, row, column, cell)
           })
         }
+        this.isManualActivate = false
       })
     },
     checkValid () {

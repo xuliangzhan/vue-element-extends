@@ -154,7 +154,7 @@ export default {
     },
     loadList () {
       this.loading = true
-      this.getDataJSON().then(({ page, result }) => {
+      return this.getDataJSON().then(({ page, result }) => {
         this.pageVO.totalResult = page.total
         this.$refs.editable.reload(result)
         this.loading = false

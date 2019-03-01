@@ -18,7 +18,7 @@
   * 支持显示单元格值的修改状态
   * 支持增/删/改/查/还原
   * 支持导出 .csv 文件
-  * 支持原 ElTable 所有参数及功能
+  * 支持原 ElTable 的所有参数、方法、插槽
 
 ![editable1](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/img/editable1.gif)
 ![editable2](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/img/editable2.gif)

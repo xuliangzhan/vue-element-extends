@@ -2,7 +2,7 @@
   <el-table ref="refElTable" v-bind="attrs" v-on="events">
     <slot></slot>
     <template slot="append">
-      <slot name="append" v-bind="{editConfig: configs}"></slot>
+      <slot name="append"></slot>
     </template>
   </el-table>
 </template>
@@ -171,9 +171,6 @@ export default {
     EventListening.off(this, 'click')
   },
   methods: {
-    aaa (a) {
-      debugger
-    },
     /**************************/
     /* Original methods statrt */
     /**************************/

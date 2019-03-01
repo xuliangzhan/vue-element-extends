@@ -395,6 +395,8 @@ export default {
   border: 5px solid;
   border-color: transparent #f56c6c transparent transparent;
   -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
 .editable .editable-column .cell > .edit-input,

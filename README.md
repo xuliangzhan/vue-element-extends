@@ -170,7 +170,7 @@ edit-render 渲染参数配置
 
 😱编辑表格组件中涉及双向绑定的属性较多，渲染性能开销大，建议数据不要超过 200 行，使用分页加载😱  
 也可以把 packages/* 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，再根据自己项目需求去做修改  
-如果有更好优化建议或遇到问题欢迎提 Issues 和讨论
+如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed) 和讨论
 
 ```html
 <template>

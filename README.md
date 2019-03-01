@@ -20,11 +20,11 @@
   * 支持导出 .csv 文件
   * 支持原 ElTable 所有参数及功能
 
-![editable1](https://github.com/xuliangzhan/vue-element-extends/blob/master/docs/img/editable1.gif?raw=true)
-![editable2](https://github.com/xuliangzhan/vue-element-extends/blob/master/docs/img/editable2.gif?raw=true)
-![editable3](https://github.com/xuliangzhan/vue-element-extends/blob/master/docs/img/editable3.gif?raw=true)
-![editable4](https://github.com/xuliangzhan/vue-element-extends/blob/master/docs/img/editable4.gif?raw=true)
-![editable5](https://github.com/xuliangzhan/vue-element-extends/blob/master/docs/img/editable5.gif?raw=true)
+![editable1](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/img/editable1.gif)
+![editable2](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/img/editable2.gif)
+![editable3](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/img/editable3.gif)
+![editable4](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/img/editable4.gif)
+![editable5](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/img/editable5.gif)
 
 ## Docs
 

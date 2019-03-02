@@ -30,6 +30,7 @@
           </el-popover>
         </template>
       </el-editable-column>
+      <template slot="append">底部内容插槽</template>
     </el-editable>
   </div>
 </template>

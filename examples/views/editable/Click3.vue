@@ -44,11 +44,15 @@
       </el-editable-column>
       <el-editable-column prop="sex" label="单选下拉" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}}"></el-editable-column>
       <el-editable-column prop="attr6" label="多选下拉" width="200" :edit-render="{name: 'ElSelect', options: attrOptions, attrs: {multiple: true}}"></el-editable-column>
-      <el-editable-column prop="attr7" label="多选下拉" width="200" :edit-render="{name: 'ElSelect', options: attrOptions, attrs: {multiple: true, collapseTags: true}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {clearable: true, options: regionList, separator: '-'}}"></el-editable-column>
+      <el-editable-column prop="attr7" label="多选下拉" width="200" :edit-render="{name: 'ElSelect', options: attrOptions, attrs: {multiple: true, clearable:true, collapseTags: true}}"></el-editable-column>
+      <el-editable-column prop="attr1" label="分组下拉" width="140" align="center" :edit-render="{name: 'ElSelect', optionGroups: groupList}"></el-editable-column>
+      <el-editable-column prop="attr2" label="分组下拉" width="140" align="center" :edit-render="{name: 'ElSelect', optionGroups: groupList, optionGroupProps: {options: 'options', label: 'label2'}, optionProps: {value: 'val', label: 'label2'}, attrs: {clearable: true}}"></el-editable-column>
+      <el-editable-column prop="attr9" label="多选分组下拉" width="200" align="center" :edit-render="{name: 'ElSelect', optionGroups: groupList, optionGroupProps: {options: 'options', label: 'label2'}, optionProps: {value: 'val', label: 'label2'}, attrs: {multiple: true, clearable: true}}"></el-editable-column>
+      <el-editable-column prop="attr10" label="多选分组下拉" width="200" align="center" :edit-render="{name: 'ElSelect', optionGroups: groupList, optionGroupProps: {options: 'options', label: 'label2'}, optionProps: {value: 'val', label: 'label2'}, attrs: {multiple: true, clearable: true, collapseTags: true}}"></el-editable-column>
       <el-editable-column prop="attr8" label="ElSelect 自定义显示内容" width="200" :edit-render="{name: 'ElSelect', options: attrOptions, attrs: {multiple: true, collapseTags: true}}">
         <template slot-scope="scope">{{ getAttr8Label(scope.row.attr8) }}</template>
       </el-editable-column>
+      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {clearable: true, options: regionList, separator: '-'}}"></el-editable-column>
       <el-editable-column prop="name" label="textarea 自定义渲染" min-width="200" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
         <template slot="edit" slot-scope="scope">
           <textarea class="editable-custom_input" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)"></textarea>
@@ -130,6 +134,45 @@ export default {
       loading: false,
       sexList: [],
       regionList: [],
+      groupList: [{
+        label: '热门城市',
+        label2: 'Re Men',
+        options: [{
+          val: 'sh',
+          value: 'Shanghai',
+          label: '上海',
+          label2: 'Shang Hai'
+        }, {
+          val: 'bj',
+          value: 'Beijing',
+          label: '北京',
+          label2: 'Bei Jing'
+        }]
+      }, {
+        label: '城市名',
+        label2: 'Cheng Shi',
+        options: [{
+          val: 'cd',
+          value: 'Chengdu',
+          label: '成都',
+          label2: 'Cheng Du'
+        }, {
+          val: 'sz',
+          value: 'Shenzhen',
+          label: '深圳',
+          label2: 'Shen Zhen'
+        }, {
+          val: 'gz',
+          value: 'Guangzhou',
+          label: '广州',
+          label2: 'Guang Zhou'
+        }, {
+          val: 'dl',
+          value: 'Dalian',
+          label: '大连',
+          label2: 'Da Lian'
+        }]
+      }],
       attrOptions: [
         {
           value: '111',

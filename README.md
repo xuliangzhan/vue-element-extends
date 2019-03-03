@@ -149,6 +149,8 @@ edit-render 渲染参数配置
 | events | 渲染组件附加事件，参数为 ( { rule, row, column, $index }, ...Component arguments ) | Object | — | {} |
 | options | 只对 name=ElSelect 有效，下拉组件选项列表 | Array | — | [] |
 | optionProps | 只对 name=ElSelect 有效，下拉组件选项属性参数配置 | Object | — | { value: 'value', label: 'label' } |
+| optionGroups | 只对 name=ElSelect 有效，下拉组件分组选项列表 | Array | — | [] |
+| optionGroupProps | 只对 name=ElSelect 有效，下拉组件分组选项属性参数配置 | Object | — | { options: 'options', label: 'label' } |
 
 ### Editable-Column Scoped Slot
 

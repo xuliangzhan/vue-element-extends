@@ -833,22 +833,6 @@ export default {
     /***************************/
 
     /***************************/
-    /* Discard methods start   */
-    /***************************/
-    isActiveRow (record) {
-      return this.hasActiveRow(record)
-    },
-    getActiveInfo () {
-      return this.getActiveRow()
-    },
-    isRowChange (record, property) {
-      return this.hasRowChange(record, property)
-    },
-    /***************************/
-    /* Discard methods end     */
-    /***************************/
-
-    /***************************/
     /* Public methods start    */
     /***************************/
     reload (datas) {

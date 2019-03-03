@@ -28,7 +28,12 @@
       <template v-if="isEditRender(scope)">
         <slot name="edit" v-bind="getRowScope(scope)">
           <template v-if="compName === 'ElSelect'">
-            <el-select v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
+            <el-select v-if="renderOpts.optionGroups" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
+              <el-option-group v-for="(group, gIndex) in renderOpts.optionGroups" :key="gIndex" :label="group[renderOpts.optionGroupProps.label]" v-bind="group.attrs">
+                <el-option v-for="(item, index) in group[renderOpts.optionGroupProps.options]" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.attrs"></el-option>
+              </el-option-group>
+            </el-select>
+            <el-select v-else v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
               <el-option v-for="(item, index) in renderOpts.options" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.attrs"></el-option>
             </el-select>
           </template>
@@ -143,6 +148,10 @@ export default {
         autofocus: editRender && this.isDefaultInput,
         optionProps: {
           value: 'value',
+          label: 'label'
+        },
+        optionGroupProps: {
+          options: 'options',
           label: 'label'
         }
       }, editRender)
@@ -277,13 +286,18 @@ export default {
       return this.getRowIdentity(scope.row, scope.column)
     },
     getSelectLabel ({ row, column }) {
-      let attrs = this.renderOpts.attrs || {}
-      let labelProp = this.renderOpts.optionProps.label
-      let valueProp = this.renderOpts.optionProps.value
+      let renderOpts = this.renderOpts
+      let attrs = renderOpts.attrs || {}
+      let labelProp = renderOpts.optionProps.label
+      let valueProp = renderOpts.optionProps.value
+      let optionsProp = renderOpts.optionGroupProps.options
       let value = this.getRowIdentity(row, column)
       if (value) {
-        return (attrs.multiple ? value : [value]).map(value => {
-          let selectItem = this.renderOpts.options.find(item => item[valueProp] === value)
+        return (attrs.multiple ? value : [value]).map(renderOpts.optionGroups ? value => {
+          let selectItem = renderOpts.optionGroups.find(group => group[optionsProp].find(item => item[valueProp] === value))
+          return selectItem ? selectItem[labelProp] : null
+        } : value => {
+          let selectItem = renderOpts.options.find(item => item[valueProp] === value)
           return selectItem ? selectItem[labelProp] : null
         }).join(';')
       }

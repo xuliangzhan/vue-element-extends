@@ -138,7 +138,7 @@ export default {
     exportCsvEvent () {
       this.$refs.editable.exportCsv({
         filename: 'Excel5数据.csv',
-        columnMethod: (column, columnIndex) => !['index'].includes(column.type)
+        columnFilterMethod: (column, columnIndex) => !['index'].includes(column.type)
       })
     },
     getAllEvent () {

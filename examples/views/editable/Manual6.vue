@@ -84,8 +84,8 @@ export default {
     exportCsvEvent () {
       this.$refs.editable.exportCsv({
         filename: '导出前5行指定列(sex,age,name,region)数据.csv',
-        columnMethod: (column, columnIndex) => ['sex', 'age', 'name', 'region'].includes(column.property),
-        dataMethod: (row, rowIndex) => rowIndex < 5
+        columnFilterMethod: (column, columnIndex) => ['sex', 'age', 'name', 'region'].includes(column.property),
+        dataFilterMethod: (row, rowIndex) => rowIndex < 5
       })
     },
     isRowOperate (row) {

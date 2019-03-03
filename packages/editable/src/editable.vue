@@ -784,13 +784,13 @@ export default {
     },
     _getCsvContent (opts) {
       let isOriginal = opts.original
-      let columns = this.$refs.refElTable.columns
-      if (opts.columnMethod) {
-        columns = columns.filter(opts.columnMethod)
+      let columns = opts.columns ? opts.columns : this.$refs.refElTable.columns
+      if (opts.columnFilterMethod) {
+        columns = columns.filter(opts.columnFilterMethod)
       }
-      let datas = isOriginal ? this._getData(this.tableData) : this._getCsvLabelData(opts, columns)
-      if (opts.dataMethod) {
-        datas = datas.filter(opts.dataMethod)
+      let datas = opts.data ? opts.data : (isOriginal ? this._getData(this.tableData) : this._getCsvLabelData(opts, columns))
+      if (opts.dataFilterMethod) {
+        datas = datas.filter(opts.dataFilterMethod)
       }
       let content = '\ufeff'
       datas.forEach((record, rowIndex) => {
@@ -1108,8 +1108,10 @@ export default {
       let opts = Object.assign({
         filename: 'table.csv',
         original: false,
-        columnMethod: column => column.type === 'index' || (['selection', 'expand'].indexOf(column.type) === -1 && column.property),
-        dataMethod: null
+        data: null,
+        columns: null,
+        columnFilterMethod: column => column.type === 'index' || (['selection', 'expand'].indexOf(column.type) === -1 && column.property),
+        dataFilterMethod: null
       }, options)
       if (opts.filename.indexOf('.csv') === -1) {
         opts.filename += '.csv'

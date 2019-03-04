@@ -365,7 +365,7 @@ export default {
           }
           if (isClearActive) {
             this._validActiveCell().then(() => {
-              this._clearValidError(row)
+              this._clearValidError(row, true)
               this._clearActiveData()
               this._restoreTooltip()
               if (this.configs.mode === 'row') {
@@ -402,7 +402,7 @@ export default {
         )) {
         this._validActiveCell().then(() => {
           if (this.lastActive) {
-            this._clearValidError(this.lastActive.row)
+            this._clearValidError(this.lastActive.row, true)
           }
           if (this.configs.trigger === type) {
             this._triggerActive(row, column, cell, event)
@@ -610,7 +610,7 @@ export default {
         let columns = this.$refs.refElTable.columns
         let ruleKeys = Object.keys(editRules)
         let rowIndex = XEUtils.findIndexOf(datas, item => item === row)
-        this._clearValidError(row)
+        this._clearValidError(row, true)
         columns.forEach((column, columnIndex) => {
           if (ruleKeys.includes(column.property)) {
             validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
@@ -731,12 +731,14 @@ export default {
       }
       return Promise.resolve()
     },
-    _clearValidError (row) {
+    _clearValidError (row, isClear) {
       row.showValidMsg = false
       row.validRule = null
       row.validActive = null
-      this.isValidActivate = false
-      this.isManualActivate = false
+      if (isClear) {
+        this.isValidActivate = false
+        this.isManualActivate = false
+      }
     },
     _toValidError (rule, row, column, cell) {
       row.validRule = rule
@@ -744,7 +746,9 @@ export default {
       this._triggerActive(row, column, cell, { type: 'valid' })
       // 解决 ElTooltip 默认无法自动弹出问题
       setTimeout(() => {
-        row.showValidMsg = true
+        if (row.validActive) {
+          row.showValidMsg = true
+        }
       }, 50)
       this.$emit('valid-error', rule, row, column, cell)
     },
@@ -1009,9 +1013,9 @@ export default {
         let { $index, column } = scope
         let { row, cell } = this._getColumnByRowIndex($index, column.property)
         if (cell) {
-          return this._validCellRules('change', row, column).then(rule => {
+          return this._validCellRules(row.validActive ? 'all' : 'change', row, column).then(rule => {
             if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
-              this._clearValidError(row)
+              this._clearValidError(row, true)
             }
           }).catch(rule => {
             this._toValidError(rule, row, column, cell)

@@ -124,8 +124,8 @@ export default {
           { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         age: [
-          { required: true, message: '年龄必须填写', trigger: 'blur' },
-          { validator: checkAge, trigger: 'blur' }
+          { required: true, message: '年龄必须填写', trigger: 'change' },
+          { validator: checkAge, trigger: 'change' }
         ],
         phone: [
           { required: true, message: '手机号码必须填写', trigger: 'blur' },

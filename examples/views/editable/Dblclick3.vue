@@ -134,7 +134,7 @@ export default {
           { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         age: [
-          { validator: checkAge, trigger: 'blur' }
+          { validator: checkAge, trigger: 'change' }
         ],
         birthdate: [
           { required: true, message: '请选择日期', trigger: 'blur' }

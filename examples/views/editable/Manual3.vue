@@ -74,14 +74,14 @@ export default {
       this.$nextTick(() => this.$refs.editable.setActiveRow(row))
     },
     isRowOperate (row) {
-      let activeInfo = this.$refs.editable.getActiveInfo()
+      let activeInfo = this.$refs.editable.getActiveRow()
       return activeInfo ? activeInfo.row === row : true
     },
     clearActiveMethod ({ row }) {
       return this.isClearActiveFlag
     },
     openActiveRowEvent (row) {
-      let activeInfo = this.$refs.editable.getActiveInfo()
+      let activeInfo = this.$refs.editable.getActiveRow()
       // 如果当前行正在编辑中，禁止编辑其他行
       if (activeInfo) {
         if (activeInfo.row === row || !this.$refs.editable.checkValid().error) {
@@ -160,7 +160,7 @@ export default {
       })
     },
     cancelRowEvent (row) {
-      let activeInfo = this.$refs.editable.getActiveInfo()
+      let activeInfo = this.$refs.editable.getActiveRow()
       if (activeInfo && activeInfo.isUpdate) {
         MessageBox.confirm('检测到未保存的内容，确定放弃修改?', '温馨提示', {
           confirmButtonText: '放弃更改',

@@ -351,7 +351,7 @@ export default {
             if (this.configs.mode === 'row' ? target === trElem : target === cell) {
               return
             }
-            if (this.configs.mode === 'row' && this._hasClass(target, 'editable-row') && target.parentNode === trElem.parentNode) {
+            if (this.configs.mode === 'row' && this._hasClass(target, 'editable-row') && target.parentNode === trElem) {
               break
             }
             target = target.parentNode
@@ -412,7 +412,9 @@ export default {
               this._validCellRules('change', row, column).catch(rule => this._toValidError(rule, row, column, cell))
             }
           } else {
-            this._clearActiveData()
+            if (this.configs.mode === 'cell') {
+              this._clearActiveData()
+            }
             row.checked = column.property
           }
         }).catch(e => e).then(() => this.$emit(`cell-${type}`, row.data, column, cell, event))

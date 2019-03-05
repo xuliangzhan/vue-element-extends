@@ -87,12 +87,13 @@ edit-config 编辑参数配置
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
 | activeMethod | 只对 type=default 的列有效，该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
 | clearActiveMethod | 该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定是否允许清除活动编辑 | Function | — | — |
-| useDefaultValidTip | 如果使用了数据校验和 fixed 列（因为 fixed 列也会被渲染，所以会导致同时出现多个校验提示），请设置为 true 使用默认提示  | Boolean | — | false |
+| useDefaultValidTip | 如果同时使用了数据校验和 fixed 列，请设置为 true 使用默认提示  | Boolean | — | false |
 | validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
 | autoClearActive | 当点击其它地方后，自动清除最后活动行或列 | Boolean | — | true |
 | autoScrollIntoView | 当单元格被激活时，自动将单元格滚动到可视区域内 | Boolean | — | false |
-| isTabKey | 只对 trigger!=manual 有效，是否启用 Tab 键切换到下一列 | Boolean | — | false |
-| isArrowKey | 只对 trigger!=manual 有效，是否启用箭头键切换行和列 | Boolean | — | false |
+| isTabKey | 只对 trigger!=manual 有效，是否启用 Tab 键切换到下一个单元格 | Boolean | — | false |
+| isArrowKey | 只对 trigger!=manual 有效，是否启用箭头键切换行和单元格 | Boolean | — | false |
+| isCheckedEdit | 只对 trigger!=manual 有效，是否启用选中状态允许值覆盖式编辑 | Boolean | — | false |
 
 ### Editable Events
 
@@ -167,7 +168,7 @@ edit-render 渲染参数配置
 
 [Run this demo on jsfiddle.net](https://jsfiddle.net/p8a4dtyq/)
 
-😱编辑表格组件中涉及双向绑定的属性较多，渲染性能开销大，建议数据不要超过 200 行，使用分页加载😱  
+😱编辑表格组件中涉及监听的属性较多，渲染性能开销大，建议数据不要超过 200 行，使用分页加载😱  
 也可以把 packages 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，再根据项目需求去做修改  
 如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
 

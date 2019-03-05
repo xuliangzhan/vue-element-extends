@@ -128,18 +128,31 @@ export default {
       return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
     },
     configs () {
-      let tipConf = this.editConfig ? (this.editConfig.validTooltip || {}) : {}
+      let editConfig = this.editConfig || {}
+      let tipConf = editConfig ? (editConfig.validTooltip || {}) : {}
       let conf = Object.assign({
+        // 触发方式
         trigger: 'click',
+        // 是否显示列头编辑图标
         showIcon: true,
+        // 是否实时显示单元格值的修改状态
         showStatus: true,
+        // 编辑模式
         mode: 'cell',
+        // 是否使用默认的 tip 校验提示框，如果同时使用了数据校验和 fixed 列，建议设置为 true，否则会出现多个 tip 提示（因为隐藏的 fixed 列部分也会被渲染，所以会导致同时出现多个校验提示）
         useDefaultValidTip: false,
+        // 当点击其它地方后，自动清除最后活动行或列
         autoClearActive: true,
+        // 当单元格被激活时，自动将单元格滚动到可视区域内
         autoScrollIntoView: false,
+        // 是否启用 Tab 键切换到下一个单元格
         isTabKey: false,
-        isArrowKey: false
-      }, this.editConfig, {
+        // 是否启用箭头键切换行和单元格
+        isArrowKey: false,
+        // 是否启用选中状态是否允许值覆盖式编辑，当 isTabKey 或 isArrowKey 为true 时启用时默认 true，否则 false
+        isCheckedEdit: !!(editConfig.isTabKey || editConfig.isArrowKey)
+      }, editConfig, {
+        // 限制 Tooltip 固定参数不允许修改
         validTooltip: Object.assign({
           disabled: false,
           offset: 10,
@@ -439,7 +452,7 @@ export default {
             }
           }
         }
-      } else {
+      } else if (this.configs.isCheckedEdit) {
         let tableData = this.tableData
         let rowIndex = XEUtils.findIndexOf(tableData, row => !row.editActive && row.checked)
         let row = tableData[rowIndex]

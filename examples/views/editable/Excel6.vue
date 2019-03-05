@@ -217,6 +217,7 @@ export default {
 .excel-table6 .el-table__body .el-table__row>td .cell .el-input__inner {
   border-radius: 0;
   padding: 0 2px;
+  line-height: 30px;
   border-color: #217346;
 }
 .custom-wrapper {

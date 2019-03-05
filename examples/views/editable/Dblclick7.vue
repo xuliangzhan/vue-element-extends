@@ -21,7 +21,7 @@
 
     <el-editable
       ref="editable"
-      class="db-table7"
+      class="dblclick-table7"
       stripe
       border
       size="medium"
@@ -374,7 +374,7 @@ export default {
 </script>
 
 <style scoped>
-.db-table7 .error-msg {
+.dblclick-table7 .error-msg {
   display: block;
   color: #fff;
   background-color: red;
@@ -387,7 +387,7 @@ export default {
   left: 10px;
   z-index: 9;
 }
-.db-table7 .error-msg:before {
+.dblclick-table7 .error-msg:before {
   content: "";
   position: absolute;
   border: 4px solid;
@@ -398,7 +398,7 @@ export default {
 </style>
 
 <style>
-.db-table7 .delete-row {
+.dblclick-table7 .delete-row {
   color: #f56c6c;
   text-decoration: line-through;
 }

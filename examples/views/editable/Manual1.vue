@@ -15,6 +15,7 @@
 
     <el-editable
       ref="editable"
+      class="manual-table1"
       border
       size="mini"
       :data.sync="list"

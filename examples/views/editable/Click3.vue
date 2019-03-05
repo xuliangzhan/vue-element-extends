@@ -20,6 +20,7 @@
 
     <el-editable
       ref="editable"
+      class="click-table3"
       height="480"
       stripe
       border

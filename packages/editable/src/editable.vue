@@ -9,7 +9,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import EventListening from './eventListening.js'
+import GlobalEvents from './globalEvents.js'
 
 export default {
   name: 'ElEditable',
@@ -136,7 +136,9 @@ export default {
         mode: 'cell',
         useDefaultValidTip: false,
         autoClearActive: true,
-        autoScrollIntoView: false
+        autoScrollIntoView: false,
+        isTabKey: false,
+        isArrowKey: false
       }, this.editConfig, {
         validTooltip: Object.assign({
           disabled: false,
@@ -164,11 +166,11 @@ export default {
     }
   },
   created () {
+    this._bindEvents()
     this._initial(this.data, true)
-    EventListening.on(this, 'click', evnt => this._triggerClear(evnt))
   },
   destroyed () {
-    EventListening.off(this, 'click')
+    this._unbindEvents()
   },
   methods: {
     /**************************/
@@ -256,6 +258,16 @@ export default {
       this.isEmitUpdateActivate = true
       this.$emit('update:data', this.datas.map(item => item.data))
     },
+    _bindEvents () {
+      GlobalEvents.on(this, 'click', evnt => this._triggerClear(evnt))
+      if (this.configs.trigger !== 'manual') {
+        GlobalEvents.on(this, 'keydown', evnt => this._triggerKeydown(evnt))
+      }
+    },
+    _unbindEvents () {
+      GlobalEvents.off(this, 'click')
+      GlobalEvents.off(this, 'keydown')
+    },
     _rowClassName ({ row, rowIndex }) {
       let clsName = 'editable-row '
       let rowClassName = this.rowClassName
@@ -336,10 +348,117 @@ export default {
     _cellDBLclick (row, column, cell, event) {
       this._cellHandleEvent('dblclick', row, column, cell, event)
     },
+    _arrowLeftAndRightColumn (row, columns, offsetColumnIndex) {
+      let offsetColumn = columns[offsetColumnIndex]
+      if (offsetColumn && offsetColumn.property) {
+        row.checked = offsetColumn.property
+      }
+    },
+    _arrowUpAndDownColumn (list, row, column, offsetRowIndex) {
+      let offsetRow = list[offsetRowIndex]
+      if (offsetRow) {
+        row.checked = null
+        offsetRow.checked = column.property
+      }
+    },
+    /**
+     * 监听方向键和 Tab 键切换行和单元格
+     */
+    _triggerKeydown (evnt) {
+      let keyCode = evnt.keyCode
+      let isTab = keyCode === 9
+      if (isTab || (keyCode >= 37 && keyCode <= 40)) {
+        if ((this.configs.isTabKey && isTab) || this.configs.isArrowKey) {
+          let tableData = this.tableData
+          let rowIndex = XEUtils.findIndexOf(tableData, isTab ? row => row.editActive || row.checked : row => row.checked)
+          let row = tableData[rowIndex]
+          if (row) {
+            let columns = this.$refs.refElTable.columns
+            let columnIndex = XEUtils.findIndexOf(columns, isTab ? column => column.property === row.editActive || column.property === row.checked : column => column.property === row.checked)
+            let column = columns[columnIndex]
+            if (column) {
+              switch (keyCode) {
+                case 9:
+                  if (columnIndex < columns.length - 1) {
+                    let offsetColumn = columns[columnIndex + 1]
+                    if (offsetColumn && offsetColumn.property) {
+                      if (this.configs.mode === 'cell' && row.editActive) {
+                        let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+                        this._validCellRules('blur', row, column).then(() => {
+                          row.editActive = null
+                          row.checked = offsetColumn.property
+                          this._restoreTooltip()
+                        }).catch(rule => this._toValidError(rule, row, column, cell))
+                      } else {
+                        row.checked = offsetColumn.property
+                      }
+                      evnt.preventDefault()
+                    }
+                  } else if (columnIndex >= columns.length - 1) {
+                    let offsetRow = tableData[rowIndex + 1]
+                    if (offsetRow) {
+                      columnIndex = XEUtils.findIndexOf(columns, column => column.property)
+                      let offsetColumn = columns[columnIndex]
+                      if (this.configs.mode === 'cell' && row.editActive) {
+                        let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+                        this._validCellRules('blur', row, column).then(() => {
+                          row.editActive = null
+                          row.checked = null
+                          offsetRow.checked = offsetColumn.property
+                          this._restoreTooltip()
+                        }).catch(rule => this._toValidError(rule, row, column, cell))
+                      } else {
+                        row.checked = null
+                        offsetRow.checked = offsetColumn.property
+                      }
+                      evnt.preventDefault()
+                    }
+                  }
+                  break
+                case 37:
+                  if (columnIndex > 0) {
+                    this._arrowLeftAndRightColumn(row, columns, columnIndex - 1)
+                  }
+                  break
+                case 39:
+                  if (columnIndex < columns.length - 1) {
+                    this._arrowLeftAndRightColumn(row, columns, columnIndex + 1)
+                  }
+                  break
+                case 38:
+                  if (rowIndex > 0) {
+                    this._arrowUpAndDownColumn(tableData, row, column, rowIndex - 1)
+                  }
+                  break
+                case 40:
+                  if (rowIndex < tableData.length - 1) {
+                    this._arrowUpAndDownColumn(tableData, row, column, rowIndex + 1)
+                  }
+                  break
+              }
+            }
+          }
+        }
+      } else {
+        let tableData = this.tableData
+        let rowIndex = XEUtils.findIndexOf(tableData, row => !row.editActive && row.checked)
+        let row = tableData[rowIndex]
+        if (row) {
+          let columns = this.$refs.refElTable.columns
+          let columnIndex = XEUtils.findIndexOf(columns, column => column.property === row.checked)
+          let column = columns[columnIndex]
+          if (column) {
+            let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+            this._triggerActive(row, column, cell, event).then(() => XEUtils.set(row.data, column.property, null))
+          }
+        }
+      }
+    },
     /**
      * 监听处理点击表格外清除激活状态
      */
     _triggerClear (evnt) {
+      this._clearChecked(evnt)
       if (!this.isManualActivate && !this.isValidActivate && this.lastActive) {
         if (this.configs.autoClearActive) {
           let target = evnt.target
@@ -460,6 +579,21 @@ export default {
     _expandChange (row, expandedRows) {
       this.$emit('expand-change', row.data, expandedRows)
     },
+    _clearChecked (evnt) {
+      let target = evnt.target
+      let bodyWrapperElem = this.$el.querySelector('.el-table__body-wrapper')
+      if (bodyWrapperElem) {
+        while (target && target.nodeType && target !== document) {
+          if (target === bodyWrapperElem) {
+            return
+          }
+          target = target.parentNode
+        }
+        this.datas.forEach(row => {
+          row.checked = false
+        })
+      }
+    },
     _clearActiveData () {
       this.lastActive = null
       this.datas.forEach(item => {
@@ -554,20 +688,26 @@ export default {
       return this.configs.activeMethod ? !this.configs.activeMethod(param) : false
     },
     _triggerActive (row, column, cell, event) {
-      if (!this._isDisabledEdit(row, column)) {
-        this._restoreTooltip(cell)
-        this._disabledTooltip(cell)
-        this._clearActiveData()
-        this.lastActive = { row, column, cell }
-        row.editActive = column.property
-        this.$nextTick(() => {
-          this._scrollIntoView(cell)
-          this._setCellFocus(cell)
-          if (row.editActive !== column.property) {
-            this.$emit('edit-active', row.data, column, cell, event)
-          }
-        })
-      }
+      let rest = { row, column, cell, event }
+      return new Promise((resolve, reject) => {
+        if (!this._isDisabledEdit(row, column)) {
+          this._restoreTooltip(cell)
+          this._disabledTooltip(cell)
+          this._clearActiveData()
+          this.lastActive = { row, column, cell }
+          row.editActive = column.property
+          this.$nextTick(() => {
+            this._scrollIntoView(cell)
+            this._setCellFocus(cell)
+            if (row.editActive !== column.property) {
+              this.$emit('edit-active', row.data, column, cell, event)
+            }
+            resolve(rest)
+          })
+        } else {
+          reject(rest)
+        }
+      })
     },
     _summaryMethod (param) {
       let { columns } = param

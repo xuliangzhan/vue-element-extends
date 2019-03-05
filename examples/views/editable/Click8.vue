@@ -18,6 +18,7 @@
 
     <el-editable
       ref="editable"
+      class="click-table8"
       stripe
       border
       size="medium"

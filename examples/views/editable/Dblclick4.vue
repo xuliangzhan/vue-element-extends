@@ -19,7 +19,7 @@
 
     <el-editable
       ref="editable"
-      class="my-table11"
+      class="dblclick-table4"
       stripe
       border
       size="medium"
@@ -378,7 +378,7 @@ export default {
 </script>
 
 <style scoped>
-.my-table11 .error-msg {
+.dblclick-table4 .error-msg {
   display: block;
   color: #fff;
   background-color: red;
@@ -391,7 +391,7 @@ export default {
   left: 10px;
   z-index: 9;
 }
-.my-table11 .error-msg:before {
+.dblclick-table4 .error-msg:before {
   content: "";
   position: absolute;
   border: 4px solid;

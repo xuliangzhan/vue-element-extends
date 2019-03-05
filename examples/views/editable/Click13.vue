@@ -21,7 +21,7 @@
 
     <el-editable
       ref="editable"
-      class="c-table13"
+      class="click-table13"
       border
       height="600"
       size="medium"
@@ -291,23 +291,23 @@ export default {
 </style>
 
 <style>
-.c-table13 .delete-row {
+.click-table13 .delete-row {
   color: #f56c6c;
   text-decoration: line-through;
 }
-.c-table13 .editable-col_active .cell {
+.click-table13 .editable-col_active .cell {
   padding: 0 5px;
 }
-.c-table13 .el-input .el-input__inner {
+.click-table13 .el-input .el-input__inner {
   padding: 0 15px 0 4px;
 }
-.c-table13 .el-input-number .el-input__inner {
+.click-table13 .el-input-number .el-input__inner {
   padding: 0 43px;
 }
-.c-table13 .el-cascader .el-cascader__label {
+.click-table13 .el-cascader .el-cascader__label {
   padding: 0 25px 0 5px;
 }
-.c-table13 .el-date-editor .el-input__inner {
+.click-table13 .el-date-editor .el-input__inner {
   padding: 0 30px;
 }
 </style>

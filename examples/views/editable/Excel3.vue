@@ -145,6 +145,14 @@ export default {
 }
 .excel-table3 .el-table__body .el-table__row>td .cell {
   width: 100% !important;
+  line-height: 30px;
+  padding: 0 3px;
+}
+.excel-table3 .el-table__body .el-table__row>td.editable-col_checked .cell {
+  padding: 0 2px;
+  line-height: 28px;
+}
+.excel-table3 .el-table__body .el-table__row>td.editable-col_active .cell {
   padding: 0;
 }
 .excel-table3 .el-table__body .el-table__row>td .cell,

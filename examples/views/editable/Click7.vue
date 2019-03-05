@@ -18,6 +18,7 @@
 
     <el-editable
       ref="editable"
+      class="click-table7"
       stripe
       border
       show-summary

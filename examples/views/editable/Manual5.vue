@@ -19,7 +19,7 @@
 
     <el-editable
       ref="editable"
-      class="my-table11"
+      class="manual-table5"
       size="small"
       :data.sync="list"
       :row-class-name="treeRowClassName"
@@ -516,7 +516,7 @@ export default {
   display: inline-block;
   margin: 0 10px;
 }
-.my-table11 .error-msg {
+.manual-table5 .error-msg {
   display: block;
   color: #fff;
   background-color: red;
@@ -529,7 +529,7 @@ export default {
   left: 10px;
   z-index: 9;
 }
-.my-table11 .error-msg:before {
+.manual-table5 .error-msg:before {
   content: "";
   position: absolute;
   border: 4px solid;
@@ -540,37 +540,37 @@ export default {
 </style>
 
 <style>
-.my-table11 .tree-level_0 .tree-operate-node .cell {
+.manual-table5 .tree-level_0 .tree-operate-node .cell {
   padding-left: 25px;
 }
-.my-table11 .tree-level_1 .tree-operate-node .cell {
+.manual-table5 .tree-level_1 .tree-operate-node .cell {
   padding-left: 40px;
 }
-.my-table11 .tree-level_2 .tree-operate-node .cell {
+.manual-table5 .tree-level_2 .tree-operate-node .cell {
   padding-left: 55px;
 }
-.my-table11 .tree-level_3 .tree-operate-node .cell {
+.manual-table5 .tree-level_3 .tree-operate-node .cell {
   padding-left: 70px;
 }
-.my-table11 .tree-level_4 .tree-operate-node .cell {
+.manual-table5 .tree-level_4 .tree-operate-node .cell {
   padding-left: 85px;
 }
-.my-table11 .tree-level_5 .tree-operate-node .cell {
+.manual-table5 .tree-level_5 .tree-operate-node .cell {
   padding-left: 100px;
 }
-.my-table11 .tree-level_6 .tree-operate-node .cell {
+.manual-table5 .tree-level_6 .tree-operate-node .cell {
   padding-left: 115px;
 }
-.my-table11 .tree-level_7 .tree-operate-node .cell {
+.manual-table5 .tree-level_7 .tree-operate-node .cell {
   padding-left: 130px;
 }
-.my-table11 .tree-level_8 .tree-operate-node .cell {
+.manual-table5 .tree-level_8 .tree-operate-node .cell {
   padding-left: 145px;
 }
-.my-table11 .tree-expand-icon {
+.manual-table5 .tree-expand-icon {
   padding-right: 10px;
 }
-.my-table11 .editable-row .editable-column.editable-col_edit.editable-col_disabled {
+.manual-table5 .editable-row .editable-column.editable-col_edit.editable-col_disabled {
   cursor: auto;
 }
 </style>

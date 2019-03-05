@@ -10,6 +10,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableManual4'}" replace>行编辑+校验+行操作+禁用自动清除活动编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual5'}" replace>行编辑+校验+行操作+树表格</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual6'}" replace>行编辑+校验+行操作+导出数据</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual7'}" replace>行编辑+行操作+多个表格</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">单击模式</a>
@@ -44,6 +45,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>校验+排序+筛选</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel4'}" replace>校验+排序+筛选+个性化列</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel5'}" replace>校验+排序+筛选+个性化列+导出数据</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel6'}" replace>校验+排序+筛选+个性化列+导出数据+方向键切换</router-link>
       </div>
     </div>
     <router-view/>

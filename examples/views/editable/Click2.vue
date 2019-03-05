@@ -13,6 +13,7 @@
 
     <el-editable
       ref="editable"
+      class="click-table2"
       border
       size="small"
       height="540"

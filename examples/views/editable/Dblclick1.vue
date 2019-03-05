@@ -12,6 +12,7 @@
 
     <el-editable
       ref="editable"
+      class="dblclick-table1"
       size="small"
       border
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false}"
@@ -39,7 +40,7 @@
           </el-checkbox-group>
         </template>
       </el-editable-column>
-      <el-editable-column prop="order" label="自定义渲染" width="120" :edit-render="{type: 'default'}">
+      <el-editable-column prop="order" label="自定义渲染" width="120" :edit-render="{name: 'ElAutocomplete'}">
         <template slot="edit" slot-scope="scope">
           <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
         </template>

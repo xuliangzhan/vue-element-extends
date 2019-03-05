@@ -91,6 +91,8 @@ edit-config 编辑参数配置
 | validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
 | autoClearActive | 当点击其它地方后，自动清除最后活动行或列 | Boolean | — | true |
 | autoScrollIntoView | 当单元格被激活时，自动将单元格滚动到可视区域内 | Boolean | — | false |
+| isTabKey | 只对 trigger!=manual 有效，是否启用 Tab 键切换到下一列 | Boolean | — | false |
+| isArrowKey | 只对 trigger!=manual 有效，是否启用箭头键切换行和列 | Boolean | — | false |
 
 ### Editable Events
 

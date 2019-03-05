@@ -15,7 +15,7 @@
 
     <el-editable
       ref="editable"
-      class="excel-table4"
+      class="excel-table5"
       border
       size="customSize"
       :edit-rules="validRules"
@@ -176,36 +176,44 @@ export default {
 </script>
 
 <style>
-.excel-table4.el-table--customSize .editable-column {
+.excel-table5.el-table--customSize .editable-column {
   height: 30px;
 }
-.excel-table4 .el-table__body .el-table__row>td {
+.excel-table5 .el-table__body .el-table__row>td {
   cursor: cell;
 }
-.excel-table4 .el-table__header th,
-.excel-table4 .el-table__body .el-table__row>td:first-child,
-.excel-table4 .el-table__body .el-table__row:hover>td:first-child {
+.excel-table5 .el-table__header th,
+.excel-table5 .el-table__body .el-table__row>td:first-child,
+.excel-table5 .el-table__body .el-table__row:hover>td:first-child {
   background-color: #f5f5f5;
 }
-.excel-table4 .el-table__body .el-table__row>td:first-child {
+.excel-table5 .el-table__body .el-table__row>td:first-child {
   cursor: default;
 }
-.excel-table4 .el-table__body .el-table__row:hover>td {
+.excel-table5 .el-table__body .el-table__row:hover>td {
   background-color: inherit;
 }
-.excel-table4 .el-table__body .el-table__row>td.editable-col_checked {
+.excel-table5 .el-table__body .el-table__row>td.editable-col_checked {
   border: 1px solid #217346;
 }
-.excel-table4 .el-table__body .el-table__row>td .cell {
+.excel-table5 .el-table__body .el-table__row>td .cell {
   width: 100% !important;
+  line-height: 30px;
+  padding: 0 3px;
+}
+.excel-table5 .el-table__body .el-table__row>td.editable-col_checked .cell {
+  padding: 0 2px;
+  line-height: 28px;
+}
+.excel-table5 .el-table__body .el-table__row>td.editable-col_active .cell {
   padding: 0;
 }
-.excel-table4 .el-table__body .el-table__row>td .cell,
-.excel-table4 .el-table__body .el-table__row>td .cell .el-input,
-.excel-table4 .el-table__body .el-table__row>td .cell .el-input__inner {
+.excel-table5 .el-table__body .el-table__row>td .cell,
+.excel-table5 .el-table__body .el-table__row>td .cell .el-input,
+.excel-table5 .el-table__body .el-table__row>td .cell .el-input__inner {
   height: 100%;
 }
-.excel-table4 .el-table__body .el-table__row>td .cell .el-input__inner {
+.excel-table5 .el-table__body .el-table__row>td .cell .el-input__inner {
   border-radius: 0;
   padding: 0 2px;
   line-height: 30px;

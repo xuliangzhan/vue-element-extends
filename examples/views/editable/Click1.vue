@@ -9,7 +9,13 @@
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
     </p>
 
-    <el-editable ref="editable" :data.sync="list" border size="mini" style="width: 100%">
+    <el-editable
+      ref="editable"
+      class="click-table1"
+      :data.sync="list"
+      border
+      size="mini"
+      style="width: 100%">
       <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>

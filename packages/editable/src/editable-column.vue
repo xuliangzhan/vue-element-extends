@@ -135,8 +135,7 @@ export default {
         'ElRate',
         'ElColorPicker',
         'ElSlider'
-      ],
-      isDefaultInput: ['ElInput', 'ElInputNumber'].includes(this.editRender ? this.editRender.name : null)
+      ]
     }
   },
   computed: {
@@ -145,7 +144,7 @@ export default {
       return Object.assign({
         name: editRender ? 'ElInput' : null,
         type: 'default',
-        autofocus: editRender && this.isDefaultInput,
+        autofocus: editRender && ['ElInput', 'ElInputNumber', 'ElAutocomplete'].includes(editRender.name),
         optionProps: {
           value: 'value',
           label: 'label'

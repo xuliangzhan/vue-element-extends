@@ -15,7 +15,14 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable ref="editable" stripe border show-summary size="medium" style="width: 100%">
+    <el-editable
+      ref="editable"
+      class="click-table5"
+      stripe
+      border
+      show-summary
+      size="medium"
+      style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column v-for="(item, index) in columnConfigs" :key="index" v-bind="item"></el-editable-column>
       <el-editable-column label="操作">

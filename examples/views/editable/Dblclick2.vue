@@ -20,6 +20,7 @@
 
     <el-editable
       ref="editable"
+      class="dblclick-table2"
       stripe
       border
       height="540"
@@ -48,7 +49,7 @@
           <input class="editable-custom_input" type="text" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)">
         </template>
       </el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true}}"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" width="120" align="center" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true}}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '->'}}"></el-editable-column>
       <el-editable-column prop="birthdate" label="日期" width="220" sortable :sort-method="birthdateSortHandler" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy年MM月dd日'}}"></el-editable-column>

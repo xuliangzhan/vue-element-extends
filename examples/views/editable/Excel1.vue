@@ -87,6 +87,13 @@ export default {
   border: 1px solid #217346;
 }
 .excel-table1 .el-table__body .el-table__row>td .cell {
+  width: 100% !important;
+  padding: 0 3px;
+}
+.excel-table1 .el-table__body .el-table__row>td.editable-col_checked .cell {
+  padding: 0 2px;
+}
+.excel-table1 .el-table__body .el-table__row>td.editable-col_active .cell {
   padding: 0;
 }
 .excel-table1 .el-table__body .el-table__row>td .cell,

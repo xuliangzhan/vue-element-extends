@@ -15,7 +15,13 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable ref="editable" stripe border size="medium" height="540" style="width: 100%">
+    <el-editable
+      ref="editable"
+      class="click-table6"
+      stripe border
+      size="medium"
+      height="540"
+      style="width: 100%">
       <el-editable-column type="index" width="55">
         <template slot="header">
           <i class="el-icon-setting" @click="dialogVisible = true"></i>

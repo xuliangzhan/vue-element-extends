@@ -19,6 +19,7 @@
 
     <el-editable
       ref="editable"
+      class="click-table9"
       stripe
       border
       size="medium"

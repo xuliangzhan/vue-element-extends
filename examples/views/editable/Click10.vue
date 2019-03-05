@@ -22,6 +22,7 @@
 
     <el-editable
       ref="editable"
+      class="click-table10"
       stripe
       border
       height="600"

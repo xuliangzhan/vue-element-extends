@@ -2,7 +2,7 @@ import XEUtils from 'xe-utils'
 
 // 监听全局事件
 var eventStore = []
-var EventListening = {
+var GlobalEvents = {
   on (comp, type, cb) {
     eventStore.push({ comp, type, cb })
   },
@@ -18,6 +18,7 @@ var EventListening = {
   }
 }
 
-window.addEventListener('click', EventListening.trigger)
+window.addEventListener('click', GlobalEvents.trigger, false)
+document.addEventListener('keydown', GlobalEvents.trigger, false)
 
-export default EventListening
+export default GlobalEvents

@@ -18,7 +18,7 @@
 
     <el-editable
       ref="editable"
-      class="my-table11"
+      class="dblclick-table3"
       stripe
       border
       size="medium"

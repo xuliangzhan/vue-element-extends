@@ -28,7 +28,7 @@
       :row-class-name="tableRowClassName"
       @valid-error="validErrorEvent"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, activeMethod}"
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, activeMethod}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55">
@@ -401,6 +401,9 @@ export default {
 .dblclick-table7 .delete-row {
   color: #f56c6c;
   text-decoration: line-through;
+}
+.dblclick-table7 .el-table__body .el-table__row>td.editable-col_checked {
+  box-shadow: inset 0 0 6px #409EFF;
 }
 .custom-wrapper {
   height: 200px;

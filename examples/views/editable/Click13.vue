@@ -29,7 +29,7 @@
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, activeMethod}"
+      :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, isTabKey: true, isArrowKey: true, activeMethod}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
@@ -309,5 +309,8 @@ export default {
 }
 .click-table13 .el-date-editor .el-input__inner {
   padding: 0 30px;
+}
+.click-table13 .el-table__body .el-table__row>td.editable-col_checked {
+  box-shadow: inset 0 0 6px #67C23A;
 }
 </style>

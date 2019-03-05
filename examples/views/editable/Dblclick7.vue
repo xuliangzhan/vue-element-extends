@@ -373,7 +373,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.dblclick-table7 .delete-row {
+  color: #f56c6c;
+  text-decoration: line-through;
+}
+.dblclick-table7 .el-table__body .el-table__row>td.editable-col_checked {
+  box-shadow: inset 0 0 6px #409EFF;
+}
 .dblclick-table7 .error-msg {
   display: block;
   color: #fff;
@@ -394,16 +401,6 @@ export default {
   top: -8px;
   left: 20%;
   border-color: transparent transparent red transparent;
-}
-</style>
-
-<style>
-.dblclick-table7 .delete-row {
-  color: #f56c6c;
-  text-decoration: line-through;
-}
-.dblclick-table7 .el-table__body .el-table__row>td.editable-col_checked {
-  box-shadow: inset 0 0 6px #409EFF;
 }
 .custom-wrapper {
   height: 200px;

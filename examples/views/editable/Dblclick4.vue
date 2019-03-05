@@ -377,7 +377,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .dblclick-table4 .error-msg {
   display: block;
   color: #fff;
@@ -399,9 +399,6 @@ export default {
   left: 20%;
   border-color: transparent transparent red transparent;
 }
-</style>
-
-<style>
 .custom-wrapper {
   height: 200px;
   overflow: auto;

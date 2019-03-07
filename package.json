@@ -15,7 +15,8 @@
   ],
   "main": "lib/index.common.js",
   "style": "lib/index.css",
-  "unpkg": "lib/index.umd.min.js",
+  "unpkg": "lib/index.umd.js",
+  "jsdelivr": "lib/index.umd.js",
   "dependencies": {
     "element-ui": "^2.6.1",
     "vue": "^2.5.22",

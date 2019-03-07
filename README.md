@@ -34,8 +34,14 @@ npm install xe-utils vue-element-extends --save
 在 [unpkg](https://unpkg.com/vue-element-extends/) 和 [cdnjs](https://cdn.jsdelivr.net/npm/vue-element-extends/) 上获取
 
 ```HTML
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 <link rel="stylesheet" href="https://unpkg.com/vue-element-extends/lib/index.css">
-<script src="https://unpkg.com/vue-element-extends/lib/index.umd.min.js"></script>
+<!-- 引入脚本 -->
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/element-ui"></script>
+<script src="https://unpkg.com/xe-utils"></script>
+<script src="https://unpkg.com/vue-element-extends"></script>
 ```
 
 ```javascript
@@ -161,7 +167,7 @@ edit-render 渲染参数配置
 
 ## Example
 
-[Run this demo on jsfiddle.net](https://jsfiddle.net/p8a4dtyq/)
+[Run this demo on jsfiddle.net](https://jsfiddle.net/dakygb7v/)
 
 😱编辑表格组件中涉及监听的属性较多，渲染性能开销大，建议数据不要超过 200 行，使用分页加载😱  
 也可以把 packages 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，再根据项目需求去做修改  

@@ -10,7 +10,8 @@
   },
   "files": [
     "lib",
-    "packages"
+    "packages",
+    "style"
   ],
   "main": "lib/index.common.js",
   "style": "lib/index.css",

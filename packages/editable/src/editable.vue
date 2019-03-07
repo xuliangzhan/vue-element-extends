@@ -1283,3 +1283,5 @@ export default {
   }
 }
 </script>
+
+<style src="../../../style/editable.css"></style>

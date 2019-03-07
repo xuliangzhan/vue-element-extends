@@ -21,10 +21,6 @@
   * 支持方向键和 Tab 键切换单元格
   * 支持原 ElTable 的所有参数、方法、插槽
 
-![editable1](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/static/img/editable1.gif)
-![editable3](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/static/img/editable3.gif)
-![editable5](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/static/img/editable5.gif)
-
 ## Docs
 
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)

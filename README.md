@@ -22,9 +22,7 @@
   * 支持原 ElTable 的所有参数、方法、插槽
 
 ![editable1](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/static/img/editable1.gif)
-![editable2](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/static/img/editable2.gif)
 ![editable3](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/static/img/editable3.gif)
-![editable4](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/static/img/editable4.gif)
 ![editable5](https://raw.githubusercontent.com/xuliangzhan/vue-element-extends/master/docs/static/img/editable5.gif)
 
 ## Docs

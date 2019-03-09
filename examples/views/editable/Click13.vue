@@ -1,6 +1,7 @@
 <template>
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
+    <p style="color: red;font-size: 12px;">上下左右方向键切换列、Tab 键切换列、选中后可直接输入值覆盖旧值</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
@@ -283,12 +284,6 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.editable-custom_input {
-  width: 95%;
-}
-</style>
 
 <style>
 .click-table13 .delete-row {

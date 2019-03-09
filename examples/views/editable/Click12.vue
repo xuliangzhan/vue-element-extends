@@ -280,9 +280,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.editable-custom_input {
-  width: 95%;
-}
-</style>

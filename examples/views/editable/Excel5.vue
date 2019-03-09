@@ -75,7 +75,25 @@ export default {
       list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach((name, index) => {
-          rest[name.toLowerCase()] = `${name}${i}_${index}`
+          switch (name) {
+            case 'A':
+              rest[name.toLowerCase()] = `123`
+              break
+            case 'B':
+              rest[name.toLowerCase()] = `值`
+              break
+            case 'C':
+              rest[name.toLowerCase()] = `ABC`
+              break
+            case 'D':
+              rest[name.toLowerCase()] = `20`
+              break
+            case 'E':
+              rest[name.toLowerCase()] = `23.33`
+              break
+            default:
+              rest[name.toLowerCase()] = `${name}${i}_${index}`
+          }
         })
         return rest
       }),

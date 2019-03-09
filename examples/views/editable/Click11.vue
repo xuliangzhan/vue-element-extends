@@ -268,8 +268,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.editable-custom_input {
+<style>
+.click-table11 .editable-custom_input {
   width: 95%;
 }
 </style>

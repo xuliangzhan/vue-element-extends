@@ -310,7 +310,7 @@ export default {
 </script>
 
 <style scoped>
-.editable-custom_input {
+.click-table10 .editable-custom_input {
   width: 95%;
 }
 </style>

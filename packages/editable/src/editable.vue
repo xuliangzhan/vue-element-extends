@@ -62,10 +62,8 @@ export default {
       initialStore: [],
       deleteRecords: [],
       lastActive: null,
-      isEmitUpdateActivate: false,
-      isClearlActivate: false,
-      isManualActivate: false,
-      isValidActivate: false
+      callEvent: null,
+      isUpdateData: false
     }
   },
   computed: {
@@ -124,9 +122,6 @@ export default {
         'expand-change': this._expandChange
       }
     },
-    tableData () {
-      return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
-    },
     configs () {
       let editConfig = this.editConfig || {}
       let tipConf = editConfig ? (editConfig.validTooltip || {}) : {}
@@ -167,14 +162,14 @@ export default {
   },
   watch: {
     data (value) {
-      if (!this.isEmitUpdateActivate) {
+      if (!this.isUpdateData) {
         if (value.length) {
           this.reload(value)
         } else {
           this.clear()
         }
       } else {
-        this.isEmitUpdateActivate = false
+        this.isUpdateData = false
       }
     }
   },
@@ -244,8 +239,7 @@ export default {
     },
     _defineProp (record) {
       let recordItem = Object.assign({}, record)
-      let columns = this.$refs.refElTable ? this.$refs.refElTable.columns : []
-      columns.forEach(column => {
+      this.getColumns().forEach(column => {
         if (column.property && !XEUtils.has(recordItem, column.property)) {
           XEUtils.set(recordItem, column.property, null)
         }
@@ -275,7 +269,7 @@ export default {
       }
     },
     _updateData () {
-      this.isEmitUpdateActivate = true
+      this.isUpdateData = true
       this.$emit('update:data', this.datas.map(item => item.data))
     },
     _bindEvents () {
@@ -287,6 +281,30 @@ export default {
     _unbindEvents () {
       GlobalEvents.off(this, 'click')
       GlobalEvents.off(this, 'keydown')
+    },
+    _getIndex (list, item) {
+      return XEUtils.findIndexOf(list, obj => obj === item)
+    },
+    _getDataIndex (row) {
+      return this._getIndex(this.datas, row)
+    },
+    _getDataIndexByRecord (record) {
+      return XEUtils.findIndexOf(this.datas, item => item.data === record)
+    },
+    _getTDatas () {
+      return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
+    },
+    _getTDataIndex (row) {
+      return this._getIndex(this._getTDatas(), row)
+    },
+    _getTDataIndexByRecord (record) {
+      return XEUtils.findIndexOf(this._getTDatas(), item => item.data === record)
+    },
+    _getColumnIndex (column) {
+      return this._getIndex(this.getColumns(), column)
+    },
+    _getColumnIndexByProp (prop) {
+      return this._getIndex(this.getColumns(), column => column.property === prop)
     },
     _rowClassName ({ row, rowIndex }) {
       let clsName = 'editable-row '
@@ -387,13 +405,13 @@ export default {
     _triggerKeydown (evnt) {
       let keyCode = evnt.keyCode
       let isTab = keyCode === 9
+      let tableData = this._getTDatas()
       if (isTab || (keyCode >= 37 && keyCode <= 40)) {
         if ((this.configs.isTabKey && isTab) || this.configs.isArrowKey) {
-          let tableData = this.tableData
           let rowIndex = XEUtils.findIndexOf(tableData, isTab ? row => row.editActive || row.checked : row => row.checked)
           let row = tableData[rowIndex]
           if (row) {
-            let columns = this.$refs.refElTable.columns
+            let columns = this.getColumns()
             let columnIndex = XEUtils.findIndexOf(columns, isTab ? column => column.property === row.editActive || column.property === row.checked : column => column.property === row.checked)
             let column = columns[columnIndex]
             if (column) {
@@ -404,11 +422,12 @@ export default {
                     if (offsetColumn && offsetColumn.property) {
                       if (this.configs.mode === 'cell' && row.editActive) {
                         let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
-                        this._validCellRules('blur', row, column).then(() => {
-                          row.editActive = null
-                          row.checked = offsetColumn.property
-                          this._restoreTooltip()
-                        }).catch(rule => this._toValidError(rule, row, column, cell))
+                        this._validCellRules('blur', row, column)
+                          .then(() => {
+                            row.editActive = null
+                            row.checked = offsetColumn.property
+                            this._restoreTooltip()
+                          }).catch(rule => this._toValidError(rule, row, column, cell))
                       } else {
                         row.checked = offsetColumn.property
                       }
@@ -421,12 +440,13 @@ export default {
                       let offsetColumn = columns[columnIndex]
                       if (this.configs.mode === 'cell' && row.editActive) {
                         let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
-                        this._validCellRules('blur', row, column).then(() => {
-                          row.editActive = null
-                          row.checked = null
-                          offsetRow.checked = offsetColumn.property
-                          this._restoreTooltip()
-                        }).catch(rule => this._toValidError(rule, row, column, cell))
+                        this._validCellRules('blur', row, column)
+                          .then(() => {
+                            row.editActive = null
+                            row.checked = null
+                            offsetRow.checked = offsetColumn.property
+                            this._restoreTooltip()
+                          }).catch(rule => this._toValidError(rule, row, column, cell))
                       } else {
                         row.checked = null
                         offsetRow.checked = offsetColumn.property
@@ -460,11 +480,10 @@ export default {
           }
         }
       } else if (this.configs.isCheckedEdit) {
-        let tableData = this.tableData
         let rowIndex = XEUtils.findIndexOf(tableData, row => !row.editActive && row.checked)
         let row = tableData[rowIndex]
         if (row) {
-          let columns = this.$refs.refElTable.columns
+          let columns = this.getColumns()
           let columnIndex = XEUtils.findIndexOf(columns, column => column.property === row.checked)
           let column = columns[columnIndex]
           if (column) {
@@ -475,36 +494,53 @@ export default {
       }
     },
     /**
-     * 监听处理点击表格外清除激活状态
+     * 如果点击了表格外会触发清除
+     * 如果点击了表格内不同行会触发清除
+     * 如果存在校验不通过，自动聚焦到错误单元格
      */
     _triggerClear (evnt) {
       this._clearChecked(evnt)
-      if (!this.isManualActivate && !this.isValidActivate && this.lastActive) {
-        if (this.configs.autoClearActive) {
+      if (this.configs.autoClearActive) {
+        if (!this.callEvent && this.lastActive) {
           let target = evnt.target
           let clearActiveMethod = this.configs.clearActiveMethod
           let { row, column, cell } = this.lastActive
+          let rowIndex = this._getDataIndex(row)
+          let trElem = cell.parentNode
           let isClearActive = true
+          let type = null
           while (target && target.nodeType && target !== document) {
-            let trElem = cell.parentNode
             if (this.configs.mode === 'row' ? target === trElem : target === cell) {
               return
             }
-            if (this.configs.mode === 'row' && this._hasClass(target, 'editable-row') && target.parentNode === trElem) {
+            if (this.configs.mode === 'row' ? this._hasClass(target, 'editable-row') && this._getIndex(Array.from(target.parentNode.children), target) !== rowIndex : this._hasClass(target, 'editable-column')) {
+              type = 'in'
+            }
+            if (type && this._hasClass(target, 'editable')) {
+              if (target !== this.$el) {
+                type = 'out'
+              }
               break
             }
             target = target.parentNode
           }
           if (clearActiveMethod) {
-            let param = { row: row.data, rowIndex: XEUtils.findIndexOf(this.tableData, item => item === row) }
+            let param = {
+              type: type || 'out',
+              row: row.data,
+              rowIndex
+            }
             if (this.configs.mode === 'cell') {
-              Object.assign(param, { column, columnIndex: this.$refs.refElTable ? XEUtils.findIndexOf(this.$refs.refElTable.columns, item => item === column) : null })
+              Object.assign(param, {
+                column,
+                columnIndex: this._getColumnIndex(column)
+              })
             }
             isClearActive = clearActiveMethod(param)
           }
           if (isClearActive) {
             this._validActiveCell().then(() => {
-              this._clearValidError(row, true)
+              this._clearValidError(row)
               this._clearActiveData()
               this._restoreTooltip()
               if (this.configs.mode === 'row') {
@@ -515,10 +551,8 @@ export default {
             }).catch(e => e)
           }
         }
-      } else {
-        this.isValidActivate = false
-        this.isManualActivate = false
       }
+      this.callEvent = null
     },
     /**
      * 触发编辑事件
@@ -530,8 +564,7 @@ export default {
      * 如果配置了规则且校验不通过，则停止激活新行，聚焦到校验错误行
      */
     _cellHandleEvent (type, row, column, cell, event) {
-      if (!this.isClearlActivate &&
-        this.configs.trigger !== 'manual' &&
+      if (this.configs.trigger !== 'manual' &&
         this._hasClass(cell, 'editable-col_edit') &&
         (row.editActive
           ? this.configs.mode === 'row' && this.lastActive
@@ -541,27 +574,24 @@ export default {
         )) {
         this._validActiveCell().then(() => {
           if (this.lastActive) {
-            this._clearValidError(this.lastActive.row, true)
+            this._clearValidError(this.lastActive.row)
           }
           if (this.configs.trigger === type) {
             this._triggerActive(row, column, cell, event)
             if (this.configs.mode === 'row') {
-              this._validRowRules('change', row).catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
+              this._validRowRules('change', row)
+                .catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
             } else {
-              this._validCellRules('change', row, column).catch(rule => this._toValidError(rule, row, column, cell))
+              this._validCellRules('change', row, column)
+                .catch(rule => this._toValidError(rule, row, column, cell))
             }
           } else {
-            if (this.configs.mode === 'cell') {
-              this._clearActiveData()
-            }
             row.checked = column.property
           }
         }).catch(e => e).then(() => this.$emit(`cell-${type}`, row.data, column, cell, event))
       } else {
-        this.isClearlActivate = false
         this.$emit(`cell-${type}`, row.data, column, cell, event)
       }
-      this.isManualActivate = false
     },
     _rowClick (row, event, column) {
       this.$emit('row-click', row.data, event, column)
@@ -614,15 +644,12 @@ export default {
         })
       }
     },
-    _clearActiveData (force) {
+    _clearActiveData () {
       this.lastActive = null
       this.datas.forEach(item => {
         item.editActive = null
         item.showValidMsg = false
         item.checked = null
-        if (force) {
-          item.validActive = null
-        }
       })
     },
     _restoreTooltip (cell) {
@@ -688,7 +715,7 @@ export default {
       }
     },
     _scrollIntoView (cell) {
-      if (this.configs.autoScrollIntoView && this.isValidActivate && cell) {
+      if (this.configs.autoScrollIntoView && cell) {
         if (cell.scrollIntoViewIfNeeded) {
           cell.scrollIntoViewIfNeeded()
         } else if (cell.scrollIntoView) {
@@ -697,16 +724,21 @@ export default {
       }
     },
     _isRowDataChange (row, column) {
-      let columns = this.$refs.refElTable.columns
       if (column) {
         return !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))
       }
-      return !columns.every(column => XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property)))
+      return !this.getColumns().every(column => XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property)))
     },
     _isDisabledEdit (row, column, columnIndex) {
-      let param = { row: row.data, rowIndex: XEUtils.findIndexOf(this.tableData, item => item === row) }
+      let param = {
+        row: row.data,
+        rowIndex: this._getTDataIndex(row)
+      }
       if (this.configs.mode === 'cell') {
-        Object.assign(param, { column, columnIndex })
+        Object.assign(param, {
+          column,
+          columnIndex
+        })
       }
       return this.configs.activeMethod ? !this.configs.activeMethod(param) : false
     },
@@ -769,19 +801,19 @@ export default {
       let validPromise = Promise.resolve()
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
-        let datas = this.tableData
-        let columns = this.$refs.refElTable.columns
         let ruleKeys = Object.keys(editRules)
-        let rowIndex = XEUtils.findIndexOf(datas, item => item === row)
-        this._clearValidError(row, true)
-        columns.forEach((column, columnIndex) => {
+        let rowIndex = this._getTDataIndex(row)
+        this._clearValidError(row)
+        this.getColumns().forEach((column, columnIndex) => {
           if (ruleKeys.includes(column.property)) {
             validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
-              this._validCellRules('all', row, column).then(resolve).catch(rule => {
-                let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
-                let rest = { rule, row, column, cell }
-                return reject(rest)
-              })
+              this._validCellRules('all', row, column)
+                .then(resolve)
+                .catch(rule => {
+                  let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+                  let rest = { rule, row, column, cell }
+                  return reject(rest)
+                })
             }))
           }
         })
@@ -848,8 +880,9 @@ export default {
       return validPromise
     },
     _getColumnByRowIndex (rowIndex, property) {
-      let row = this.tableData[rowIndex]
-      let columns = this.$refs.refElTable.columns
+      let tableData = this._getTDatas()
+      let row = tableData[rowIndex]
+      let columns = this.getColumns()
       let columnIndex = XEUtils.findIndexOf(columns, item => property ? property === item.property : item.property)
       let column = columns[columnIndex]
       let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
@@ -858,11 +891,10 @@ export default {
       return { row, rowIndex, column, columnIndex, cell }
     },
     _toActiveRow (record, prop, preventDefault) {
-      let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
+      let rowIndex = this._getTDataIndexByRecord(record)
       let { row, column, cell } = this._getColumnByRowIndex(rowIndex, prop)
       if (row && column) {
-        this.isValidActivate = true
-        this.isManualActivate = preventDefault !== false
+        this.callEvent = 'activate'
         this.datas.forEach(row => {
           if (row.data !== record) {
             this._clearValidError(row)
@@ -879,13 +911,13 @@ export default {
       if (this.lastActive && !XEUtils.isEmpty(this.editRules)) {
         let { row, column, cell } = this.lastActive
         if (row && this.configs.mode === 'row') {
-          return this._validRowRules('blur', row).catch(({ rule, row, column, cell }) => {
+          return this._validRowRules(row.validActive ? 'all' : 'blur', row).catch(({ rule, row, column, cell }) => {
             let rest = { rule, row, column, cell }
             this._toValidError(rule, row, column, cell)
             return Promise.reject(rest)
           })
         } else {
-          return this._validCellRules('blur', row, column).catch(rule => {
+          return this._validCellRules(row.validActive ? 'all' : 'blur', row, column).catch(rule => {
             let rest = { rule, row, column, cell }
             this._toValidError(rule, row, column, cell)
             return Promise.reject(rest)
@@ -894,26 +926,27 @@ export default {
       }
       return Promise.resolve()
     },
-    _clearValidError (row, isClear) {
+    _clearValidError (row) {
       row.showValidMsg = false
       row.validRule = null
       row.validActive = null
-      if (isClear) {
-        this.isValidActivate = false
-        this.isManualActivate = false
-      }
     },
     _toValidError (rule, row, column, cell) {
-      row.validRule = rule
-      row.validActive = column.property
-      this._triggerActive(row, column, cell, { type: 'valid' })
-      // 解决 ElTooltip 默认无法自动弹出问题
-      setTimeout(() => {
-        if (row.validActive) {
-          row.showValidMsg = true
+      this._triggerActive(row, column, cell, { type: 'valid' }).then(() => {
+        row.validRule = rule
+        row.validActive = column.property
+        row.showValidMsg = true
+        if (!this.configs.useDefaultValidTip) {
+          // 解决 ElTooltip 默认无法自动弹出问题
+          row.showValidMsg = false
+          this.$nextTick(() => {
+            if (row.validActive) {
+              row.showValidMsg = true
+            }
+          })
         }
-      }, 50)
-      this.$emit('valid-error', rule, row, column, cell)
+        this.$emit('valid-error', rule, row, column, cell)
+      })
     },
     _deleteData (index) {
       if (index > -1) {
@@ -941,7 +974,7 @@ export default {
     },
     _getCsvLabelData (opts, columns) {
       let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
-      return this.tableData.map((row, rowIndex) => {
+      return this._getTDatas().map((row, rowIndex) => {
         let item = {}
         let trElem = trElemList[rowIndex]
         columns.forEach(column => {
@@ -953,11 +986,11 @@ export default {
     },
     _getCsvContent (opts) {
       let isOriginal = opts.original
-      let columns = opts.columns ? opts.columns : this.$refs.refElTable.columns
+      let columns = opts.columns ? opts.columns : this.getColumns()
       if (opts.columnFilterMethod) {
         columns = columns.filter(opts.columnFilterMethod)
       }
-      let datas = opts.data ? opts.data : (isOriginal ? this._getData(this.tableData) : this._getCsvLabelData(opts, columns))
+      let datas = opts.data ? opts.data : (isOriginal ? this._getData(this._getTDatas()) : this._getCsvLabelData(opts, columns))
       if (opts.dataFilterMethod) {
         datas = datas.filter(opts.dataFilterMethod)
       }
@@ -1041,6 +1074,9 @@ export default {
       this._initial([])
       this._updateData()
     },
+    getColumns () {
+      return this.$refs.refElTable ? this.$refs.refElTable.columns : []
+    },
     /**
      * 插入数据
      * 如果是 record 或 rowIndex 则在指定位置新增一行新数据
@@ -1069,17 +1105,19 @@ export default {
      * 根据索引删除行数据
      */
     removeByIndex (rowIndex) {
-      let row = this.tableData[rowIndex]
+      let tableData = this._getTDatas()
+      let row = tableData[rowIndex]
       if (row) {
         return this.remove(row.data)
       }
       return null
     },
     removeByIndexs (rowIndexs) {
-      return this.removes(rowIndexs.map(index => this.tableData[index] ? this.tableData[index].data : null))
+      let tableData = this._getTDatas()
+      return this.removes(rowIndexs.map(index => tableData[index] ? tableData[index].data : null))
     },
     remove (record) {
-      let items = this._deleteData(XEUtils.findIndexOf(this.datas, item => item.data === record))
+      let items = this._deleteData(this._getDataIndexByRecord(record))
       this._updateData()
       return items.length ? items[0].data : null
     },
@@ -1094,7 +1132,7 @@ export default {
       return items.map(item => item.data)
     },
     getSelecteds () {
-      return this.$refs.refElTable.selection.map(item => item.data)
+      return this.$refs.refElTable ? this.$refs.refElTable.selection.map(item => item.data) : []
     },
     removeSelecteds () {
       this.removes(this.getSelecteds())
@@ -1121,9 +1159,9 @@ export default {
     getUpdateRecords () {
       return this._getData(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
     },
-    clearActive (force) {
-      this.isClearlActivate = true
-      this._clearActiveData(force)
+    clearActive () {
+      this.callEvent = 'clear'
+      this._clearActiveData()
       this._restoreTooltip()
     },
     /**
@@ -1154,11 +1192,21 @@ export default {
     getActiveRow () {
       if (this.lastActive) {
         let { row, column } = this.lastActive
-        let index = XEUtils.findIndexOf(this.datas, item => item === row)
+        let rowIndex = this._getTDataIndex(row)
         if (this.configs.mode === 'row') {
-          return { row: row.data, $index: index, _row: row, isUpdate: this._isRowDataChange(row) }
+          return {
+            row: row.data,
+            rowIndex: rowIndex,
+            isUpdate: this._isRowDataChange(row)
+          }
         }
-        return { row: row.data, column, $index: index, _row: row, isUpdate: this._isRowDataChange(row, column) }
+        return {
+          row: row.data,
+          rowIndex: rowIndex,
+          column,
+          columnIndex: this._getColumnIndex(column),
+          isUpdate: this._isRowDataChange(row, column)
+        }
       }
       return null
     },
@@ -1176,50 +1224,61 @@ export default {
         let { $index, column } = scope
         let { row, cell } = this._getColumnByRowIndex($index, column.property)
         if (cell) {
-          return this._validCellRules(row.validActive ? 'all' : 'change', row, column).then(rule => {
-            if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
-              this._clearValidError(row, true)
-            }
-          }).catch(rule => {
-            this._toValidError(rule, row, column, cell)
-          })
+          return this._validCellRules(row.validActive ? 'all' : 'change', row, column)
+            .then(rule => {
+              if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
+                this._clearValidError(row)
+              }
+            }).catch(rule => {
+              this._toValidError(rule, row, column, cell)
+            })
         }
-        this.isManualActivate = false
       })
     },
     checkValid () {
       let row = this.datas.find(item => item.validActive)
       if (row) {
-        let index = XEUtils.findIndexOf(this.datas, item => item === row)
-        return { error: true, row: row.data, prop: row.validActive, rule: row.validRule, $index: index, _row: row }
+        let column = this._getColumnIndexByProp(row.validActive)
+        return {
+          error: true,
+          row: row.data,
+          rowIndex: this._getTDataIndex(row),
+          column,
+          columnIndex: this._getColumnIndex(column),
+          rule: row.validRule
+        }
       }
-      return { error: false }
+      return {
+        error: false
+      }
     },
     /**
      * 对表格某一行进行校验的方法
      * 返回 Promise 对象，或者使用回调方式
      */
     validateRow (record, cb) {
-      let rowIndex = XEUtils.findIndexOf(this.tableData, item => item.data === record)
-      this.isValidActivate = true
+      let rowIndex = this._getTDataIndexByRecord(record)
+      this.callEvent = 'valid'
       return new Promise((resolve, reject) => {
-        let row = this.tableData[rowIndex]
-        this._validRowRules('all', row).then(rest => {
-          let valid = true
-          if (cb) {
-            cb(valid)
-          }
-          resolve(true)
-        }).catch(({ rule, row, column, cell }) => {
-          let valid = false
-          this._toValidError(rule, row, column, cell)
-          if (cb) {
-            cb(valid, { [column.property]: [new Error(rule.message)] })
-            resolve(valid)
-          } else {
-            reject(valid)
-          }
-        })
+        let tableData = this._getTDatas()
+        let row = tableData[rowIndex]
+        this._validRowRules('all', row)
+          .then(rest => {
+            let valid = true
+            if (cb) {
+              cb(valid)
+            }
+            resolve(true)
+          }).catch(({ rule, row, column, cell }) => {
+            let valid = false
+            this._toValidError(rule, row, column, cell)
+            if (cb) {
+              cb(valid, { [column.property]: [new Error(rule.message)] })
+              resolve(valid)
+            } else {
+              reject(valid)
+            }
+          })
       })
     },
     /**
@@ -1228,22 +1287,24 @@ export default {
      */
     validate (cb) {
       let validPromise = Promise.resolve(true)
-      this.isValidActivate = true
+      this.callEvent = 'valid'
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
-        let datas = this.tableData
-        let columns = this.$refs.refElTable.columns
+        let tableData = this._getTDatas()
+        let columns = this.getColumns()
         let ruleKeys = Object.keys(editRules)
-        datas.forEach((row, rowIndex) => {
+        tableData.forEach((row, rowIndex) => {
           this._clearValidError(row)
           columns.forEach((column, columnIndex) => {
             if (ruleKeys.includes(column.property)) {
               validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
-                this._validCellRules('all', row, column).then(resolve).catch(rule => {
-                  let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
-                  let rest = { rule, row, column, cell }
-                  return reject(rest)
-                })
+                this._validCellRules('all', row, column)
+                  .then(resolve)
+                  .catch(rule => {
+                    let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+                    let rest = { rule, row, column, cell }
+                    return reject(rest)
+                  })
               }))
             }
           })

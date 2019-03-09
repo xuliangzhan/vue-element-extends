@@ -87,6 +87,7 @@ export default {
         if (activeInfo.row === row || !this.$refs.editable.checkValid().error) {
           if (activeInfo.isUpdate) {
             MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
+              closeOnClickModal: false,
               distinguishCancelAndClose: true,
               confirmButtonText: '保存',
               cancelButtonText: '放弃修改',
@@ -157,6 +158,7 @@ export default {
       let activeInfo = this.$refs.editable.getActiveRow()
       if (activeInfo && activeInfo.isUpdate) {
         MessageBox.confirm('检测到未保存的内容，确定放弃修改?', '温馨提示', {
+          closeOnClickModal: false,
           confirmButtonText: '放弃更改',
           cancelButtonText: '返回',
           type: 'warning'

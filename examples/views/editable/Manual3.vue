@@ -99,6 +99,7 @@ export default {
           if (activeInfo.isUpdate) {
             this.isClearActiveFlag = false
             MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
+              closeOnClickModal: false,
               distinguishCancelAndClose: true,
               confirmButtonText: '保存',
               cancelButtonText: '放弃修改',
@@ -174,19 +175,20 @@ export default {
       let activeInfo = this.$refs.editable.getActiveRow()
       if (activeInfo && activeInfo.isUpdate) {
         MessageBox.confirm('检测到未保存的内容，确定放弃修改?', '温馨提示', {
+          closeOnClickModal: false,
           confirmButtonText: '放弃更改',
           cancelButtonText: '返回',
           type: 'warning'
         }).then(action => {
           if (action === 'confirm') {
-            this.$refs.editable.clearActive(true)
+            this.$refs.editable.clearActive()
             this.$refs.editable.revert(row)
           } else {
             this.$refs.editable.setActiveRow(row, false)
           }
         }).catch(e => e)
       } else {
-        this.$refs.editable.clearActive(true)
+        this.$refs.editable.clearActive()
       }
     },
     validEvent () {

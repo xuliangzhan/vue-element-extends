@@ -16,7 +16,7 @@
       border
       height="260px"
       :data.sync="list1"
-      :edit-config="{trigger: 'manual', mode: 'row'}"
+      :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod1}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
@@ -57,7 +57,7 @@
       border
       height="260px"
       :data.sync="list2"
-      :edit-config="{trigger: 'manual', mode: 'row'}"
+      :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod2}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
@@ -98,7 +98,7 @@
       border
       height="260px"
       :data.sync="list3"
-      :edit-config="{trigger: 'manual', mode: 'row'}"
+      :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod3}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
@@ -140,7 +140,8 @@ export default {
       regionList: XEUtils.clone(regionData, true),
       list1: XEUtils.clone(listData, true),
       list2: XEUtils.clone(listData, true),
-      list3: XEUtils.clone(listData, true)
+      list3: XEUtils.clone(listData, true),
+      isClearActiveFlag: true
     }
   },
   methods: {
@@ -158,6 +159,56 @@ export default {
       let activeInfo = this.$refs[name].getActiveRow()
       return activeInfo ? activeInfo.row === row : true
     },
+    clearActiveMethod1 ({ type, row, rowIndex }) {
+      console.log('clear 1')
+      if (type === 'out') {
+        return this.isClearActiveFlag ? this.checkSaveData('editable1', row) : this.isClearActiveFlag
+      }
+      return this.isClearActiveFlag
+    },
+    clearActiveMethod2 ({ type, row, rowIndex }) {
+      console.log('clear 2')
+      if (type === 'out') {
+        return this.isClearActiveFlag ? this.checkSaveData('editable2', row) : this.isClearActiveFlag
+      }
+      return this.isClearActiveFlag
+    },
+    clearActiveMethod3 ({ type, row, rowIndex }) {
+      console.log('clear 3')
+      if (type === 'out') {
+        return this.isClearActiveFlag ? this.checkSaveData('editable3', row) : this.isClearActiveFlag
+      }
+      return this.isClearActiveFlag
+    },
+    // 判断多表格切换时是否有数据没有保存
+    checkSaveData (name, row) {
+      if (this.$refs[name].hasRowChange(row)) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('您离开了表格，检测未保存的内容，是否在离开前保存修改?', '温馨提示', {
+          closeOnClickModal: false,
+          distinguishCancelAndClose: true,
+          confirmButtonText: '保存',
+          cancelButtonText: '放弃修改',
+          type: 'warning'
+        }).then(() => {
+          this.$refs[name].clearActive()
+          this.updateRowEvent(name, row)
+        }).catch(action => {
+          if (action === 'cancel') {
+            this.$refs[name].revert(row)
+            this.$refs[name].clearActive()
+            Message({ message: '放弃修改并离开当前行', type: 'warning' })
+          } else {
+            this.$refs[name].setActiveRow(row)
+            Message({ message: '停留在当前行编辑', type: 'info' })
+          }
+        }).then(() => {
+          this.isClearActiveFlag = true
+        })
+        return false
+      }
+      return this.isClearActiveFlag
+    },
     openActiveRowEvent (name, row) {
       let activeInfo = this.$refs[name].getActiveRow()
       // 如果当前行正在编辑中，禁止编辑其他行
@@ -165,6 +216,7 @@ export default {
         if (activeInfo.row === row || !this.$refs[name].checkValid().error) {
           if (activeInfo.isUpdate) {
             MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
+              closeOnClickModal: false,
               distinguishCancelAndClose: true,
               confirmButtonText: '保存',
               cancelButtonText: '放弃修改',
@@ -219,6 +271,7 @@ export default {
       let activeInfo = this.$refs[name].getActiveRow()
       if (activeInfo && activeInfo.isUpdate) {
         MessageBox.confirm('检测到未保存的内容，确定放弃修改?', '温馨提示', {
+          closeOnClickModal: false,
           confirmButtonText: '放弃更改',
           cancelButtonText: '返回',
           type: 'warning'

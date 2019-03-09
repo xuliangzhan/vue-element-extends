@@ -50,11 +50,13 @@
       </template>
       <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
         <template v-if="scope.row.config.useDefaultValidTip">
-          <slot name="valid" v-bind="getVaildScope(scope)">
-            <div class="editable-valid_error">
-              <span class="valid-message">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</span>
-            </div>
-          </slot>
+          <template v-if="scope.row.showValidMsg">
+            <slot name="valid" v-bind="getVaildScope(scope)">
+              <div class="editable-valid_error">
+                <span class="valid-message">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</span>
+              </div>
+            </slot>
+          </template>
         </template>
         <template v-else-if="!scope.row.config.validTooltip.disabled">
           <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">

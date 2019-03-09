@@ -92,7 +92,7 @@ export default {
       regionList: [],
       pageVO: {
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 100,
         totalResult: 0
       }
     }
@@ -109,7 +109,7 @@ export default {
         this.loadList(),
         this.getColumnConfigs().then(data => {
           this.columnConfigs = data.map(column => {
-            let defaultShow = ['name', 'region', 'rate'].includes(column.prop)
+            let defaultShow = ['name', 'age', 'birthdate'].includes(column.prop)
             column.customDefault = defaultShow
             column.customShow = defaultShow
             switch (column.prop) {
@@ -230,15 +230,17 @@ export default {
     getColumnConfigs () {
       // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 1000)
+        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 100)
       })
     },
     getDataJSON () {
       // 模拟分页数据
       return new Promise(resolve => {
         let list = []
-        Array.from(new Array(50)).map(item => {
-          list = list.concat(listData)
+        Array.from(new Array(100)).map(item => {
+          if (list.length < this.pageVO.pageSize) {
+            list = list.concat(listData)
+          }
         })
         list = XEUtils.shuffle(XEUtils.clone(list, true))
         list.length = this.pageVO.pageSize

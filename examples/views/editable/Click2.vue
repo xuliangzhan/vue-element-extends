@@ -76,7 +76,7 @@ export default {
       ],
       pageVO: {
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 50,
         totalResult: 0
       }
     }
@@ -158,8 +158,10 @@ export default {
       // 模拟分页数据
       return new Promise(resolve => {
         let list = []
-        Array.from(new Array(50)).map(item => {
-          list = list.concat(listData)
+        Array.from(new Array(100)).map(item => {
+          if (list.length < this.pageVO.pageSize) {
+            list = list.concat(listData)
+          }
         })
         list = XEUtils.shuffle(XEUtils.clone(list, true))
         list.length = this.pageVO.pageSize

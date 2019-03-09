@@ -187,7 +187,7 @@ export default {
       this.$refs.editable.updateStatus(scope)
     },
     getSelectLabel (value, valueProp, labelProp, list) {
-      let item = list.find(item => item[valueProp] === value)
+      let item = XEUtils.find(list, item => item[valueProp] === value)
       return item ? item[labelProp] : null
     },
     attr5ChangeEvent (scope) {

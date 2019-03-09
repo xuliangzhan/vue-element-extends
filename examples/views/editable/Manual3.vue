@@ -1,6 +1,7 @@
 <template>
   <div>
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符</p>
+    <p style="color: red;font-size: 12px;">可以给 data 设置特殊：_checked=true 默认选中；_disabled=true 默认禁止勾选，如果自定义了 selectable 方法，则根据该方法结果决定是否允许勾选</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增一行</el-button>
@@ -8,6 +9,7 @@
       <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
+      <el-button type="warning" size="mini" @click="$refs.editable.toggleRowSelection(list[1], true)">设置第二行为选中</el-button>
     </p>
 
     <el-editable
@@ -59,7 +61,7 @@ export default {
     return {
       sexList: XEUtils.clone(sexData, true),
       regionList: XEUtils.clone(regionData, true),
-      list: XEUtils.clone(listData, true),
+      list: [],
       isClearActiveFlag: true,
       validRules: {
         name: [
@@ -68,6 +70,14 @@ export default {
         ]
       }
     }
+  },
+  created () {
+    let list = XEUtils.clone(listData, true).map((item, index) => {
+      item._checked = index < 2
+      item._disabled = index === 3
+      return item
+    })
+    this.list = list
   },
   methods: {
     insertEvent () {
@@ -169,14 +179,14 @@ export default {
           type: 'warning'
         }).then(action => {
           if (action === 'confirm') {
-            this.$refs.editable.clearActive()
+            this.$refs.editable.clearActive(true)
             this.$refs.editable.revert(row)
           } else {
             this.$refs.editable.setActiveRow(row, false)
           }
         }).catch(e => e)
       } else {
-        this.$refs.editable.clearActive()
+        this.$refs.editable.clearActive(true)
       }
     },
     validEvent () {

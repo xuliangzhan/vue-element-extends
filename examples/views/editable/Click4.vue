@@ -1,7 +1,8 @@
 <template>
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">region字段（校验必填）</p>
-    <p style="color: red;font-size: 12px;">第1行不允许勾选</p>
+    <p style="color: red;font-size: 12px;">可以给 data 设置特殊：_checked=true 默认选中；_disabled=true 默认禁止勾选，如果自定义了 selectable 方法，则根据该方法结果决定是否允许勾选</p>
+    <p style="color: red;font-size: 12px;">自定义 selectable 方法，限制第1行不允许勾选</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
@@ -23,6 +24,7 @@
       stripe
       border
       size="medium"
+      :data.sync="list"
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
@@ -107,6 +109,7 @@ export default {
   data () {
     return {
       loading: false,
+      list: [],
       sexList: [],
       regionList: [],
       orderDataList: [
@@ -157,7 +160,11 @@ export default {
     findList () {
       this.loading = true
       this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
+        data.forEach((item, index) => {
+          item._checked = index === 3
+          item._disabled = index === 2 // 如果自定义了 selectable 方法，该属性无效
+        })
+        this.list = data
         this.loading = false
       }).catch(e => {
         this.loading = false

@@ -198,7 +198,7 @@ export default {
         headerAlign: this.headerAlign,
         className: `editable-column ${XEUtils.trimRight(clsName)}`,
         labelClassName: this.labelClassName,
-        selectable: this.selectable ? this.selectableEvent : this.selectable,
+        selectable: this.selectableEvent,
         reserveSelection: this.reserveSelection,
         filters: this.filters,
         filterPlacement: this.filterPlacement,
@@ -372,7 +372,10 @@ export default {
       return this.sortMethod(v1.data, v2.data)
     },
     selectableEvent (row, index) {
-      return this.selectable(row.data, index)
+      if (this.selectable) {
+        return this.selectable(row.data, index)
+      }
+      return !row.data._disabled
     },
     filterMethodEvent (value, row, column) {
       return this.filterMethod(value, row.data, column)

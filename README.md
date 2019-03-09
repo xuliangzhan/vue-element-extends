@@ -119,7 +119,7 @@ edit-config 编辑参数配置
 | removeByIndexs | 根据多个行号删除多行数据 | $indexs |
 | removeSelecteds | 删除选中行数据 | — |
 | clear | 清空所有数据 | — |
-| clearActive | 清除所有活动行或列为不可编辑状态 | — |
+| clearActive | 清除所有活动行或列为不可编辑状态 | force? |
 | hasActiveRow | 判断当前是否活动行 | row |
 | getActiveRow | 获取当前活动行或列的信息 | — |
 | setActiveRow | 只对 mode=row 有效，激活指定行行为可编辑状态 | row, preventDefault? |

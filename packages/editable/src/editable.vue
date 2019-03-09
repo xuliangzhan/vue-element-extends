@@ -231,6 +231,13 @@ export default {
         this.initialStore = XEUtils.clone(datas, true)
       }
       this.datas = (datas || []).map(record => this._toData(this.datas.some(row => row.data === record) ? record : Object.assign(record, this._defineProp(record))))
+      this.$nextTick(() => {
+        this.datas.forEach(row => {
+          if (row.data._checked) {
+            this.$refs.refElTable.toggleRowSelection(row, true)
+          }
+        })
+      })
     },
     _getData (datas) {
       return (datas || this.datas).map(item => item.data)
@@ -607,12 +614,15 @@ export default {
         })
       }
     },
-    _clearActiveData () {
+    _clearActiveData (force) {
       this.lastActive = null
       this.datas.forEach(item => {
         item.editActive = null
         item.showValidMsg = false
         item.checked = null
+        if (force) {
+          item.validActive = null
+        }
       })
     },
     _restoreTooltip (cell) {
@@ -1111,9 +1121,9 @@ export default {
     getUpdateRecords () {
       return this._getData(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
     },
-    clearActive () {
+    clearActive (force) {
       this.isClearlActivate = true
-      this._clearActiveData()
+      this._clearActiveData(force)
       this._restoreTooltip()
     },
     /**

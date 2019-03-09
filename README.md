@@ -170,7 +170,7 @@ edit-render 渲染参数配置
 
 [Run this demo on jsfiddle.net](https://jsfiddle.net/dakygb7v/)
 
-😱由于编辑表格响应属性及渲染开销较大，不适用于一页显示海量数据的表格；建议使用分页渲染可视区域内能显示的数据😱  
+😱编辑表格响应属性及渲染开销较大，不适用于一页显示海量数据的表格；建议使用分页渲染可视区域内能显示的数据😱  
 也可以把 packages 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，再根据项目需求去做修改  
 如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
 

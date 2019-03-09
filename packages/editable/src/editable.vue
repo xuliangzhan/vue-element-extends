@@ -488,7 +488,8 @@ export default {
           let column = columns[columnIndex]
           if (column) {
             let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
-            this._triggerActive(row, column, cell, event).then(() => XEUtils.set(row.data, column.property, null))
+            this._triggerActive(row, column, cell, event)
+              .then(() => XEUtils.set(row.data, column.property, null))
           }
         }
       }
@@ -760,7 +761,8 @@ export default {
             resolve(rest)
           })
         } else {
-          reject(rest)
+          this.$emit('edit-disabled', row.data, column, cell, event)
+          resolve(rest)
         }
       })
     },
@@ -911,11 +913,12 @@ export default {
       if (this.lastActive && !XEUtils.isEmpty(this.editRules)) {
         let { row, column, cell } = this.lastActive
         if (row && this.configs.mode === 'row') {
-          return this._validRowRules(row.validActive ? 'all' : 'blur', row).catch(({ rule, row, column, cell }) => {
-            let rest = { rule, row, column, cell }
-            this._toValidError(rule, row, column, cell)
-            return Promise.reject(rest)
-          })
+          return this._validRowRules(row.validActive ? 'all' : 'blur', row)
+            .catch(({ rule, row, column, cell }) => {
+              let rest = { rule, row, column, cell }
+              this._toValidError(rule, row, column, cell)
+              return Promise.reject(rest)
+            })
         } else {
           return this._validCellRules(row.validActive ? 'all' : 'blur', row, column).catch(rule => {
             let rest = { rule, row, column, cell }

@@ -29,6 +29,7 @@
       size="medium"
       @select="selectEvent"
       @current-change="currentChangeEvent"
+      @edit-disabled="editDisabledEvent"
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, activeMethod}"
       style="width: 100%">
@@ -170,6 +171,9 @@ export default {
         return false
       }
       return true
+    },
+    editDisabledEvent (row, column, cell, event) {
+      MessageBox({ message: '该行禁止编辑', title: '温馨提示', type: 'error' }).catch(e => e)
     },
     removeEvent (row) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {

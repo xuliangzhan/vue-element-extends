@@ -30,6 +30,7 @@
       size="medium"
       @select="selectEvent"
       @current-change="currentChangeEvent"
+      @edit-disabled="editDisabledEvent"
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, activeMethod}"
       style="width: 100%">
@@ -194,6 +195,9 @@ export default {
       let list = this.$refs.editable.getRecords()
       this.attr5Options = this.typeOptions.filter(item => !list.some(row => row.attr5 === item.label))
       this.$refs.editable.updateStatus(scope)
+    },
+    editDisabledEvent (row, column, cell, event) {
+      MessageBox({ message: '该单元格禁止编辑', title: '温馨提示', type: 'error' }).catch(e => e)
     },
     submitEvent () {
       this.$refs.editable.validate(valid => {

@@ -101,7 +101,8 @@ edit-config 编辑参数配置
 | 事件名 | 说明 | 参数 |
 |------|------|-----|
 | valid-error | 校验不通过时会触发该事件 | rule, row, column, cell |
-| edit-active | 激活编辑状态之后会触发该事件 | row, column, cell, event |
+| edit-active | 当点击后改变为编辑状态之后会触发该事件 | row, column, cell, event |
+| edit-disabled | 当点击后行或单元格如果是禁用状态时会触发该事件 | row, column, cell, event |
 | clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row[, column, cell]?, event |
 
 ### Editable Methods

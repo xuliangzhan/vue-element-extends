@@ -66,60 +66,12 @@
 <script>
 import XEUtils from 'xe-utils'
 import { Message, MessageBox } from 'element-ui'
+import regionData from '@/common/json/editable/region.json'
 
 export default {
   data () {
     return {
-      cascaderList: [
-        {
-          label: '广东',
-          value: '1000',
-          children: [
-            {
-              label: '深圳',
-              value: '1010',
-              children: [
-                {
-                  label: '南山',
-                  value: '1011'
-                },
-                {
-                  label: '龙岗',
-                  value: '1012'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '北京',
-          value: '2000',
-          children: [
-            {
-              label: '东城',
-              value: '2010'
-            },
-            {
-              label: '西城',
-              value: '2020'
-            }
-          ]
-        },
-        {
-          label: '上海',
-          value: '3000',
-          children: [
-            {
-              label: '黄浦',
-              value: '3010'
-            },
-            {
-              label: '金山',
-              value: '3020'
-            }
-          ]
-        }
-      ],
+      cascaderList: regionData,
       selectList: [
         {
           label: '男',
@@ -134,8 +86,8 @@ export default {
         {
           select1: '1',
           select2: '0',
-          cascader1: ['1000', '1010', '1012'],
-          cascader2: ['2000', '2010'],
+          cascader1: [19, 199, 1773],
+          cascader2: [19, 197, 1751],
           date1: new Date(),
           date2: new Date(),
           flag1: true,

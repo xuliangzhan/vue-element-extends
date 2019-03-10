@@ -26,7 +26,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>行编辑+排序+禁用行编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>列编辑+排序+禁用列编辑+唯一下拉选项</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick12'}" replace>列编辑+排序+多级属性</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick13'}" replace>列编辑+排序+标记删除+方向键&amp;切换</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick13'}" replace>列编辑+排序+标记删除+方向键&amp;Tab键切换</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">双击模式</a>
@@ -36,7 +36,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>个性化列+唯一下拉选项+完整校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>个性化列+自定义列头+校验+自适应高度</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>个性化列+自定义列头+校验+关闭默认校验方式</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick7'}" replace>个性化列+校验+标记删除+导出数据+方向键&amp;切换</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick7'}" replace>个性化列+校验+标记删除+导出数据+方向键&amp;Tab键切换</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">Excel表格</a>
@@ -45,7 +45,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>校验+排序+筛选</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel4'}" replace>校验+排序+筛选+个性化列</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel5'}" replace>校验+排序+筛选+个性化列+导出数据</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableExcel6'}" replace>校验+排序+筛选+个性化列+导出数据+方向键&amp;切换</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel6'}" replace>校验+排序+筛选+个性化列+导出数据+方向键&amp;Tab键切换</router-link>
       </div>
     </div>
     <router-view/>

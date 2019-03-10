@@ -48,8 +48,8 @@
         <router-link class="apimenu-link" :to="{name: 'EditableExcel6'}" replace>校验+排序+筛选+个性化列+导出数据+方向键&amp;Tab键切换</router-link>
       </div>
       <div class="apimenu-row">
-        <a class="apimenu-title">El 和 iView</a>
-        <router-link class="apimenu-link" :to="{name: 'EditableMultiComp1'}" replace>自定义渲染不同 UI</router-link>
+        <a class="apimenu-title">El和iView</a>
+        <router-link class="apimenu-link" :to="{name: 'EditableMultiComp1'}" replace>渲染多个 UI 组件</router-link>
       </div>
     </div>
     <router-view/>

@@ -188,7 +188,7 @@ edit-render 渲染参数配置
   <div>
     <el-button @click="$refs.editable.insert({name: 'new1'})">新增</el-button>
     <el-button @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button @click="$refs.editable.clear()">清空</el-button>
+    <el-button @click="$refs.editable.clear()">清空表格</el-button>
 
     <el-editable
       ref="editable"

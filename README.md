@@ -189,15 +189,37 @@ edit-render 渲染参数配置
     <el-button @click="$refs.editable.insert({name: 'new1'})">新增</el-button>
     <el-button @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button @click="$refs.editable.clear()">清空</el-button>
+
     <el-editable ref="editable" :data.sync="tableData">
-      <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="只读"></el-editable-column>
-      <el-editable-column prop="sex" label="下拉" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="age" label="数值" :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
-      <el-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="flag" label="开关" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="remark" label="文本" :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column
+        type="selection"
+        width="55"></el-editable-column>
+      <el-editable-column
+        type="index"
+        width="55"></el-editable-column>
+      <el-editable-column
+        prop="name"
+        label="只读"></el-editable-column>
+      <el-editable-column
+        prop="sex"
+        label="下拉"
+        :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column
+        prop="age"
+        label="数值"
+        :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
+      <el-editable-column
+        prop="date"
+        label="日期"
+        :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column
+        prop="flag"
+        label="开关"
+        :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+      <el-editable-column
+        prop="remark"
+        label="文本"
+        :edit-render="{name: 'ElInput'}"></el-editable-column>
     </el-editable>
   </div>
 </template>

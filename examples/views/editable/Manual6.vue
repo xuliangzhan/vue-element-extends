@@ -20,7 +20,7 @@
       border
       :data.sync="list"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'manual', mode: 'row'}"
+      :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
@@ -68,7 +68,8 @@ export default {
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, max: 10, message: '名称长度 3-10 个字符', trigger: 'blur' }
         ]
-      }
+      },
+      isClearActiveFlag: true
     }
   },
   methods: {
@@ -92,6 +93,36 @@ export default {
     isRowOperate (row) {
       let activeInfo = this.$refs.editable.getActiveRow()
       return activeInfo ? activeInfo.row === row : true
+    },
+    clearActiveMethod ({ type, row, rowIndex }) {
+      if (this.isClearActiveFlag && type === 'out') {
+        if (this.$refs.editable.hasRowChange(row)) {
+          this.isClearActiveFlag = false
+          MessageBox.confirm('您离开了表格，检测未保存的内容，是否在离开前保存修改?', '温馨提示', {
+            closeOnClickModal: false,
+            distinguishCancelAndClose: true,
+            confirmButtonText: '保存',
+            cancelButtonText: '放弃修改',
+            type: 'warning'
+          }).then(() => {
+            this.$refs.editable.clearActive()
+            this.updateRowEvent(name, row)
+          }).catch(action => {
+            if (action === 'cancel') {
+              this.$refs.editable.revert(row)
+              this.$refs.editable.clearActive()
+              Message({ message: '放弃修改并离开当前行', type: 'warning' })
+            } else {
+              this.$refs.editable.setActiveRow(row)
+              Message({ message: '停留在当前行编辑', type: 'info' })
+            }
+          }).then(() => {
+            this.isClearActiveFlag = true
+          })
+          return false
+        }
+      }
+      return this.isClearActiveFlag
     },
     openActiveRowEvent (row) {
       let activeInfo = this.$refs.editable.getActiveRow()

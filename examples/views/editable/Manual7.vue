@@ -161,22 +161,22 @@ export default {
     },
     clearActiveMethod1 ({ type, row, rowIndex }) {
       console.log('clear 1')
-      if (type === 'out') {
-        return this.isClearActiveFlag ? this.checkSaveData('editable1', row) : this.isClearActiveFlag
+      if (this.isClearActiveFlag && type === 'out') {
+        return this.checkSaveData('editable1', row)
       }
       return this.isClearActiveFlag
     },
     clearActiveMethod2 ({ type, row, rowIndex }) {
       console.log('clear 2')
-      if (type === 'out') {
-        return this.isClearActiveFlag ? this.checkSaveData('editable2', row) : this.isClearActiveFlag
+      if (this.isClearActiveFlag && type === 'out') {
+        return this.checkSaveData('editable2', row)
       }
       return this.isClearActiveFlag
     },
     clearActiveMethod3 ({ type, row, rowIndex }) {
       console.log('clear 3')
-      if (type === 'out') {
-        return this.isClearActiveFlag ? this.checkSaveData('editable3', row) : this.isClearActiveFlag
+      if (this.isClearActiveFlag && type === 'out') {
+        return this.checkSaveData('editable3', row)
       }
       return this.isClearActiveFlag
     },

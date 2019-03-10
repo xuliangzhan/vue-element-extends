@@ -254,7 +254,7 @@ export default {
         validActive: null,
         validRule: null,
         showValidMsg: false,
-        checked: false,
+        checked: null,
         editActive: null,
         editStatus: status || 'initial',
         config: {
@@ -381,9 +381,6 @@ export default {
       this.$emit('cell-mouse-leave', row.data, column, cell, event)
     },
     _cellClick (row, column, cell, event) {
-      this.datas.forEach(item => {
-        item.checked = item === row ? column.property : null
-      })
       this._cellHandleEvent('click', row, column, cell, event)
     },
     _cellDBLclick (row, column, cell, event) {
@@ -427,9 +424,10 @@ export default {
                         let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
                         this._validCellRules('blur', row, column)
                           .then(() => {
+                            this._restoreTooltip()
+                            this._clearActiveData()
                             row.editActive = null
                             row.checked = offsetColumn.property
-                            this._restoreTooltip()
                           }).catch(rule => this._toValidError(rule, row, column, cell))
                       } else {
                         row.checked = offsetColumn.property
@@ -503,7 +501,7 @@ export default {
      * 如果存在校验不通过，自动聚焦到错误单元格
      */
     _triggerClear (evnt) {
-      this._clearChecked(evnt)
+      this._triggerClearChecked(evnt)
       if (this.configs.autoClearActive && !this.callEvent && this.lastActive) {
         let target = evnt.target
         let clearActiveMethod = this.configs.clearActiveMethod
@@ -587,6 +585,10 @@ export default {
               this._validCellRules('change', row, column)
                 .catch(rule => this._toValidError(rule, row, column, cell))
             }
+          } else {
+            this.datas.forEach(item => {
+              item.checked = item === row ? column.property : null
+            })
           }
         }).catch(e => e).then(() => this.$emit(`cell-${type}`, row.data, column, cell, event))
       } else {
@@ -603,6 +605,7 @@ export default {
       this.$emit('row-dblclick', row.data, event)
     },
     _headerClick (column, event) {
+      this._clearChecked()
       this.$emit('header-click', column, event)
     },
     _headerContextmenu (column, event) {
@@ -629,17 +632,34 @@ export default {
     _expandChange (row, expandedRows) {
       this.$emit('expand-change', row.data, expandedRows)
     },
-    _clearChecked (evnt) {
-      let target = evnt.target
-      while (target && target.nodeType && target !== document) {
-        if (target === this.$el) {
-          return
-        }
-        target = target.parentNode
-      }
+    _clearChecked () {
       this.datas.forEach(row => {
         row.checked = null
       })
+    },
+    _triggerClearChecked (evnt) {
+      let target = evnt.target
+      let isRow = false
+      let isColumn = false
+      let isHeader = false
+      while (target && target.nodeType && target !== document) {
+        if (this._hasClass(target, 'editable-row')) {
+          isRow = true
+        }
+        if (this._hasClass(target, 'editable-column')) {
+          isColumn = true
+        }
+        if (this._hasClass(target, 'el-table__header-wrapper')) {
+          isHeader = true
+        }
+        if (target === this.$el) {
+          if (!isHeader && (isRow || isColumn)) {
+            return
+          }
+        }
+        target = target.parentNode
+      }
+      this._clearChecked()
     },
     _clearActiveData () {
       this.lastActive = null

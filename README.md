@@ -190,7 +190,9 @@ edit-render 渲染参数配置
     <el-button @click="$refs.editable.removeSelecteds()">删除选中</el-button>
     <el-button @click="$refs.editable.clear()">清空</el-button>
 
-    <el-editable ref="editable" :data.sync="tableData">
+    <el-editable
+      ref="editable"
+      :data.sync="tableData">
       <el-editable-column
         type="selection"
         width="55"></el-editable-column>

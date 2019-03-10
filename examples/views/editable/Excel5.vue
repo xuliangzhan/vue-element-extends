@@ -77,7 +77,7 @@ export default {
         columns.forEach((name, index) => {
           switch (name) {
             case 'A':
-              rest[name.toLowerCase()] = `123`
+              rest[name.toLowerCase()] = `${100 + i}`
               break
             case 'B':
               rest[name.toLowerCase()] = `值`
@@ -86,10 +86,10 @@ export default {
               rest[name.toLowerCase()] = `ABC`
               break
             case 'D':
-              rest[name.toLowerCase()] = `20`
+              rest[name.toLowerCase()] = `${20 + i}`
               break
             case 'E':
-              rest[name.toLowerCase()] = `23.33`
+              rest[name.toLowerCase()] = `${13.33 + i}`
               break
             default:
               rest[name.toLowerCase()] = `${name}${i}_${index}`

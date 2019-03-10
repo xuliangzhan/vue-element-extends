@@ -88,7 +88,7 @@ export default {
         headerRowStyle: XEUtils.isFunction(this.headerRowStyle) ? this._headerRowStyle : this.headerRowStyle,
         headerCellClassName: XEUtils.isFunction(this.headerCellClassName) ? this._headerCellClassName : this.headerCellClassName,
         headerCellStyle: XEUtils.isFunction(this.headerCellStyle) ? this._headerCellStyle : this.headerCellStyle,
-        rowKey: XEUtils.isFunction(this.rowKey) ? this._rowKey : this.rowKey,
+        rowKey: XEUtils.isFunction(this.rowKey) ? this._rowKey : this.rowKey ? `data.${this.rowKey}` : this.rowKey,
         emptyText: this.emptyText,
         defaultExpandAll: this.defaultExpandAll,
         expandRowKeys: this.expandRowKeys,

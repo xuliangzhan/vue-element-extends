@@ -381,6 +381,9 @@ export default {
       this.$emit('cell-mouse-leave', row.data, column, cell, event)
     },
     _cellClick (row, column, cell, event) {
+      this.datas.forEach(item => {
+        item.checked = item === row ? column.property : null
+      })
       this._cellHandleEvent('click', row, column, cell, event)
     },
     _cellDBLclick (row, column, cell, event) {
@@ -501,56 +504,54 @@ export default {
      */
     _triggerClear (evnt) {
       this._clearChecked(evnt)
-      if (this.configs.autoClearActive) {
-        if (!this.callEvent && this.lastActive) {
-          let target = evnt.target
-          let clearActiveMethod = this.configs.clearActiveMethod
-          let { row, column, cell } = this.lastActive
-          let rowIndex = this._getDataIndex(row)
-          let trElem = cell.parentNode
-          let isClearActive = true
-          let type = null
-          while (target && target.nodeType && target !== document) {
-            if (this.configs.mode === 'row' ? target === trElem : target === cell) {
-              return
-            }
-            if (this.configs.mode === 'row' ? this._hasClass(target, 'editable-row') && this._getIndex(Array.from(target.parentNode.children), target) !== rowIndex : this._hasClass(target, 'editable-column')) {
-              type = 'in'
-            }
-            if (type && this._hasClass(target, 'editable')) {
-              if (target !== this.$el) {
-                type = 'out'
-              }
-              break
-            }
-            target = target.parentNode
+      if (this.configs.autoClearActive && !this.callEvent && this.lastActive) {
+        let target = evnt.target
+        let clearActiveMethod = this.configs.clearActiveMethod
+        let { row, column, cell } = this.lastActive
+        let rowIndex = this._getDataIndex(row)
+        let trElem = cell.parentNode
+        let isClearActive = true
+        let type = null
+        while (target && target.nodeType && target !== document) {
+          if (this.configs.mode === 'row' ? target === trElem : target === cell) {
+            return
           }
-          if (clearActiveMethod) {
-            let param = {
-              type: type || 'out',
-              row: row.data,
-              rowIndex
-            }
-            if (this.configs.mode === 'cell') {
-              Object.assign(param, {
-                column,
-                columnIndex: this._getColumnIndex(column)
-              })
-            }
-            isClearActive = clearActiveMethod(param)
+          if (this.configs.mode === 'row' ? this._hasClass(target, 'editable-row') && this._getIndex(Array.from(target.parentNode.children), target) !== rowIndex : this._hasClass(target, 'editable-column')) {
+            type = 'in'
           }
-          if (isClearActive) {
-            this._validActiveCell().then(() => {
-              this._clearValidError(row)
-              this._clearActiveData()
-              this._restoreTooltip()
-              if (this.configs.mode === 'row') {
-                this.$emit('clear-active', row.data, evnt)
-              } else {
-                this.$emit('clear-active', row.data, column, cell, evnt)
-              }
-            }).catch(e => e)
+          if (type && this._hasClass(target, 'editable')) {
+            if (target !== this.$el) {
+              type = 'out'
+            }
+            break
           }
+          target = target.parentNode
+        }
+        if (clearActiveMethod) {
+          let param = {
+            type: type || 'out',
+            row: row.data,
+            rowIndex
+          }
+          if (this.configs.mode === 'cell') {
+            Object.assign(param, {
+              column,
+              columnIndex: this._getColumnIndex(column)
+            })
+          }
+          isClearActive = clearActiveMethod(param)
+        }
+        if (isClearActive) {
+          this._validActiveCell().then(() => {
+            this._clearValidError(row)
+            this._clearActiveData()
+            this._restoreTooltip()
+            if (this.configs.mode === 'row') {
+              this.$emit('clear-active', row.data, evnt)
+            } else {
+              this.$emit('clear-active', row.data, column, cell, evnt)
+            }
+          }).catch(e => e)
         }
       }
       this.callEvent = null
@@ -586,8 +587,6 @@ export default {
               this._validCellRules('change', row, column)
                 .catch(rule => this._toValidError(rule, row, column, cell))
             }
-          } else {
-            row.checked = column.property
           }
         }).catch(e => e).then(() => this.$emit(`cell-${type}`, row.data, column, cell, event))
       } else {
@@ -632,18 +631,15 @@ export default {
     },
     _clearChecked (evnt) {
       let target = evnt.target
-      let bodyWrapperElem = this.$el.querySelector('.el-table__body-wrapper')
-      if (bodyWrapperElem) {
-        while (target && target.nodeType && target !== document) {
-          if (target === bodyWrapperElem) {
-            return
-          }
-          target = target.parentNode
+      while (target && target.nodeType && target !== document) {
+        if (target === this.$el) {
+          return
         }
-        this.datas.forEach(row => {
-          row.checked = false
-        })
+        target = target.parentNode
       }
+      this.datas.forEach(row => {
+        row.checked = null
+      })
     },
     _clearActiveData () {
       this.lastActive = null

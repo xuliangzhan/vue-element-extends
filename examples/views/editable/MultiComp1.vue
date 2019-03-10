@@ -30,10 +30,10 @@
         </template>
         <template slot-scope="scope">{{ getSelectLabel(scope.row.select2) }}</template>
       </el-editable-column>
-      <el-editable-column prop="cascader1" label="ElCascader" :edit-render="{name: 'ElCascader', attrs: {options: regionList, clearable: true}}"></el-editable-column>
+      <el-editable-column prop="cascader1" label="ElCascader" :edit-render="{name: 'ElCascader', attrs: {options: cascaderList, clearable: true}}"></el-editable-column>
       <el-editable-column prop="cascader2" label="iCascader" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
-          <Cascader :data="regionList" v-model="scope.row.cascader2"></Cascader>
+          <Cascader :data="cascaderList" v-model="scope.row.cascader2"></Cascader>
         </template>
         <template slot-scope="scope">{{ getCascaderLabel(scope.row.cascader2) }}</template>
       </el-editable-column>
@@ -66,12 +66,60 @@
 <script>
 import XEUtils from 'xe-utils'
 import { Message, MessageBox } from 'element-ui'
-import regionData from '@/common/json/editable/region.json'
 
 export default {
   data () {
     return {
-      regionList: XEUtils.clone(regionData, true),
+      cascaderList: [
+        {
+          label: '广东',
+          value: '1000',
+          children: [
+            {
+              label: '深圳',
+              value: '1010',
+              children: [
+                {
+                  label: '南山',
+                  value: '1011'
+                },
+                {
+                  label: '龙岗',
+                  value: '1012'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          label: '北京',
+          value: '2000',
+          children: [
+            {
+              label: '东城',
+              value: '2010'
+            },
+            {
+              label: '西城',
+              value: '2020'
+            }
+          ]
+        },
+        {
+          label: '上海',
+          value: '3000',
+          children: [
+            {
+              label: '黄浦',
+              value: '3010'
+            },
+            {
+              label: '金山',
+              value: '3020'
+            }
+          ]
+        }
+      ],
       selectList: [
         {
           label: '男',
@@ -86,8 +134,8 @@ export default {
         {
           select1: '1',
           select2: '0',
-          cascader1: [19, 199, 1773],
-          cascader2: [19, 199, 1774],
+          cascader1: ['1000', '1010', '1012'],
+          cascader2: ['2000', '2010'],
           date1: new Date(),
           date2: new Date(),
           flag1: true,
@@ -120,7 +168,7 @@ export default {
     },
     getCascaderLabel (cellValue) {
       let labels = []
-      this.matchCascaderData(cellValue || [], 0, this.regionList, labels)
+      this.matchCascaderData(cellValue || [], 0, this.cascaderList, labels)
       return labels.join(' / ')
     },
     getDateLabel (cellValue) {

@@ -25,6 +25,7 @@
       class="dblclick-table7"
       stripe
       border
+      height="480"
       size="medium"
       :row-class-name="tableRowClassName"
       @valid-error="validErrorEvent"

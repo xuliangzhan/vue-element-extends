@@ -497,7 +497,7 @@ export default {
     },
     /**
      * 如果点击了表格外会触发清除
-     * 如果点击了表格内不同行会触发清除
+     * 如果点击了表格内不同行或单元格会触发清除
      * 如果存在校验不通过，自动聚焦到错误单元格
      */
     _triggerClear (evnt) {
@@ -666,7 +666,6 @@ export default {
       this.datas.forEach(item => {
         item.editActive = null
         item.showValidMsg = false
-        item.checked = null
       })
     },
     _restoreTooltip (cell) {
@@ -765,6 +764,7 @@ export default {
         if (!this._isDisabledEdit(row, column)) {
           this._restoreTooltip(cell)
           this._disabledTooltip(cell)
+          this._clearChecked()
           this._clearActiveData()
           this.lastActive = { row, column, cell }
           row.editActive = column.property
@@ -1059,6 +1059,7 @@ export default {
     reload (datas) {
       this.deleteRecords = []
       this._clearAllOpers()
+      this._clearChecked()
       this._clearActiveData()
       this._initial(datas, true)
       this._updateData()
@@ -1089,6 +1090,7 @@ export default {
      */
     clear () {
       this.deleteRecords = []
+      this._clearChecked()
       this._clearActiveData()
       this._initial([])
       this._updateData()
@@ -1180,6 +1182,7 @@ export default {
     },
     clearActive () {
       this.callEvent = 'clear'
+      this._clearChecked()
       this._clearActiveData()
       this._restoreTooltip()
     },

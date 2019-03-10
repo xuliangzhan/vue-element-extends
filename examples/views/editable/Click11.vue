@@ -34,8 +34,14 @@
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, activeMethod}"
       style="width: 100%">
-      <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
-      <el-editable-column type="index" :index="indexMethod" width="55"></el-editable-column>
+      <el-editable-column
+        type="selection"
+        width="55"
+        :selectable="selectableEvent"></el-editable-column>
+      <el-editable-column
+        type="index"
+        :index="indexMethod"
+        width="55"></el-editable-column>
       <el-editable-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline>
@@ -48,28 +54,76 @@
           </el-form>
         </template>
       </el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" align="center" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="name" label="名字（带校验的自定义渲染)" min-width="220" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
+      <el-editable-column
+        prop="sex"
+        label="性别"
+        width="100"
+        align="center"
+        :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column
+        prop="name"
+        label="名字（带校验的自定义渲染)"
+        min-width="220"
+        show-overflow-tooltip
+        :edit-render="{type: 'default', autofocus: true}">
         <template slot="edit" slot-scope="scope">
           <textarea class="editable-custom_input" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)"></textarea>
         </template>
       </el-editable-column>
-      <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" width="220" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="slider" label="滑块" width="200" :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="attr4" label="attr4 唯一下拉选项" width="200" :edit-render="{type: 'default'}">
+      <el-editable-column
+        prop="age"
+        label="年龄"
+        width="140"
+        align="center"
+        headerAlign="center"
+        :filters="ageFilterList"
+        :filter-method="filterHandler"
+        :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column
+        prop="region"
+        label="地区"
+        min-width="180"
+        :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}"></el-editable-column>
+      <el-editable-column
+        prop="date1"
+        label="选择日期"
+        width="220"
+        sortable
+        :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
+      <el-editable-column
+        prop="slider"
+        label="滑块"
+        width="200"
+        :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
+      <el-editable-column
+        prop="attr4"
+        label="attr4 唯一下拉选项"
+        width="200"
+        :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-select v-model="scope.row.attr4" @change="attr4ChangeEvent(scope)">
-            <el-option v-for="(item, index) in attr4Options" :key="index" :value="item.value" :label="item.label" :disabled="item.disabled"></el-option>
+            <el-option
+              v-for="(item, index) in attr4Options"
+              :key="index"
+              :value="item.value"
+              :label="item.label"
+              :disabled="item.disabled"></el-option>
           </el-select>
         </template>
         <template slot-scope="scope">{{ getSelectLabel(scope.row.attr4, 'value', 'label', attr4Options) }}</template>
       </el-editable-column>
-      <el-editable-column  prop="attr5" label="attr5 限制唯一下拉" width="200" :edit-render="{type: 'default'}">
+      <el-editable-column
+        prop="attr5"
+        label="attr5 限制唯一下拉"
+        width="200"
+        :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-select v-model="scope.row.attr5" @change="attr5ChangeEvent(scope)">
-            <el-option v-for="(item, index) in attr5Options" :key="index" :value="item.label" :label="item.label"></el-option>
+            <el-option
+              v-for="(item, index) in attr5Options"
+              :key="index"
+              :value="item.label"
+              :label="item.label"></el-option>
           </el-select>
         </template>
       </el-editable-column>

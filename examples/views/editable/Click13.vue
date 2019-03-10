@@ -32,13 +32,42 @@
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, isTabKey: true, isArrowKey: true, activeMethod}"
       style="width: 100%">
-      <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="name" label="名字" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {clearable: true}}"></el-editable-column>
-      <el-editable-column prop="age" label="年龄" width="140" align="center" headerAlign="center" :filters="ageFilterList" :filter-method="filterHandler" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {clearable: true, options: regionList, separator: '-'}}"></el-editable-column>
-      <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput', attrs: {clearable: true}}"></el-editable-column>
+      <el-editable-column
+        type="selection"
+        width="55"></el-editable-column>
+      <el-editable-column
+        type="index"
+        width="55"></el-editable-column>
+      <el-editable-column
+        prop="sex"
+        label="性别"
+        width="100"
+        :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column
+        prop="name"
+        label="名字"
+        min-width="220"
+        show-overflow-tooltip
+        :edit-render="{name: 'ElInput', attrs: {clearable: true}}"></el-editable-column>
+      <el-editable-column
+        prop="age"
+        label="年龄"
+        width="140"
+        align="center"
+        headerAlign="center"
+        :filters="ageFilterList"
+        :filter-method="filterHandler"
+        :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column
+        prop="region"
+        label="地区"
+        min-width="180"
+        :edit-render="{name: 'ElCascader', attrs: {clearable: true, options: regionList, separator: '-'}}"></el-editable-column>
+      <el-editable-column
+        prop="remark"
+        label="备注"
+        min-width="180"
+        :edit-render="{name: 'ElInput', attrs: {clearable: true}}"></el-editable-column>
     </el-editable>
   </div>
 </template>

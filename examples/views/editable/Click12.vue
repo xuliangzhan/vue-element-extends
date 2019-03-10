@@ -31,41 +31,96 @@
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true}"
       style="width: 100%">
-      <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"> </el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="userInfo.sex1" label="方式1" width="160" :edit-render="{type: 'default'}">
+      <el-editable-column
+        type="selection"
+        width="55"></el-editable-column>
+      <el-editable-column
+        type="index"
+        width="55"></el-editable-column>
+      <el-editable-column
+        prop="name"
+        label="名字"
+        min-width="220"
+        show-overflow-tooltip
+        :edit-render="{name: 'ElInput'}"> </el-editable-column>
+      <el-editable-column
+        prop="sex"
+        label="性别"
+        width="100"
+        :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column
+        prop="userInfo.sex1"
+        label="方式1"
+        width="160"
+        :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <el-select v-model="scope.row.userInfo.sex1" placeholder="请选择性别" clearable @change="$refs.editable.updateStatus(scope)">
-            <el-option v-for="(item, index) in sexList" :key="index" :value="item.val" :label="item.spell"></el-option>
+            <el-option
+              v-for="(item, index) in sexList"
+              :key="index"
+              :value="item.val"
+              :label="item.spell"></el-option>
           </el-select>
         </template>
         <template slot-scope="scope">{{ getSelectLabel(scope.row.userInfo.sex1, 'val', 'spell', sexList) }}</template>
       </el-editable-column>
-      <el-editable-column prop="userInfo.sex2" label="方式2" width="160" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true, placeholder: '请选择性别'}}">
+      <el-editable-column
+        prop="userInfo.base.other.sex2"
+        label="方式2"
+        width="160"
+        :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true, placeholder: '请选择性别'}}">
         <template slot="edit" slot-scope="scope">
-          <el-select v-model="scope.row.userInfo.sex2" v-bind="scope.editRender.attrs" @change="$refs.editable.updateStatus(scope)">
-            <el-option v-for="(item, index) in sexList" :key="index" :value="item.value" :label="item.spell"></el-option>
+          <el-select v-model="scope.row.userInfo.base.other.sex2" v-bind="scope.editRender.attrs" @change="$refs.editable.updateStatus(scope)">
+            <el-option
+              v-for="(item, index) in sexList"
+              :key="index"
+              :value="item.value"
+              :label="item.spell"></el-option>
           </el-select>
         </template>
       </el-editable-column>
-      <el-editable-column prop="userInfo.base.age" label="年龄" width="160" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}">
+      <el-editable-column
+        prop="userInfo.base.age"
+        label="年龄"
+        width="160"
+        :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}">
         <template slot="edit" slot-scope="scope">
-          <el-input-number v-model="scope.row.userInfo.base.age" v-bind="scope.editRender.attrs" @input="$refs.editable.updateStatus(scope)"></el-input-number>
+          <el-input-number
+            v-model="scope.row.userInfo.base.age"
+            v-bind="scope.editRender.attrs"
+            @input="$refs.editable.updateStatus(scope)"></el-input-number>
         </template>
       </el-editable-column>
-      <el-editable-column prop="userInfo.region" label="地区" min-width="180" :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}">
+      <el-editable-column
+        prop="userInfo.region"
+        label="地区"
+        min-width="180"
+        :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}">
         <template slot="edit" slot-scope="scope">
-          <el-cascader v-model="scope.row.userInfo.region" v-bind="scope.editRender.attrs" @change="$refs.editable.updateStatus(scope)"></el-cascader>
+          <el-cascader
+            v-model="scope.row.userInfo.region"
+            v-bind="scope.editRender.attrs"
+            @change="$refs.editable.updateStatus(scope)"></el-cascader>
         </template>
       </el-editable-column>
-      <el-editable-column prop="dateObj.date1" label="选择日期" width="220" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}">
+      <el-editable-column
+        prop="dateObj.date1"
+        label="选择日期"
+        width="220"
+        sortable
+        :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}">
         <template slot="edit" slot-scope="scope">
-          <el-date-picker v-model="scope.row.dateObj.date1" v-bind="scope.editRender.attrs" @change="$refs.editable.updateStatus(scope)"></el-date-picker>
+          <el-date-picker
+            v-model="scope.row.dateObj.date1"
+            v-bind="scope.editRender.attrs"
+            @change="$refs.editable.updateStatus(scope)"></el-date-picker>
         </template>
       </el-editable-column>
-      <el-editable-column prop="slider" label="滑块" width="200" :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
+      <el-editable-column
+        prop="slider"
+        label="滑块"
+        width="200"
+        :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
       <el-editable-column label="操作" width="180">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope)">删除</el-button>
@@ -224,9 +279,11 @@ export default {
             userInfo: {
               region: [1, 1, 3],
               sex1: 'o',
-              sex2: '1',
               base: {
-                age: 24
+                age: 24,
+                other: {
+                  sex2: '1'
+                }
               }
             },
             dateObj: {
@@ -241,9 +298,11 @@ export default {
             userInfo: {
               region: [1, 1, 4],
               sex1: 'x',
-              sex2: '0',
               base: {
-                age: 26
+                age: 26,
+                other: {
+                  sex2: '0'
+                }
               }
             },
             dateObj: {
@@ -258,9 +317,11 @@ export default {
             userInfo: {
               region: [1, 1, 5],
               sex1: 'o',
-              sex2: '1',
               base: {
-                age: 28
+                age: 28,
+                other: {
+                  sex2: '1'
+                }
               }
             },
             dateObj: {

@@ -61,8 +61,14 @@ Vue.use(VueElementExtends)
   ref="editable"
   :edit-config="{trigger: 'click', mode: 'cell'}"
   :edit-rules="{name: [{required: true, message: 'Please enter a name.', trigger: 'blur'}]}">
-  <el-editable-column prop="name" label="Name" :edit-render="{name: 'ElInput'}"></el-editable-column>
-  <el-editable-column prop="age" label="Age" :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
+  <el-editable-column
+    prop="name"
+    label="Name"
+    :edit-render="{name: 'ElInput'}"></el-editable-column>
+  <el-editable-column
+    prop="age"
+    label="Age"
+    :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
 </el-editable>
 ```
 
@@ -140,7 +146,10 @@ edit-config 编辑参数配置
 ### Editable-Column Attributes
 
 ```html
-<el-editable-column prop="name" label="Name" :edit-render="{name: 'ElInput'}"></el-editable-column>
+<el-editable-column
+  prop="name"
+  label="Name"
+  :edit-render="{name: 'ElInput'}"></el-editable-column>
 ```
 
 edit-render 渲染参数配置

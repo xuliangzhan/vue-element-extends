@@ -502,7 +502,7 @@ export default {
      */
     _triggerClear (evnt) {
       this._triggerClearChecked(evnt)
-      if (this.configs.autoClearActive && !this.callEvent && this.lastActive) {
+      if (this.configs.autoClearActive && this.lastActive && (this.callEvent ? this.callEvent.vT < Date.now() : true)) {
         let target = evnt.target
         let clearActiveMethod = this.configs.clearActiveMethod
         let { row, column, cell } = this.lastActive
@@ -908,11 +908,15 @@ export default {
       let cell = trElem.querySelector(`.${column.id}`)
       return { row, rowIndex, column, columnIndex, cell }
     },
+    _callTriggerEvent (type) {
+      // 如果通过函数式调用，超过一定时间后允许触发 Clear 相关操作
+      return { vT: Date.now() + 100 }
+    },
     _toActiveRow (record, prop, preventDefault) {
       let rowIndex = this._getTDataIndexByRecord(record)
       let { row, column, cell } = this._getColumnByRowIndex(rowIndex, prop)
       if (row && column) {
-        this.callEvent = 'activate'
+        this.callEvent = this._callTriggerEvent('activate')
         this.datas.forEach(row => {
           if (row.data !== record) {
             this._clearValidError(row)
@@ -1181,7 +1185,7 @@ export default {
       return this._getData(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
     },
     clearActive () {
-      this.callEvent = 'clear'
+      this.callEvent = this._callTriggerEvent('clear')
       this._clearChecked()
       this._clearActiveData()
       this._restoreTooltip()
@@ -1280,7 +1284,7 @@ export default {
      */
     validateRow (record, cb) {
       let rowIndex = this._getTDataIndexByRecord(record)
-      this.callEvent = 'valid'
+      this.callEvent = this._callTriggerEvent('valid')
       return new Promise((resolve, reject) => {
         let tableData = this._getTDatas()
         let row = tableData[rowIndex]
@@ -1309,7 +1313,7 @@ export default {
      */
     validate (cb) {
       let validPromise = Promise.resolve(true)
-      this.callEvent = 'valid'
+      this.callEvent = this._callTriggerEvent('valid')
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
         let tableData = this._getTDatas()

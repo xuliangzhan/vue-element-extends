@@ -50,13 +50,21 @@ import XEUtils from 'xe-utils'
 import { Message, MessageBox } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
-import sexData from '@/common/json/editable/sex.json'
 
 export default {
   data () {
     return {
-      sexList: XEUtils.clone(sexData, true),
-      regionList: XEUtils.clone(regionData, true),
+      sexList: [
+        {
+          label: '男',
+          value: '1'
+        },
+        {
+          label: '女',
+          value: '0'
+        }
+      ],
+      regionList: regionData,
       list: XEUtils.clone(listData, true)
     }
   },

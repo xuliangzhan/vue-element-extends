@@ -330,12 +330,12 @@ export default {
               cancelButtonText: '放弃修改',
               type: 'warning'
             }).then(() => {
-              this.$refs.editable.setActiveRow(row, false)
+              this.$refs.editable.setActiveRow(row)
               this.updateRowEvent(activeInfo.row)
             }).catch(action => {
               if (action === 'cancel') {
                 this.$refs.editable.revert(activeInfo.row)
-                this.$refs.editable.setActiveRow(row, false)
+                this.$refs.editable.setActiveRow(row)
                 Message({ message: '放弃修改并离开当前行', type: 'warning' })
               } else {
                 Message({ message: '停留在当前行编辑', type: 'info' })
@@ -363,7 +363,7 @@ export default {
             this.$refs.editable.clearActive()
             this.$refs.editable.revert(row)
           } else {
-            this.$refs.editable.setActiveRow(row, false)
+            this.$refs.editable.setActiveRow(row)
           }
         }).catch(e => e)
       } else {

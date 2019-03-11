@@ -52,7 +52,9 @@
         <router-link class="apimenu-link" :to="{name: 'EditableMultiComp1'}" replace>渲染多个 UI 组件</router-link>
       </div> -->
     </div>
-    <router-view/>
+    <div class="view-body">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -78,6 +80,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+.view-body {
+  margin: 0 20px;
 }
 .apimenu-header {
   margin-bottom: 10px;

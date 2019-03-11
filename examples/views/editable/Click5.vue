@@ -47,7 +47,6 @@ import XEUtils from 'xe-utils'
 import { MessageBox } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
-import sexData from '@/common/json/editable/sex.json'
 import columnsData from '@/common/json/editable/columns.json'
 
 export default {
@@ -157,13 +156,28 @@ export default {
     getSexJSON () {
       // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 300)
+        setTimeout(() => resolve(
+          [
+            {
+              label: '男',
+              spell: 'nan',
+              value: '1',
+              val: 'x'
+            },
+            {
+              label: '女',
+              spell: 'nv',
+              value: '0',
+              val: 'o'
+            }
+          ]
+        ), 300)
       })
     },
     getColumnConfigs () {
       // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(columnsData, true)), 700)
+        setTimeout(() => resolve(columnsData), 700)
       })
     },
     getDataJSON () {
@@ -175,7 +189,7 @@ export default {
     getRegionJSON () {
       // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(regionData, true)), 200)
+        setTimeout(() => resolve(regionData), 200)
       })
     }
   }

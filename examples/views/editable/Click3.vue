@@ -126,7 +126,6 @@ import XEUtils from 'xe-utils'
 import { MessageBox, Message } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
-import sexData from '@/common/json/editable/sex.json'
 
 export default {
   data () {
@@ -135,45 +134,51 @@ export default {
       loading: false,
       sexList: [],
       regionList: [],
-      groupList: [{
-        label: '热门城市',
-        label2: 'Re Men',
-        options: [{
-          val: 'sh',
-          value: 'Shanghai',
-          label: '上海',
-          label2: 'Shang Hai'
+      groupList: [
+        {
+          label: '热门城市',
+          label2: 'Re Men',
+          options: [
+            {
+              val: 'sh',
+              value: 'Shanghai',
+              label: '上海',
+              label2: 'Shang Hai'
+            }, {
+              val: 'bj',
+              value: 'Beijing',
+              label: '北京',
+              label2: 'Bei Jing'
+            }
+          ]
         }, {
-          val: 'bj',
-          value: 'Beijing',
-          label: '北京',
-          label2: 'Bei Jing'
-        }]
-      }, {
-        label: '城市名',
-        label2: 'Cheng Shi',
-        options: [{
-          val: 'cd',
-          value: 'Chengdu',
-          label: '成都',
-          label2: 'Cheng Du'
-        }, {
-          val: 'sz',
-          value: 'Shenzhen',
-          label: '深圳',
-          label2: 'Shen Zhen'
-        }, {
-          val: 'gz',
-          value: 'Guangzhou',
-          label: '广州',
-          label2: 'Guang Zhou'
-        }, {
-          val: 'dl',
-          value: 'Dalian',
-          label: '大连',
-          label2: 'Da Lian'
-        }]
-      }],
+          label: '城市名',
+          label2: 'Cheng Shi',
+          options: [
+            {
+              val: 'cd',
+              value: 'Chengdu',
+              label: '成都',
+              label2: 'Cheng Du'
+            }, {
+              val: 'sz',
+              value: 'Shenzhen',
+              label: '深圳',
+              label2: 'Shen Zhen'
+            }, {
+              val: 'gz',
+              value: 'Guangzhou',
+              label: '广州',
+              label2: 'Guang Zhou'
+            }, {
+              val: 'dl',
+              value: 'Dalian',
+              label: '大连',
+              label2: 'Da Lian'
+            }
+          ]
+        }
+      ],
       attrOptions: [
         {
           value: '111',
@@ -200,19 +205,21 @@ export default {
         }
       ],
       pickerOptions2: {
-        shortcuts: [{
-          text: '今天',
-          onClick: picker => picker.$emit('pick', [date, date])
-        }, {
-          text: '最近一周',
-          onClick: picker => picker.$emit('pick', [XEUtils.getWhatDay(date, -7), date])
-        }, {
-          text: '最近一个月',
-          onClick: picker => picker.$emit('pick', [XEUtils.getWhatMonth(date, -1), date])
-        }, {
-          text: '最近三个月',
-          onClick: picker => picker.$emit('pick', [XEUtils.getWhatMonth(date, -3), date])
-        }]
+        shortcuts: [
+          {
+            text: '今天',
+            onClick: picker => picker.$emit('pick', [date, date])
+          }, {
+            text: '最近一周',
+            onClick: picker => picker.$emit('pick', [XEUtils.getWhatDay(date, -7), date])
+          }, {
+            text: '最近一个月',
+            onClick: picker => picker.$emit('pick', [XEUtils.getWhatMonth(date, -1), date])
+          }, {
+            text: '最近三个月',
+            onClick: picker => picker.$emit('pick', [XEUtils.getWhatMonth(date, -3), date])
+          }
+        ]
       },
       ageFilterList: [
         {
@@ -370,7 +377,22 @@ export default {
     getSexJSON () {
       // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 100)
+        setTimeout(() => resolve(
+          [
+            {
+              label: '男',
+              spell: 'nan',
+              value: '1',
+              val: 'x'
+            },
+            {
+              label: '女',
+              spell: 'nv',
+              value: '0',
+              val: 'o'
+            }
+          ]
+        ), 100)
       })
     },
     getDataJSON () {
@@ -382,7 +404,7 @@ export default {
     getRegionJSON () {
       // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(regionData, true)), 200)
+        setTimeout(() => resolve(regionData), 200)
       })
     }
   }

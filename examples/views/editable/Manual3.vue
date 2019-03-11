@@ -54,13 +54,25 @@ import XEUtils from 'xe-utils'
 import { Message, MessageBox } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
-import sexData from '@/common/json/editable/sex.json'
 
 export default {
   data () {
     return {
-      sexList: XEUtils.clone(sexData, true),
-      regionList: XEUtils.clone(regionData, true),
+      sexList: [
+        {
+          label: '男',
+          spell: 'nan',
+          value: '1',
+          val: 'x'
+        },
+        {
+          label: '女',
+          spell: 'nv',
+          value: '0',
+          val: 'o'
+        }
+      ],
+      regionList: regionData,
       list: [],
       isClearActiveFlag: true,
       validRules: {
@@ -105,12 +117,12 @@ export default {
               cancelButtonText: '放弃修改',
               type: 'warning'
             }).then(() => {
-              this.$refs.editable.setActiveRow(row, false)
+              this.$refs.editable.setActiveRow(row)
               this.updateRowEvent(activeInfo.row)
             }).catch(action => {
               if (action === 'cancel') {
                 this.$refs.editable.revert(activeInfo.row)
-                this.$refs.editable.setActiveRow(row, false)
+                this.$refs.editable.setActiveRow(row)
                 Message({ message: '放弃修改并离开当前行', type: 'warning' })
               } else {
                 Message({ message: '停留在当前行编辑', type: 'info' })

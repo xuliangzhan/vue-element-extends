@@ -103,7 +103,6 @@ import XEUtils from 'xe-utils'
 import { Message, MessageBox } from 'element-ui'
 import listData from '@/common/json/editable/list.json'
 import regionData from '@/common/json/editable/region.json'
-import sexData from '@/common/json/editable/sex.json'
 
 export default {
   data () {
@@ -186,6 +185,7 @@ export default {
     saveRowEvent (row) {
       this.$refs.editable.validateRow(row).then(valid => {
         this.postJSON('url', { row }).then(data => {
+          this.$refs.editable.clearActive()
           Message({ message: '保存成功', type: 'success' })
         })
       }).catch(e => {
@@ -283,7 +283,22 @@ export default {
     getSexJSON () {
       // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(sexData, true)), 400)
+        setTimeout(() => resolve(
+          [
+            {
+              label: '男',
+              spell: 'nan',
+              value: '1',
+              val: 'x'
+            },
+            {
+              label: '女',
+              spell: 'nv',
+              value: '0',
+              val: 'o'
+            }
+          ]
+        ), 400)
       })
     },
     getDataJSON () {
@@ -295,7 +310,7 @@ export default {
     getRegionJSON () {
       // 模拟数据
       return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(regionData, true)), 400)
+        setTimeout(() => resolve(regionData), 400)
       })
     }
   }

@@ -499,6 +499,8 @@ export default {
      * 如果点击了表格外会触发清除
      * 如果点击了表格内不同行或单元格会触发清除
      * 如果存在校验不通过，自动聚焦到错误单元格
+     * type=in 如果是在当前表格内点击了其他 mode=row 行或 mode=cell 单元格
+     * type=out 如果是点击当前表格之外
      */
     _triggerClear (evnt) {
       this._triggerClearChecked(evnt)
@@ -920,7 +922,8 @@ export default {
       return { row, rowIndex, column, columnIndex, cell }
     },
     _callTriggerEvent (type) {
-      // 如果通过函数式调用，超过一定时间后允许触发 Clear 相关操作
+      // 解决事件触发的同时调用了 active 和 validate 函数，导致重复执行 Clear
+      // 如果通过函数式调用，超过一定时间后才允许触发 Clear 相关操作，不应该和事件叠加触发
       return { vT: Date.now() + 100 }
     },
     _toActiveRow (record, prop, preventDefault) {

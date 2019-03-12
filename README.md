@@ -94,7 +94,7 @@ edit-config 编辑参数配置
 | autoClearActive | 当点击表格之外后，是否自动清除最后活动行或列 | Boolean | — | true |
 | clearActiveMethod | 该函数 Function({type, row, rowIndex, column?, columnIndex?}) 的返回值用来决定是否允许清除当前活动行或单元格 | Function | — | — |
 | useDefaultValidTip | 如果同时使用了数据校验和 fixed 列，请设置为 true 使用默认提示  | Boolean | — | false |
-| validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | {offset:10,placement:'bottom-start'} |
+| validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
 | autoScrollIntoView | 当单元格被激活时，自动将单元格滚动到可视区域内 | Boolean | — | false |
 | isTabKey | 只对 trigger!=manual 有效，是否启用 Tab 键切换到下一个单元格 | Boolean | — | false |
 | isArrowKey | 只对 trigger!=manual 有效，是否启用箭头键切换行和单元格 | Boolean | — | false |
@@ -160,9 +160,9 @@ edit-render 渲染参数配置
 | attrs | 渲染组件附加属性，参数请查看被渲染的 Component attrs | Object | — | {} |
 | events | 渲染组件附加事件，参数为 ( { rule, row, column, $index }, ...Component arguments ) | Object | — | {} |
 | options | 只对 name=ElSelect 有效，下拉组件选项列表 | Array | — | [] |
-| optionProps | 只对 name=ElSelect 有效，下拉组件选项属性参数配置 | Object | — | {value:'value',label:'label'} |
+| optionProps | 只对 name=ElSelect 有效，下拉组件选项属性参数配置 | Object | — | { value: 'value', label: 'label' } |
 | optionGroups | 只对 name=ElSelect 有效，下拉组件分组选项列表 | Array | — | [] |
-| optionGroupProps | 只对 name=ElSelect 有效，下拉组件分组选项属性参数配置 | Object | — | {options:'options',label:'label'} |
+| optionGroupProps | 只对 name=ElSelect 有效，下拉组件分组选项属性参数配置 | Object | — | { options: 'options', label: 'label' } |
 
 ### Editable-Column Scoped Slot
 

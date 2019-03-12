@@ -511,11 +511,22 @@ export default {
         let isClearActive = true
         let type = null
         while (target && target.nodeType && target !== document) {
-          if (this.configs.mode === 'row' ? target === trElem : target === cell) {
-            return
-          }
-          if (this.configs.mode === 'row' ? this._hasClass(target, 'editable-row') && this._getIndex(Array.from(target.parentNode.children), target) !== rowIndex : this._hasClass(target, 'editable-column')) {
-            type = 'in'
+          if (this.configs.mode === 'row') {
+            if (target === trElem) {
+              return
+            } else if (this._hasClass(target, 'editable-row')) {
+              if (this._getIndex(Array.from(target.parentNode.children), target) === rowIndex) {
+                return
+              } else {
+                type = 'in'
+              }
+            }
+          } else {
+            if (target === cell) {
+              return
+            } else if (this._hasClass(target, 'editable-column')) {
+              type = 'in'
+            }
           }
           if (type && this._hasClass(target, 'editable')) {
             if (target !== this.$el) {

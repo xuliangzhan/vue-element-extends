@@ -17,21 +17,22 @@
       class="manual-table3"
       size="mini"
       border
+      height="540"
       :data.sync="list"
       :edit-rules="validRules"
       :edit-config="{trigger: 'manual', mode: 'row', useDefaultValidTip: true, autoScrollIntoView: true, clearActiveMethod}"
       @clear-active="clearActiveEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList, optionProps: { value: 'value', label: 'label' }}"></el-editable-column>
-      <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="remark" label="备注" :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column label="操作" width="220">
+      <el-editable-column prop="sex" label="性别" width="200" :edit-render="{name: 'ElSelect', options: sexList, optionProps: { value: 'value', label: 'label' }}"></el-editable-column>
+      <el-editable-column prop="age" label="年龄" width="200" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column prop="name" label="名字" width="300" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" width="240" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
+      <el-editable-column prop="birthdate" label="日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="date1" label="选择日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
+      <el-editable-column prop="flag" label="是否启用" width="100" fixed="right" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="remark" label="备注" width="300" fixed="right" :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
             <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>

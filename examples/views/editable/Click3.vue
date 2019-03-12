@@ -81,7 +81,6 @@
         </template>
       </el-editable-column>
       <el-editable-column prop="attr4" label="带输入建议" width="140" :edit-render="{name: 'ElAutocomplete', attrs: {fetchSuggestions: querySearchAsync}}"></el-editable-column>
-      <el-editable-column prop="remark" label="备注" min-width="180" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', rows: 2}}"></el-editable-column>
       <el-editable-column prop="slider" label="滑块" width="200" :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="flag" label="开关" width="140" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="flag2" label="单选" width="200" :edit-render="{type: 'visible'}">
@@ -105,6 +104,7 @@
           </el-checkbox-group>
         </template>
       </el-editable-column>
+      <el-editable-column prop="remark" label="备注" width="180" fixed="left" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', rows: 2}}"></el-editable-column>
       <el-editable-column label="操作" width="160" fixed="left">
         <template slot-scope="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
@@ -282,6 +282,7 @@ export default {
       this.$refs.editable.validateRow(row, valid => {
         if (valid) {
           this.postJSON('url', { row }).then(data => {
+            this.$refs.editable.clearActive()
             Message({ message: '保存成功', type: 'success' })
           })
         } else {

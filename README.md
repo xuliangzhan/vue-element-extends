@@ -38,8 +38,6 @@ npm install xe-utils vue-element-extends --save
 <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 <link rel="stylesheet" href="https://unpkg.com/vue-element-extends/lib/index.css">
 <!-- 引入脚本 -->
-<script src="https://unpkg.com/vue"></script>
-<script src="https://unpkg.com/element-ui"></script>
 <script src="https://unpkg.com/xe-utils"></script>
 <script src="https://unpkg.com/vue-element-extends"></script>
 ```

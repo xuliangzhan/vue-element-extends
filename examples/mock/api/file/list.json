@@ -79,23 +79,5 @@
     "type": "1",
     "createTime": 1550923830095,
     "updateTime": 1550923830095
-  },
-  {
-    "id": 401,
-    "parentId": null,
-    "name": "嘿嘿401.mp4",
-    "size": 2048,
-    "type": "1",
-    "createTime": 1550923830095,
-    "updateTime": 1550923830095
-  },
-  {
-    "id": 501,
-    "parentId": null,
-    "name": "文件501.pdf",
-    "size": 512,
-    "type": "1",
-    "createTime": 1550923830095,
-    "updateTime": 1550923830095
   }
 ]

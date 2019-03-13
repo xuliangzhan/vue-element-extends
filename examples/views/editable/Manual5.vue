@@ -88,16 +88,21 @@ export default {
   methods: {
     findList () {
       this.loading = true
-      return this.loadList().then(data => {
+      return XEAjax.doGet('/api/file/list').then(({ data }) => {
+        this.initTreeList(data)
         this.loading = false
       }).catch(e => {
         this.loading = false
       })
     },
-    loadList () {
-      return XEAjax.doGet('/api/file/list').then(({ data }) => {
-        this.initTreeList(data)
-      })
+    rowClickEvent (row, event, column) {
+      this.currentRow = row
+    },
+    formatColumnDate (row, column, cellValue, index) {
+      return XEUtils.toDateString(cellValue)
+    },
+    formatColumnSize (row, column, cellValue, index) {
+      return cellValue ? `${cellValue} KB` : ''
     },
     clearActiveMethod ({ type, row }) {
       if (this.isClearActiveFlag && type === 'out') {
@@ -132,6 +137,158 @@ export default {
         this.fileLoading.close()
       }
     },
+    insertEvent (type, file, isSave) {
+      if (!this.$refs.editable.checkValid().error) {
+        let selectRow = this.currentRow
+        let isAppand = false
+        let index = selectRow ? XEUtils.findIndexOf(this.list, item => item.id === selectRow.id) : -1
+        let data = Object.assign({
+          id: '',
+          isNew: true,
+          type: type,
+          parentId: null,
+          treeLevel: 0,
+          treeIndex: 0,
+          expandNode: false,
+          showNode: true,
+          isCheck: false,
+          indeterminate: false
+        }, file)
+        if (selectRow) {
+          if (selectRow.type === '0') {
+            // 如果选中目录
+            isAppand = true
+            index += this.getChildren(selectRow).length
+          } else {
+            // 如果选中文件
+            if (this.treeList[selectRow.parentId]) {
+              index += this.getChildren(this.treeList[selectRow.parentId]).length
+            } else {
+              index = -1
+            }
+          }
+          if (isAppand) {
+            selectRow.expandNode = true
+            data.parentId = selectRow.id
+            data.treeLevel = selectRow.treeLevel + 1
+          } else {
+            data.parentId = selectRow.parentId
+            data.treeLevel = selectRow.treeLevel
+          }
+        }
+        let row = this.$refs.editable.insertAt(data, index)
+        // 默认选中新增行
+        this.currentRow = row
+        this.$nextTick(() => {
+          this.treeList.push(row)
+          this.reloedTreeList(this.treeList)
+          if (isSave) {
+            // 异步保存，局部更新
+            this.$refs.editable.clearActive()
+            XEAjax.doPost('/api/file/add', row).then(({ data }) => {
+              XEUtils.destructuring(row, data[0])
+              this.$refs.editable.reloadRow(row)
+              Message({ message: '保存成功', type: 'success' })
+            })
+          } else {
+            this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+          }
+        })
+      }
+    },
+    openActiveRowEvent (row) {
+      let activeInfo = this.$refs.editable.getActiveRow()
+      if (activeInfo && activeInfo.isUpdate) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '保存数据',
+          cancelButtonText: '取消修改',
+          type: 'warning'
+        }).then(() => {
+          this.$refs.editable.setActiveRow(row)
+          this.saveRowEvent(activeInfo.row)
+        }).catch(action => {
+          if (action === 'cancel') {
+            this.$refs.editable.revert(activeInfo.row)
+            this.$refs.editable.setActiveRow(row)
+          }
+        }).then(() => {
+          this.isClearActiveFlag = true
+        })
+      } else {
+        this.$refs.editable.setActiveRow(row)
+      }
+    },
+    cancelRowEvent (row) {
+      if (row.isNew) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
+          confirmButtonText: '移除数据',
+          cancelButtonText: '返回继续',
+          type: 'warning'
+        }).then(action => {
+          if (action === 'confirm') {
+            this.$refs.editable.remove(row) // 从表格中移除
+            XEUtils.remove(this.treeList, item => item === row) // 从缓存树中移除
+          }
+        }).catch(e => e).then(() => {
+          this.isClearActiveFlag = true
+        })
+      } else if (this.$refs.editable.hasRowChange(row)) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('检测到未保存的内容，是否取消修改?', '温馨提示', {
+          confirmButtonText: '取消修改',
+          cancelButtonText: '返回继续',
+          type: 'warning'
+        }).then(action => {
+          if (action === 'confirm') {
+            this.$refs.editable.clearActive()
+            this.$refs.editable.revert(row)
+          } else {
+            this.$refs.editable.setActiveRow(row)
+          }
+        }).catch(e => e).then(() => {
+          this.isClearActiveFlag = true
+        })
+      } else {
+        this.$refs.editable.clearActive()
+      }
+    },
+    removeEvent (row) {
+      MessageBox.confirm('确定删除该附件?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true
+        XEAjax.doDelete(`/api/file/delete/${row.id}`).then(({ data }) => {
+          this.$refs.editable.remove(row)
+          this.loading = false
+          Message({ message: '删除成功', type: 'success' })
+        })
+      }).catch(e => e)
+    },
+    saveRowEvent (row) {
+      this.$refs.editable.validateRow(row, valid => {
+        if (valid) {
+          let url = '/api/file/add'
+          if (!row.isNew) {
+            url = '/api/file/update'
+          }
+          // 异步保存，局部刷新
+          this.loading = true
+          this.$refs.editable.clearActive()
+          XEAjax.doPost(url, row).then(({ data }) => {
+            XEUtils.destructuring(row, data[0])
+            this.$refs.editable.reloadRow(row)
+            this.loading = false
+            Message({ message: '保存成功', type: 'success' })
+          })
+        }
+      })
+    },
+    /** 组装树相关的函数处理 start */
     getChildren (row) {
       return this.treeList.filter(item => item.parentId === row.id)
     },
@@ -263,164 +420,8 @@ export default {
     toggleCollapseNode (row) {
       this.treeCollapseNode(row, !row.expandNode)
       this.loadTree()
-    },
-    rowClickEvent (row, event, column) {
-      this.currentRow = row
-    },
-    formatColumnDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue)
-    },
-    formatColumnSize (row, column, cellValue, index) {
-      return cellValue ? `${cellValue} KB` : ''
-    },
-    insertEvent (type, file, isSave) {
-      if (!this.$refs.editable.checkValid().error) {
-        let selectRow = this.currentRow
-        let children = []
-        let isAppand = false
-        let index = selectRow ? XEUtils.findIndexOf(this.list, item => item.id === selectRow.id) : 0
-        let data = Object.assign({
-          id: '',
-          isNew: true,
-          type: type,
-          parentId: null,
-          treeLevel: 0,
-          treeIndex: 0,
-          expandNode: false,
-          showNode: true,
-          isCheck: false,
-          indeterminate: false
-        }, file)
-        if (selectRow) {
-          children = this.getChildren(selectRow)
-          isAppand = selectRow.type === '0'
-          if (isAppand) {
-            selectRow.expandNode = true
-            data.parentId = selectRow.id
-            data.treeLevel = selectRow.treeLevel + 1
-          } else {
-            data.parentId = selectRow.parentId
-            data.treeLevel = selectRow.treeLevel
-          }
-        }
-        let row = this.$refs.editable.insertAt(data, isAppand ? index + children.length + 1 : index)
-        this.currentRow = row
-        this.$nextTick(() => {
-          this.treeList.push(row)
-          this.reloedTreeList(this.treeList)
-          if (isSave) {
-            // 局部保存，局部更新
-            this.$refs.editable.clearActive()
-            XEAjax.doPost('/api/file/add', row).then(({ data }) => {
-              XEUtils.destructuring(row, data[0])
-              this.$refs.editable.reloadRow(row)
-              Message({ message: '保存成功', type: 'success' })
-            })
-          } else {
-            this.$nextTick(() => this.$refs.editable.setActiveRow(row))
-          }
-        })
-      }
-    },
-    openActiveRowEvent (row) {
-      let activeInfo = this.$refs.editable.getActiveRow()
-      // 如果当前行正在编辑中，禁止编辑其他行
-      if (activeInfo) {
-        if (activeInfo.row === row || !this.$refs.editable.checkValid().error) {
-          if (activeInfo.isUpdate) {
-            this.isClearActiveFlag = false
-            MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
-              distinguishCancelAndClose: true,
-              confirmButtonText: '保存',
-              cancelButtonText: '放弃修改',
-              type: 'warning'
-            }).then(() => {
-              this.$refs.editable.setActiveRow(row)
-              this.saveRowEvent(activeInfo.row)
-            }).catch(action => {
-              if (action === 'cancel') {
-                this.$refs.editable.revert(activeInfo.row)
-                this.$refs.editable.setActiveRow(row)
-              }
-            }).then(() => {
-              this.isClearActiveFlag = true
-            })
-          } else {
-            this.$refs.editable.setActiveRow(row)
-          }
-        }
-      } else {
-        this.$refs.editable.setActiveRow(row)
-      }
-    },
-    cancelRowEvent (row) {
-      if (row.isNew) {
-        this.isClearActiveFlag = false
-        MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
-          confirmButtonText: '移除数据',
-          cancelButtonText: '返回继续',
-          type: 'warning'
-        }).then(action => {
-          if (action === 'confirm') {
-            this.$refs.editable.remove(row) // 从表格中移除
-            XEUtils.remove(this.treeList, item => item === row) // 从缓存树中移除
-          }
-        }).catch(e => e).then(() => {
-          this.isClearActiveFlag = true
-        })
-      } else if (this.$refs.editable.hasRowChange(row)) {
-        this.isClearActiveFlag = false
-        MessageBox.confirm('检测到未保存的内容，是否取消修改?', '温馨提示', {
-          confirmButtonText: '取消修改',
-          cancelButtonText: '返回继续',
-          type: 'warning'
-        }).then(action => {
-          if (action === 'confirm') {
-            this.$refs.editable.clearActive()
-            this.$refs.editable.revert(row)
-          } else {
-            this.$refs.editable.setActiveRow(row)
-          }
-        }).catch(e => e).then(() => {
-          this.isClearActiveFlag = true
-        })
-      } else {
-        this.$refs.editable.clearActive()
-      }
-    },
-    removeEvent (row) {
-      MessageBox.confirm('确定删除该附件?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.loading = true
-        XEAjax.doDelete(`/api/file/delete/${row.id}`).then(({ data }) => {
-          this.$refs.editable.remove(row)
-          this.loading = false
-          Message({ message: '删除成功', type: 'success' })
-        })
-      }).catch(e => e)
-    },
-    saveRowEvent (row) {
-      this.$refs.editable.validateRow(row, valid => {
-        if (valid) {
-          let url = '/api/file/add'
-          if (!row.isNew) {
-            url = '/api/file/update'
-          }
-          // 异步保存，局部刷新
-          this.loading = true
-          this.$refs.editable.clearActive()
-          XEAjax.doPost(url, row).then(({ data }) => {
-            XEUtils.destructuring(row, data[0])
-            this.$refs.editable.reloadRow(row)
-            this.loading = false
-            Message({ message: '保存成功', type: 'success' })
-          })
-        }
-      })
     }
+    /** 组装树相关的函数处理 end */
   }
 }
 </script>

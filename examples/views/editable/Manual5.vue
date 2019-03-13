@@ -263,7 +263,8 @@ export default {
       }).then(() => {
         this.loading = true
         XEAjax.doDelete(`/api/file/delete/${row.id}`).then(({ data }) => {
-          this.$refs.editable.remove(row)
+          this.$refs.editable.remove(row) // 从表格中移除
+          XEUtils.remove(this.treeList, item => item === row) // 从缓存树中移除
           this.loading = false
           Message({ message: '删除成功', type: 'success' })
         })

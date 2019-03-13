@@ -354,10 +354,24 @@ export default {
       }
     },
     cancelRowEvent (row) {
-      let activeInfo = this.$refs.editable.getActiveRow()
-      if (activeInfo && activeInfo.isUpdate) {
-        MessageBox.confirm('检测到未保存的内容，确定放弃修改?', '温馨提示', {
-          confirmButtonText: '放弃更改',
+      if (row.isNew) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
+          confirmButtonText: '移除数据',
+          cancelButtonText: '返回继续',
+          type: 'warning'
+        }).then(action => {
+          if (action === 'confirm') {
+            this.$refs.editable.remove(row) // 从表格中移除
+            XEUtils.remove(this.treeList, item => item === row) // 从缓存树中移除
+          }
+        }).catch(e => e).then(() => {
+          this.isClearActiveFlag = true
+        })
+      } else if (this.$refs.editable.hasRowChange(row)) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('检测到未保存的内容，是否取消修改?', '温馨提示', {
+          confirmButtonText: '取消修改',
           cancelButtonText: '返回继续',
           type: 'warning'
         }).then(action => {
@@ -367,7 +381,9 @@ export default {
           } else {
             this.$refs.editable.setActiveRow(row)
           }
-        }).catch(e => e)
+        }).catch(e => e).then(() => {
+          this.isClearActiveFlag = true
+        })
       } else {
         this.$refs.editable.clearActive()
       }

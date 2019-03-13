@@ -1,0 +1,14 @@
+[
+  {
+    "label": "男",
+    "spell": "nan",
+    "value": "1",
+    "val": "x"
+  },
+  {
+    "label": "女",
+    "spell": "nv",
+    "value": "0",
+    "val": "o"
+  }
+]

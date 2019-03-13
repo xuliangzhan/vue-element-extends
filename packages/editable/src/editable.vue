@@ -312,6 +312,9 @@ export default {
       if (this.configs.mode === 'row' && this._isDisabledEdit(row)) {
         clsName += 'editable-row_disabled '
       }
+      if (row.editStatus === 'insert') {
+        clsName += 'new-insert '
+      }
       if (XEUtils.isFunction(rowClassName)) {
         clsName += rowClassName({ row: row.data, rowIndex }) || ''
       } else if (XEUtils.isString(rowClassName)) {
@@ -1140,6 +1143,10 @@ export default {
       this._updateData()
       return recordItem.data
     },
+    hasInsertRow (record) {
+      let row = this.datas.find(item => item.data === record)
+      return row && row.editStatus === 'insert'
+    },
     /**
      * 根据索引删除行数据
      */
@@ -1157,6 +1164,7 @@ export default {
     },
     remove (record) {
       let items = this._deleteData(this._getDataIndexByRecord(record))
+      this._clearActiveData()
       this._updateData()
       return items.length ? items[0].data : null
     },
@@ -1167,6 +1175,7 @@ export default {
           items = items.concat(this._deleteData(index))
         }
       })
+      this._clearActiveData()
       this._updateData()
       return items.map(item => item.data)
     },

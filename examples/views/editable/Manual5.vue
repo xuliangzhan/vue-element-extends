@@ -14,7 +14,6 @@
         :show-file-list="false">
         <el-button type="primary" size="mini">上传文件</el-button>
       </el-upload>
-      <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
     </p>
 
     <el-editable
@@ -25,7 +24,6 @@
       :row-class-name="treeRowClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
-      @clear-active="clearActiveEvent"
       @row-click="rowClickEvent"
       style="width: 100%">
       <el-editable-column class-name="tree-operate-node" width="200">
@@ -37,10 +35,11 @@
           <el-checkbox v-model="scope.row.isCheck" :indeterminate="scope.row.indeterminate" @change="treeNodeChange(scope.row)"></el-checkbox>
         </template>
       </el-editable-column>
-      <el-editable-column prop="fileName" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="fileSize" label="大小" width="100" :formatter="formatColumnSize"></el-editable-column>
-      <el-editable-column prop="createDate" label="创建时间" width="160" :formatter="formatColumnDate"></el-editable-column>
-      <el-editable-column prop="updateDate" label="最后修改时间" width="160" :formatter="formatColumnDate"></el-editable-column>
+      <el-editable-column prop="id" label="ID" width="100"></el-editable-column>
+      <el-editable-column prop="name" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></el-editable-column>
+      <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatColumnDate"></el-editable-column>
+      <el-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatColumnDate"></el-editable-column>
       <el-editable-column label="操作" width="220">
         <template slot-scope="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
@@ -49,8 +48,8 @@
           </template>
           <template v-else>
             <el-button size="mini" type="info" icon="el-icon-edit" circle @click="openActiveRowEvent(scope.row)"></el-button>
-            <el-button size="mini" type="primary" icon="el-icon-download" circle></el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="removeEvent(scope.row)"></el-button>
+            <el-button size="mini" type="primary" icon="el-icon-download" circle></el-button>
             <el-button size="mini" type="success" icon="el-icon-share" circle></el-button>
           </template>
         </template>
@@ -61,6 +60,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import { Loading, Message, MessageBox } from 'element-ui'
 
 export default {
@@ -76,22 +76,16 @@ export default {
       treeNode: [],
       treeList: [],
       validRules: {
-        fileName: [
+        name: [
           { required: true, message: '请输入名称', trigger: 'change' }
         ]
       }
     }
   },
   created () {
-    this.init()
+    this.findList()
   },
   methods: {
-    init () {
-      this.findList()
-    },
-    clearActiveMethod ({ row }) {
-      return this.isClearActiveFlag
-    },
     findList () {
       this.loading = true
       return this.loadList().then(data => {
@@ -101,9 +95,19 @@ export default {
       })
     },
     loadList () {
-      return this.getDataJSON().then(data => {
+      return XEAjax.doGet('/api/file/list').then(({ data }) => {
         this.initTreeList(data)
       })
+    },
+    clearActiveMethod ({ type, row }) {
+      if (this.isClearActiveFlag && type === 'out') {
+        if (row.isNew || this.$refs.editable.hasRowChange(row)) {
+          this.$refs.editable.clearActive()
+          this.saveRowEvent(row)
+          return true
+        }
+      }
+      return this.isClearActiveFlag
     },
     handleFileBeforeUpload (file) {
       this.fileLoading = Loading.service({
@@ -115,9 +119,7 @@ export default {
       return true
     },
     handleFileSuccess (response, file, fileList) {
-      this.insertEvent('1', {
-        fileName: file.name
-      })
+      this.insertEvent('1', file, true)
       if (this.fileLoading) {
         this.fileLoading.close()
       }
@@ -140,7 +142,7 @@ export default {
       this.initTreeList(data, true)
     },
     initTreeList (data, isReload) {
-      let treeNode = XEUtils.toArrayTree(data, { key: 'id', parentKey: 'parentId', children: 'children' })
+      let treeNode = XEUtils.toArrayTree(data, { strict: true, key: 'id', parentKey: 'parentId', children: 'children' })
       let treeList = XEUtils.toTreeArray(treeNode, { children: 'children' })
       if (!isReload) {
         treeList.forEach(item => {
@@ -170,10 +172,10 @@ export default {
       if (row.expandNode) {
         clsName = 'fa-folder-open'
       } else {
-        if (row.fileType === '0') {
+        if (row.type === '0') {
           clsName = 'fa-folder'
         } else {
-          let type = (row.fileName || '').split('.').pop()
+          let type = (row.name || '').split('.').pop()
           switch (type) {
             case 'xlsx':
             case 'excel':
@@ -271,16 +273,16 @@ export default {
     formatColumnSize (row, column, cellValue, index) {
       return cellValue ? `${cellValue} KB` : ''
     },
-    insertEvent (type, file) {
+    insertEvent (type, file, isSave) {
       if (!this.$refs.editable.checkValid().error) {
         let selectRow = this.currentRow
         let children = []
         let isAppand = false
         let index = selectRow ? XEUtils.findIndexOf(this.list, item => item.id === selectRow.id) : 0
         let data = Object.assign({
+          id: '',
           isNew: true,
-          id: Date.now(),
-          fileType: type,
+          type: type,
           parentId: null,
           treeLevel: 0,
           treeIndex: 0,
@@ -291,7 +293,7 @@ export default {
         }, file)
         if (selectRow) {
           children = this.getChildren(selectRow)
-          isAppand = selectRow.fileType === '0' && (selectRow.expandNode || !children.length)
+          isAppand = selectRow.type === '0'
           if (isAppand) {
             selectRow.expandNode = true
             data.parentId = selectRow.id
@@ -304,14 +306,17 @@ export default {
         let row = this.$refs.editable.insertAt(data, isAppand ? index + children.length + 1 : index)
         this.currentRow = row
         this.$nextTick(() => {
-          if (selectRow) {
-            let dataIndex = XEUtils.findIndexOf(this.treeList, item => item.id === selectRow.id)
-            this.treeList.splice(isAppand ? dataIndex + children.length + 1 : dataIndex, 0, row)
-          } else {
-            this.treeList.push(row)
-          }
+          this.treeList.push(row)
           this.reloedTreeList(this.treeList)
-          if (!file) {
+          if (isSave) {
+            // 局部保存，局部更新
+            this.$refs.editable.clearActive()
+            XEAjax.doPost('/api/file/add', row).then(({ data }) => {
+              XEUtils.destructuring(row, data[0])
+              this.$refs.editable.reloadRow(row)
+              Message({ message: '保存成功', type: 'success' })
+            })
+          } else {
             this.$nextTick(() => this.$refs.editable.setActiveRow(row))
           }
         })
@@ -331,14 +336,11 @@ export default {
               type: 'warning'
             }).then(() => {
               this.$refs.editable.setActiveRow(row)
-              this.updateRowEvent(activeInfo.row)
+              this.saveRowEvent(activeInfo.row)
             }).catch(action => {
               if (action === 'cancel') {
                 this.$refs.editable.revert(activeInfo.row)
                 this.$refs.editable.setActiveRow(row)
-                Message({ message: '放弃修改并离开当前行', type: 'warning' })
-              } else {
-                Message({ message: '停留在当前行编辑', type: 'info' })
               }
             }).then(() => {
               this.isClearActiveFlag = true
@@ -356,7 +358,7 @@ export default {
       if (activeInfo && activeInfo.isUpdate) {
         MessageBox.confirm('检测到未保存的内容，确定放弃修改?', '温馨提示', {
           confirmButtonText: '放弃更改',
-          cancelButtonText: '返回',
+          cancelButtonText: '返回继续',
           type: 'warning'
         }).then(action => {
           if (action === 'confirm') {
@@ -376,135 +378,31 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.updateRowEvent(row)
+        this.loading = true
+        XEAjax.doDelete(`/api/file/delete/${row.id}`).then(({ data }) => {
+          this.$refs.editable.remove(row)
+          this.loading = false
+          Message({ message: '删除成功', type: 'success' })
+        })
       }).catch(e => e)
-    },
-    clearActiveEvent (row, event) {
-      this.updateRowEvent(row)
-    },
-    updateRowEvent (row) {
-      this.$refs.editable.reloadRow(row)
-      Message({ message: '保存成功', type: 'success' })
     },
     saveRowEvent (row) {
       this.$refs.editable.validateRow(row, valid => {
         if (valid) {
-          this.$refs.editable.clearActive()
-          this.$refs.editable.reloadRow(row)
-          Message({ message: '保存成功', type: 'success' })
-        } else {
-          console.log('error row submit!!')
-        }
-      })
-    },
-    getInsertEvent () {
-      let rest = this.treeList.filter(item => item.isNew)
-      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
-    },
-    getDataJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve([
-          {
-            id: 100,
-            parentId: null,
-            fileName: '一级目录',
-            fileSize: null,
-            fileType: '0',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 101,
-            parentId: 100,
-            fileName: '二级目录',
-            fileSize: null,
-            fileType: '0',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 10100,
-            parentId: 101,
-            fileName: '文件10100.pdf',
-            fileSize: 218,
-            fileType: '1',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 10101,
-            parentId: 101,
-            fileName: '文件10101.excel',
-            fileSize: 512,
-            fileType: '1',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 102,
-            parentId: 100,
-            fileName: '文件102.word',
-            fileSize: 1024,
-            fileType: '1',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 200,
-            parentId: null,
-            fileName: '我的文件',
-            fileSize: null,
-            fileType: '0',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 201,
-            parentId: 200,
-            fileName: '文件201.zip',
-            fileSize: 1024,
-            fileType: '1',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 202,
-            parentId: 200,
-            fileName: '文件202.text',
-            fileSize: 4096,
-            fileType: '1',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 301,
-            parentId: null,
-            fileName: '文件301.zip',
-            fileSize: 1024,
-            fileType: '1',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 401,
-            parentId: null,
-            fileName: '嘿嘿401.mp4',
-            fileSize: 2048,
-            fileType: '1',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
-          },
-          {
-            id: 501,
-            parentId: null,
-            fileName: '文件501.pdf',
-            fileSize: 512,
-            fileType: '1',
-            createDate: 1550923830095,
-            updateDate: 1550923830095
+          let url = '/api/file/add'
+          if (!row.isNew) {
+            url = '/api/file/update'
           }
-        ]), 350)
+          // 异步保存，局部刷新
+          this.loading = true
+          this.$refs.editable.clearActive()
+          XEAjax.doPost(url, row).then(({ data }) => {
+            XEUtils.destructuring(row, data[0])
+            this.$refs.editable.reloadRow(row)
+            this.loading = false
+            Message({ message: '保存成功', type: 'success' })
+          })
+        }
       })
     }
   }

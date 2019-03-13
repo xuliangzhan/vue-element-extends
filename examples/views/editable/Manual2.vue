@@ -1,158 +1,290 @@
 <template>
-  <div>
-    <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-10个字符；flag（校验必填）</p>
+  <div v-loading="loading">
+    <p style="color: red;font-size: 12px;">如果是手动模式会自动关闭触发激活</p>
 
     <p>
-      <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
-      <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
-      <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
-      <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
-      <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
+      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
+      <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </p>
 
     <el-editable
       ref="editable"
       class="manual-table2"
-      size="mini"
       border
+      height="466"
+      size="mini"
       :data.sync="list"
-      :edit-rules="validRules"
-      :edit-config="{trigger: 'manual', mode: 'row'}"
+      :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
+      <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip></el-editable-column>
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
+      <el-editable-column prop="describe2" label="文本输入" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
+      <el-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="remark" label="备注" :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column label="操作" width="220">
+      <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
+      <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
+      <el-editable-column prop="attr3" label="链接">
+        <template>
+          <a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">打开链接</a>
+        </template>
+      </el-editable-column>
+      <el-editable-column label="操作" width="150">
         <template slot-scope="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
             <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
-            <el-button size="mini" type="warning" @click="$refs.editable.revert(scope.row)">还原</el-button>
           </template>
           <template v-else>
-            <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.row)">编辑</el-button>
+            <el-button size="mini" type="primary" @click="openActiveRowEvent(scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
-            <el-button size="mini" type="warning" @click="revertEvent(scope.row)">还原</el-button>
           </template>
         </template>
       </el-editable-column>
     </el-editable>
+
+    <el-pagination
+      class="manual-table2-pagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageVO.currentPage"
+      :page-sizes="[5, 10, 15, 20, 50, 100, 150, 200]"
+      :page-size="pageVO.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pageVO.totalResult">
+    </el-pagination>
   </div>
 </template>
 
 <script>
 import XEUtils from 'xe-utils'
-import { Message, MessageBox } from 'element-ui'
-import listData from '@/common/json/editable/list.json'
-import regionData from '@/common/json/editable/region.json'
+import XEAjax from 'xe-ajax'
+import { MessageBox, Message } from 'element-ui'
 
 export default {
   data () {
     return {
-      sexList: [
-        {
-          label: '男',
-          value: '1'
-        },
-        {
-          label: '女',
-          value: '0'
-        }
-      ],
-      regionList: regionData,
-      list: XEUtils.clone(listData, true),
-      validRules: {
-        name: [
-          { required: true, message: '请输入名称', trigger: 'change' },
-          { min: 3, max: 10, message: '名称长度 3-10 个字符', trigger: 'blur' }
-        ],
-        flag: [
-          { required: true, message: '必须选择启用才能保存', trigger: 'blur' }
-        ]
-      }
+      loading: false,
+      sexList: [],
+      regionList: [],
+      list: [],
+      pageVO: {
+        currentPage: 1,
+        pageSize: 10,
+        totalResult: 0
+      },
+      isClearActiveFlag: true
     }
   },
+  created () {
+    this.findSexList()
+    this.findRegionList()
+    this.findList()
+  },
   methods: {
-    insertEvent (index) {
-      let row = this.$refs.editable.insertAt({ name: '默认名字1' }, index)
-      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+    findList () {
+      this.loading = true
+      XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`).then(response => {
+        let { page, result } = response.data
+        this.list = result
+        this.pageVO.totalResult = page.totalResult
+        this.loading = false
+      })
+    },
+    findSexList () {
+      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
+        this.sexList = data
+      })
+    },
+    findRegionList () {
+      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+        this.regionList = data
+      })
+    },
+    handleSizeChange (pageSize) {
+      this.pageVO.pageSize = pageSize
+      this.findList()
+    },
+    handleCurrentChange (currentPage) {
+      this.pageVO.currentPage = currentPage
+      this.findList()
+    },
+    formatterDate (row, column, cellValue, index) {
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+    },
+    clearActiveMethod ({ type, row }) {
+      return this.isClearActiveFlag && type === 'out' ? this.checkOutSave(row) : this.isClearActiveFlag
+    },
+    insertEvent () {
+      let activeInfo = this.$refs.editable.getActiveRow()
+      let { insertRecords } = this.$refs.editable.getAllRecords()
+      if (!activeInfo && !insertRecords.length) {
+        let row = this.$refs.editable.insert({
+          name: `New ${Date.now()}`,
+          age: 26,
+          flag: false
+        })
+        this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+      }
+    },
+    // 点击表格外面处理
+    checkOutSave (row) {
+      if (this.$refs.editable.hasRowChange(row)) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '保存数据',
+          cancelButtonText: '取消修改',
+          type: 'warning'
+        }).then(() => {
+          this.$refs.editable.clearActive()
+          this.saveRowEvent(row)
+        }).catch(action => {
+          if (action === 'cancel') {
+            this.$refs.editable.revert(row)
+            this.$refs.editable.clearActive()
+          }
+        }).then(() => {
+          this.isClearActiveFlag = true
+        })
+        return false
+      }
+      return this.isClearActiveFlag
+    },
+    // 编辑处理
+    openActiveRowEvent (row) {
+      let activeInfo = this.$refs.editable.getActiveRow()
+      if (activeInfo && activeInfo.isUpdate) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '保存数据',
+          cancelButtonText: '取消修改',
+          type: 'warning'
+        }).then(() => {
+          this.$refs.editable.setActiveRow(row)
+          this.saveRowEvent(activeInfo.row)
+        }).catch(action => {
+          if (action === 'cancel') {
+            this.$refs.editable.revert(activeInfo.row)
+            this.$refs.editable.setActiveRow(row)
+          }
+        }).then(() => {
+          this.isClearActiveFlag = true
+        })
+      } else {
+        this.$refs.editable.setActiveRow(row)
+      }
+    },
+    // 取消处理
+    cancelRowEvent (row) {
+      if (!row.id) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
+          confirmButtonText: '移除数据',
+          cancelButtonText: '返回继续',
+          type: 'warning'
+        }).then(action => {
+          if (action === 'confirm') {
+            this.$refs.editable.remove(row)
+          }
+        }).catch(e => e).then(() => {
+          this.isClearActiveFlag = true
+        })
+      } else if (this.$refs.editable.hasRowChange(row)) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('检测到未保存的内容，是否取消修改?', '温馨提示', {
+          confirmButtonText: '取消修改',
+          cancelButtonText: '返回继续',
+          type: 'warning'
+        }).then(action => {
+          if (action === 'confirm') {
+            this.$refs.editable.clearActive()
+            this.$refs.editable.revert(row)
+          } else {
+            this.$refs.editable.setActiveRow(row)
+          }
+        }).catch(e => e).then(() => {
+          this.isClearActiveFlag = true
+        })
+      } else {
+        this.$refs.editable.clearActive()
+      }
     },
     removeEvent (row) {
-      MessageBox.confirm('确定删除该数据?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$refs.editable.remove(row)
-      }).catch(e => e)
-    },
-    revertEvent (row) {
-      if (this.$refs.editable.hasRowChange(row)) {
-        MessageBox.confirm('确定还原该行数据?', '温馨提示', {
+      if (row.id) {
+        MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$refs.editable.revert(row)
-          Message({ message: '数据还原成功！', type: 'success' })
+          XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
+            this.findList()
+          })
         }).catch(e => e)
       } else {
-        Message({ message: '数据未改动！', type: 'info' })
+        this.$refs.editable.remove(row)
+      }
+    },
+    deleteSelectedEvent () {
+      let removeRecords = this.$refs.editable.getSelecteds()
+      if (removeRecords.length) {
+        MessageBox.confirm('确定删除所选数据?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          XEAjax.doPost('/api/user/save', { removeRecords }).then(({ data }) => {
+            Message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.findList()
+          })
+        }).catch(e => e)
+      } else {
+        Message({
+          type: 'info',
+          message: '请至少选择一条数据！'
+        })
       }
     },
     saveRowEvent (row) {
       this.$refs.editable.validateRow(row, valid => {
         if (valid) {
+          let url = '/api/user/add'
+          if (row.id) {
+            url = '/api/user/update'
+          }
+          this.loading = true
           this.$refs.editable.clearActive()
-          Message({ message: '保存成功', type: 'success' })
-        } else {
-          console.log('error row submit!!')
+          XEAjax.doPost(url, row).then(({ data }) => {
+            this.findList()
+            Message({ message: '保存成功', type: 'success' })
+          })
         }
       })
     },
-    cancelRowEvent (row) {
-      this.$refs.editable.validateRow(row, (valid, validErrs) => {
-        if (valid) {
-          this.$refs.editable.clearActive()
-        } else {
-          let message = <p>
-            <p>请正确填写以下信息！</p>
-            {
-              Object.keys(validErrs).map(name => {
-                let errors = validErrs[name]
-                let msg = `${name}：${errors.map(e => e.message).join(';')}`
-                return <p>{msg}</p>
-              })
-            }
-          </p>
-          Message({ message, dangerouslyUseHTMLString: true, type: 'error' })
-        }
-      })
-    },
-    validEvent () {
-      this.$refs.editable.validate().then(valid => {
-        Message({ message: '校验通过', type: 'success' })
-      }).catch(valid => {
-        console.log('error submit!!')
-      })
-    },
-    submitEvent () {
-      this.$refs.editable.validate().then(valid => {
-        alert('提交通过')
-      }).catch(valid => {
-        console.log('error submit!!')
-      })
+    exportCsvEvent () {
+      this.$refs.editable.exportCsv()
     }
   }
 }
 </script>
+
+<style>
+.manual-table2-pagination {
+  margin: 15px 20px 0 0;
+  text-align: right;
+}
+.manual-table2.editable .editable-row.new-insert,
+.manual-table2.editable .editable-row.new-insert:hover>td {
+  background-color: #f0f9eb;
+}
+</style>

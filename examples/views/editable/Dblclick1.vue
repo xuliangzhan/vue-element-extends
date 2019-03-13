@@ -1,56 +1,27 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">如果是单击模式会在双击后激活列编辑</p>
+    <p style="color: red;font-size: 12px;">如果是双击模式会在双击后激活列编辑</p>
 
     <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert({name: `New ${Date.now()}`, flag: true, flag2: 'Y', status: [], createDate: Date.now()})">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: `New last ${Date.now()}`, flag: true, flag2: 'Y', status: [], createDate: Date.now()}, -1)">在最后新增一行</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </p>
 
     <el-editable
       ref="editable"
       class="dblclick-table1"
-      size="small"
       border
-      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      size="mini"
+      :data.sync="list"
+      :edit-config="{trigger: 'dblclick'}"
       style="width: 100%">
-      <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字（只读）" show-overflow-tooltip></el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="age" label="年龄" width="140" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" width="100" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="是否启用2" width="200" :edit-render="{type: 'visible'}">
-        <template slot="edit" slot-scope="scope">
-          <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
-            <el-radio label="N" border>值1</el-radio>
-            <el-radio label="Y" border>值2</el-radio>
-          </el-radio-group>
-        </template>
-      </el-editable-column>
-      <el-editable-column prop="status" label="状态" width="160" :edit-render="{type: 'visible'}">
-        <template slot="edit" slot-scope="scope">
-          <el-checkbox-group v-model="scope.row.status" size="mini" @change="$refs.editable.updateStatus(scope)">
-            <el-checkbox-button label="success">成功</el-checkbox-button>
-            <el-checkbox-button label="error">失败</el-checkbox-button>
-          </el-checkbox-group>
-        </template>
-      </el-editable-column>
-      <el-editable-column prop="order" label="自定义渲染" width="120" :edit-render="{name: 'ElAutocomplete'}">
-        <template slot="edit" slot-scope="scope">
-          <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
-        </template>
-        <template slot-scope="scope">
-          <span>订单号：{{ scope.row.order }}</span>
-        </template>
-      </el-editable-column>
-      <el-editable-column prop="remark" label="备注" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', rows: 1}}"></el-editable-column>
-      <el-editable-column prop="createDate" label="创建时间（只读）" :formatter="formatterCreateDate"></el-editable-column>
-      <el-editable-column label="操作">
+      <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
+      <el-editable-column prop="name" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="describe" label="描述" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
+      <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
+      <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
+      <el-editable-column label="操作" width="160">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
@@ -61,119 +32,84 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox } from 'element-ui'
-import listData from '@/common/json/editable/list.json'
-import regionData from '@/common/json/editable/region.json'
+import XEAjax from 'xe-ajax'
+import { MessageBox, Message } from 'element-ui'
 
 export default {
   data () {
     return {
       loading: false,
-      sexList: [],
-      regionList: [],
-      orderDataList: [
-        {
-          value: '136'
-        },
-        {
-          value: '1362'
-        },
-        {
-          value: '13886'
-        }
-      ]
+      list: []
     }
   },
   created () {
-    this.init()
+    this.findList()
   },
   methods: {
-    init () {
-      this.findList()
-      this.getSexJSON().then(data => {
-        this.sexList = data
-      })
-      this.getRegionJSON().then(data => {
-        this.regionList = data
-      })
-    },
     findList () {
       this.loading = true
-      this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
-        this.loading = false
-      }).catch(e => {
+      XEAjax.doGet('/api/role/list').then(({ data }) => {
+        this.list = data
         this.loading = false
       })
     },
-    formatterCreateDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(row.createDate, 'yyyy-MM-dd hh:mm:ss')
+    formatterDate (row, column, cellValue, index) {
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
     },
-    submitEvent () {
-      let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
-      this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-        this.findList()
+    insertEvent () {
+      this.$refs.editable.insert({
+        name: `New ${Date.now()}`,
+        age: 26,
+        flag: false
       })
     },
     removeEvent (row) {
-      MessageBox.confirm('确定删除该数据?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      if (row.id) {
+        MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          XEAjax.doDelete(`/api/role/delete/${row.id}`).then(({ data }) => {
+            this.findList()
+          })
+        }).catch(e => e)
+      } else {
         this.$refs.editable.remove(row)
-      }).catch(e => e)
-    },
-    querySearchAsync (queryString, cb) {
-      var orderDataList = this.orderDataList
-      var results = queryString ? orderDataList.filter(this.createStateFilter(queryString)) : orderDataList
-      clearTimeout(this.timeout)
-      this.timeout = setTimeout(() => {
-        cb(results)
-      }, 3000 * Math.random())
-    },
-    createStateFilter (queryString) {
-      return (state) => {
-        return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
       }
     },
-    postJSON (data) {
-      // 提交请求
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve('保存成功')
-        }, 300)
+    submitEvent () {
+      this.$refs.editable.validate(valid => {
+        if (valid) {
+          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          if (insertRecords.length || updateRecords.length) {
+            this.loading = true
+            XEAjax.doPost('/api/role/save', { insertRecords, updateRecords }).then(({ data }) => {
+              Message({
+                type: 'success',
+                message: '保存成功!'
+              })
+              this.findList()
+            })
+          } else {
+            Message({
+              type: 'info',
+              message: '数据未改动！'
+            })
+          }
+        }
       })
     },
-    getSexJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(
-          [
-            {
-              label: '男',
-              value: '1'
-            },
-            {
-              label: '女',
-              value: '0'
-            }
-          ]
-        ), 100)
-      })
-    },
-    getDataJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
-      })
-    },
-    getRegionJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(regionData), 200)
-      })
+    exportCsvEvent () {
+      this.$refs.editable.exportCsv()
     }
   }
 }
 </script>
+
+<style>
+.dblclick-table1.editable .editable-row.new-insert,
+.dblclick-table1.editable .editable-row.new-insert:hover>td {
+  background-color: #f0f9eb;
+}
+</style>

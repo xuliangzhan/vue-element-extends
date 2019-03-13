@@ -1,36 +1,43 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">自定义行样式</p>
-    <p style="color: red;font-size: 12px;">使用分页组件</p>
+    <p style="color: red;font-size: 12px;">如果是单击模式会在点击后激活列编辑</p>
 
     <p>
-      <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
-      <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
+      <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
+      <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </p>
 
     <el-editable
       ref="editable"
       class="click-table2"
       border
-      size="small"
-      height="540"
+      height="466"
+      size="mini"
+      :data.sync="list"
       :row-class-name="tableRowClassName"
-      :edit-config="{trigger: 'click', showStatus: false}"
+      :edit-config="{trigger: 'click', mode: 'row'}"
       style="width: 100%">
-      <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="name" label="名字（只读）" min-width="140" show-overflow-tooltip></el-editable-column>
-      <el-editable-column prop="sex" label="性别" width="100" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column prop="age" label="年龄" width="140" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column prop="birthdate" label="日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="date1" label="选择日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column prop="date2" label="多个日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'dates'}}"></el-editable-column>
-      <el-editable-column prop="date3" label="选择周" width="150" :edit-render="{name: 'ElDatePicker', attrs: {type: 'week', format: 'yyyy 第 WW 周'}}"></el-editable-column>
-      <el-editable-column prop="date4" label="选择月" width="150" :edit-render="{name: 'ElDatePicker', attrs: {type: 'month'}}"></el-editable-column>
-      <el-editable-column prop="date5" label="选择年" width="150" :edit-render="{name: 'ElDatePicker', attrs: {type: 'year'}}"></el-editable-column>
-      <el-editable-column label="操作">
+      <el-editable-column type="selection" width="55"></el-editable-column>
+      <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
+      <el-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
+      <el-editable-column prop="describe2" label="文本输入" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
+      <el-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></el-editable-column>
+      <el-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
+      <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
+      <el-editable-column prop="attr3" label="链接">
+        <template>
+          <a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">打开链接</a>
+        </template>
+      </el-editable-column>
+      <el-editable-column label="操作" width="100">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
@@ -38,7 +45,7 @@
     </el-editable>
 
     <el-pagination
-      class="my-pagination"
+      class="click-table2-pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
@@ -52,9 +59,8 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox } from 'element-ui'
-import listData from '@/common/json/editable/list.json'
-import regionData from '@/common/json/editable/region.json'
+import XEAjax from 'xe-ajax'
+import { MessageBox, Message } from 'element-ui'
 
 export default {
   data () {
@@ -62,45 +68,39 @@ export default {
       loading: false,
       sexList: [],
       regionList: [],
-      orderDataList: [
-        {
-          value: '136'
-        },
-        {
-          value: '1362'
-        },
-        {
-          value: '13886'
-        }
-      ],
+      list: [],
       pageVO: {
         currentPage: 1,
-        pageSize: 50,
+        pageSize: 10,
         totalResult: 0
-      }
+      },
+      pendingRemoveList: []
     }
   },
   created () {
-    this.init()
+    this.findSexList()
+    this.findRegionList()
+    this.findList()
   },
   methods: {
-    init () {
-      this.findList()
-      this.getSexJSON().then(data => {
-        this.sexList = data
-      })
-      this.getRegionJSON().then(data => {
-        this.regionList = data
-      })
-    },
     findList () {
       this.loading = true
-      this.getDataJSON().then(({ page, result }) => {
-        this.pageVO.totalResult = page.total
-        this.$refs.editable.reload(result)
+      this.pendingRemoveList = []
+      XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`).then(response => {
+        let { page, result } = response.data
+        this.list = result
+        this.pageVO.totalResult = page.totalResult
         this.loading = false
-      }).catch(e => {
-        this.loading = false
+      })
+    },
+    findSexList () {
+      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
+        this.sexList = data
+      })
+    },
+    findRegionList () {
+      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+        this.regionList = data
       })
     },
     handleSizeChange (pageSize) {
@@ -111,100 +111,127 @@ export default {
       this.pageVO.currentPage = currentPage
       this.findList()
     },
+    formatterDate (row, column, cellValue, index) {
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+    },
     tableRowClassName ({ row, rowIndex }) {
-      if (rowIndex === 2 || rowIndex === 3 || rowIndex === 4) {
-        return 'warning-row'
-      } else if (rowIndex === 6 || rowIndex === 7) {
-        return 'success-row'
+      if (this.pendingRemoveList.some(item => item === row)) {
+        return 'delete-row'
       }
       return ''
     },
-    submitEvent () {
-      let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
-      this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-        this.findList()
+    insertEvent () {
+      this.$refs.editable.insert({
+        name: `New ${Date.now()}`,
+        age: 26,
+        flag: false
       })
-    },
-    insertEvent (index) {
-      let row = this.$refs.editable.insertAt({ name: '默认名字2' }, index)
-      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'sex'))
     },
     removeEvent (row) {
-      MessageBox.confirm('确定删除该数据?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      if (row.id) {
+        MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
+            this.findList()
+          })
+        }).catch(e => e)
+      } else {
         this.$refs.editable.remove(row)
-        this.findList()
-      }).catch(e => e)
+      }
     },
-    postJSON (data) {
-      // 提交请求
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve('保存成功')
-        }, 300)
-      })
-    },
-    getSexJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(
-          [
-            {
-              label: '男',
-              value: '1'
-            },
-            {
-              label: '女',
-              value: '0'
-            }
-          ]
-        ), 100)
-      })
-    },
-    getDataJSON () {
-      // 模拟分页数据
-      return new Promise(resolve => {
-        let list = []
-        Array.from(new Array(100)).map(item => {
-          if (list.length < this.pageVO.pageSize) {
-            list = list.concat(listData)
+    pendingRemoveEvent () {
+      let selection = this.$refs.editable.getSelecteds()
+      if (selection.length) {
+        let plus = []
+        let minus = []
+        selection.forEach(data => {
+          if (this.pendingRemoveList.some(item => data === item)) {
+            minus.push(data)
+          } else {
+            plus.push(data)
           }
         })
-        list = XEUtils.shuffle(XEUtils.clone(list, true))
-        list.length = this.pageVO.pageSize
-        setTimeout(() => resolve({
-          page: {
-            total: 1000
-          },
-          result: list
-        }), 350)
+        if (minus.length) {
+          this.pendingRemoveList = this.pendingRemoveList.filter(item => minus.some(data => data !== item)).concat(plus)
+        } else if (plus) {
+          this.pendingRemoveList = this.pendingRemoveList.concat(plus)
+        }
+        this.$refs.editable.clearSelection()
+      } else {
+        Message({
+          type: 'info',
+          message: '请至少选择一条数据！'
+        })
+      }
+    },
+    deleteSelectedEvent () {
+      let removeRecords = this.$refs.editable.getSelecteds()
+      if (removeRecords.length) {
+        MessageBox.confirm('确定删除所选数据?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          XEAjax.doPost('/api/user/save', { removeRecords }).then(({ data }) => {
+            Message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.findList()
+          })
+        }).catch(e => e)
+      } else {
+        Message({
+          type: 'info',
+          message: '请至少选择一条数据！'
+        })
+      }
+    },
+    submitEvent () {
+      this.$refs.editable.validate(valid => {
+        if (valid) {
+          let removeRecords = this.pendingRemoveList
+          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          if (insertRecords.length || updateRecords.length || removeRecords.length) {
+            this.loading = true
+            XEAjax.doPost('/api/user/save', { insertRecords, updateRecords, removeRecords }).then(({ data }) => {
+              Message({
+                type: 'success',
+                message: '保存成功!'
+              })
+              this.findList()
+            })
+          } else {
+            Message({
+              type: 'info',
+              message: '数据未改动！'
+            })
+          }
+        }
       })
     },
-    getRegionJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(regionData), 200)
-      })
+    exportCsvEvent () {
+      this.$refs.editable.exportCsv()
     }
   }
 }
 </script>
 
-<style scoped>
-.my-pagination {
+<style>
+.click-table2 .delete-row {
+  color: #f56c6c;
+  text-decoration: line-through;
+}
+.click-table2-pagination {
   margin: 15px 20px 0 0;
   text-align: right;
 }
-</style>
-
-<style>
-.el-table .warning-row {
-  background: oldlace;
-}
-.el-table .success-row {
-  background: #f0f9eb;
+.click-table2.editable .editable-row.new-insert,
+.click-table2.editable .editable-row.new-insert:hover>td {
+  background-color: #f0f9eb;
 }
 </style>

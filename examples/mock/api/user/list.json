@@ -1,0 +1,18 @@
+{
+  "!return|array(50-500)": {
+    "id|number": "{{ $index+1 }}",
+    "name": "Name_{{ $index }}",
+    "password": "{{ random.repeat('abcdefgABCDEFG',6,12) }}",
+    "sex|random(1)": ["0", "1"],
+    "region|random(1)": [[1, 1, 5], [19, 199, 1773], [9, 73, 719]],
+    "email": "{{ random.repeat('abcdefg',5,20) }}@{{ random.repeat(['qq','163'],1) }}.{{ random.repeat(['com','net'],1) }}",
+    "age|number": "{{ random.num(18,30) }}",
+    "flag|boolean": "{{ random.num(0,1) }}",
+    "describe": "{{ random.repeat('用户信息',2,6) }}",
+    "describe2": "{{ random.repeat('用户信息',4,10) }}",
+    "describe3": "{{ random.repeat('用户信息',6,20) }}",
+    "date|number": "{{ random.time('2019-01-01 00:00:00','2019-02-20 23:59:59', 'yyyy-MM-dd HH:mm:ss') }}",
+    "createTime|number": "{{ random.time('2019-01-01 00:00:00','2019-02-20 23:59:59', 'yyyy-MM-dd HH:mm:ss') }}",
+    "updateTime|number": "{{ random.time('2019-01-01 00:00:00','2019-02-20 23:59:59', 'yyyy-MM-dd HH:mm:ss') }}"
+  }
+}

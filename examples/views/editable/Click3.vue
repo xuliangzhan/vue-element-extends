@@ -22,9 +22,9 @@
       ref="editable"
       class="click-table3"
       height="480"
-      stripe
       border
       size="medium"
+      :row-class-name="tableRowClassName"
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-config="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, useDefaultValidTip: true, autoScrollIntoView: true}"
@@ -265,6 +265,14 @@ export default {
         return selectItem ? selectItem.value : null
       }).join(' / ')
     },
+    tableRowClassName ({ row, rowIndex }) {
+      if (rowIndex === 2 || rowIndex === 3) {
+        return 'warning-row'
+      } else if (rowIndex === 4) {
+        return 'success-row'
+      }
+      return ''
+    },
     insertEvent (index) {
       let row = this.$refs.editable.insertAt({ name: '默认名字1', age: 26 }, index)
       this.$nextTick(() => this.$refs.editable.setActiveRow(row))
@@ -415,5 +423,14 @@ export default {
 <style scoped>
 .editable-custom_input {
   width: 95%;
+}
+</style>
+
+<style>
+.el-table .warning-row {
+  background: oldlace;
+}
+.el-table .success-row {
+  background: #f0f9eb;
 }
 </style>

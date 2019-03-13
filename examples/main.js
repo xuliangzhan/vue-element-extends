@@ -5,6 +5,7 @@ import router from './router'
 import 'font-awesome/css/font-awesome.css'
 import './plugins/element.js'
 import './plugins/element-extends.js'
+import './mock'
 // import './plugins/iview.js'
 
 Vue.config.productionTip = false

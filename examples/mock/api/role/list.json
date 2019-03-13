@@ -1,0 +1,9 @@
+{
+  "!return|array(5-50)": {
+    "id|number": "{{ $index+1 }}",
+    "name": "Role_{{ $index }}",
+    "describe": "{{ random.repeat('角色描述',4,50) }}",
+    "createTime|number": "{{ random.time('2019-01-01 00:00:00','2019-02-20 23:59:59', 'yyyy-MM-dd HH:mm:ss') }}",
+    "updateTime|number": "{{ random.time('2019-01-01 00:00:00','2019-02-20 23:59:59', 'yyyy-MM-dd HH:mm:ss') }}"
+  }
+}

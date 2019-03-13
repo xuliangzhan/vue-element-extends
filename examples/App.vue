@@ -4,18 +4,18 @@
        <a href="https://github.com/xuliangzhan/vue-element-extends/tree/master/examples/views/editable">查看代码</a>
       <div class="apimenu-row">
         <a class="apimenu-title">手动模式</a>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>行编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>行编辑+校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>基本操作</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>基本操作+分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual3'}" replace>行编辑+校验+多选操作</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual4'}" replace>行编辑+校验+行操作+禁用自动清除活动编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual5'}" replace>行编辑+校验+行操作+树表格</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual6'}" replace>行编辑+校验+行操作+导出数据</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual7'}" replace>行编辑+行操作+多个表格</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual4'}" replace>行编辑+校验+禁用自动清除活动编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual5'}" replace>行编辑+校验+树表格</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual6'}" replace>行编辑+校验+导出数据</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual7'}" replace>行编辑+多个表格</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">单击模式</a>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick1'}" replace>列编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>行样式+自定义渲染+分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick1'}" replace>基本操作</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>基本操作+分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>行编辑+自定义渲染+排序</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>多级表头+多选操作+校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>动态列渲染</router-link>
@@ -30,8 +30,8 @@
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">双击模式</a>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>列编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+自定义渲染+筛选+分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>基本操作</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>基本操作+分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>个性化列+自定义渲染+自定义校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>个性化列+唯一下拉选项+完整校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>个性化列+自定义列头+校验+自适应高度</router-link>

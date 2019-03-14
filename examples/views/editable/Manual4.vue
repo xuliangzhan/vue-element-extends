@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">禁用自动清除：如果 autoClearActive=false 当点击表格之外后，则不会自动清除最后活动行或列</p>
+    <p style="color: red;font-size: 12px;">关闭自动清除：如果 autoClearActive=false 当点击其它地方后，则不会自动清除最后活动行或列</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>

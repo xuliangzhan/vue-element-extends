@@ -80,7 +80,20 @@ export default {
     },
     // 点击表格外面处理
     checkOutSave (row) {
-      if (!row.id || this.$refs.editable.hasRowChange(row)) {
+      if (!row.id) {
+        this.isClearActiveFlag = false
+        MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
+          confirmButtonText: '移除数据',
+          cancelButtonText: '返回继续',
+          type: 'warning'
+        }).then(action => {
+          if (action === 'confirm') {
+            this.$refs.editable.remove(row)
+          }
+        }).catch(e => e).then(() => {
+          this.isClearActiveFlag = true
+        })
+      } else if (this.$refs.editable.hasRowChange(row)) {
         this.isClearActiveFlag = false
         MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
           distinguishCancelAndClose: true,

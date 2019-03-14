@@ -121,11 +121,12 @@ export default {
       return ''
     },
     insertEvent () {
-      this.$refs.editable.insert({
+      let row = this.$refs.editable.insert({
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
       })
+      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
     },
     removeEvent (row) {
       if (row.id) {

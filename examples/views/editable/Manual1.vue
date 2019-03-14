@@ -82,15 +82,19 @@ export default {
     checkOutSave (row) {
       if (!row.id) {
         this.isClearActiveFlag = false
-        MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
-          confirmButtonText: '移除数据',
-          cancelButtonText: '返回继续',
+        MessageBox.confirm('该数据未保存，请确认操作?', '温馨提示', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '保存数据',
+          cancelButtonText: '移除数据',
           type: 'warning'
         }).then(action => {
-          if (action === 'confirm') {
+          this.$refs.editable.clearActive()
+          this.saveRowEvent(row)
+        }).catch(action => {
+          if (action === 'cancel') {
             this.$refs.editable.remove(row)
           }
-        }).catch(e => e).then(() => {
+        }).then(() => {
           this.isClearActiveFlag = true
         })
       } else if (this.$refs.editable.hasRowChange(row)) {
@@ -145,6 +149,7 @@ export default {
       if (!row.id) {
         this.isClearActiveFlag = false
         MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
+          distinguishCancelAndClose: true,
           confirmButtonText: '移除数据',
           cancelButtonText: '返回继续',
           type: 'warning'
@@ -152,23 +157,24 @@ export default {
           if (action === 'confirm') {
             this.$refs.editable.remove(row)
           }
-        }).catch(e => e).then(() => {
+        }).catch(action => action).then(() => {
           this.isClearActiveFlag = true
         })
       } else if (this.$refs.editable.hasRowChange(row)) {
         this.isClearActiveFlag = false
         MessageBox.confirm('检测到未保存的内容，是否取消修改?', '温馨提示', {
+          distinguishCancelAndClose: true,
           confirmButtonText: '取消修改',
           cancelButtonText: '返回继续',
           type: 'warning'
         }).then(action => {
-          if (action === 'confirm') {
-            this.$refs.editable.clearActive()
-            this.$refs.editable.revert(row)
-          } else {
+          this.$refs.editable.clearActive()
+          this.$refs.editable.revert(row)
+        }).catch(action => {
+          if (action === 'cancel') {
             this.$refs.editable.setActiveRow(row)
           }
-        }).catch(e => e).then(() => {
+        }).then(() => {
           this.isClearActiveFlag = true
         })
       } else {
@@ -177,7 +183,9 @@ export default {
     },
     removeEvent (row) {
       if (row.id) {
+        this.isClearActiveFlag = false
         MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
+          distinguishCancelAndClose: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -185,7 +193,9 @@ export default {
           XEAjax.doDelete(`/api/role/delete/${row.id}`).then(({ data }) => {
             this.findList()
           })
-        }).catch(e => e)
+        }).catch(action => action).then(() => {
+          this.isClearActiveFlag = true
+        })
       } else {
         this.$refs.editable.remove(row)
       }

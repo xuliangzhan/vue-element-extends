@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">如果是双击模式会在双击后激活列编辑</p>
+    <p style="color: red;font-size: 12px;">带分页</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
@@ -22,7 +22,7 @@
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
-      <el-editable-column prop="name" label="名字" show-overflow-tooltip></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>

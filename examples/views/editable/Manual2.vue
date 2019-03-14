@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">如果是手动模式会自动关闭触发激活</p>
+    <p style="color: red;font-size: 12px;">带分页</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
@@ -19,7 +19,7 @@
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
-      <el-editable-column prop="name" label="名字" show-overflow-tooltip></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
@@ -136,15 +136,19 @@ export default {
     checkOutSave (row) {
       if (!row.id) {
         this.isClearActiveFlag = false
-        MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
-          confirmButtonText: '移除数据',
-          cancelButtonText: '返回继续',
+        MessageBox.confirm('该数据未保存，请确认操作?', '温馨提示', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '保存数据',
+          cancelButtonText: '移除数据',
           type: 'warning'
         }).then(action => {
-          if (action === 'confirm') {
+          this.$refs.editable.clearActive()
+          this.saveRowEvent(row)
+        }).catch(action => {
+          if (action === 'cancel') {
             this.$refs.editable.remove(row)
           }
-        }).catch(e => e).then(() => {
+        }).then(() => {
           this.isClearActiveFlag = true
         })
       } else if (this.$refs.editable.hasRowChange(row)) {
@@ -199,6 +203,7 @@ export default {
       if (!row.id) {
         this.isClearActiveFlag = false
         MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
+          distinguishCancelAndClose: true,
           confirmButtonText: '移除数据',
           cancelButtonText: '返回继续',
           type: 'warning'
@@ -212,17 +217,18 @@ export default {
       } else if (this.$refs.editable.hasRowChange(row)) {
         this.isClearActiveFlag = false
         MessageBox.confirm('检测到未保存的内容，是否取消修改?', '温馨提示', {
+          distinguishCancelAndClose: true,
           confirmButtonText: '取消修改',
           cancelButtonText: '返回继续',
           type: 'warning'
         }).then(action => {
-          if (action === 'confirm') {
-            this.$refs.editable.clearActive()
-            this.$refs.editable.revert(row)
-          } else {
+          this.$refs.editable.clearActive()
+          this.$refs.editable.revert(row)
+        }).catch(action => {
+          if (action === 'cancel') {
             this.$refs.editable.setActiveRow(row)
           }
-        }).catch(e => e).then(() => {
+        }).then(() => {
           this.isClearActiveFlag = true
         })
       } else {
@@ -231,7 +237,9 @@ export default {
     },
     removeEvent (row) {
       if (row.id) {
+        this.isClearActiveFlag = false
         MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
+          distinguishCancelAndClose: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -239,7 +247,9 @@ export default {
           XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
             this.findList()
           })
-        }).catch(e => e)
+        }).catch(action => action).then(() => {
+          this.isClearActiveFlag = true
+        })
       } else {
         this.$refs.editable.remove(row)
       }
@@ -247,7 +257,9 @@ export default {
     deleteSelectedEvent () {
       let removeRecords = this.$refs.editable.getSelecteds()
       if (removeRecords.length) {
+        this.isClearActiveFlag = false
         MessageBox.confirm('确定删除所选数据?', '温馨提示', {
+          distinguishCancelAndClose: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -260,7 +272,9 @@ export default {
             })
             this.findList()
           })
-        }).catch(e => e)
+        }).catch(action => action).then(() => {
+          this.isClearActiveFlag = true
+        })
       } else {
         Message({
           type: 'info',

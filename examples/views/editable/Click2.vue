@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">如果是单击模式会在点击后激活列编辑</p>
+    <p style="color: red;font-size: 12px;">带分页</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>

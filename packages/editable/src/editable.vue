@@ -659,13 +659,13 @@ export default {
       let isColumn = false
       let isHeader = false
       while (target && target.nodeType && target !== document) {
-        if (this._hasClass(target, 'editable-row')) {
+        if (!isRow && this._hasClass(target, 'editable-row')) {
           isRow = true
         }
-        if (this._hasClass(target, 'editable-column')) {
+        if (!isColumn && this._hasClass(target, 'editable-column')) {
           isColumn = true
         }
-        if (this._hasClass(target, 'el-table__header-wrapper')) {
+        if (!isHeader && this._hasClass(target, 'el-table__header-wrapper')) {
           isHeader = true
         }
         if (target === this.$el) {

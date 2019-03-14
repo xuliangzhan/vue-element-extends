@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">表格树：自动保存</p>
+    <p style="color: red;font-size: 12px;">编辑表格树：使用新增即保存方式；至于特殊需求可参考示例自行根据自身业务去实现；</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent('0')">新增目录</el-button>

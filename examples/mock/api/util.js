@@ -4,21 +4,21 @@ var idIndex = 100000
 
 const MockUtil = {
   // 获取最新数据、升序
-  getAscSortListByMax (list, ModelVO, sortProps, max) {
+  findAscSortList (list, ModelVO, sortProps, max) {
     return function (request, response) {
       let rest = XEUtils.sortBy(list, sortProps)
       return max ? rest.slice(0, max) : rest
     }
   },
   // 获取最新数据、倒序
-  getDescSortListByMax (list, ModelVO, sortProps, max) {
+  findDescSortList (list, ModelVO, sortProps, max) {
     return function (request, response) {
       let rest = XEUtils.sortBy(list, sortProps).reverse()
       return max ? rest.slice(0, max) : rest
     }
   },
   // 删除单条
-  removeByPathVariable (list, ModelVO, itemKey) {
+  deleteByPathVariable (list, ModelVO, itemKey) {
     return function (request, response, { pathVariable }) {
       let rest = []
       if (pathVariable) {
@@ -92,7 +92,7 @@ const MockUtil = {
     }
   },
   // 分页、升序
-  getAscSortPageList (list, ModelVO, sortProps, propSize, propCurrent) {
+  findAscSortPageList (list, ModelVO, sortProps, propSize, propCurrent) {
     return function (request, response, { pathVariable }) {
       let pageSize = 10
       let currentPage = 1
@@ -111,7 +111,7 @@ const MockUtil = {
     }
   },
   // 分页、倒序
-  getDescSortPageList (list, ModelVO, sortProps, propSize, propCurrent) {
+  findDescSortPageList (list, ModelVO, sortProps, propSize, propCurrent) {
     return function (request, response, { pathVariable }) {
       let pageSize = 10
       let currentPage = 1

@@ -55,7 +55,7 @@ export default {
   methods: {
     findList () {
       this.loading = true
-      XEAjax.doGet('/api/user/list').then(({ data }) => {
+      XEAjax.doGet('/api/role/list').then(({ data }) => {
         this.list = data
         this.loading = false
       })
@@ -182,7 +182,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
+          XEAjax.doDelete(`/api/role/delete/${row.id}`).then(({ data }) => {
             this.findList()
           })
         }).catch(e => e)
@@ -193,9 +193,9 @@ export default {
     saveRowEvent (row) {
       this.$refs.editable.validateRow(row, valid => {
         if (valid) {
-          let url = '/api/user/add'
+          let url = '/api/role/add'
           if (row.id) {
-            url = '/api/user/update'
+            url = '/api/role/update'
           }
           this.loading = true
           this.$refs.editable.clearActive()

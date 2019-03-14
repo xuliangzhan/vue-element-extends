@@ -611,14 +611,14 @@ export default {
         this.$emit(`cell-${type}`, row.data, column, cell, event)
       }
     },
-    _rowClick (row, event, column) {
-      this.$emit('row-click', row.data, event, column)
+    _rowClick (row, column, event) {
+      this.$emit('row-click', row.data, column, event)
     },
-    _rowContextmenu (row, event) {
-      this.$emit('row-contextmenu', row.data, event)
+    _rowContextmenu (row, column, event) {
+      this.$emit('row-contextmenu', row.data, column, event)
     },
-    _rowDBLclick (row, event) {
-      this.$emit('row-dblclick', row.data, event)
+    _rowDBLclick (row, column, event) {
+      this.$emit('row-dblclick', row.data, column, event)
     },
     _headerClick (column, event) {
       this._clearChecked()

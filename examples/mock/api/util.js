@@ -3,9 +3,19 @@ import XEUtils from 'xe-utils'
 var idIndex = 100000
 
 const MockUtil = {
-  // 按更新时间倒序
-  sortList (list) {
-    return XEUtils.sortBy(list, 'updateTime').reverse()
+  // 获取最新数据、升序
+  getAscSortListByMax (list, ModelVO, sortProps, max) {
+    return function (request, response) {
+      let rest = XEUtils.sortBy(list, sortProps)
+      return max ? rest.slice(0, max) : rest
+    }
+  },
+  // 获取最新数据、倒序
+  getDescSortListByMax (list, ModelVO, sortProps, max) {
+    return function (request, response) {
+      let rest = XEUtils.sortBy(list, sortProps).reverse()
+      return max ? rest.slice(0, max) : rest
+    }
   },
   // 删除单条
   removeByPathVariable (list, ModelVO, itemKey) {
@@ -81,8 +91,8 @@ const MockUtil = {
       return response
     }
   },
-  // 处理分页
-  getPageList (list, propSize, propCurrent) {
+  // 分页、升序
+  getAscSortPageList (list, ModelVO, sortProps, propSize, propCurrent) {
     return function (request, response, { pathVariable }) {
       let pageSize = 10
       let currentPage = 1
@@ -91,7 +101,26 @@ const MockUtil = {
       if (pathVariable) {
         pageSize = XEUtils.toNumber(pathVariable[propSize])
         currentPage = XEUtils.toNumber(pathVariable[propCurrent])
-        rest = MockUtil.sortList(list).slice((currentPage - 1) * pageSize, currentPage * pageSize)
+        rest = XEUtils.sortBy(list, sortProps).slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      }
+      response.body = {
+        page: { pageSize, currentPage, totalResult },
+        result: rest
+      }
+      return response
+    }
+  },
+  // 分页、倒序
+  getDescSortPageList (list, ModelVO, sortProps, propSize, propCurrent) {
+    return function (request, response, { pathVariable }) {
+      let pageSize = 10
+      let currentPage = 1
+      let totalResult = list.length
+      let rest = []
+      if (pathVariable) {
+        pageSize = XEUtils.toNumber(pathVariable[propSize])
+        currentPage = XEUtils.toNumber(pathVariable[propCurrent])
+        rest = XEUtils.sortBy(list, sortProps).reverse().slice((currentPage - 1) * pageSize, currentPage * pageSize)
       }
       response.body = {
         page: { pageSize, currentPage, totalResult },

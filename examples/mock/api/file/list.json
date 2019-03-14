@@ -39,7 +39,7 @@
     "id": 102,
     "parentId": 100,
     "name": "文件102.word",
-    "size": 1024,
+    "size": 101024,
     "type": "1",
     "createTime": 1550923830095,
     "updateTime": 1550923830095
@@ -75,7 +75,7 @@
     "id": 301,
     "parentId": null,
     "name": "文件301.zip",
-    "size": 1024,
+    "size": 4024,
     "type": "1",
     "createTime": 1550923830095,
     "updateTime": 1550923830095

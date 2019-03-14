@@ -6,7 +6,7 @@
       <el-button type="success" size="mini" @click="insertEvent('0')">新增目录</el-button>
       <el-button type="success" size="mini" @click="insertEvent('1')">新增文件</el-button>
       <el-upload
-        class="upload-demo"
+        class="manual-upload5"
         action="https://jsonplaceholder.typicode.com/posts/"
         :before-upload="handleFileBeforeUpload"
         :on-success="handleFileSuccess"
@@ -97,14 +97,30 @@ export default {
         this.loading = false
       })
     },
-    rowClickEvent (row, event, column) {
-      this.currentRow = row
+    rowClickEvent (row, column, event) {
+      if (['id', 'name', 'createTime', 'updateTime'].includes(column.property)) {
+        this.currentRow = this.currentRow === row ? null : row
+      }
     },
     formatColumnDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue)
     },
     formatColumnSize (row, column, cellValue, index) {
-      return cellValue ? `${cellValue} KB` : ''
+      if (XEUtils.isNumber(cellValue)) {
+        let units = ['B', 'KB', 'MB', 'GB', 'TB']
+        let unit = ''
+        let size = XEUtils.toNumber(cellValue)
+        for (let index = 0; index < units.length; index++) {
+          unit = units[index]
+          if (size >= 1024) {
+            size = XEUtils.toFixedNumber(size / 1024, 2)
+          } else {
+            break
+          }
+        }
+        return `${size} ${unit}`
+      }
+      return ''
     },
     clearActiveMethod ({ type, row }) {
       if (this.isClearActiveFlag && type === 'out') {
@@ -147,6 +163,8 @@ export default {
         let data = Object.assign({
           id: '',
           type: type,
+          name: type === '0' ? '新建文件夹' : '新建文件.txt',
+          size: type === '1' ? 0 : null,
           parentId: null,
           treeLevel: 0,
           treeIndex: 0,
@@ -192,7 +210,8 @@ export default {
               Message({ message: '保存成功', type: 'success' })
             })
           } else {
-            this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+            // 默认聚焦到 name 列
+            this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
           }
         })
       }
@@ -266,6 +285,9 @@ export default {
         XEAjax.doDelete(`/api/file/delete/${row.id}`).then(({ data }) => {
           this.removeOwnAllChilds(row)
           this.reloedTreeList(this.treeList)
+          if (this.currentRow && !this.treeList.includes(this.currentRow)) {
+            this.currentRow = null
+          }
           this.loading = false
           Message({ message: '删除成功', type: 'success' })
         })
@@ -290,6 +312,7 @@ export default {
               message: '删除成功!'
             })
             // 如果删除包含目录，级联删除子级
+            this.currentRow = null
             removeRecords.forEach(item => this.removeOwnAllChilds(item))
             this.treeAllChange(false)
             this.reloedTreeList(this.treeList)
@@ -419,6 +442,9 @@ export default {
       return clsName
     },
     treeAllChange (value) {
+      if (!value) {
+        this.treeAllCheck = false
+      }
       this.treeAllIndeterminate = false
       this.treeList.forEach(item => {
         item.isCheck = value
@@ -470,7 +496,7 @@ export default {
     treeRowClassName ({ row, rowIndex }) {
       let clsName = `tree-level_${row.treeLevel}`
       if (this.currentRow && this.currentRow.id === row.id) {
-        clsName += ' current-row'
+        clsName += ' selected-row'
       }
       return clsName
     },
@@ -483,35 +509,11 @@ export default {
 }
 </script>
 
-<style scoped>
-.upload-demo {
+<style>
+.manual-upload5 {
   display: inline-block;
   margin: 0 10px;
 }
-.manual-table5 .error-msg {
-  display: block;
-  color: #fff;
-  background-color: red;
-  border-radius: 8px;
-  font-size: 12px;
-  line-height: 1;
-  padding: 10px;
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 10px;
-  z-index: 9;
-}
-.manual-table5 .error-msg:before {
-  content: "";
-  position: absolute;
-  border: 4px solid;
-  top: -8px;
-  left: 20%;
-  border-color: transparent transparent red transparent;
-}
-</style>
-
-<style>
 .manual-table5 .tree-level_0 .tree-operate-node .cell {
   padding-left: 25px;
 }
@@ -542,7 +544,34 @@ export default {
 .manual-table5 .tree-expand-icon {
   padding-right: 10px;
 }
+.manual-table5 .el-table__body .el-table__row.selected-row {
+   background-color: #f0f9eb;
+}
+.manual-table5 .el-table__body .el-table__row:hover>td {
+  background-color: inherit;
+}
 .manual-table5 .editable-row .editable-column.editable-col_edit.editable-col_disabled {
   cursor: auto;
+}
+.manual-table5 .error-msg {
+  display: block;
+  color: #fff;
+  background-color: red;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1;
+  padding: 10px;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 10px;
+  z-index: 9;
+}
+.manual-table5 .error-msg:before {
+  content: "";
+  position: absolute;
+  border: 4px solid;
+  top: -8px;
+  left: 20%;
+  border-color: transparent transparent red transparent;
 }
 </style>

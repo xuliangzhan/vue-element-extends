@@ -929,7 +929,7 @@ export default {
       // 如果通过函数式调用，超过一定时间后才允许触发 Clear 相关操作，不应该和事件叠加触发
       return { vT: Date.now() + 100 }
     },
-    _toActiveRow (record, prop, preventDefault) {
+    _toActiveRow (record, prop) {
       let rowIndex = this._getTDataIndexByRecord(record)
       let { row, column, cell } = this._getColumnByRowIndex(rowIndex, prop)
       if (row && column) {
@@ -1215,25 +1215,15 @@ export default {
     },
     /**
      * 激活指定某一行为可编辑状态
-     * 只有当指定为 mode='row' 模式时有效
-     * 如果 preventDefault=false 不阻止 clearActive 行为
      */
-    setActiveRow (record, preventDefault) {
-      if (this.configs.mode === 'row') {
-        return this._toActiveRow(record, null, preventDefault)
-      }
-      return false
+    setActiveRow (record) {
+      return this._toActiveRow(record, null)
     },
     /**
      * 激活指定某一行的单元格为可编辑状态
-     * 只有当指定为 mode='cell' 模式时有效
-     * 如果 preventDefault=false 不阻止 clearActive 行为
      */
-    setActiveCell (record, prop, preventDefault) {
-      if (this.configs.mode === 'cell') {
-        return this._toActiveRow(record, prop, preventDefault)
-      }
-      return false
+    setActiveCell (record, prop) {
+      return this._toActiveRow(record, prop)
     },
     hasActiveRow (record) {
       return this.lastActive ? this.lastActive.row.data === record : false

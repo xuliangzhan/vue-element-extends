@@ -8,7 +8,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>基本操作+分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual3'}" replace>行编辑+校验+多选操作</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual4'}" replace>行编辑+校验+禁用自动清除活动编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual5'}" replace>行编辑+校验+树表格</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual5'}" replace>基本操作+树表格+校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual6'}" replace>行编辑+校验+导出数据</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual7'}" replace>行编辑+多个表格</router-link>
       </div>

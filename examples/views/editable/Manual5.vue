@@ -14,12 +14,14 @@
         :show-file-list="false">
         <el-button type="primary" size="mini">上传文件</el-button>
       </el-upload>
+      <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
     </p>
 
     <el-editable
       ref="editable"
       class="manual-table5"
       size="small"
+      row-key="id"
       :data.sync="list"
       :row-class-name="treeRowClassName"
       :edit-rules="validRules"
@@ -255,19 +257,51 @@ export default {
       }
     },
     removeEvent (row) {
-      MessageBox.confirm('确定删除该附件?', '温馨提示', {
+      MessageBox.confirm('确定删除该文件?', '温馨提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.loading = true
         XEAjax.doDelete(`/api/file/delete/${row.id}`).then(({ data }) => {
-          this.removeAllChilds(row)
+          this.removeOwnAllChilds(row)
           this.reloedTreeList(this.treeList)
           this.loading = false
           Message({ message: '删除成功', type: 'success' })
         })
       }).catch(e => e)
+    },
+    deleteSelectedEvent () {
+      let removeRecords = this.treeList.filter(item => item.isCheck)
+      if (removeRecords.length) {
+        let msg = '您确定删除所选的文件？'
+        if (removeRecords.some(item => item.type === '0')) {
+          msg = '您确定删除所选目录及所有文件？'
+        }
+        MessageBox.confirm(msg, '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          XEAjax.doPost('/api/file/save', { removeRecords }).then(({ data }) => {
+            Message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            // 如果删除包含目录，级联删除子级
+            removeRecords.forEach(item => this.removeOwnAllChilds(item))
+            this.treeAllChange(false)
+            this.reloedTreeList(this.treeList)
+            this.loading = false
+          })
+        }).catch(e => e)
+      } else {
+        Message({
+          type: 'info',
+          message: '请至少选择一个文件！'
+        })
+      }
     },
     saveRowEvent (row) {
       // 如果是新增或已改动直接保存
@@ -313,8 +347,8 @@ export default {
     hasDirectory (row) {
       return this.getChildren(row).length > 0
     },
-    // 移除子级及所有子级
-    removeAllChilds (row) {
+    // 移除自己以及所有子级
+    removeOwnAllChilds (row) {
       let allChilds = this.getAllChilds(row)
       XEUtils.remove(this.treeList, item => row === item || allChilds.includes(item))
     },

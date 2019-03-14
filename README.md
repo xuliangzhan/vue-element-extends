@@ -128,8 +128,8 @@ edit-config 编辑参数配置
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |
 | hasActiveRow | 判断当前是否活动行 | row |
 | getActiveRow | 获取当前活动行或列的信息 | — |
-| setActiveRow | 激活指定行行为可编辑状态 | row |
-| setActiveCell | 激活指定某一行的单元格为可编辑状态 | row,prop |
+| setActiveRow | 只对 mode=row 有效，激活指定行为可编辑状态 | row |
+| setActiveCell | 激活指定某一行的某个单元格为可编辑状态 | row,prop? |
 | hasRowChange | 检查行或列数据是否有改变 | row, prop? |
 | updateStatus | 更新单元格编辑状态（只对 showStatus=true 并且使用自定义渲染时，当值发生改变时才需要调用） | scope |
 | getAllRecords | 获取表格数据集合 | — |

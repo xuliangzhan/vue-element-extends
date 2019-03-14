@@ -1217,10 +1217,14 @@ export default {
      * 激活指定某一行为可编辑状态
      */
     setActiveRow (record) {
-      return this._toActiveRow(record, null)
+      if (this.configs.mode === 'row') {
+        return this._toActiveRow(record, null)
+      }
+      return false
     },
     /**
      * 激活指定某一行的单元格为可编辑状态
+     * 如果不指定 prop 和 setActiveRow 一样效果
      */
     setActiveCell (record, prop) {
       return this._toActiveRow(record, prop)

@@ -26,7 +26,7 @@
       :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
       @row-click="rowClickEvent"
       style="width: 100%">
-      <el-editable-column class-name="tree-operate-node" width="200">
+      <el-editable-column class-name="tree-operate-node" width="160">
         <template slot="header">
           <el-checkbox v-model="treeAllCheck" :indeterminate="treeAllIndeterminate" @change="treeAllChange(treeAllCheck)"></el-checkbox>
         </template>
@@ -106,7 +106,7 @@ export default {
     },
     clearActiveMethod ({ type, row }) {
       if (this.isClearActiveFlag && type === 'out') {
-        if (row.isNew || this.$refs.editable.hasRowChange(row)) {
+        if (!row.id || this.$refs.editable.hasRowChange(row)) {
           this.$refs.editable.clearActive()
           this.saveRowEvent(row)
           return true
@@ -144,7 +144,6 @@ export default {
         let index = selectRow ? XEUtils.findIndexOf(this.list, item => item.id === selectRow.id) : -1
         let data = Object.assign({
           id: '',
-          isNew: true,
           type: type,
           parentId: null,
           treeLevel: 0,
@@ -221,7 +220,7 @@ export default {
       }
     },
     cancelRowEvent (row) {
-      if (row.isNew) {
+      if (!row.id) {
         this.isClearActiveFlag = false
         MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
           confirmButtonText: '移除数据',
@@ -229,8 +228,8 @@ export default {
           type: 'warning'
         }).then(action => {
           if (action === 'confirm') {
-            this.$refs.editable.remove(row) // 从表格中移除
             XEUtils.remove(this.treeList, item => item === row) // 从缓存树中移除
+            this.reloedTreeList(this.treeList)
           }
         }).catch(e => e).then(() => {
           this.isClearActiveFlag = true
@@ -263,38 +262,61 @@ export default {
       }).then(() => {
         this.loading = true
         XEAjax.doDelete(`/api/file/delete/${row.id}`).then(({ data }) => {
-          this.$refs.editable.remove(row) // 从表格中移除
-          XEUtils.remove(this.treeList, item => item === row) // 从缓存树中移除
+          this.removeAllChilds(row)
+          this.reloedTreeList(this.treeList)
           this.loading = false
           Message({ message: '删除成功', type: 'success' })
         })
       }).catch(e => e)
     },
     saveRowEvent (row) {
-      this.$refs.editable.validateRow(row, valid => {
-        if (valid) {
-          let url = '/api/file/add'
-          if (!row.isNew) {
-            url = '/api/file/update'
+      // 如果是新增或已改动直接保存
+      if (!row.id || this.$refs.editable.hasRowChange(row)) {
+        this.$refs.editable.validateRow(row, valid => {
+          if (valid) {
+            let url = '/api/file/add'
+            if (row.id) {
+              url = '/api/file/update'
+            }
+            // 异步保存，局部刷新
+            this.loading = true
+            this.$refs.editable.clearActive()
+            XEAjax.doPost(url, row).then(({ data }) => {
+              XEUtils.destructuring(row, data[0])
+              this.$refs.editable.reloadRow(row)
+              this.loading = false
+              Message({ message: '保存成功', type: 'success' })
+            })
           }
-          // 异步保存，局部刷新
-          this.loading = true
-          this.$refs.editable.clearActive()
-          XEAjax.doPost(url, row).then(({ data }) => {
-            XEUtils.destructuring(row, data[0])
-            this.$refs.editable.reloadRow(row)
-            this.loading = false
-            Message({ message: '保存成功', type: 'success' })
-          })
-        }
-      })
+        })
+      } else {
+        this.$refs.editable.clearActive()
+      }
     },
-    /** 组装树相关的函数处理 start */
+    /** 树表格相关的函数处理 start */
     getChildren (row) {
       return this.treeList.filter(item => item.parentId === row.id)
     },
+    getAllChilds (row) {
+      let result = []
+      let getChilds = (parent) => {
+        this.treeList.forEach(item => {
+          if (item.parentId && item.parentId === parent.id) {
+            result.push(item)
+            getChilds(item)
+          }
+        })
+      }
+      getChilds(row)
+      return result
+    },
     hasDirectory (row) {
       return this.getChildren(row).length > 0
+    },
+    // 移除子级及所有子级
+    removeAllChilds (row) {
+      let allChilds = this.getAllChilds(row)
+      XEUtils.remove(this.treeList, item => row === item || allChilds.includes(item))
     },
     reloedTreeList (data) {
       this.initTreeList(data, true)
@@ -422,7 +444,7 @@ export default {
       this.treeCollapseNode(row, !row.expandNode)
       this.loadTree()
     }
-    /** 组装树相关的函数处理 end */
+    /** 树表格相关的函数处理 end */
   }
 }
 </script>

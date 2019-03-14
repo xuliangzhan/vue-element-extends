@@ -28,7 +28,7 @@
       :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
       @row-click="rowClickEvent"
       style="width: 100%">
-      <el-editable-column class-name="tree-operate-node" width="160">
+      <el-editable-column prop="showNode" class-name="tree-operate-node" width="160">
         <template slot="header">
           <el-checkbox v-model="treeAllCheck" :indeterminate="treeAllIndeterminate" @change="treeAllChange(treeAllCheck)"></el-checkbox>
         </template>
@@ -98,7 +98,7 @@ export default {
       })
     },
     rowClickEvent (row, column, event) {
-      if (['id', 'name', 'createTime', 'updateTime'].includes(column.property)) {
+      if (['showNode', 'id', 'name', 'createTime', 'updateTime'].includes(column.property)) {
         this.currentRow = this.currentRow === row ? null : row
       }
     },

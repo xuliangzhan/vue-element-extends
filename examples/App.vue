@@ -5,7 +5,7 @@
       <div class="apimenu-row">
         <a class="apimenu-title">手动模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>列编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>行编辑+分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual2'}" replace>行编辑+基本操作</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual3'}" replace>行编辑+勾选+校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual4'}" replace>行编辑+关闭自动清除</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual5'}" replace>行编辑+多表格</router-link>
@@ -14,7 +14,7 @@
       <div class="apimenu-row">
         <a class="apimenu-title">单击模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableClick1'}" replace>列编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>行编辑+分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>行编辑+基本操作</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>列编辑+自定义渲染+禁止勾选</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>行编辑+浮动列</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>多级表头</router-link>
@@ -30,7 +30,7 @@
       <div class="apimenu-row">
         <a class="apimenu-title">双击模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>列编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+分页</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+基本操作</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>列编辑+校验+自定义提示</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>动态列+唯一下拉选项+完整校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>动态列+自定义列头+校验</router-link>

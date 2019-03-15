@@ -24,7 +24,6 @@ GET('/api/role/page/list/{pageSize}/{currentPage}', MockUtil.findDescSortPageLis
 class UserVO {
   constructor (data) {
     this.id = data.id
-    this.parentId = data.parentId
     this.name = data.name
     this.password = data.password
     this.sex = data.sex

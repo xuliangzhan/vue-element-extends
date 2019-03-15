@@ -90,12 +90,12 @@ export default {
           let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
           if (insertRecords.length || updateRecords.length) {
             insertRecords.forEach(item => {
-              if (item.date) {
+              if (XEUtils.isDate(item.date)) {
                 item.date = item.date.getTime()
               }
             })
             updateRecords.forEach(item => {
-              if (item.date) {
+              if (XEUtils.isDate(item.date)) {
                 item.date = item.date.getTime()
               }
             })

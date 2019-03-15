@@ -311,7 +311,7 @@ export default {
           if (row.id) {
             url = '/api/user/update'
           }
-          if (row.date) {
+          if (XEUtils.isDate(row.date)) {
             row.date = row.date.getTime()
           }
           this.loading = true

@@ -2,6 +2,7 @@
   <div>
     <p style="color: red;font-size: 12px;">自定义设置动态列</p>
     <p style="color: red;font-size: 12px;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
+    <p style="color: red;font-size: 12px;">上下左右方向键切换列、Tab 键切换列、选中后可直接输入值覆盖旧值</p>
 
     <p>
       <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
@@ -10,6 +11,7 @@
       <el-button size="mini" @click="getAllEvent">获取所有</el-button>
       <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
       <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
+      <el-button size="mini" @click="exportCsvEvent">导出数据</el-button>
     </p>
 
     <el-editable
@@ -18,7 +20,7 @@
       border
       size="customSize"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true}"
       style="width: 100%" >
       <el-editable-column type="index" align="center" width="50">
         <template slot="header">
@@ -32,24 +34,24 @@
       </template>
     </el-editable>
 
-    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
-      <ul class="custom-wrapper">
-        <li v-for="(item, index) in columnConfigs" :key="index">
-          <el-checkbox v-model="item.customChecked">{{ item.label }}</el-checkbox>
-        </li>
-      </ul>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="resetCustomEvent">重 置</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
-      </span>
+    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
+      <el-transfer
+        v-model="selectColumns"
+        :data="columnConfigs"
+        :titles="['隐藏列', '显示列']"
+        :props="{key: 'prop', label: 'label'}"></el-transfer>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="resetCustomEvent">重 置</el-button>
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
+        </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import XEUtils from 'xe-utils'
-import { MessageBox } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 
 export default {
   data () {
@@ -70,10 +72,29 @@ export default {
     }
     return {
       dialogVisible: false,
+      selectColumns: [],
       list: Array.from(new Array(15), (v, i) => {
         let rest = {}
-        columns.forEach(name => {
-          rest[name.toLowerCase()] = ''
+        columns.forEach((name, index) => {
+          switch (name) {
+            case 'A':
+              rest[name.toLowerCase()] = `${100 + i}`
+              break
+            case 'B':
+              rest[name.toLowerCase()] = `值`
+              break
+            case 'C':
+              rest[name.toLowerCase()] = `ABC`
+              break
+            case 'D':
+              rest[name.toLowerCase()] = `${200 + i}`
+              break
+            case 'E':
+              rest[name.toLowerCase()] = `${300.33 + i}`
+              break
+            default:
+              rest[name.toLowerCase()] = `${name}-${i < 10 ? '0' + i : i}`
+          }
         })
         return rest
       }),
@@ -81,7 +102,6 @@ export default {
         let defaultShow = index < 20
         let column = {
           customDefault: defaultShow,
-          customChecked: defaultShow,
           customShow: defaultShow,
           prop: name.toLowerCase(),
           label: name,
@@ -134,6 +154,12 @@ export default {
     })
   },
   methods: {
+    exportCsvEvent () {
+      this.$refs.editable.exportCsv({
+        filename: 'Excel5数据.csv',
+        columnFilterMethod: (column, columnIndex) => !['index'].includes(column.type)
+      })
+    },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
@@ -147,19 +173,21 @@ export default {
       MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` }).catch(e => e)
     },
     openCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.customChecked = column.customShow
-      })
+      this.selectColumns = this.columnConfigs.filter(column => column.customShow).map(column => column.prop)
     },
     resetCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.customChecked = column.customDefault
-      })
+      this.selectColumns = this.columnConfigs.filter(column => column.customDefault).map(column => column.prop)
     },
     saveCustomEvent () {
+      if (!this.selectColumns.length) {
+        return Message({
+          type: 'error',
+          message: '请至少选择一列！'
+        })
+      }
       this.dialogVisible = false
       this.columnConfigs.forEach(column => {
-        column.customShow = column.customChecked
+        column.customShow = this.selectColumns.includes(column.prop)
       })
     }
   }

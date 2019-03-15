@@ -1,9 +1,10 @@
 <template>
   <div>
-    <p style="color: red;font-size: 12px;">A字段（必填校验）</p>
+    <p style="color: red;font-size: 12px;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
 
     <p>
       <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
+      <el-button size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
       <el-button size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
       <el-button size="mini" @click="getAllEvent">获取所有</el-button>
       <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
@@ -29,30 +30,98 @@
 </template>
 
 <script>
+import XEUtils from 'xe-utils'
 import { MessageBox } from 'element-ui'
 
 export default {
   data () {
-    let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V']
+    let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
+    const checkD = (rule, value, callback) => {
+      if (!value || XEUtils.isInteger(Number(value))) {
+        callback()
+      } else {
+        callback(new Error('请输入整数'))
+      }
+    }
+    const checkE = (rule, value, callback) => {
+      if (!value || XEUtils.isFloat(Number(value))) {
+        callback()
+      } else {
+        callback(new Error('请输入小数'))
+      }
+    }
     return {
       list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach(name => {
-          rest[name.toLowerCase()] = name === 'A' ? `A-${i < 10 ? '0' + i : i}` : ''
+          switch (name) {
+            case 'A':
+              rest[name.toLowerCase()] = `${100 + i}`
+              break
+            case 'B':
+              rest[name.toLowerCase()] = `值`
+              break
+            case 'C':
+              rest[name.toLowerCase()] = `ABC`
+              break
+            case 'D':
+              rest[name.toLowerCase()] = `${200 + i}`
+              break
+            case 'E':
+              rest[name.toLowerCase()] = `${300.33 + i}`
+              break
+            case 'F':
+              rest[name.toLowerCase()] = `${name}-${i < 10 ? '0' + i : i}`
+              break
+            default:
+              rest[name.toLowerCase()] = ''
+          }
         })
         return rest
       }),
       columnConfigs: columns.map(name => {
-        return {
+        let column = {
           prop: name.toLowerCase(),
           label: name,
-          sortable: name === 'A',
+          minWidth: '80',
+          sortable: true,
           editRender: { name: 'ElInput' }
         }
+        switch (name) {
+          case 'A':
+            column.filters = [{ text: '大于10', value: 10 }, { text: '大于50', value: 50 }, { text: '大于100', value: 100 }]
+            column.filterMethod = (value, row, column) => Number(row[column.property] || 0) > value
+            break
+          case 'C':
+            column.filters = [{ text: 'a开头', value: 'a' }, { text: 'b开头', value: 'b' }, { text: 'c开头', value: 'c' }]
+            column.filterMethod = (value, row, column) => (row[column.property] || '').substring(0, 1) === value
+            break
+          case 'D':
+            column.filters = [{ text: '大于0', value: 0 }, { text: '大于20', value: 20 }, { text: '大于200', value: 200 }]
+            column.filterMethod = (value, row, column) => Number(row[column.property] || 0) > value
+            break
+          case 'E':
+            column.filters = [{ text: '大于2.5', value: 2.5 }, { text: '大于7.8', value: 7.8 }, { text: '大于9.5', value: 9.5 }]
+            column.filterMethod = (value, row, column) => Number(row[column.property] || 0) > value
+            break
+        }
+        return column
       }),
       validRules: {
         a: [
-          { required: true, message: '必填字段', trigger: 'change' }
+          { type: 'number', message: '必须输入数字', trigger: 'change' }
+        ],
+        b: [
+          { pattern: /^[\u4e00-\u9fa5]{1,5}$/, message: '校验1-5个汉字', trigger: 'change' }
+        ],
+        c: [
+          { pattern: /^[a-zA-Z]{1,5}$/, message: '校验1-5个字母', trigger: 'blur' }
+        ],
+        d: [
+          { validator: checkD, trigger: 'blur' }
+        ],
+        e: [
+          { validator: checkE, trigger: 'change' }
         ]
       }
     }

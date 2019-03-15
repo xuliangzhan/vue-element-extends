@@ -43,10 +43,8 @@
 </template>
 
 <script>
-import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import { MessageBox } from 'element-ui'
-import listData from '@/common/json/editable/list.json'
-import regionData from '@/common/json/editable/region.json'
 
 export default {
   data () {
@@ -106,21 +104,17 @@ export default {
   },
   methods: {
     init () {
-      this.findList()
-      this.getSexJSON().then(data => {
+      this.findSexList()
+      this.findRegionList()
+    },
+    findSexList () {
+      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
         this.sexList = data
       })
-      this.getRegionJSON().then(data => {
-        this.regionList = data
-      })
     },
-    findList () {
-      this.loading = true
-      this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
+    findRegionList () {
+      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+        this.regionList = data
       })
     },
     insertEvent (index) {
@@ -143,7 +137,7 @@ export default {
       this.$refs.editable.validate().then(valid => {
         let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
         this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-          this.findList()
+
         })
       }).catch(valid => {
         console.log('error submit!!')
@@ -171,39 +165,6 @@ export default {
         setTimeout(() => {
           resolve('保存成功')
         }, 300)
-      })
-    },
-    getSexJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(
-          [
-            {
-              label: '男',
-              spell: 'nan',
-              value: '1',
-              val: 'x'
-            },
-            {
-              label: '女',
-              spell: 'nv',
-              value: '0',
-              val: 'o'
-            }
-          ]
-        ), 200)
-      })
-    },
-    getDataJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 400)
-      })
-    },
-    getRegionJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(regionData), 200)
       })
     }
   }

@@ -73,10 +73,8 @@
 </template>
 
 <script>
-import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import { MessageBox, Message } from 'element-ui'
-import listData from '@/common/json/editable/list.json'
-import regionData from '@/common/json/editable/region.json'
 
 export default {
   data () {
@@ -123,22 +121,17 @@ export default {
   },
   methods: {
     init () {
-      this.findList()
-      this.getSexJSON().then(data => {
+      this.findSexList()
+      this.findRegionList()
+    },
+    findSexList () {
+      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
         this.sexList = data
       })
-      this.getRegionJSON().then(data => {
-        this.regionList = data
-      })
     },
-    findList () {
-      this.loading = true
-      this.pendingRemoveList = []
-      this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
+    findRegionList () {
+      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+        this.regionList = data
       })
     },
     insertEvent (index) {
@@ -187,7 +180,6 @@ export default {
       if (selection.length) {
         this.postJSON('url', { selection }).then(data => {
           Message({ message: '删除成功', type: 'success' })
-          this.findList()
         })
       } else {
         Message({
@@ -232,7 +224,7 @@ export default {
           let removeRecords = this.pendingRemoveList
           let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
           this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-            this.findList()
+
           })
         } else {
           console.log('error submit!!')
@@ -289,39 +281,6 @@ export default {
         setTimeout(() => {
           resolve('保存成功')
         }, 300)
-      })
-    },
-    getSexJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(
-          [
-            {
-              label: '男',
-              spell: 'nan',
-              value: '1',
-              val: 'x'
-            },
-            {
-              label: '女',
-              spell: 'nv',
-              value: '0',
-              val: 'o'
-            }
-          ]
-        ), 100)
-      })
-    },
-    getDataJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 350)
-      })
-    },
-    getRegionJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(regionData), 200)
       })
     }
   }

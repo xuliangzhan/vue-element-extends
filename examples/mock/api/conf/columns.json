@@ -30,7 +30,7 @@
   },
   {
     "prop": "phone",
-    "label": "手机号码",
+    "label": "手机",
     "editRender": {
       "name": "ElInput"
     }
@@ -43,7 +43,7 @@
     }
   },
   {
-    "prop": "birthdate",
+    "prop": "date",
     "label": "日期",
     "editRender": {
       "name": "ElDatePicker"
@@ -54,13 +54,6 @@
     "label": "评分",
     "editRender": {
       "name": "ElRate"
-    }
-  },
-  {
-    "prop": "url",
-    "label": "URL路径",
-    "editRender": {
-      "name": "ElInput"
     }
   },
   {

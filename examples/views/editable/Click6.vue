@@ -44,17 +44,6 @@
       </el-editable-column>
     </el-editable>
 
-    <el-pagination
-      class="my-pagination"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="pageVO.currentPage"
-      :page-sizes="[5, 10, 15, 20, 50, 100, 150, 200]"
-      :page-size="pageVO.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="pageVO.totalResult">
-    </el-pagination>
-
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
       <el-transfer
         filterable
@@ -74,11 +63,8 @@
 </template>
 
 <script>
-import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import { MessageBox } from 'element-ui'
-import listData from '@/common/json/editable/list.json'
-import regionData from '@/common/json/editable/region.json'
-import columnsData from '@/common/json/editable/columns.json'
 
 export default {
   data () {
@@ -88,12 +74,7 @@ export default {
       columnConfigs: [],
       selectColumns: [],
       sexList: [],
-      regionList: [],
-      pageVO: {
-        currentPage: 1,
-        pageSize: 100,
-        totalResult: 0
-      }
+      regionList: []
     }
   },
   created () {
@@ -101,71 +82,55 @@ export default {
   },
   methods: {
     init () {
-      let sexPromise = this.getSexJSON()
-      let regionPromise = this.getRegionJSON()
+      let sexPromise = this.findSexList()
+      let regionPromise = this.findRegionList()
       this.loading = true
-      Promise.all([
-        this.loadList(),
-        this.getColumnConfigs().then(data => {
-          this.columnConfigs = data.map(column => {
-            let defaultShow = ['name', 'age', 'birthdate'].includes(column.prop)
-            column.customDefault = defaultShow
-            column.customShow = defaultShow
-            switch (column.prop) {
-              case 'sex':
-                column.editRender.options = []
-                sexPromise.then(rest => {
-                  column.editRender.options = rest
-                })
-                break
-              case 'region':
-                column.editRender.attrs = { options: [] }
-                regionPromise.then(rest => {
-                  column.editRender.attrs.options = rest
-                })
-                break
-              case 'birthdate':
-                column.editRender.attrs = {
-                  type: 'date',
-                  format: 'yyyy-MM-dd'
-                }
-                break
-              case 'rate':
-                column.editRender.type = 'visible'
-                break
-            }
-            return column
-          })
+      this.findColumnsList().then(data => {
+        this.columnConfigs = data.map(column => {
+          let defaultShow = ['name', 'age', 'birthdate'].includes(column.prop)
+          column.customDefault = defaultShow
+          column.customShow = defaultShow
+          switch (column.prop) {
+            case 'sex':
+              column.editRender.options = []
+              sexPromise.then(rest => {
+                column.editRender.options = rest
+              })
+              break
+            case 'region':
+              column.editRender.attrs = { options: [] }
+              regionPromise.then(rest => {
+                column.editRender.attrs.options = rest
+              })
+              break
+            case 'birthdate':
+              column.editRender.attrs = {
+                type: 'date',
+                format: 'yyyy-MM-dd'
+              }
+              break
+            case 'rate':
+              column.editRender.type = 'visible'
+              break
+          }
+          return column
         })
-      ]).then(datas => {
+      }).then(datas => {
         this.loading = false
       })
     },
-    findList () {
-      this.loading = true
-      return this.loadList().then(data => {
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
+    findSexList () {
+      return XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
+        this.sexList = data
       })
     },
-    handleSizeChange (pageSize) {
-      this.pageVO.pageSize = pageSize
-      this.findList()
-    },
-    handleCurrentChange (currentPage) {
-      this.pageVO.currentPage = currentPage
-      this.findList()
-    },
-    loadList () {
-      this.loading = true
-      return this.getDataJSON().then(({ page, result }) => {
-        this.pageVO.totalResult = page.total
-        this.$refs.editable.reload(result)
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
+    findRegionList () {
+      return XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+        this.regionList = data
       })
+    },
+    findColumnsList () {
+      return XEAjax.doGet('/api/conf/columns/list').then(({ data }) => data)
     },
     insertEvent (index) {
       let row = this.$refs.editable.insertAt({ rate: 2 }, index)
@@ -178,7 +143,7 @@ export default {
     submitEvent () {
       let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
       this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-        this.findList()
+
       })
     },
     filterColumnMethod (query, item) {
@@ -218,58 +183,6 @@ export default {
         setTimeout(() => {
           resolve('保存成功')
         }, 300)
-      })
-    },
-    getSexJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(
-          [
-            {
-              label: '男',
-              spell: 'nan',
-              value: '1',
-              val: 'x'
-            },
-            {
-              label: '女',
-              spell: 'nv',
-              value: '0',
-              val: 'o'
-            }
-          ]
-        ), 300)
-      })
-    },
-    getColumnConfigs () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(columnsData), 100)
-      })
-    },
-    getDataJSON () {
-      // 模拟分页数据
-      return new Promise(resolve => {
-        let list = []
-        Array.from(new Array(100)).map(item => {
-          if (list.length < this.pageVO.pageSize) {
-            list = list.concat(listData)
-          }
-        })
-        list = XEUtils.shuffle(XEUtils.clone(list, true))
-        list.length = this.pageVO.pageSize
-        setTimeout(() => resolve({
-          page: {
-            total: 1000
-          },
-          result: list
-        }), 350)
-      })
-    },
-    getRegionJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(regionData), 200)
       })
     }
   }

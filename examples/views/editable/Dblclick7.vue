@@ -62,9 +62,8 @@
 
 <script>
 import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import { Message, MessageBox } from 'element-ui'
-import regionData from '@/common/json/editable/region.json'
-import columnsData from '@/common/json/editable/columns.json'
 
 export default {
   data () {
@@ -163,66 +162,61 @@ export default {
   },
   methods: {
     init () {
-      let sexPromise = this.getSexJSON()
-      let regionPromise = this.getRegionJSON()
+      let sexPromise = this.findSexList()
+      let regionPromise = this.findRegionList()
       this.loading = true
-      Promise.all([
-        this.loadList(),
-        this.getColumnConfigs().then(data => {
-          this.columnConfigs = data.map(column => {
-            let defaultShow = ['name', 'nickname', 'sex', 'region', 'phone', 'rate', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].includes(column.prop)
-            let editRender = column.editRender
-            column.customDefault = defaultShow
-            column.customShow = defaultShow
-            column.minWidth = '150'
-            editRender.attrs = {
-              placeholder: `请输入${column.label}`
-            }
-            switch (column.prop) {
-              case 'sex':
-                editRender.options = []
-                sexPromise.then(rest => {
-                  editRender.options = rest
-                })
-                break
-              case 'region':
-                editRender.attrs = { options: [] }
-                regionPromise.then(rest => {
-                  editRender.attrs.options = rest
-                })
-                break
-              case 'birthdate':
-                editRender.attrs = {
-                  type: 'date',
-                  format: 'yyyy-MM-dd'
-                }
-                break
-              case 'rate':
-                editRender.type = 'visible'
-                break
-            }
-            return column
-          })
+      this.findColumnsList().then(data => {
+        this.columnConfigs = data.map(column => {
+          let defaultShow = ['name', 'nickname', 'sex', 'region', 'phone', 'rate', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].includes(column.prop)
+          let editRender = column.editRender
+          column.customDefault = defaultShow
+          column.customShow = defaultShow
+          column.minWidth = '150'
+          editRender.attrs = {
+            placeholder: `请输入${column.label}`
+          }
+          switch (column.prop) {
+            case 'sex':
+              editRender.options = []
+              sexPromise.then(rest => {
+                editRender.options = rest
+              })
+              break
+            case 'region':
+              editRender.attrs = { options: [] }
+              regionPromise.then(rest => {
+                editRender.attrs.options = rest
+              })
+              break
+            case 'birthdate':
+              editRender.attrs = {
+                type: 'date',
+                format: 'yyyy-MM-dd'
+              }
+              break
+            case 'rate':
+              editRender.type = 'visible'
+              break
+          }
+          return column
         })
-      ]).then(datas => {
         this.loading = false
       }).catch(e => {
         this.loading = false
       })
     },
-    findList () {
-      this.loading = true
-      this.pendingRemoveList = []
-      return this.loadList().then(data => {
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
+    findSexList () {
+      return XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
+        this.sexList = data
       })
     },
-    loadList () {
-      return this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
+    findRegionList () {
+      return XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+        this.regionList = data
       })
+    },
+    findColumnsList () {
+      return XEAjax.doGet('/api/conf/columns/list').then(({ data }) => data)
     },
     validErrorEvent (rule, row, column) {
       Message({ message: rule.message, type: 'error' })
@@ -284,7 +278,7 @@ export default {
       this.$refs.editable.validate().then(valid => {
         let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
         this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-          this.findList()
+
         })
       }).catch(valid => {
         console.log('error submit!!')
@@ -332,57 +326,6 @@ export default {
         setTimeout(() => {
           resolve('保存成功')
         }, 300)
-      })
-    },
-    getSexJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(
-          [
-            {
-              label: '男',
-              spell: 'nan',
-              value: '1',
-              val: 'x'
-            },
-            {
-              label: '女',
-              spell: 'nv',
-              value: '0',
-              val: 'o'
-            }
-          ]
-        ), 300)
-      })
-    },
-    getColumnConfigs () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(columnsData), 600)
-      })
-    },
-    getDataJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve([{
-          attr1: null,
-          attr2: null,
-          attr3: null,
-          attr4: '必填字段4',
-          attr5: '必填字段5',
-          name: '名称1',
-          nickname: '隔壁老王1',
-          phone: 13666666666,
-          rate: 3,
-          region: [19, 199, 1773],
-          sex: '1'
-        }]), 350)
-      })
-    },
-    getRegionJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(regionData), 200)
       })
     }
   }

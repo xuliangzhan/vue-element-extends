@@ -21,19 +21,19 @@
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="select1" label="ElSelect" :edit-render="{name: 'ElSelect', options: selectList, attrs: {clearable: true}}"></el-editable-column>
+      <el-editable-column prop="select1" label="ElSelect" :edit-render="{name: 'ElSelect', options: sexList, attrs: {clearable: true}}"></el-editable-column>
       <el-editable-column prop="select2" label="iSelect" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
           <Select v-model="scope.row.select2" clearable>
-            <Option v-for="item in selectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </template>
         <template slot-scope="scope">{{ getSelectLabel(scope.row.select2) }}</template>
       </el-editable-column>
-      <el-editable-column prop="cascader1" label="ElCascader" :edit-render="{name: 'ElCascader', attrs: {options: cascaderList, clearable: true}}"></el-editable-column>
+      <el-editable-column prop="cascader1" label="ElCascader" :edit-render="{name: 'ElCascader', attrs: {options: regionList, clearable: true}}"></el-editable-column>
       <el-editable-column prop="cascader2" label="iCascader" :edit-render="{type: 'default'}">
         <template slot="edit" slot-scope="scope">
-          <Cascader :data="cascaderList" v-model="scope.row.cascader2"></Cascader>
+          <Cascader :data="regionList" v-model="scope.row.cascader2"></Cascader>
         </template>
         <template slot-scope="scope">{{ getCascaderLabel(scope.row.cascader2) }}</template>
       </el-editable-column>
@@ -65,23 +65,14 @@
 
 <script>
 import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import { Message, MessageBox } from 'element-ui'
-import regionData from '@/common/json/editable/region.json'
 
 export default {
   data () {
     return {
-      cascaderList: regionData,
-      selectList: [
-        {
-          label: '男',
-          value: '1'
-        },
-        {
-          label: '女',
-          value: '0'
-        }
-      ],
+      regionList: [],
+      sexList: [],
       list: [
         {
           select1: '1',
@@ -102,9 +93,23 @@ export default {
       }
     }
   },
+  created () {
+    this.findSexList()
+    this.findRegionList()
+  },
   methods: {
+    findSexList () {
+      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
+        this.sexList = data
+      })
+    },
+    findRegionList () {
+      return XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+        this.regionList = data
+      })
+    },
     getSelectLabel (cellValue) {
-      let item = XEUtils.find(this.selectList, item => item.value === cellValue)
+      let item = XEUtils.find(this.sexList, item => item.value === cellValue)
       return item ? item.label : null
     },
     matchCascaderData (values, index, list, labels) {
@@ -120,7 +125,7 @@ export default {
     },
     getCascaderLabel (cellValue) {
       let labels = []
-      this.matchCascaderData(cellValue || [], 0, this.cascaderList, labels)
+      this.matchCascaderData(cellValue || [], 0, this.regionList, labels)
       return labels.join(' / ')
     },
     getDateLabel (cellValue) {

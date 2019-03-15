@@ -64,11 +64,8 @@
 </template>
 
 <script>
-import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import { MessageBox } from 'element-ui'
-import listData from '@/common/json/editable/list.json'
-import regionData from '@/common/json/editable/region.json'
-import columnsData from '@/common/json/editable/columns.json'
 
 export default {
   data () {
@@ -85,62 +82,58 @@ export default {
   },
   methods: {
     init () {
-      let sexPromise = this.getSexJSON()
-      let regionPromise = this.getRegionJSON()
+      let sexPromise = this.findSexList()
+      let regionPromise = this.findRegionList()
       this.loading = true
-      Promise.all([
-        this.loadList(),
-        this.getColumnConfigs().then(data => {
-          this.columnConfigs = data.map((column, index) => {
-            let defaultShow = index < 8
-            column.customDefault = defaultShow
-            column.customChecked = defaultShow
-            column.customShow = defaultShow
-            column.minWidth = '150'
-            switch (column.prop) {
-              case 'sex':
-                column.editRender.options = []
-                sexPromise.then(rest => {
-                  column.editRender.options = rest
-                })
-                break
-              case 'region':
-                column.editRender.attrs = { options: [] }
-                regionPromise.then(rest => {
-                  column.editRender.attrs.options = rest
-                })
-                break
-              case 'birthdate':
-                column.editRender.attrs = {
-                  type: 'date',
-                  format: 'yyyy-MM-dd'
-                }
-                break
-              case 'rate':
-                column.editRender.type = 'visible'
-                break
-            }
-            return column
-          })
+      this.findColumnsList().then(data => {
+        this.columnConfigs = data.map((column, index) => {
+          let defaultShow = index < 8
+          column.customDefault = defaultShow
+          column.customChecked = defaultShow
+          column.customShow = defaultShow
+          column.minWidth = '150'
+          switch (column.prop) {
+            case 'sex':
+              column.editRender.options = []
+              sexPromise.then(rest => {
+                column.editRender.options = rest
+              })
+              break
+            case 'region':
+              column.editRender.attrs = { options: [] }
+              regionPromise.then(rest => {
+                column.editRender.attrs.options = rest
+              })
+              break
+            case 'birthdate':
+              column.editRender.attrs = {
+                type: 'date',
+                format: 'yyyy-MM-dd'
+              }
+              break
+            case 'rate':
+              column.editRender.type = 'visible'
+              break
+          }
+          return column
         })
-      ]).then(datas => {
         this.loading = false
       }).catch(e => {
         this.loading = false
       })
     },
-    findList () {
-      this.loading = true
-      return this.loadList().then(data => {
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
+    findSexList () {
+      return XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
+        this.sexList = data
       })
     },
-    loadList () {
-      return this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
+    findRegionList () {
+      return XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+        this.regionList = data
       })
+    },
+    findColumnsList () {
+      return XEAjax.doGet('/api/conf/columns/list').then(({ data }) => data)
     },
     editActiveEvent (row, column, cell, event) {
       if (column.property) {
@@ -174,7 +167,7 @@ export default {
     submitEvent () {
       let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
       this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-        this.findList()
+
       })
     },
     openCustomEvent () {
@@ -215,45 +208,6 @@ export default {
         setTimeout(() => {
           resolve('保存成功')
         }, 300)
-      })
-    },
-    getSexJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(
-          [
-            {
-              label: '男',
-              spell: 'nan',
-              value: '1',
-              val: 'x'
-            },
-            {
-              label: '女',
-              spell: 'nv',
-              value: '0',
-              val: 'o'
-            }
-          ]
-        ), 100)
-      })
-    },
-    getColumnConfigs () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(columnsData), 500)
-      })
-    },
-    getDataJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(XEUtils.clone(listData, true)), 300)
-      })
-    },
-    getRegionJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(regionData), 200)
       })
     }
   }

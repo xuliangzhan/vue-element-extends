@@ -26,6 +26,7 @@
       border
       height="480"
       size="medium"
+      :data.sync="list"
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
@@ -133,8 +134,8 @@
 
 <script>
 import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import { MessageBox, Message } from 'element-ui'
-import regionData from '@/common/json/editable/region.json'
 
 export default {
   data () {
@@ -142,6 +143,65 @@ export default {
       loading: false,
       sexList: [],
       regionList: [],
+      list: [
+        {
+          name: '数据1',
+          sex: '1',
+          slider: 10,
+          userInfo: {
+            region: [1, 1, 3],
+            sex1: 'o',
+            base: {
+              age: 24,
+              other: {
+                sex2: '1'
+              }
+            }
+          },
+          dateObj: {
+            date1: 1550588308445,
+            date2: 1550588308445
+          }
+        },
+        {
+          name: '数据2',
+          sex: '1',
+          slider: 20,
+          userInfo: {
+            region: [1, 1, 4],
+            sex1: 'x',
+            base: {
+              age: 26,
+              other: {
+                sex2: '0'
+              }
+            }
+          },
+          dateObj: {
+            date1: 1550588308445,
+            date2: 1550588308445
+          }
+        },
+        {
+          name: '数据3',
+          sex: '1',
+          slider: 10,
+          userInfo: {
+            region: [1, 1, 5],
+            sex1: 'o',
+            base: {
+              age: 28,
+              other: {
+                sex2: '1'
+              }
+            }
+          },
+          dateObj: {
+            date1: 1550588308445,
+            date2: 1550588308445
+          }
+        }
+      ],
       validRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
@@ -155,25 +215,17 @@ export default {
   },
   methods: {
     init () {
-      this.findList()
-      this.getSexJSON().then(data => {
+      this.findSexList()
+      this.findRegionList()
+    },
+    findSexList () {
+      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
         this.sexList = data
       })
-      this.getRegionJSON().then(data => {
+    },
+    findRegionList () {
+      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
         this.regionList = data
-      })
-    },
-    findList () {
-      this.loading = true
-      return this.loadList().then(data => {
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
-      })
-    },
-    loadList () {
-      return this.getDataJSON().then(data => {
-        this.$refs.editable.reload(data)
       })
     },
     getSelectLabel (value, valueProp, labelProp, list) {
@@ -214,7 +266,6 @@ export default {
       if (selection.length) {
         this.postJSON('url', { selection }).then(data => {
           Message({ message: '删除成功', type: 'success' })
-          this.findList()
         })
       } else {
         Message({
@@ -259,97 +310,6 @@ export default {
         setTimeout(() => {
           resolve('保存成功')
         }, 300)
-      })
-    },
-    getSexJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(
-          [
-            {
-              label: '男',
-              spell: 'nan',
-              value: '1',
-              val: 'x'
-            },
-            {
-              label: '女',
-              spell: 'nv',
-              value: '0',
-              val: 'o'
-            }
-          ]
-        ), 100)
-      })
-    },
-    getDataJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve([
-          {
-            name: '数据1',
-            sex: '1',
-            slider: 10,
-            userInfo: {
-              region: [1, 1, 3],
-              sex1: 'o',
-              base: {
-                age: 24,
-                other: {
-                  sex2: '1'
-                }
-              }
-            },
-            dateObj: {
-              date1: 1550588308445,
-              date2: 1550588308445
-            }
-          },
-          {
-            name: '数据2',
-            sex: '1',
-            slider: 20,
-            userInfo: {
-              region: [1, 1, 4],
-              sex1: 'x',
-              base: {
-                age: 26,
-                other: {
-                  sex2: '0'
-                }
-              }
-            },
-            dateObj: {
-              date1: 1550588308445,
-              date2: 1550588308445
-            }
-          },
-          {
-            name: '数据3',
-            sex: '1',
-            slider: 10,
-            userInfo: {
-              region: [1, 1, 5],
-              sex1: 'o',
-              base: {
-                age: 28,
-                other: {
-                  sex2: '1'
-                }
-              }
-            },
-            dateObj: {
-              date1: 1550588308445,
-              date2: 1550588308445
-            }
-          }
-        ]), 300)
-      })
-    },
-    getRegionJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(regionData), 200)
       })
     }
   }

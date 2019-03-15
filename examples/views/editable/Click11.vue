@@ -138,8 +138,8 @@
 
 <script>
 import XEUtils from 'xe-utils'
+import XEAjax from 'xe-ajax'
 import { MessageBox } from 'element-ui'
-import regionData from '@/common/json/editable/region.json'
 
 export default {
   data () {
@@ -196,10 +196,16 @@ export default {
     init () {
       this.attr4Options = XEUtils.clone(this.typeOptions)
       this.attr5Options = XEUtils.clone(this.typeOptions)
-      this.getSexJSON().then(data => {
+      this.findSexList()
+      this.findRegionList()
+    },
+    findSexList () {
+      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
         this.sexList = data
       })
-      this.getRegionJSON().then(data => {
+    },
+    findRegionList () {
+      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
         this.regionList = data
       })
     },
@@ -307,33 +313,6 @@ export default {
         setTimeout(() => {
           resolve('保存成功')
         }, 300)
-      })
-    },
-    getSexJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(
-          [
-            {
-              label: '男',
-              spell: 'nan',
-              value: '1',
-              val: 'x'
-            },
-            {
-              label: '女',
-              spell: 'nv',
-              value: '0',
-              val: 'o'
-            }
-          ]
-        ), 100)
-      })
-    },
-    getRegionJSON () {
-      // 模拟数据
-      return new Promise(resolve => {
-        setTimeout(() => resolve(regionData), 200)
       })
     }
   }

@@ -6,14 +6,26 @@ const MockUtil = {
   // 获取最新数据、升序
   findAscSortList (list, ModelVO, sortProps, max) {
     return function (request, response) {
-      let rest = XEUtils.sortBy(list, sortProps)
+      let rest = list
+      let params = request.params
+      let filterProps = XEUtils.keys(params).filter(key => params[key])
+      if (filterProps) {
+        rest = rest.filter(data => filterProps.every(key => '' + data[key] === '' + params[key]))
+      }
+      rest = XEUtils.sortBy(list, sortProps)
       return max ? rest.slice(0, max) : rest
     }
   },
   // 获取最新数据、倒序
   findDescSortList (list, ModelVO, sortProps, max) {
     return function (request, response) {
-      let rest = XEUtils.sortBy(list, sortProps).reverse()
+      let rest = list
+      let params = request.params
+      let filterProps = XEUtils.keys(params).filter(key => params[key])
+      if (filterProps) {
+        rest = rest.filter(data => filterProps.every(key => '' + data[key] === '' + params[key]))
+      }
+      rest = XEUtils.sortBy(list, sortProps).reverse()
       return max ? rest.slice(0, max) : rest
     }
   },
@@ -92,17 +104,22 @@ const MockUtil = {
     }
   },
   // 分页、升序
-  findAscSortPageList (list, ModelVO, sortProps, propSize, propCurrent) {
+  findAscSortPageList (list, ModelVO, sortProps, pageProp) {
     return function (request, response, { pathVariable }) {
       let pageSize = 10
       let currentPage = 1
-      let totalResult = list.length
-      let rest = []
-      if (pathVariable) {
-        pageSize = XEUtils.toNumber(pathVariable[propSize])
-        currentPage = XEUtils.toNumber(pathVariable[propCurrent])
-        rest = XEUtils.sortBy(list, sortProps).slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      let rest = list
+      let params = request.params
+      let filterProps = XEUtils.keys(params).filter(key => params[key])
+      if (filterProps) {
+        rest = rest.filter(data => filterProps.every(key => '' + data[key] === '' + params[key]))
       }
+      if (pathVariable) {
+        pageSize = XEUtils.toNumber(pathVariable[pageProp ? pageProp.size : 'pageSize']) || pageSize
+        currentPage = XEUtils.toNumber(pathVariable[pageProp ? pageProp.current : 'currentPage']) || currentPage
+      }
+      let totalResult = rest.length
+      rest = XEUtils.sortBy(list, sortProps).slice((currentPage - 1) * pageSize, currentPage * pageSize)
       response.body = {
         page: { pageSize, currentPage, totalResult },
         result: rest
@@ -111,17 +128,22 @@ const MockUtil = {
     }
   },
   // 分页、倒序
-  findDescSortPageList (list, ModelVO, sortProps, propSize, propCurrent) {
+  findDescSortPageList (list, ModelVO, sortProps, pageProp) {
     return function (request, response, { pathVariable }) {
       let pageSize = 10
       let currentPage = 1
-      let totalResult = list.length
-      let rest = []
-      if (pathVariable) {
-        pageSize = XEUtils.toNumber(pathVariable[propSize])
-        currentPage = XEUtils.toNumber(pathVariable[propCurrent])
-        rest = XEUtils.sortBy(list, sortProps).reverse().slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      let rest = list
+      let params = request.params
+      let filterProps = XEUtils.keys(params).filter(key => params[key])
+      if (filterProps) {
+        rest = rest.filter(data => filterProps.every(key => String(data[key] || '').indexOf(params[key]) > -1))
       }
+      if (pathVariable) {
+        pageSize = XEUtils.toNumber(pathVariable[pageProp ? pageProp.size : 'pageSize']) || pageSize
+        currentPage = XEUtils.toNumber(pathVariable[pageProp ? pageProp.current : 'currentPage']) || currentPage
+      }
+      let totalResult = rest.length
+      rest = XEUtils.sortBy(rest, sortProps).reverse().slice((currentPage - 1) * pageSize, currentPage * pageSize)
       response.body = {
         page: { pageSize, currentPage, totalResult },
         result: rest

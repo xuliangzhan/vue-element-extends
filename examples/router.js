@@ -7,7 +7,6 @@ import EditableManual3 from './views/editable/Manual3'
 import EditableManual4 from './views/editable/Manual4'
 import EditableManual5 from './views/editable/Manual5'
 import EditableManual6 from './views/editable/Manual6'
-import EditableManual7 from './views/editable/Manual7'
 import EditableClick1 from './views/editable/Click1'
 import EditableClick2 from './views/editable/Click2'
 import EditableClick3 from './views/editable/Click3'
@@ -77,11 +76,6 @@ export default new Router({
       path: '/editable/manual6',
       name: 'EditableManual6',
       component: EditableManual6
-    },
-    {
-      path: '/editable/manual7',
-      name: 'EditableManual7',
-      component: EditableManual7
     },
     {
       path: '/editable/click1',

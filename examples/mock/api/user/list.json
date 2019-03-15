@@ -1,9 +1,10 @@
 {
   "!return|array(50-500)": {
     "id|number": "{{ $index+1 }}",
-    "name": "Name_{{ $index }}",
+    "name": "{{ random.repeat(['名字'],1) }}_{{ $index }}",
     "password": "{{ random.repeat('abcdefgABCDEFG',6,12) }}",
     "sex|random(1)": ["0", "1"],
+    "role|random(1)": ["管理员", "超级管理员", "员工", "主管", "项目经理"],
     "region|random(1)": [[1, 1, 5], [19, 199, 1773], [9, 73, 719]],
     "email": "{{ random.repeat('abcdefg',5,20) }}@{{ random.repeat(['qq','163'],1) }}.{{ random.repeat(['com','net'],1) }}",
     "age|number": "{{ random.num(18,30) }}",

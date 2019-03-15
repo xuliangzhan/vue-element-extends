@@ -1,12 +1,27 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">带分页</p>
+    <p style="color: red;font-size: 12px;">带分页、条件筛选</p>
 
-    <p>
+    <el-form ref="tableform" class="manual-table2-form" size="mini" :inline="true" :model="formData">
+      <el-form-item label="名字" prop="name">
+        <el-input v-model="formData.name" placeholder="名字"></el-input>
+      </el-form-item>
+      <el-form-item label="性别" prop="sex">
+        <el-select v-model="formData.sex" placeholder="性别">
+          <el-option v-for="(item, index) in sexList" :key="index" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="searchEvent">查询</el-button>
+        <el-button @click="$refs.tableform.resetFields()">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <div class="manual-table2-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
-    </p>
+    </div>
 
     <el-editable
       ref="editable"
@@ -23,7 +38,7 @@
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-      <el-editable-column prop="describe2" label="文本输入" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
       <el-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
@@ -73,6 +88,10 @@ export default {
       sexList: [],
       regionList: [],
       list: [],
+      formData: {
+        name: null,
+        sex: null
+      },
       pageVO: {
         currentPage: 1,
         pageSize: 10,
@@ -89,10 +108,12 @@ export default {
   methods: {
     findList () {
       this.loading = true
-      XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`).then(response => {
+      XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`, this.formData).then(response => {
         let { page, result } = response.data
         this.list = result
         this.pageVO.totalResult = page.totalResult
+        this.loading = false
+      }).catch(e => {
         this.loading = false
       })
     },
@@ -105,6 +126,10 @@ export default {
       XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
         this.regionList = data
       })
+    },
+    searchEvent () {
+      this.pageVO.currentPage = 1
+      this.findList()
     },
     handleSizeChange (pageSize) {
       this.pageVO.pageSize = pageSize
@@ -244,8 +269,11 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.loading = true
           XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
             this.findList()
+          }).catch(e => {
+            this.loading = false
           })
         }).catch(action => action).then(() => {
           this.isClearActiveFlag = true
@@ -271,6 +299,8 @@ export default {
               message: '删除成功!'
             })
             this.findList()
+          }).catch(e => {
+            this.loading = false
           })
         }).catch(action => action).then(() => {
           this.isClearActiveFlag = true
@@ -289,11 +319,16 @@ export default {
           if (row.id) {
             url = '/api/user/update'
           }
+          if (row.date) {
+            row.date = row.date.getTime()
+          }
           this.loading = true
           this.$refs.editable.clearActive()
           XEAjax.doPost(url, row).then(({ data }) => {
             this.findList()
             Message({ message: '保存成功', type: 'success' })
+          }).catch(e => {
+            this.loading = false
           })
         }
       })
@@ -306,8 +341,11 @@ export default {
 </script>
 
 <style>
+.manual-table2-oper {
+  margin-bottom: 18px;
+}
 .manual-table2-pagination {
-  margin: 15px 20px 0 0;
+  margin-top: 18px;
   text-align: right;
 }
 .manual-table2.editable .editable-row.new-insert,

@@ -3,11 +3,11 @@
     <p style="color: red;font-size: 12px;">带校验：name字段（校验必填，校验3-50个字符）；sex字段（校验必填）；age（校验18-28）</p>
     <p style="color: red;font-size: 12px;">默认勾选：可以给 data 设置特殊；_checked=true 默认选中；_disabled=true 默认禁止勾选，如果自定义了 selectable 方法，则根据该方法结果决定是否允许勾选</p>
 
-    <p>
+    <div class="manual-table3-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
-    </p>
+    </div>
 
     <el-editable
       ref="editable"
@@ -109,6 +109,8 @@ export default {
           return item
         })
         this.pageVO.totalResult = page.totalResult
+        this.loading = false
+      }).catch(e => {
         this.loading = false
       })
     },
@@ -289,6 +291,8 @@ export default {
               message: '删除成功!'
             })
             this.findList()
+          }).catch(e => {
+            this.loading = false
           })
         }).catch(action => action).then(() => {
           this.isClearActiveFlag = true
@@ -307,11 +311,16 @@ export default {
           if (row.id) {
             url = '/api/user/update'
           }
+          if (row.date) {
+            row.date = row.date.getTime()
+          }
           this.loading = true
           this.$refs.editable.clearActive()
           XEAjax.doPost(url, row).then(({ data }) => {
             this.findList()
             Message({ message: '保存成功', type: 'success' })
+          }).catch(e => {
+            this.loading = false
           })
         }
       })
@@ -324,8 +333,11 @@ export default {
 </script>
 
 <style>
+.manual-table3-oper {
+  margin-bottom: 18px;
+}
 .manual-table3-pagination {
-  margin: 15px 20px 0 0;
+  margin-top: 18px;
   text-align: right;
 }
 .manual-table3.editable .editable-row.new-insert,

@@ -2,15 +2,15 @@
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">关闭自动清除：如果 autoClearActive=false 当点击其它地方后，则不会自动清除最后活动行或列</p>
 
-    <p>
+    <div class="manual-table3-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
-    </p>
+    </div>
 
     <el-editable
       ref="editable"
-      class="manual-table2"
+      class="manual-table4"
       border
       height="466"
       size="mini"
@@ -44,7 +44,7 @@
     </el-editable>
 
     <el-pagination
-      class="manual-table2-pagination"
+      class="manual-table4-pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
@@ -87,6 +87,8 @@ export default {
         let { page, result } = response.data
         this.list = result
         this.pageVO.totalResult = page.totalResult
+        this.loading = false
+      }).catch(e => {
         this.loading = false
       })
     },
@@ -225,8 +227,11 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.loading = true
           XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
             this.findList()
+          }).catch(e => {
+            this.loading = false
           })
         })
       } else {
@@ -249,6 +254,8 @@ export default {
               message: '删除成功!'
             })
             this.findList()
+          }).catch(e => {
+            this.loading = false
           })
         })
       } else {
@@ -264,6 +271,9 @@ export default {
           let url = '/api/user/add'
           if (row.id) {
             url = '/api/user/update'
+          }
+          if (row.date) {
+            row.date = row.date.getTime()
           }
           this.loading = true
           this.$refs.editable.clearActive()
@@ -282,12 +292,15 @@ export default {
 </script>
 
 <style>
-.manual-table2-pagination {
-  margin: 15px 20px 0 0;
+.manual-table4-oper {
+  margin-bottom: 18px;
+}
+.manual-table4-pagination {
+  margin-top: 18px;
   text-align: right;
 }
-.manual-table2.editable .editable-row.new-insert,
-.manual-table2.editable .editable-row.new-insert:hover>td {
+.manual-table4.editable .editable-row.new-insert,
+.manual-table4.editable .editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

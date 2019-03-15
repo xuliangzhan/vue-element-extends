@@ -2,16 +2,16 @@
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">如果是手动模式会自动关闭触发激活</p>
 
-    <p>
-      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
-      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
-    </p>
+    <div class="manual-table1-oper">
+      <el-button type="success" size="small" @click="insertEvent">新增</el-button>
+      <el-button type="success" size="small" @click="exportCsvEvent">导出</el-button>
+    </div>
 
     <el-editable
       ref="editable"
       class="manual-table1"
       border
-      size="mini"
+      size="small"
       :data.sync="list"
       :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
       style="width: 100%">
@@ -23,12 +23,12 @@
       <el-editable-column label="操作" width="160">
         <template slot-scope="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
-            <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
-            <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
+            <el-button size="small" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
+            <el-button size="small" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
           </template>
           <template v-else>
-            <el-button size="mini" type="primary" @click="openActiveRowEvent(scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
+            <el-button size="small" type="primary" @click="openActiveRowEvent(scope.row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="removeEvent(scope.row)">删除</el-button>
           </template>
         </template>
       </el-editable-column>
@@ -57,6 +57,8 @@ export default {
       this.loading = true
       XEAjax.doGet('/api/role/list').then(({ data }) => {
         this.list = data
+        this.loading = false
+      }).catch(e => {
         this.loading = false
       })
     },
@@ -192,6 +194,8 @@ export default {
         }).then(() => {
           XEAjax.doDelete(`/api/role/delete/${row.id}`).then(({ data }) => {
             this.findList()
+          }).catch(e => {
+            this.loading = false
           })
         }).catch(action => action).then(() => {
           this.isClearActiveFlag = true
@@ -212,6 +216,8 @@ export default {
           XEAjax.doPost(url, row).then(({ data }) => {
             this.findList()
             Message({ message: '保存成功', type: 'success' })
+          }).catch(e => {
+            this.loading = false
           })
         }
       })
@@ -224,6 +230,9 @@ export default {
 </script>
 
 <style>
+.manual-table1-oper {
+  margin-bottom: 18px;
+}
 .manual-table1.editable .editable-row.new-insert,
 .manual-table1.editable .editable-row.new-insert:hover>td {
   background-color: #f0f9eb;

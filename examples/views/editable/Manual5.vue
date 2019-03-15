@@ -1,5 +1,7 @@
 <template>
   <div>
+    <p style="color: red;font-size: 12px;">对于一个页面有多个表格，建议再封装一层使用更简单</p>
+
     <div v-loading="roleLoading">
       <div class="manual-table5-oper">
         <el-button type="success" size="mini" @click="insertEvent('editable1')">新增</el-button>

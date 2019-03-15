@@ -1143,7 +1143,7 @@ export default {
       this._updateData()
       return recordItem.data
     },
-    hasInsertRow (record) {
+    hasRowInsert (record) {
       let row = this.datas.find(item => item.data === record)
       return row && row.editStatus === 'insert'
     },

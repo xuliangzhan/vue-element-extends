@@ -15,9 +15,9 @@
         <a class="apimenu-title">单击模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableClick1'}" replace>基本操作+列编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>基本操作+行编辑+分页</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>行编辑+自定义渲染+排序</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>多级表头+多选操作+校验</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>动态列渲染</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>基本操作+列编辑+自定义渲染+禁止勾选</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>基本操作+行编辑+浮动列</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>多级表头</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>动态列渲染+自定义列+分页</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>表尾合计行</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>合并行或列</router-link>
@@ -31,7 +31,7 @@
         <a class="apimenu-title">双击模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>基本操作+列编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>基本操作+行编辑+分页</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>个性化列+自定义渲染+自定义校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>基本操作+列编辑+校验+自定义提示</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>个性化列+唯一下拉选项+完整校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>个性化列+自定义列头+校验+自适应高度</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>个性化列+自定义列头+校验+关闭默认校验方式</router-link>
@@ -39,7 +39,7 @@
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">Excel表格</a>
-        <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>带状态</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>默认</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel2'}" replace>排序</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>校验+排序+筛选</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel4'}" replace>校验+排序+筛选+个性化列</router-link>

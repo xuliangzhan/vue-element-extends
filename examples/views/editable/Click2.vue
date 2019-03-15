@@ -6,6 +6,9 @@
       <el-form-item label="名字" prop="name">
         <el-input v-model="formData.name" placeholder="名字"></el-input>
       </el-form-item>
+      <el-form-item label="角色" prop="role">
+        <el-input v-model="formData.role" placeholder="请输入角色"></el-input>
+      </el-form-item>
       <el-form-item label="性别" prop="sex">
         <el-select v-model="formData.sex" placeholder="性别">
           <el-option v-for="(item, index) in sexList" :key="index" :label="item.label" :value="item.value"></el-option>
@@ -86,7 +89,8 @@ export default {
       list: [],
       formData: {
         name: null,
-        sex: null
+        sex: null,
+        role: null
       },
       pageVO: {
         currentPage: 1,

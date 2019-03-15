@@ -295,31 +295,31 @@ export default {
       let value = this.getRowIdentity(row, column)
       if (value) {
         return (attrs.multiple ? value : [value]).map(renderOpts.optionGroups ? value => {
-          let selectItem = renderOpts.optionGroups.find(group => group[optionsProp].find(item => item[valueProp] === value))
+          let selectItem = XEUtils.find(renderOpts.optionGroups, group => group[optionsProp].find(item => item[valueProp] === value))
           return selectItem ? selectItem[labelProp] : null
         } : value => {
-          let selectItem = renderOpts.options.find(item => item[valueProp] === value)
+          let selectItem = XEUtils.find(renderOpts.options, item => item[valueProp] === value)
           return selectItem ? selectItem[labelProp] : null
         }).join(';')
       }
       return null
     },
-    matchCascaderData (values, index, list, labels) {
-      let val = values[index]
-      if (list && values.length > index) {
-        list.forEach(item => {
-          if (item.value === val) {
-            labels.push(item.label)
-            this.matchCascaderData(values, ++index, item.children, labels)
-          }
-        })
-      }
-    },
     getCascaderLabel ({ row, column }) {
       let values = this.getRowIdentity(row, column) || []
       let labels = []
       let attrs = this.renderOpts.attrs || {}
-      this.matchCascaderData(values, 0, attrs.options || [], labels)
+      let matchCascaderData = function (index, list) {
+        let val = values[index]
+        if (list && values.length > index) {
+          list.forEach(item => {
+            if (item.value === val) {
+              labels.push(item.label)
+              matchCascaderData(++index, item.children)
+            }
+          })
+        }
+      }
+      matchCascaderData(0, attrs.options || [])
       return labels.join(` ${attrs.separator || '/'} `)
     },
     getTimePickerLabel ({ row, column }) {

@@ -1,11 +1,13 @@
 <template>
   <div v-loading="loading">
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验4-20个字符）sex字段（校验必填）age字段（校验18-28）</p>
     <p style="color: red;font-size: 12px;">如果同时使用了数据校验和 fixed 列，请设置 useDefaultValidTip=true 使用默认的校验提示</p>
 
     <div class="click-table4-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
+      <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </div>
@@ -251,6 +253,21 @@ export default {
           message: '请至少选择一条数据！'
         })
       }
+    },
+    validEvent () {
+      this.$refs.editable.validate(valid => {
+        if (valid) {
+          Message({
+            type: 'success',
+            message: '校验通过!'
+          })
+        } else {
+          Message({
+            type: 'error',
+            message: '校验不通过!'
+          })
+        }
+      })
     },
     submitEvent () {
       this.$refs.editable.validate(valid => {

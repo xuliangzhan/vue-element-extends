@@ -6,6 +6,7 @@
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
+      <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </div>
@@ -212,6 +213,21 @@ export default {
           message: '请至少选择一条数据！'
         })
       }
+    },
+    validEvent () {
+      this.$refs.editable.validate(valid => {
+        if (valid) {
+          Message({
+            type: 'success',
+            message: '校验通过!'
+          })
+        } else {
+          Message({
+            type: 'error',
+            message: '校验不通过!'
+          })
+        }
+      })
     },
     submitEvent () {
       this.$refs.editable.validate(valid => {

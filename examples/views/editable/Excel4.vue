@@ -73,7 +73,7 @@ export default {
     return {
       dialogVisible: false,
       selectColumns: [],
-      list: Array.from(new Array(15), (v, i) => {
+      list: Array.from(new Array(20), (v, i) => {
         let rest = {}
         columns.forEach((name, index) => {
           switch (name) {

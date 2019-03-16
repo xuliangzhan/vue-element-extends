@@ -31,8 +31,8 @@
         <a class="apimenu-title">双击模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick1'}" replace>列编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+基本操作</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>列编辑+校验+自定义提示</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>动态列+唯一下拉选项+完整校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>列编辑+校验+修改校验提示</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>行编辑+完整校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>动态列+自定义列头+校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>动态列+自定义列头+校验+关闭默认校验方式</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick7'}" replace>动态列+校验+方向键&amp;Tab键切换</router-link>

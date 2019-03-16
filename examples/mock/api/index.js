@@ -1,5 +1,5 @@
-import { template, DELETE, POST, GET } from 'xe-ajax-mock'
-import MockUtil from './util'
+import { DELETE, POST, GET } from 'xe-ajax-mock'
+import Helper from './helper'
 
 GET('/api/conf/region/list', require('./conf/region.json'))
 GET('/api/conf/sex/list', require('./conf/sex.json'))
@@ -14,13 +14,13 @@ class RoleVO {
     this.updateTime = data.updateTime
   }
 }
-const roleList = template(require('./role/list.json'))
-DELETE('/api/role/delete/{id}', MockUtil.deleteByPathVariable(roleList, RoleVO, 'id'))
-POST('/api/role/add', MockUtil.insertByBody(roleList, RoleVO, 'id'))
-POST('/api/role/update', MockUtil.updateByBody(roleList, RoleVO, 'id'))
-POST('/api/role/save', MockUtil.saveListByBody(roleList, RoleVO, 'id'))
-GET('/api/role/list', MockUtil.findDescSortList(roleList, RoleVO, ['updateTime'], 10))
-GET('/api/role/page/list/{pageSize}/{currentPage}', MockUtil.findDescSortPageList(roleList, RoleVO, ['updateTime']))
+const roleHelper = new Helper(require('./role/list.json'), RoleVO)
+DELETE('/api/role/delete/{id}', roleHelper.deleteByPathVariable())
+POST('/api/role/add', roleHelper.insertByBody())
+POST('/api/role/update', roleHelper.updateByBody())
+POST('/api/role/save', roleHelper.saveListByBody())
+GET('/api/role/list', roleHelper.findDescSortList({ max: 10 }))
+GET('/api/role/page/list/{pageSize}/{currentPage}', roleHelper.findDescSortPageList())
 
 class UserVO {
   constructor (data) {
@@ -48,13 +48,13 @@ class UserVO {
     this.attr6 = data.attr6
   }
 }
-const userList = template(require('./user/list.json'))
-DELETE('/api/user/delete/{id}', MockUtil.deleteByPathVariable(userList, UserVO, 'id'))
-POST('/api/user/add', MockUtil.insertByBody(userList, UserVO, 'id'))
-POST('/api/user/update', MockUtil.updateByBody(userList, UserVO, 'id'))
-POST('/api/user/save', MockUtil.saveListByBody(userList, UserVO, 'id'))
-GET('/api/user/list', MockUtil.findDescSortList(userList, UserVO, ['updateTime'], 10))
-GET('/api/user/page/list/{pageSize}/{currentPage}', MockUtil.findDescSortPageList(userList, UserVO, ['updateTime']))
+const userHelper = new Helper(require('./user/list.json'), UserVO)
+DELETE('/api/user/delete/{id}', userHelper.deleteByPathVariable())
+POST('/api/user/add', userHelper.insertByBody())
+POST('/api/user/update', userHelper.updateByBody())
+POST('/api/user/save', userHelper.saveListByBody())
+GET('/api/user/list', userHelper.findDescSortList({ max: 10 }))
+GET('/api/user/page/list/{pageSize}/{currentPage}', userHelper.findDescSortPageList())
 
 class FileVO {
   constructor (data) {
@@ -67,10 +67,10 @@ class FileVO {
     this.updateTime = data.updateTime
   }
 }
-const fileList = template(require('./file/list.json'))
-DELETE('/api/file/delete/{id}', MockUtil.deleteByPathVariable(fileList, FileVO, 'id'))
-POST('/api/file/add', MockUtil.insertByBody(fileList, FileVO, 'id'))
-POST('/api/file/update', MockUtil.updateByBody(fileList, FileVO, 'id'))
-POST('/api/file/save', MockUtil.saveListByBody(fileList, FileVO, 'id'))
-GET('/api/file/list', MockUtil.findDescSortList(fileList, FileVO, ['updateTime']))
-GET('/api/file/page/list/{pageSize}/{currentPage}', MockUtil.findDescSortPageList(fileList, FileVO, ['updateTime']))
+const fileHelper = new Helper(require('./file/list.json'), FileVO)
+DELETE('/api/file/delete/{id}', fileHelper.deleteByPathVariable())
+POST('/api/file/add', fileHelper.insertByBody())
+POST('/api/file/update', fileHelper.updateByBody())
+POST('/api/file/save', fileHelper.saveListByBody())
+GET('/api/file/list', fileHelper.findDescSortList())
+GET('/api/file/page/list/{pageSize}/{currentPage}', fileHelper.findDescSortPageList())

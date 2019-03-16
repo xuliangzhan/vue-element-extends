@@ -1,7 +1,7 @@
 {
   "!return|array(5-50)": {
     "id|number": "{{ $index+1 }}",
-    "name": "{{ random.repeat(['管理员', '超级管理员', '员工', '主管', '项目经理'],1) }}_{{ $index }}",
+    "name": "{{ random.repeat(['前端', '后端', '测试', '项目经理', '设计'],1) }}_{{ $index }}",
     "describe": "{{ random.repeat('角色描述',4,50) }}",
     "createTime|number": "{{ random.time('2019-01-01 00:00:00','2019-02-20 23:59:59', 'yyyy-MM-dd HH:mm:ss') }}",
     "updateTime|number": "{{ random.time('2019-01-01 00:00:00','2019-02-20 23:59:59', 'yyyy-MM-dd HH:mm:ss') }}"

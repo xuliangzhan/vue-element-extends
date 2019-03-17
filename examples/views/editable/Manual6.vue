@@ -29,10 +29,10 @@
       @row-click="rowClickEvent"
       style="width: 100%">
       <el-editable-column prop="showNode" class-name="tree-operate-node" width="160">
-        <template slot="header">
+        <template v-slot:header>
           <el-checkbox v-model="treeAllCheck" :indeterminate="treeAllIndeterminate" @change="treeAllChange(treeAllCheck)"></el-checkbox>
         </template>
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <i class="tree-expand-icon fa" :class="treeIcons(scope.row)" @click="toggleCollapseNode(scope.row)"></i>
           <el-checkbox v-model="scope.row.isCheck" :indeterminate="scope.row.indeterminate" @change="treeNodeChange(scope.row)"></el-checkbox>
         </template>
@@ -43,7 +43,7 @@
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column label="操作" width="220">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
             <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>

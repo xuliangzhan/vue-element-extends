@@ -37,7 +37,7 @@
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="describe3" label="备注" width="200" fixed="right" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column label="操作" width="160" fixed="right">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
           <el-button size="mini" type="info" @click="revertEvent(scope.row)">还原</el-button>
         </template>

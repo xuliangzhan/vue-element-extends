@@ -54,7 +54,7 @@
         label="方式1"
         width="160"
         :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-select v-model="scope.row.userInfo.sex1" placeholder="请选择性别" clearable @change="$refs.editable.updateStatus(scope)">
             <el-option
               v-for="(item, index) in sexList"
@@ -63,15 +63,15 @@
               :label="item.spell"></el-option>
           </el-select>
         </template>
-        <template slot-scope="scope">{{ getSelectLabel(scope.row.userInfo.sex1, 'val', 'spell', sexList) }}</template>
+        <template v-slot="scope">{{ getSelectLabel(scope.row.userInfo.sex1, 'val', 'spell', sexList) }}</template>
       </el-editable-column>
       <el-editable-column
         prop="userInfo.base.other.sex2"
         label="方式2"
         width="160"
         :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true, placeholder: '请选择性别'}}">
-        <template slot="edit" slot-scope="scope">
-          <el-select v-model="scope.row.userInfo.base.other.sex2" v-bind="scope.editRender.attrs" @change="$refs.editable.updateStatus(scope)">
+        <template v-slot:edit="scope">
+          <el-select v-model="scope.row.userInfo.base.other.sex2" v-bind="scope.$render.attrs" @change="$refs.editable.updateStatus(scope)">
             <el-option
               v-for="(item, index) in sexList"
               :key="index"
@@ -85,10 +85,10 @@
         label="年龄"
         width="160"
         :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-input-number
             v-model="scope.row.userInfo.base.age"
-            v-bind="scope.editRender.attrs"
+            v-bind="scope.$render.attrs"
             @input="$refs.editable.updateStatus(scope)"></el-input-number>
         </template>
       </el-editable-column>
@@ -97,10 +97,10 @@
         label="地区"
         min-width="180"
         :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-cascader
             v-model="scope.row.userInfo.region"
-            v-bind="scope.editRender.attrs"
+            v-bind="scope.$render.attrs"
             @change="$refs.editable.updateStatus(scope)"></el-cascader>
         </template>
       </el-editable-column>
@@ -110,10 +110,10 @@
         width="220"
         sortable
         :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-date-picker
             v-model="scope.row.dateObj.date1"
-            v-bind="scope.editRender.attrs"
+            v-bind="scope.$render.attrs"
             @change="$refs.editable.updateStatus(scope)"></el-date-picker>
         </template>
       </el-editable-column>
@@ -123,7 +123,7 @@
         width="200"
         :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
       <el-editable-column label="操作" width="180">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope)">删除</el-button>
           <el-button size="mini" type="warning" @click="revertEvent(scope.row)">默认值</el-button>
         </template>

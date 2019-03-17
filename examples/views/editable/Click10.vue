@@ -41,7 +41,7 @@
         :index="indexMethod"
         width="55"></el-editable-column>
       <el-editable-column type="expand">
-        <template slot-scope="props">
+        <template v-slot="props">
           <el-form label-position="left" inline>
             <el-form-item label="名称">
               <span>{{ props.row.name }}</span>
@@ -64,7 +64,7 @@
         min-width="220"
         show-overflow-tooltip
         :edit-render="{type: 'default', autofocus: true}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <textarea class="editable-custom_input" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)"></textarea>
         </template>
       </el-editable-column>
@@ -116,7 +116,7 @@
         label="是否启用2"
         width="200"
         :edit-render="{type: 'visible'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-radio label="N" border>值1</el-radio>
             <el-radio label="Y" border>值2</el-radio>
@@ -128,7 +128,7 @@
         label="状态"
         width="160"
         :edit-render="{type: 'visible'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-checkbox-group v-model="scope.row.status" size="mini" @change="$refs.editable.updateStatus(scope)">
             <el-checkbox-button label="success">成功</el-checkbox-button>
             <el-checkbox-button label="error">失败</el-checkbox-button>
@@ -141,7 +141,7 @@
         width="140"
         :formatter="formatterOrder"
         :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
         </template>
       </el-editable-column>
@@ -153,7 +153,7 @@
       <el-editable-column
         label="操作"
         width="160">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
             <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>

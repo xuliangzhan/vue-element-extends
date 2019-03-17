@@ -169,10 +169,10 @@ edit-render 渲染参数配置
 
 | name | 说明 |
 |------|------|
-| — | 自定义渲染显示内容，参数为 { row, column, $index, editRender } |
-| edit | 自定义渲染组件，参数为 { row, column, $index, editRender } |
-| header | 自定义表头的内容，参数为 { column, $index, editRender } |
-| valid | 自定义校验提示信息，参数为 { rule, row, column, $index, editRender } |
+| — | 自定义渲染显示内容，参数为 { row, column, $index, $render } |
+| edit | 自定义渲染组件，参数为 { row, column, $index, $render } |
+| header | 自定义表头的内容，参数为 { column, $index, $render } |
+| valid | 自定义校验提示信息，参数为 { rule, row, column, $index, $render } |
 
 ## Example
 

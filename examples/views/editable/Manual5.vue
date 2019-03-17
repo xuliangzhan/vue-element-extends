@@ -15,7 +15,7 @@
         class="manual-table7"
         size="mini"
         border
-        height="260px"
+        height="260"
         :data.sync="roleList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod1}"
         style="width: 100%">
@@ -26,7 +26,7 @@
         <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
         <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
         <el-editable-column label="操作" width="160">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <template v-if="$refs.editable1.hasActiveRow(scope.row)">
               <el-button size="mini" type="success" @click="saveRowEvent('editable1', scope.row)">保存</el-button>
               <el-button size="mini" type="warning" @click="cancelRowEvent('editable1', scope.row)">取消</el-button>
@@ -63,7 +63,7 @@
         ref="editable2"
         size="mini"
         border
-        height="260px"
+        height="260"
         :data.sync="userList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod2}"
         style="width: 100%">
@@ -80,7 +80,7 @@
         <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
         <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
         <el-editable-column label="操作" width="150">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <template v-if="$refs.editable2.hasActiveRow(scope.row)">
               <el-button size="mini" type="success" @click="saveRowEvent('editable2', scope.row)">保存</el-button>
               <el-button size="mini" type="warning" @click="cancelRowEvent('editable2', scope.row)">取消</el-button>
@@ -117,7 +117,7 @@
         ref="editable3"
         size="mini"
         border
-        height="260px"
+        height="260"
         :data.sync="fileList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod3}"
         style="width: 100%">
@@ -128,7 +128,7 @@
         <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
         <el-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatterDate"></el-editable-column>
         <el-editable-column label="操作" width="160">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <template v-if="$refs.editable3.hasActiveRow(scope.row)">
               <el-button size="mini" type="success" @click="saveRowEvent('editable3', scope.row)">保存</el-button>
               <el-button size="mini" type="warning" @click="cancelRowEvent('editable3', scope.row)">取消</el-button>

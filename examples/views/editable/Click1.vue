@@ -21,10 +21,13 @@
       <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column label="操作" width="160">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button size="small" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
       </el-editable-column>
+      <template v-slot:append>
+        <div>-- append 插槽 --</div>
+      </template>
     </el-editable>
   </div>
 </template>

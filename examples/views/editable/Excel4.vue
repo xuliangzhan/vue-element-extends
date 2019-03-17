@@ -23,7 +23,7 @@
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true}"
       style="width: 100%" >
       <el-editable-column type="index" align="center" width="50">
-        <template slot="header">
+        <template v-slot:header>
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
       </el-editable-column>

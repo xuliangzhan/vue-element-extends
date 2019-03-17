@@ -43,7 +43,7 @@
         :index="indexMethod"
         width="55"></el-editable-column>
       <el-editable-column type="expand">
-        <template slot-scope="props">
+        <template v-slot="props">
           <el-form label-position="left" inline>
             <el-form-item label="名称">
               <span>{{ props.row.name }}</span>
@@ -66,7 +66,7 @@
         min-width="220"
         show-overflow-tooltip
         :edit-render="{type: 'default', autofocus: true}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <textarea class="editable-custom_input" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)"></textarea>
         </template>
       </el-editable-column>
@@ -100,7 +100,7 @@
         label="attr4 唯一下拉选项"
         width="200"
         :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-select v-model="scope.row.attr4" @change="attr4ChangeEvent(scope)">
             <el-option
               v-for="(item, index) in attr4Options"
@@ -110,14 +110,14 @@
               :disabled="item.disabled"></el-option>
           </el-select>
         </template>
-        <template slot-scope="scope">{{ getSelectLabel(scope.row.attr4, 'value', 'label', attr4Options) }}</template>
+        <template v-slot="scope">{{ getSelectLabel(scope.row.attr4, 'value', 'label', attr4Options) }}</template>
       </el-editable-column>
       <el-editable-column
         prop="attr5"
         label="attr5 限制唯一下拉"
         width="200"
         :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-select v-model="scope.row.attr5" @change="attr5ChangeEvent(scope)">
             <el-option
               v-for="(item, index) in attr5Options"
@@ -128,7 +128,7 @@
         </template>
       </el-editable-column>
       <el-editable-column label="操作" width="80">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope)">删除</el-button>
         </template>
       </el-editable-column>

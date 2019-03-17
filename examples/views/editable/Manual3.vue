@@ -13,7 +13,7 @@
       ref="editable"
       class="manual-table3"
       border
-      height="466"
+      height="500"
       size="mini"
       row-key="id"
       :data.sync="list"
@@ -35,7 +35,7 @@
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="describe3" label="备注" width="200" fixed="right" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column label="操作" width="150" fixed="right">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
             <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
@@ -46,6 +46,9 @@
           </template>
         </template>
       </el-editable-column>
+      <template v-slot:append>
+        <div>-- append 插槽 --</div>
+      </template>
     </el-editable>
 
     <el-pagination

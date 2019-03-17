@@ -25,6 +25,7 @@
       size="medium"
       height="480"
       :edit-rules="validRules"
+      :edit-config="{useDefaultValidTip: true}"
       style="width: 100%">
       <el-editable-column type="index" width="55"></el-editable-column>
       <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
@@ -34,7 +35,7 @@
       <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
       <el-editable-column prop="rate" label="评分" :edit-render="{name: 'ElRate', type: 'visible'}"></el-editable-column>
       <el-editable-column label="操作">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
       </el-editable-column>

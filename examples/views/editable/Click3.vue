@@ -23,46 +23,46 @@
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
       <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-input v-model="scope.row.name" size="mini" @input="$refs.editable.updateStatus(scope)"></el-input>
         </template>
-        <template slot-scope="scope">{{ scope.row.name }}</template>
+        <template v-slot="scope">{{ scope.row.name }}</template>
       </el-editable-column>
       <el-editable-column prop="sex" label="性别" :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-select v-model="scope.row.sex" size="mini" clearable @change="$refs.editable.updateStatus(scope)">
             <el-option v-for="item in sexList" :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
         </template>
-        <template slot-scope="scope">{{ getSelectLabel(scope.row.sex, 'value', 'label', sexList) }}</template>
+        <template v-slot="scope">{{ getSelectLabel(scope.row.sex, 'value', 'label', sexList) }}</template>
       </el-editable-column>
       <el-editable-column prop="age" label="年龄" :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-input-number v-model="scope.row.age" size="mini" :min="1" :max="200" @input="$refs.editable.updateStatus(scope)"></el-input-number>
         </template>
-        <template slot-scope="scope">{{ scope.row.age }}</template>
+        <template v-slot="scope">{{ scope.row.age }}</template>
       </el-editable-column>
       <el-editable-column prop="region" label="地区" width="200" :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-cascader v-model="scope.row.region" size="mini" clearable :options="regionList" @change="$refs.editable.updateStatus(scope)"></el-cascader>
         </template>
-        <template slot-scope="scope">{{ getCascaderLabel(scope.row.region, regionList) }}</template>
+        <template v-slot="scope">{{ getCascaderLabel(scope.row.region, regionList) }}</template>
       </el-editable-column>
       <el-editable-column prop="date" label="日期" :edit-render="{type: 'default'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-date-picker v-model="scope.row.date" type="datetime" format="yyyy/MM/dd" size="mini" @change="$refs.editable.updateStatus(scope)"></el-date-picker>
         </template>
-        <template slot-scope="scope">{{ getDatePicker(scope.row.date) }}</template>
+        <template v-slot="scope">{{ getDatePicker(scope.row.date) }}</template>
       </el-editable-column>
       <el-editable-column prop="flag" label="是否启用" :edit-render="{type: 'visible'}">
-        <template slot="edit" slot-scope="scope">
+        <template v-slot:edit="scope">
           <el-switch v-model="scope.row.flag" size="mini" @change="$refs.editable.updateStatus(scope)"></el-switch>
         </template>
       </el-editable-column>
       <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column label="操作" width="160">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
           <el-button size="mini" type="info" @click="revertEvent(scope.row)">还原</el-button>
         </template>

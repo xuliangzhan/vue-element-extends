@@ -38,7 +38,7 @@
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', mode: 'row'}"
+      :edit-config="{trigger: 'dblclick', mode: 'row', useDefaultValidTip: true}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
@@ -54,7 +54,7 @@
       <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column label="操作" width="100">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
       </el-editable-column>

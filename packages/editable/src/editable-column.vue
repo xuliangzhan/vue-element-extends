@@ -3,28 +3,28 @@
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="type === 'index'" v-bind="attrs">
-    <template slot="header" slot-scope="scope">
+    <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">#</slot>
     </template>
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="type === 'expand'" v-bind="attrs">
-    <template slot="header" slot-scope="scope">
+    <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)"></slot>
     </template>
-    <template slot-scope="scope">
+    <template v-slot="scope">
       <slot v-bind="getRowScope(scope)"></slot>
     </template>
   </el-table-column>
   <el-table-column v-else-if="editRender" v-bind="attrs">
-    <template slot="header" slot-scope="scope">
+    <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">
         <i v-if="checkRequired(scope)" class="editable-required-icon"></i>
         <i v-if="checkIcon(scope)" class="el-icon-edit-outline editable-header-icon"></i>
         {{ scope.column.label }}
       </slot>
     </template>
-    <template slot-scope="scope">
+    <template v-slot="scope">
       <template v-if="isEditRender(scope)">
         <slot name="edit" v-bind="getRowScope(scope)">
           <template v-if="compName === 'ElSelect'">
@@ -61,19 +61,21 @@
         <template v-else-if="!scope.row.config.validTooltip.disabled">
           <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
             <div class="editable-valid_wrapper"></div>
-            <div slot="content">
-              <slot name="valid" v-bind="getVaildScope(scope)">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</slot>
-            </div>
+            <template v-slot:content>
+              <slot name="valid" v-bind="getVaildScope(scope)">
+                <div class="valid-message">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</div>
+              </slot>
+            </template>
           </el-tooltip>
         </template>
       </template>
     </template>
   </el-table-column>
   <el-table-column v-else v-bind="attrs">
-    <template slot="header" slot-scope="scope">
+    <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">{{ scope.column.label }}</slot>
     </template>
-    <template slot-scope="scope">
+    <template v-slot="scope">
       <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
     </template>
   </el-table-column>
@@ -213,19 +215,21 @@ export default {
   methods: {
     getHeadScope (scope) {
       return {
-        $index: scope.$index,
         column: scope.column,
         store: scope.store,
+        $index: scope.$index,
+        $render: this.renderOpts,
         editRender: this.renderOpts,
         _self: scope._self
       }
     },
     getRowScope (scope) {
       return {
-        $index: scope.$index,
         row: scope.row.data,
         column: scope.column,
         store: scope.store,
+        $index: scope.$index,
+        $render: this.renderOpts,
         editRender: this.renderOpts,
         _self: scope._self,
         _row: scope.row
@@ -234,10 +238,11 @@ export default {
     getVaildScope (scope) {
       return {
         rule: scope.row.validRule || {},
-        $index: scope.$index,
         row: scope.row.data,
         column: scope.column,
         store: scope.store,
+        $index: scope.$index,
+        $render: this.renderOpts,
         editRender: this.renderOpts,
         _self: scope._self,
         _row: scope.row
@@ -252,7 +257,7 @@ export default {
     },
     getRendEvents ({ $index, row, column, store }) {
       let type = 'change'
-      let scope = { $index, row: row.data, column, store, editRender: this.renderOpts, _row: row }
+      let scope = { $index, row: row.data, column, store, $render: this.renderOpts, _row: row }
       switch (this.compName) {
         case 'ElAutocomplete':
           type = 'select'

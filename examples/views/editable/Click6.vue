@@ -23,7 +23,7 @@
       height="540"
       style="width: 100%">
       <el-editable-column type="index" width="55">
-        <template slot="header">
+        <template v-slot:header>
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
       </el-editable-column>
@@ -31,7 +31,7 @@
         <el-editable-column v-if="item.customShow" :key="index" v-bind="item"></el-editable-column>
       </template>
       <el-editable-column label="操作">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-popover placement="top" width="160" v-model="scope.row.flag3">
             <p>确定删除吗？</p>
             <div style="text-align: right; margin: 0">

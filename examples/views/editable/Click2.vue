@@ -56,7 +56,7 @@
         </template>
       </el-editable-column>
       <el-editable-column label="操作" width="100">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
       </el-editable-column>

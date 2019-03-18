@@ -26,7 +26,7 @@
       <el-editable-column type="selection" width="55" fixed="left"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80" fixed="left"></el-editable-column>
       <el-editable-column prop="name" label="名字" min-width="200" fixed="left" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="sex" label="性别" min-width="160" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
+      <el-editable-column prop="sex" label="性别" min-width="160" :edit-render="{name: 'ElSelect', options: sexList, optionProps: {label: 'spell', value: 'value'}}"></el-editable-column>
       <el-editable-column prop="age" label="年龄" min-width="160" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
       <el-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
       <el-editable-column prop="role" label="角色" min-width="160" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
@@ -108,13 +108,15 @@ export default {
       })
     },
     findSexList () {
-      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
+      return XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
         this.sexList = data
+        return data
       })
     },
     findRegionList () {
-      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+      return XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
         this.regionList = data
+        return data
       })
     },
     searchEvent () {

@@ -9,34 +9,67 @@ class Helper {
     this.list = template(data)
     this.ModelVO = ModelVO
   }
-  // 获取最新数据、升序
-  findAscSortList (options) {
+  // 获取最新数据、支持排序
+  findList (options) {
     let { list } = this
-    let { sort = ['updateTime'], max } = options || {}
+    let { sort = ['updateTime'], order = 'desc', max } = options || {}
     return function (request, response) {
       let rest = list
       let params = request.params
-      let filterProps = XEUtils.keys(params).filter(key => params[key])
-      if (filterProps) {
-        rest = rest.filter(data => filterProps.every(key => '' + data[key] === '' + params[key]))
+      if (params) {
+        let filterProps = XEUtils.keys(params).filter(key => !['sort', 'order'].includes(key) && params[key])
+        if (filterProps) {
+          rest = rest.filter(data => filterProps.every(key => '' + data[key] === '' + params[key]))
+        }
+        if (params.order) {
+          order = params.order
+        }
+        if (params.sort) {
+          sort = params.sort.split(',')
+        }
       }
       rest = XEUtils.sortBy(list, sort)
+      if (order === 'desc') {
+        rest = rest.reverse()
+      }
       return max ? rest.slice(0, max) : rest
     }
   }
-  // 获取最新数据、倒序
-  findDescSortList (options) {
+  // 分页、支持排序
+  findPageList (options) {
     let { list } = this
-    let { sort = ['updateTime'], max } = options || {}
-    return function (request, response) {
+    let { sort = ['updateTime'], order = 'desc', page } = options || {}
+    return function (request, response, { pathVariable }) {
+      let pageSize = 10
+      let currentPage = 1
       let rest = list
       let params = request.params
-      let filterProps = XEUtils.keys(params).filter(key => params[key])
-      if (filterProps) {
-        rest = rest.filter(data => filterProps.every(key => '' + data[key] === '' + params[key]))
+      if (params) {
+        let filterProps = XEUtils.keys(params).filter(key => !['sort', 'order'].includes(key) && params[key])
+        if (filterProps) {
+          rest = rest.filter(data => filterProps.every(key => String(data[key] || '').indexOf(params[key]) > -1))
+        }
+        if (params.order) {
+          order = params.order
+        }
+        if (params.sort) {
+          sort = params.sort.split(',')
+        }
       }
-      rest = XEUtils.sortBy(list, sort).reverse()
-      return max ? rest.slice(0, max) : rest
+      if (pathVariable) {
+        pageSize = XEUtils.toNumber(pathVariable[page && page.size ? page.size : 'pageSize']) || pageSize
+        currentPage = XEUtils.toNumber(pathVariable[page && page.current ? page.current : 'currentPage']) || currentPage
+      }
+      let totalResult = rest.length
+      rest = XEUtils.sortBy(rest, sort)
+      if (order === 'desc') {
+        rest = rest.reverse()
+      }
+      response.body = {
+        page: { pageSize, currentPage, totalResult },
+        result: rest.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      }
+      return response
     }
   }
   // 删除单条
@@ -118,58 +151,6 @@ class Helper {
         })
       }
       response.body = { insertRest, updateRest, removeRest }
-      return response
-    }
-  }
-  // 分页、升序
-  findAscSortPageList (options) {
-    let { list } = this
-    let { sort = ['updateTime'], page } = options || {}
-    return function (request, response, { pathVariable }) {
-      let pageSize = 10
-      let currentPage = 1
-      let rest = list
-      let params = request.params
-      let filterProps = XEUtils.keys(params).filter(key => params[key])
-      if (filterProps) {
-        rest = rest.filter(data => filterProps.every(key => '' + data[key] === '' + params[key]))
-      }
-      if (pathVariable) {
-        pageSize = XEUtils.toNumber(pathVariable[page && page.size ? page.size : 'pageSize']) || pageSize
-        currentPage = XEUtils.toNumber(pathVariable[page && page.current ? page.current : 'currentPage']) || currentPage
-      }
-      let totalResult = rest.length
-      rest = XEUtils.sortBy(list, sort).slice((currentPage - 1) * pageSize, currentPage * pageSize)
-      response.body = {
-        page: { pageSize, currentPage, totalResult },
-        result: rest
-      }
-      return response
-    }
-  }
-  // 分页、倒序
-  findDescSortPageList (options) {
-    let { list } = this
-    let { sort = ['updateTime'], page } = options || {}
-    return function (request, response, { pathVariable }) {
-      let pageSize = 10
-      let currentPage = 1
-      let rest = list
-      let params = request.params
-      let filterProps = XEUtils.keys(params).filter(key => params[key])
-      if (filterProps) {
-        rest = rest.filter(data => filterProps.every(key => String(data[key] || '').indexOf(params[key]) > -1))
-      }
-      if (pathVariable) {
-        pageSize = XEUtils.toNumber(pathVariable[page && page.size ? page.size : 'pageSize']) || pageSize
-        currentPage = XEUtils.toNumber(pathVariable[page && page.current ? page.current : 'currentPage']) || currentPage
-      }
-      let totalResult = rest.length
-      rest = XEUtils.sortBy(rest, sort).reverse().slice((currentPage - 1) * pageSize, currentPage * pageSize)
-      response.body = {
-        page: { pageSize, currentPage, totalResult },
-        result: rest
-      }
       return response
     }
   }

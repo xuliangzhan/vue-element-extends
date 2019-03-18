@@ -19,14 +19,12 @@ import EditableClick9 from './views/editable/Click9'
 import EditableClick10 from './views/editable/Click10'
 import EditableClick11 from './views/editable/Click11'
 import EditableClick12 from './views/editable/Click12'
-import EditableClick13 from './views/editable/Click13'
 import EditableDblclick1 from './views/editable/Dblclick1'
 import EditableDblclick2 from './views/editable/Dblclick2'
 import EditableDblclick3 from './views/editable/Dblclick3'
 import EditableDblclick4 from './views/editable/Dblclick4'
 import EditableDblclick5 from './views/editable/Dblclick5'
 import EditableDblclick6 from './views/editable/Dblclick6'
-import EditableDblclick7 from './views/editable/Dblclick7'
 import EditableMultiComp1 from './views/editable/MultiComp1'
 import EditableExcel1 from './views/editable/Excel1'
 import EditableExcel2 from './views/editable/Excel2'
@@ -136,11 +134,6 @@ export default new Router({
       component: EditableClick12
     },
     {
-      path: '/editable/click13',
-      name: 'EditableClick13',
-      component: EditableClick13
-    },
-    {
       path: '/editable/dblclick1',
       name: 'EditableDblclick1',
       component: EditableDblclick1
@@ -169,11 +162,6 @@ export default new Router({
       path: '/editable/dblclick6',
       name: 'EditableDblclick6',
       component: EditableDblclick6
-    },
-    {
-      path: '/editable/dblclick7',
-      name: 'EditableDblclick7',
-      component: EditableDblclick7
     },
     {
       path: '/editable/multiComp1',

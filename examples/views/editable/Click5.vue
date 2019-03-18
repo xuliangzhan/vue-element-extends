@@ -16,7 +16,7 @@
       ref="editable"
       class="click-table5"
       border
-      height="466"
+      height="564"
       size="mini"
       :data.sync="list"
       :row-class-name="tableRowClassName"
@@ -116,13 +116,15 @@ export default {
       })
     },
     findSexList () {
-      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
+      return XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
         this.sexList = data
+        return data
       })
     },
     findRegionList () {
-      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+      return XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
         this.regionList = data
+        return data
       })
     },
     searchEvent () {

@@ -121,13 +121,15 @@ export default {
       })
     },
     findSexList () {
-      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
+      return XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
         this.sexList = data
+        return data
       })
     },
     findRegionList () {
-      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
+      return XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
         this.regionList = data
+        return data
       })
     },
     searchEvent () {

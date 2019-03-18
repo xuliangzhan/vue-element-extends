@@ -16,79 +16,46 @@
   },
   {
     "prop": "sex",
-    "label": "性别",
-    "editRender": {
-      "name": "ElSelect"
-    }
+    "label": "性别"
   },
   {
     "prop": "age",
-    "label": "年龄",
-    "editRender": {
-      "name": "ElInputNumber"
-    }
+    "label": "年龄"
   },
   {
     "prop": "phone",
-    "label": "手机",
-    "editRender": {
-      "name": "ElInput"
-    }
+    "label": "手机"
   },
   {
     "prop": "region",
-    "label": "地区",
-    "editRender": {
-      "name": "ElCascader"
-    }
+    "label": "地区"
   },
   {
     "prop": "date",
-    "label": "日期",
-    "editRender": {
-      "name": "ElDatePicker"
-    }
+    "label": "日期"
   },
   {
     "prop": "rate",
-    "label": "评分",
-    "editRender": {
-      "name": "ElRate"
-    }
+    "label": "评分"
   },
   {
     "prop": "attr1",
-    "label": "属性1",
-    "editRender": {
-      "name": "ElInput"
-    }
+    "label": "属性1"
   },
   {
     "prop": "attr2",
-    "label": "属性2",
-    "editRender": {
-      "name": "ElInput"
-    }
+    "label": "属性2"
   },
   {
     "prop": "attr3",
-    "label": "属性3",
-    "editRender": {
-      "name": "ElInput"
-    }
+    "label": "属性3"
   },
   {
     "prop": "attr4",
-    "label": "属性4",
-    "editRender": {
-      "name": "ElInput"
-    }
+    "label": "属性4"
   },
   {
     "prop": "attr5",
-    "label": "属性5",
-    "editRender": {
-      "name": "ElInput"
-    }
+    "label": "属性5"
   }
 ]

@@ -1,174 +1,90 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
-    <p style="color: red;font-size: 12px;">第2行不允许勾选</p>
-    <p style="color: red;font-size: 12px;">限制第2行不允许编辑</p>
+    <p style="color: red;font-size: 12px;">未启用的行禁止编辑</p>
+    <p style="color: red;font-size: 12px;">年龄列禁止编辑</p>
 
-    <p>
-      <el-button type="success" size="mini" @click="$refs.editable.insert({name: '默认名字2'})">新增一行</el-button>
-      <el-button type="success" size="mini" @click="$refs.editable.insertAt({name: '默认名字2'}, -1)">在最后新增一行</el-button>
+    <div class="click-table10-oper">
+      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
+      <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
-      <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
-      <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
-      <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
-      <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
-      <el-button type="primary" size="mini" @click="getRemoveEvent">获取已删除数据</el-button>
-      <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
-    </p>
+      <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
+    </div>
 
     <el-editable
       ref="editable"
       class="click-table10"
-      stripe
       border
-      height="600"
-      size="medium"
-      @select="selectEvent"
-      @current-change="currentChangeEvent"
-      @edit-disabled="editDisabledEvent"
-      :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'row', showIcon: true, showStatus: true, activeMethod}"
+      height="466"
+      size="mini"
+      :data.sync="list"
+      :row-class-name="tableRowClassName"
+      :edit-config="{trigger: 'click', mode: 'cell', activeMethod}"
       style="width: 100%">
-      <el-editable-column
-        type="selection"
-        width="55"></el-editable-column>
-      <el-editable-column
-        type="index"
-        :index="indexMethod"
-        width="55"></el-editable-column>
-      <el-editable-column type="expand">
-        <template v-slot="props">
-          <el-form label-position="left" inline>
-            <el-form-item label="名称">
-              <span>{{ props.row.name }}</span>
-            </el-form-item>
-            <el-form-item label="描述">
-              <span>{{ props.row.desc }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-editable-column>
-      <el-editable-column
-        prop="sex"
-        label="性别"
-        width="100"
-        align="center"
-        :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column
-        prop="name"
-        label="名字（带校验的自定义渲染)"
-        min-width="220"
-        show-overflow-tooltip
-        :edit-render="{type: 'default', autofocus: true}">
+      <el-editable-column type="selection" width="55"></el-editable-column>
+      <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
-          <textarea class="editable-custom_input" v-model="scope.row.name" @input="$refs.editable.updateStatus(scope)"></textarea>
+          <el-input v-model="scope.row.name" size="mini" @input="$refs.editable.updateStatus(scope)"></el-input>
         </template>
+        <template v-slot="scope">{{ scope.row.name }}</template>
       </el-editable-column>
-      <el-editable-column
-        prop="age"
-        label="年龄"
-        width="140"
-        align="center"
-        headerAlign="center"
-        :filters="ageFilterList"
-        :filter-method="filterHandler"
-        :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-      <el-editable-column
-        prop="region"
-        label="地区"
-        min-width="180"
-        :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}"></el-editable-column>
-      <el-editable-column
-        prop="birthdate"
-        label="日期"
-        width="220"
-        sortable
-        :sort-method="birthdateSortHandler"
-        :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd hh:mm'}}"></el-editable-column>
-      <el-editable-column
-        prop="date1"
-        label="选择日期"
-        width="220"
-        sortable
-        :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}"></el-editable-column>
-      <el-editable-column
-        prop="date3"
-        label="任意时间点"
-        width="160"
-        sortable
-        :edit-render="{name: 'ElTimePicker', attrs: {pickerOptions: {selectableRange: '06:30:00 - 22:30:00'}, placeholder: '任意时间点'}}"></el-editable-column>
-      <el-editable-column
-        prop="slider"
-        label="滑块"
-        width="200"
-        :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
-      <el-editable-column
-        prop="flag"
-        label="是否启用"
-        width="100"
-        :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column
-        prop="flag2"
-        label="是否启用2"
-        width="200"
-        :edit-render="{type: 'visible'}">
+      <el-editable-column prop="sex" label="性别" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
-          <el-radio-group v-model="scope.row.flag2" size="mini" @change="$refs.editable.updateStatus(scope)">
-            <el-radio label="N" border>值1</el-radio>
-            <el-radio label="Y" border>值2</el-radio>
-          </el-radio-group>
+          <el-select v-model="scope.row.sex" size="mini" clearable @change="$refs.editable.updateStatus(scope)">
+            <el-option v-for="item in sexList" :key="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
         </template>
+        <template v-slot="scope">{{ getSelectLabel(scope.row.sex, 'value', 'label', sexList) }}</template>
       </el-editable-column>
-      <el-editable-column
-        prop="status"
-        label="状态"
-        width="160"
-        :edit-render="{type: 'visible'}">
+      <el-editable-column prop="age" label="年龄" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
-          <el-checkbox-group v-model="scope.row.status" size="mini" @change="$refs.editable.updateStatus(scope)">
-            <el-checkbox-button label="success">成功</el-checkbox-button>
-            <el-checkbox-button label="error">失败</el-checkbox-button>
-          </el-checkbox-group>
+          <el-input-number v-model="scope.row.age" size="mini" :min="1" :max="200" @input="$refs.editable.updateStatus(scope)"></el-input-number>
         </template>
+        <template v-slot="scope">{{ scope.row.age }}</template>
       </el-editable-column>
-      <el-editable-column
-        prop="order"
-        label="自定义渲染"
-        width="140"
-        :formatter="formatterOrder"
-        :edit-render="{type: 'default'}">
+      <el-editable-column prop="region" label="地区" width="200" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
-          <el-autocomplete v-model="scope.row.order" :fetch-suggestions="querySearchAsync" placeholder="选中订单" @select="$refs.editable.updateStatus(scope)"></el-autocomplete>
+          <el-cascader v-model="scope.row.region" size="mini" clearable :options="regionList" @change="$refs.editable.updateStatus(scope)"></el-cascader>
+        </template>
+        <template v-slot="scope">{{ getCascaderLabel(scope.row.region, regionList) }}</template>
+      </el-editable-column>
+      <el-editable-column prop="date" label="日期" :edit-render="{type: 'default'}">
+        <template v-slot:edit="scope">
+          <el-date-picker v-model="scope.row.date" type="datetime" format="yyyy/MM/dd" size="mini" @change="$refs.editable.updateStatus(scope)"></el-date-picker>
+        </template>
+        <template v-slot="scope">{{ getDatePicker(scope.row.date) }}</template>
+      </el-editable-column>
+      <el-editable-column prop="flag" label="是否启用" :edit-render="{type: 'visible'}">
+        <template v-slot:edit="scope">
+          <el-switch v-model="scope.row.flag" size="mini" @change="$refs.editable.updateStatus(scope)"></el-switch>
         </template>
       </el-editable-column>
-      <el-editable-column
-        prop="remark"
-        label="备注"
-        min-width="180"
-        :edit-render="{name: 'ElInput', attrs: {type: 'textarea', rows: 2}}"></el-editable-column>
-      <el-editable-column
-        label="操作"
-        width="160">
+      <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
+      <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
+      <el-editable-column label="操作" width="160">
         <template v-slot="scope">
-          <template v-if="$refs.editable.hasActiveRow(scope.row)">
-            <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
-            <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
-          </template>
-          <template v-else>
-            <el-button size="mini" type="primary" @click="$refs.editable.setActiveRow(scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
-          </template>
+          <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
+          <el-button size="mini" type="info" @click="revertEvent(scope.row)">还原</el-button>
         </template>
       </el-editable-column>
     </el-editable>
+
+    <el-pagination
+      class="click-table10-pagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageVO.currentPage"
+      :page-sizes="[5, 10, 15, 20, 50, 100, 150, 200]"
+      :page-size="pageVO.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pageVO.totalResult">
+    </el-pagination>
   </div>
 </template>
 
 <script>
+import XEUtils from 'xe-utils'
 import XEAjax from 'xe-ajax'
 import { MessageBox, Message } from 'element-ui'
 
@@ -178,46 +94,32 @@ export default {
       loading: false,
       sexList: [],
       regionList: [],
-      orderDataList: [
-        {
-          value: '136'
-        },
-        {
-          value: '1362'
-        },
-        {
-          value: '13886'
-        }
-      ],
-      ageFilterList: [
-        {
-          text: '26',
-          value: 26
-        },
-        {
-          text: '24',
-          value: 24
-        },
-        {
-          text: '22',
-          value: 22
-        }
-      ],
-      validRules: {
-        name: [
-          { required: true, message: '请输入名称', trigger: 'change' },
-          { min: 3, message: '名称长度最小 3 个字符', trigger: 'change' }
-        ]
-      }
+      list: [],
+      pageVO: {
+        currentPage: 1,
+        pageSize: 10,
+        totalResult: 0
+      },
+      pendingRemoveList: []
     }
   },
   created () {
-    this.init()
+    this.findSexList()
+    this.findRegionList()
+    this.findList()
   },
   methods: {
-    init () {
-      this.findSexList()
-      this.findRegionList()
+    findList () {
+      this.loading = true
+      this.pendingRemoveList = []
+      XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`).then(response => {
+        let { page, result } = response.data
+        this.list = result
+        this.pageVO.totalResult = page.totalResult
+        this.loading = false
+      }).catch(e => {
+        this.loading = false
+      })
     },
     findSexList () {
       XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
@@ -229,63 +131,145 @@ export default {
         this.regionList = data
       })
     },
-    activeMethod ({ row, rowIndex }) {
-      if (rowIndex === 1) {
+    searchEvent () {
+      this.pageVO.currentPage = 1
+      this.findList()
+    },
+    activeMethod ({ row, rowIndex, column, columnIndex }) {
+      if (!row.flag) {
+        return false
+      }
+      if (['age'].includes(column.property)) {
         return false
       }
       return true
     },
-    editDisabledEvent (row, column, cell, event) {
-      MessageBox({ message: '该行禁止编辑', title: '温馨提示', type: 'error' }).catch(e => e)
+    handleSizeChange (pageSize) {
+      this.pageVO.pageSize = pageSize
+      this.findList()
+    },
+    handleCurrentChange (currentPage) {
+      this.pageVO.currentPage = currentPage
+      this.findList()
+    },
+    getSelectLabel (value, valueProp, labelProp, list) {
+      let item = XEUtils.find(list, item => item[valueProp] === value)
+      return item ? item[labelProp] : null
+    },
+    getCascaderLabel (value, list) {
+      let values = value || []
+      let labels = []
+      let matchCascaderData = function (index, list) {
+        let val = values[index]
+        if (list && values.length > index) {
+          list.forEach(item => {
+            if (item.value === val) {
+              labels.push(item.label)
+              matchCascaderData(++index, item.children)
+            }
+          })
+        }
+      }
+      matchCascaderData(0, list)
+      return labels.join(' / ')
+    },
+    getDatePicker (value) {
+      return XEUtils.toDateString(value, 'yyyy/MM/dd')
+    },
+    formatterDate (row, column, cellValue, index) {
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+    },
+    tableRowClassName ({ row, rowIndex }) {
+      if (this.pendingRemoveList.some(item => item === row)) {
+        return 'delete-row'
+      }
+      return ''
+    },
+    insertEvent () {
+      let row = this.$refs.editable.insert({
+        name: `New ${Date.now()}`,
+        age: 26,
+        flag: false
+      })
+      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
     },
     removeEvent (row) {
-      MessageBox.confirm('确定删除该数据?', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$refs.editable.remove(row)
-      }).catch(e => e)
-    },
-    saveRowEvent (row) {
-      this.$refs.editable.validateRow(row, valid => {
-        if (valid) {
-          this.postJSON('url', { row }).then(data => {
-            Message({ message: '保存成功', type: 'success' })
+      if (row.id) {
+        MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
+            this.findList()
+          }).catch(e => {
+            this.loading = false
           })
-        } else {
-          console.log('error row submit!!')
-        }
-      })
+        }).catch(e => e)
+      } else {
+        this.$refs.editable.remove(row)
+      }
     },
-    cancelRowEvent (row) {
-      this.$refs.editable.validateRow(row, valid => {
-        if (valid) {
-          this.$refs.editable.clearActive()
-        } else {
-          // 关闭取消编辑状态
-          this.$refs.editable.clearActive()
-        }
-      })
+    revertEvent (row) {
+      if (this.$refs.editable.hasRowChange(row)) {
+        this.$refs.editable.clearActive()
+        this.$refs.editable.revert(row)
+        Message({
+          type: 'success',
+          message: '数据已还原！'
+        })
+      } else {
+        Message({
+          type: 'info',
+          message: '数据未改动！'
+        })
+      }
     },
-    indexMethod (index) {
-      return index * 2
-    },
-    selectEvent (selection, row) {
-      console.log(selection)
-    },
-    currentChangeEvent (currentRow, oldCurrentRow) {
-      console.log(currentRow)
-    },
-    formatterOrder (row, column, cellValue, index) {
-      return `订单号：${cellValue}`
-    },
-    deleteSelectedEvent () {
+    pendingRemoveEvent () {
       let selection = this.$refs.editable.getSelecteds()
       if (selection.length) {
-        this.postJSON('url', { selection }).then(data => {
-          Message({ message: '删除成功', type: 'success' })
+        let plus = []
+        let minus = []
+        selection.forEach(data => {
+          if (this.pendingRemoveList.some(item => data === item)) {
+            minus.push(data)
+          } else {
+            plus.push(data)
+          }
         })
+        if (minus.length) {
+          this.pendingRemoveList = this.pendingRemoveList.filter(item => minus.some(data => data !== item)).concat(plus)
+        } else if (plus) {
+          this.pendingRemoveList = this.pendingRemoveList.concat(plus)
+        }
+        this.$refs.editable.clearSelection()
+      } else {
+        Message({
+          type: 'info',
+          message: '请至少选择一条数据！'
+        })
+      }
+    },
+    deleteSelectedEvent () {
+      let removeRecords = this.$refs.editable.getSelecteds()
+      if (removeRecords.length) {
+        MessageBox.confirm('确定删除所选数据?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          XEAjax.doPost('/api/user/save', { removeRecords }).then(({ data }) => {
+            Message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.findList()
+          }).catch(e => {
+            this.loading = false
+          })
+        }).catch(e => e)
       } else {
         Message({
           type: 'info',
@@ -296,69 +280,59 @@ export default {
     submitEvent () {
       this.$refs.editable.validate(valid => {
         if (valid) {
-          let { insertRecords, removeRecords, updateRecords } = this.$refs.editable.getAllRecords()
-          this.postJSON('url', { insertRecords, removeRecords, updateRecords }).then(data => {
-
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+          let removeRecords = this.pendingRemoveList
+          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          if (insertRecords.length || updateRecords.length || removeRecords.length) {
+            insertRecords.forEach(item => {
+              if (XEUtils.isDate(item.date)) {
+                item.date = item.date.getTime()
+              }
+            })
+            updateRecords.forEach(item => {
+              if (XEUtils.isDate(item.date)) {
+                item.date = item.date.getTime()
+              }
+            })
+            this.loading = true
+            XEAjax.doPost('/api/user/save', { insertRecords, updateRecords, removeRecords }).then(({ data }) => {
+              Message({
+                type: 'success',
+                message: '保存成功!'
+              })
+              this.findList()
+            }).catch(e => {
+              this.loading = false
+            })
+          } else {
+            Message({
+              type: 'info',
+              message: '数据未改动！'
+            })
+          }
         }
       })
     },
-    getInsertEvent () {
-      let rest = this.$refs.editable.getInsertRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` }).catch(e => e)
-    },
-    getUpdateEvent () {
-      let rest = this.$refs.editable.getUpdateRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` }).catch(e => e)
-    },
-    getRemoveEvent () {
-      let rest = this.$refs.editable.getRemoveRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` }).catch(e => e)
-    },
-    getSelectedEvent () {
-      let rest = this.$refs.editable.getSelecteds()
-      MessageBox({ message: JSON.stringify(rest), title: `获取已选中数据(${rest.length}条)` }).catch(e => e)
-    },
-    getAllEvent () {
-      let rest = this.$refs.editable.getRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
-    },
-    birthdateSortHandler (a, b) {
-      return a.birthdate > b.birthdate ? 1 : -1
-    },
-    filterHandler (value, row, column) {
-      return row[column.property] === value
-    },
-    querySearchAsync (queryString, cb) {
-      var orderDataList = this.orderDataList
-      var results = queryString ? orderDataList.filter(this.createStateFilter(queryString)) : orderDataList
-      clearTimeout(this.timeout)
-      this.timeout = setTimeout(() => {
-        cb(results)
-      }, 3000 * Math.random())
-    },
-    createStateFilter (queryString) {
-      return (state) => {
-        return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-      }
-    },
-    postJSON (data) {
-      // 提交请求
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve('保存成功')
-        }, 300)
-      })
+    exportCsvEvent () {
+      this.$refs.editable.exportCsv()
     }
   }
 }
 </script>
 
-<style scoped>
-.click-table10 .editable-custom_input {
-  width: 95%;
+<style>
+.click-table10-oper {
+  margin-bottom: 18px;
+}
+.click-table10 .delete-row {
+  color: #f56c6c;
+  text-decoration: line-through;
+}
+.click-table10-pagination {
+  margin-top: 18px;
+  text-align: right;
+}
+.click-table10.editable .editable-row.new-insert,
+.click-table10.editable .editable-row.new-insert:hover>td {
+  background-color: #f0f9eb;
 }
 </style>

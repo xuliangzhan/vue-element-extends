@@ -19,8 +19,8 @@ DELETE('/api/role/delete/{id}', roleHelper.deleteByPathVariable())
 POST('/api/role/add', roleHelper.insertByBody())
 POST('/api/role/update', roleHelper.updateByBody())
 POST('/api/role/save', roleHelper.saveListByBody())
-GET('/api/role/list', roleHelper.findDescSortList({ max: 10 }))
-GET('/api/role/page/list/{pageSize}/{currentPage}', roleHelper.findDescSortPageList())
+GET('/api/role/list', roleHelper.findList({ max: 10 }))
+GET('/api/role/page/list/{pageSize}/{currentPage}', roleHelper.findPageList())
 
 class UserVO {
   constructor (data) {
@@ -53,8 +53,8 @@ DELETE('/api/user/delete/{id}', userHelper.deleteByPathVariable())
 POST('/api/user/add', userHelper.insertByBody())
 POST('/api/user/update', userHelper.updateByBody())
 POST('/api/user/save', userHelper.saveListByBody())
-GET('/api/user/list', userHelper.findDescSortList({ max: 10 }))
-GET('/api/user/page/list/{pageSize}/{currentPage}', userHelper.findDescSortPageList())
+GET('/api/user/list', userHelper.findList({ max: 10 }))
+GET('/api/user/page/list/{pageSize}/{currentPage}', userHelper.findPageList())
 
 class FileVO {
   constructor (data) {
@@ -72,5 +72,5 @@ DELETE('/api/file/delete/{id}', fileHelper.deleteByPathVariable())
 POST('/api/file/add', fileHelper.insertByBody())
 POST('/api/file/update', fileHelper.updateByBody())
 POST('/api/file/save', fileHelper.saveListByBody())
-GET('/api/file/list', fileHelper.findDescSortList())
-GET('/api/file/page/list/{pageSize}/{currentPage}', fileHelper.findDescSortPageList())
+GET('/api/file/list', fileHelper.findList())
+GET('/api/file/page/list/{pageSize}/{currentPage}', fileHelper.findPageList())

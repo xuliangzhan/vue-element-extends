@@ -2,6 +2,7 @@
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验最少3个字符）</p>
     <p style="color: red;font-size: 12px;">多级属性：由于 v-model 必须明确指定双向绑定的路径，所以需要配合自定义渲染使用</p>
+    <p style="color: red;font-size: 12px;">上下左右方向键切换列、Tab 键切换列、选中后可直接输入值覆盖旧值</p>
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
@@ -30,7 +31,7 @@
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true}"
+      :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, isTabKey: true, isArrowKey: true}"
       style="width: 100%">
       <el-editable-column
         type="selection"
@@ -315,3 +316,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.click-table12 .el-table__body .el-table__row>td.editable-col_checked {
+  box-shadow: inset 0 0 6px #409EFF;
+}
+</style>

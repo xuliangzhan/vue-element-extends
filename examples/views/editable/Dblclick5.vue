@@ -65,7 +65,7 @@
           </el-editable-column>
           <el-editable-column v-else-if="item.prop === 'attr2'" :key="index" v-bind="item" :edit-render="{name: 'ElInput'}">
             <template v-slot:header="scope">
-              {{ scope.column.label }}
+              自定义列头2
               <el-tooltip class="item" content="说明：attr2字段为自定义列头" placement="top">
                 <i class="el-icon-warning"></i>
               </el-tooltip>

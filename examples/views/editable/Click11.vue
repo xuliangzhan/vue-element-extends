@@ -19,6 +19,12 @@
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column width="40">
+        <template v-slot:header="scope">
+          <el-tooltip class="item" placement="top">
+            <div slot="content">按住后可以上下拖动排序，<br>完成后点击保存即可！</div>
+            <i class="el-icon-question"></i>
+          </el-tooltip>
+        </template>
         <template>
           <i class="fa fa-arrows drag-btn"></i>
         </template>

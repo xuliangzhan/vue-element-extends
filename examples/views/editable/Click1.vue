@@ -26,7 +26,7 @@
         </template>
       </el-editable-column>
       <template v-slot:append>
-        <div>-- append 插槽 --</div>
+        <div>-- slot append --</div>
       </template>
     </el-editable>
   </div>

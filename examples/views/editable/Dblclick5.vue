@@ -56,7 +56,7 @@
           <el-editable-column v-else-if="item.prop === 'attr1'" :key="index" v-bind="item" :edit-render="{name: 'ElInput'}">
             <template v-slot:header="scope">
               <i class="editable-required-icon"></i>
-              {{ scope.column.label }}
+              -- slot header -- {{ scope.column.label }}
               <el-tooltip class="item" placement="top">
                 <div slot="content">说明：<br>attr1字段为自定义列头<br>校验必填字段</div>
                 <i class="el-icon-question"></i>
@@ -65,8 +65,8 @@
           </el-editable-column>
           <el-editable-column v-else-if="item.prop === 'attr2'" :key="index" v-bind="item" :edit-render="{name: 'ElInput'}">
             <template v-slot:header="scope">
-              自定义列头2
-              <el-tooltip class="item" content="说明：attr2字段为自定义列头" placement="top">
+              -- slot header --
+              <el-tooltip class="item" content="说明：attr2字段为自定义列头" placement="left" effect="light">
                 <i class="el-icon-warning"></i>
               </el-tooltip>
             </template>

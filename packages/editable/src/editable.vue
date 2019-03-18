@@ -136,6 +136,8 @@ export default {
         mode: 'cell',
         // 是否使用默认的 tip 校验提示框，如果同时使用了数据校验和 fixed 列，建议设置为 true，否则会出现多个 tip 提示（因为隐藏的 fixed 列部分也会被渲染，所以会导致同时出现多个校验提示）
         useDefaultValidTip: false,
+        // 是否关闭校验提示
+        disabledValidTip: false,
         // 当点击其它地方后，自动清除最后活动行或列
         autoClearActive: true,
         // 当单元格被激活时，自动将单元格滚动到可视区域内
@@ -264,6 +266,7 @@ export default {
           mode: this.configs.mode,
           useDefaultValidTip: this.configs.useDefaultValidTip,
           validTooltip: this.configs.validTooltip,
+          disabledValidTip: this.configs.disabledValidTip,
           rules: this.editRules
         }
       }

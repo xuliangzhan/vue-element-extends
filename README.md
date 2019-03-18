@@ -95,6 +95,7 @@ edit-config 编辑参数配置
 | clearActiveMethod | 该函数 Function({type, row, rowIndex, column?, columnIndex?}) 的返回值用来决定是否允许清除当前活动行或单元格 | Function | — | — |
 | useDefaultValidTip | 如果同时使用了数据校验和 fixed 列，请设置为 true 使用默认提示  | Boolean | — | false |
 | validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
+| disabledValidTip | 关闭校验提示 | Boolean | — | false |
 | autoScrollIntoView | 当单元格被激活时，自动将单元格滚动到可视区域内 | Boolean | — | false |
 | isTabKey | 只对 trigger!=manual 有效，是否启用 Tab 键切换到下一个单元格 | Boolean | — | false |
 | isArrowKey | 只对 trigger!=manual 有效，是否启用箭头键切换行和单元格 | Boolean | — | false |

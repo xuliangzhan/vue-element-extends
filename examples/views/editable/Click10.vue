@@ -20,6 +20,7 @@
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-config="{trigger: 'click', mode: 'cell', activeMethod}"
+      @edit-disabled="editDisabledEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
@@ -184,6 +185,12 @@ export default {
         return 'delete-row'
       }
       return ''
+    },
+    editDisabledEvent (row, column, cell, event) {
+      Message({
+        type: 'error',
+        message: '该列禁止编辑！'
+      })
     },
     insertEvent () {
       let row = this.$refs.editable.insert({

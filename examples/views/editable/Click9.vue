@@ -1,5 +1,6 @@
 <template>
   <div v-loading="loading">
+    <p style="color: red;font-size: 12px;">设置 disabledValidTip=true 关闭校验提示</p>
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-50个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-60之间）phone字段（校验必填，校验手机号码）rate字段（校验必填，校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
 
     <el-form ref="tableform" class="click-table9-form" size="mini" :inline="true" :model="formData">
@@ -38,7 +39,8 @@
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'cell', useDefaultValidTip: true}"
+      :edit-config="{trigger: 'click', mode: 'cell', disabledValidTip: true}"
+      @valid-error="validErrorEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
@@ -229,6 +231,12 @@ export default {
         return 'delete-row'
       }
       return ''
+    },
+    validErrorEvent (rule, row, column, cell) {
+      Message({
+        type: 'error',
+        message: rule.message
+      })
     },
     insertEvent () {
       let row = this.$refs.editable.insert({

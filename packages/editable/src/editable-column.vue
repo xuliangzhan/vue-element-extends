@@ -48,7 +48,7 @@
       <template v-else>
         <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
       </template>
-      <template v-if="scope.row.validActive && scope.row.validActive === scope.column.property">
+      <template v-if="scope.row.validActive && !scope.row.config.disabledValidTip && scope.row.validActive === scope.column.property">
         <template v-if="scope.row.config.useDefaultValidTip">
           <template v-if="scope.row.showValidMsg">
             <slot name="valid" v-bind="getVaildScope(scope)">
@@ -58,7 +58,7 @@
             </slot>
           </template>
         </template>
-        <template v-else-if="!scope.row.config.validTooltip.disabled">
+        <template v-else>
           <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
             <div class="editable-valid_wrapper"></div>
             <template v-slot:content>

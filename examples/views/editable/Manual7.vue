@@ -76,9 +76,9 @@
             <i class="el-icon-setting" @click="dialogVisible = true"></i>
           </template>
         </el-editable-column>
-        <template v-for="(item, index) in columnConfigs">
+        <template v-for="item in columnConfigs">
           <template v-if="item._show">
-            <el-editable-column v-bind="item" :key="index"></el-editable-column>
+            <el-editable-column v-bind="item" :key="item.prop"></el-editable-column>
           </template>
         </template>
         <el-editable-column label="操作" width="150">

@@ -423,24 +423,24 @@ export default {
             if (column) {
               switch (keyCode) {
                 case 9:
-                  if (columnIndex < columns.length - 1) {
-                    let offsetColumn = columns[columnIndex + 1]
-                    if (offsetColumn && offsetColumn.property) {
-                      if (this.configs.mode === 'cell' && row.editActive) {
-                        let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
-                        this._validCellRules('blur', row, column)
-                          .then(() => {
-                            this._restoreTooltip()
-                            this._clearActiveData()
-                            row.editActive = null
-                            row.checked = offsetColumn.property
-                          }).catch(rule => this._toValidError(rule, row, column, cell))
-                      } else {
-                        row.checked = offsetColumn.property
-                      }
-                      evnt.preventDefault()
+                  let offsetColumn = columns.find((column, index) => index > columnIndex && column.property)
+                  // 从当前行中查找下一个可编辑列
+                  // 如果找不到则从下一行开始找
+                  if (offsetColumn && offsetColumn.property) {
+                    if (this.configs.mode === 'cell' && row.editActive) {
+                      let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+                      this._validCellRules('blur', row, column)
+                        .then(() => {
+                          this._restoreTooltip()
+                          this._clearActiveData()
+                          row.editActive = null
+                          row.checked = offsetColumn.property
+                        }).catch(rule => this._toValidError(rule, row, column, cell))
+                    } else {
+                      row.checked = offsetColumn.property
                     }
-                  } else if (columnIndex >= columns.length - 1) {
+                    evnt.preventDefault()
+                  } else {
                     let offsetRow = tableData[rowIndex + 1]
                     if (offsetRow) {
                       columnIndex = XEUtils.findIndexOf(columns, column => column.property)

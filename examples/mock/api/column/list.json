@@ -4,8 +4,9 @@
     "key": "name",
     "name": "名字",
     "readonly": false,
-    "required": false,
+    "required": true,
     "visible": true,
+    "type": "ElInput",
     "describe": "",
     "createTime": 1550923830095,
     "updateTime": 1550925830095
@@ -14,9 +15,10 @@
     "id": 2,
     "key": "age",
     "name": "年龄",
-    "readonly": true,
+    "readonly": false,
     "required": false,
     "visible": true,
+    "type": "ElInputNumber",
     "describe": "",
     "createTime": 1550923830095,
     "updateTime": 1550925830095
@@ -28,6 +30,7 @@
     "readonly": false,
     "required": false,
     "visible": true,
+    "type": "ElDatePicker",
     "describe": "",
     "createTime": 1550923830095,
     "updateTime": 1550925830095
@@ -39,6 +42,7 @@
     "readonly": false,
     "required": false,
     "visible": false,
+    "type": "ElInput",
     "describe": "",
     "createTime": 1550923830095,
     "updateTime": 1550925830095

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p style="color: red;font-size: 12px;">动态生成配置列</p>
+    <p style="color: red;font-size: 12px;">可配置的动态列</p>
 
     <div v-loading="columnLoading">
       <div class="manual-table7-oper">
@@ -24,6 +24,7 @@
         <el-editable-column prop="readonly" label="是否只读" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
         <el-editable-column prop="required" label="是否必填" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
         <el-editable-column prop="visible" label="默认显示" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
+        <el-editable-column prop="type" label="渲染类型" width="140" :edit-render="{name: 'ElSelect', options: renderTypeList}"></el-editable-column>
         <el-editable-column prop="describe" label="备注" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
         <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
         <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
@@ -66,6 +67,7 @@
         border
         height="260"
         :data.sync="userList"
+        :edit-rules="validRules"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod2}"
         style="width: 100%">
         <el-editable-column type="selection" width="55"></el-editable-column>
@@ -128,13 +130,29 @@ import { Message, MessageBox } from 'element-ui'
 export default {
   data () {
     return {
-      keyList: ['name', 'age', 'date', 'role', 'phone', 'email', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].map(name => ({
-        value: name,
-        label: name,
-        attrs: {
-          disabled: false
+      keyList: ['name', 'age', 'date', 'role', 'phone', 'email', 'attr1', 'attr2', 'attr3', 'attr4', 'attr5'].map(name => {
+        return {
+          value: name,
+          label: name,
+          attrs: {
+            disabled: false
+          }
         }
-      })),
+      }),
+      renderTypeList: [
+        {
+          value: 'ElInput',
+          label: '文本框'
+        },
+        {
+          value: 'ElInputNumber',
+          label: '数值'
+        },
+        {
+          value: 'ElDatePicker',
+          label: '日期'
+        }
+      ],
       columnList: [],
       columnLoading: false,
       columnPageVO: {
@@ -149,6 +167,7 @@ export default {
         pageSize: 5,
         totalResult: 0
       },
+      validRules: null,
       isClearActiveFlag: true,
       dialogVisible: false,
       selectColumns: [],
@@ -182,21 +201,31 @@ export default {
     },
     findConfColumnsList () {
       return XEAjax.doGet('/api/column/list').then(({ data }) => {
-        this.columnConfigs = data.map(column => {
+        let validRules = {}
+        let columnConfigs = []
+        data.forEach(column => {
           let item = {
             prop: column.key,
             label: column.name,
             _default: column.visible,
             _show: column.visible
           }
-          // 全部默认渲染成输入框
+          // 动态生成校验
+          if (column.required) {
+            validRules[column.key] = [
+              { required: true, message: `请填写${column.name}`, trigger: 'change' }
+            ]
+          }
+          // 动态处理渲染
           if (!column.readonly) {
             item.editRender = {
-              name: 'ElInput'
+              name: column.type
             }
           }
-          return item
+          columnConfigs.push(item)
         })
+        this.validRules = validRules
+        this.columnConfigs = columnConfigs
       })
     },
     reloadConf () {
@@ -263,7 +292,8 @@ export default {
               name: nextItem.value,
               readonly: false,
               required: false,
-              visible: true
+              visible: true,
+              type: 'ElInput'
             })
             break
           case 'editable2':

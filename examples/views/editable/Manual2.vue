@@ -44,7 +44,7 @@
       <el-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
       <el-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
+      <el-editable-column prop="flag" label="是否启用" :formatter="formatterFlag" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
       <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="attr3" label="链接">
@@ -142,6 +142,9 @@ export default {
     handleCurrentChange (currentPage) {
       this.pageVO.currentPage = currentPage
       this.findList()
+    },
+    formatterFlag (row, column, cellValue, index) {
+      return cellValue ? '是' : '否'
     },
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')

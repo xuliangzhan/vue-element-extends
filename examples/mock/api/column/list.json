@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "key": "name",
+    "name": "名字",
+    "readonly": false,
+    "required": false,
+    "visible": true,
+    "describe": "",
+    "createTime": 1550923830095,
+    "updateTime": 1550925830095
+  },
+  {
+    "id": 2,
+    "key": "age",
+    "name": "年龄",
+    "readonly": true,
+    "required": false,
+    "visible": true,
+    "describe": "",
+    "createTime": 1550923830095,
+    "updateTime": 1550925830095
+  },
+  {
+    "id": 3,
+    "key": "date",
+    "name": "日期",
+    "readonly": false,
+    "required": false,
+    "visible": true,
+    "describe": "",
+    "createTime": 1550923830095,
+    "updateTime": 1550925830095
+  },
+  {
+    "id": 4,
+    "key": "role",
+    "name": "角色",
+    "readonly": false,
+    "required": false,
+    "visible": false,
+    "describe": "",
+    "createTime": 1550923830095,
+    "updateTime": 1550925830095
+  }
+]

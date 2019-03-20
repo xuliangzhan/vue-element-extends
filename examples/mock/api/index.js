@@ -74,3 +74,24 @@ POST('/api/file/update', fileHelper.updateByBody())
 POST('/api/file/save', fileHelper.saveListByBody())
 GET('/api/file/list', fileHelper.findList())
 GET('/api/file/page/list/{pageSize}/{currentPage}', fileHelper.findPageList())
+
+class ColumnVO {
+  constructor (data) {
+    this.id = data.id
+    this.key = data.key
+    this.name = data.name
+    this.readonly = data.readonly
+    this.required = data.required
+    this.visible = data.visible
+    this.describe = data.describe
+    this.createTime = data.createTime
+    this.updateTime = data.updateTime
+  }
+}
+const columnHelper = new Helper(require('./column/list.json'), ColumnVO)
+DELETE('/api/column/delete/{id}', columnHelper.deleteByPathVariable())
+POST('/api/column/add', columnHelper.insertByBody())
+POST('/api/column/update', columnHelper.updateByBody())
+POST('/api/column/save', columnHelper.saveListByBody())
+GET('/api/column/list', columnHelper.findList())
+GET('/api/column/page/list/{pageSize}/{currentPage}', columnHelper.findPageList())

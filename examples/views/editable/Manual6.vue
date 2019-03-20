@@ -276,6 +276,7 @@ export default {
       }
     },
     removeEvent (row) {
+      this.isClearActiveFlag = false
       MessageBox.confirm('确定删除该文件?', '温馨提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -293,7 +294,9 @@ export default {
         }).catch(e => {
           this.loading = false
         })
-      }).catch(e => e)
+      }).catch(e => e).then(() => {
+        this.isClearActiveFlag = true
+      })
     },
     deleteSelectedEvent () {
       let removeRecords = this.treeList.filter(item => item.isCheck)

@@ -143,7 +143,7 @@ export default {
   created () {
     this.loading = true
     Promise.all([
-      this.findColumnsList(),
+      this.findConfColumnsList(),
       this.findList()
     ]).catch(e => e).then(() => {
       this.loading = false
@@ -177,7 +177,7 @@ export default {
         return data
       })
     },
-    findColumnsList () {
+    findConfColumnsList () {
       return XEAjax.doGet('/api/conf/columns/list').then(({ data }) => {
         this.columnConfigs = data.map(column => {
           let defaultShow = ['name', 'sex', 'age', 'rate', 'attr1', 'attr2'].includes(column.prop)

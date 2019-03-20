@@ -759,6 +759,10 @@ export default {
       }
     },
     _isRowDataChange (row, column) {
+      // 如果是新插入的数据，返回 true
+      if (row.editStatus === 'insert') {
+        return true
+      }
       if (column) {
         return !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))
       }
@@ -1266,20 +1270,22 @@ export default {
      * 由于缓存策略，但行数据发生增加或删除时，需要更新所有行
      */
     updateStatus (scope) {
-      this.$nextTick(() => {
-        let { $index, column } = scope
-        let { row, cell } = this._getColumnByRowIndex($index, column.property)
-        if (cell) {
-          return this._validCellRules(row.validActive ? 'all' : 'change', row, column)
-            .then(rule => {
-              if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
-                this._clearValidError(row)
-              }
-            }).catch(rule => {
-              this._toValidError(rule, row, column, cell)
-            })
-        }
-      })
+      if (scope) {
+        this.$nextTick(() => {
+          let { $index, column } = scope
+          let { row, cell } = this._getColumnByRowIndex($index, column.property)
+          if (cell) {
+            return this._validCellRules(row.validActive ? 'all' : 'change', row, column)
+              .then(rule => {
+                if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
+                  this._clearValidError(row)
+                }
+              }).catch(rule => {
+                this._toValidError(rule, row, column, cell)
+              })
+          }
+        })
+      }
     },
     checkValid () {
       let row = this.datas.find(item => item.validActive)

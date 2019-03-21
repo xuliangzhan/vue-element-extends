@@ -126,28 +126,30 @@ export default {
     },
     // 编辑处理
     openActiveRowEvent (row) {
-      let activeInfo = this.$refs.editable.getActiveRow()
-      if (activeInfo && activeInfo.isUpdate) {
-        this.isClearActiveFlag = false
-        MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '保存数据',
-          cancelButtonText: '取消修改',
-          type: 'warning'
-        }).then(() => {
-          this.$refs.editable.setActiveRow(row)
-          this.saveRowEvent(activeInfo.row)
-        }).catch(action => {
-          if (action === 'cancel') {
-            this.$refs.editable.revert(activeInfo.row)
+      this.$nextTick(() => {
+        let activeInfo = this.$refs.editable.getActiveRow()
+        if (activeInfo && activeInfo.isUpdate) {
+          this.isClearActiveFlag = false
+          MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
+            distinguishCancelAndClose: true,
+            confirmButtonText: '保存数据',
+            cancelButtonText: '取消修改',
+            type: 'warning'
+          }).then(() => {
             this.$refs.editable.setActiveRow(row)
-          }
-        }).then(() => {
-          this.isClearActiveFlag = true
-        })
-      } else {
-        this.$refs.editable.setActiveRow(row)
-      }
+            this.saveRowEvent(activeInfo.row)
+          }).catch(action => {
+            if (action === 'cancel') {
+              this.$refs.editable.revert(activeInfo.row)
+              this.$refs.editable.setActiveRow(row)
+            }
+          }).then(() => {
+            this.isClearActiveFlag = true
+          })
+        } else {
+          this.$refs.editable.setActiveRow(row)
+        }
+      })
     },
     // 取消处理
     cancelRowEvent (row) {

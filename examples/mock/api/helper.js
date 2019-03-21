@@ -16,20 +16,22 @@ class Helper {
     return function (request, response) {
       let rest = list
       let params = request.params
+      let sortProp = sort
+      let orderPrpo = order
       if (params) {
         let filterProps = XEUtils.keys(params).filter(key => !['sort', 'order'].includes(key) && params[key])
         if (filterProps) {
           rest = rest.filter(data => filterProps.every(key => '' + data[key] === '' + params[key]))
         }
         if (params.order) {
-          order = params.order
+          orderPrpo = params.order
         }
         if (params.sort) {
-          sort = params.sort.split(',')
+          sortProp = params.sort.split(',')
         }
       }
-      rest = XEUtils.sortBy(list, sort)
-      if (order === 'desc') {
+      rest = XEUtils.sortBy(list, sortProp)
+      if (orderPrpo === 'desc') {
         rest = rest.reverse()
       }
       return max ? rest.slice(0, max) : rest
@@ -44,16 +46,18 @@ class Helper {
       let currentPage = 1
       let rest = list
       let params = request.params
+      let sortProp = sort
+      let orderPrpo = order
       if (params) {
         let filterProps = XEUtils.keys(params).filter(key => !['sort', 'order'].includes(key) && params[key])
         if (filterProps) {
           rest = rest.filter(data => filterProps.every(key => String(data[key] || '').indexOf(params[key]) > -1))
         }
         if (params.order) {
-          order = params.order
+          orderPrpo = params.order
         }
         if (params.sort) {
-          sort = params.sort.split(',')
+          sortProp = params.sort.split(',')
         }
       }
       if (pathVariable) {
@@ -61,8 +65,8 @@ class Helper {
         currentPage = XEUtils.toNumber(pathVariable[page && page.current ? page.current : 'currentPage']) || currentPage
       }
       let totalResult = rest.length
-      rest = XEUtils.sortBy(rest, sort)
-      if (order === 'desc') {
+      rest = XEUtils.sortBy(rest, sortProp)
+      if (orderPrpo === 'desc') {
         rest = rest.reverse()
       }
       response.body = {

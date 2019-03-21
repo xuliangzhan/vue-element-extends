@@ -18,13 +18,13 @@
         <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>行编辑+基本操作</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>列编辑+自定义渲染+禁止勾选</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>行编辑+浮动列</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>多级表头</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>动态列</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>表尾合计行</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>合并行或列</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>行编辑+多级表头</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>行编辑+动态列</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>行编辑+表尾合计行</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>行编辑+合并行或列</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>行编辑+校验</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>禁止编辑</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>拖动表格</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>列编辑+禁止编辑</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>列编辑+拖动表格</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick12'}" replace>列编辑+多级属性+方向键&amp;Tab键切换</router-link>
       </div>
       <div class="apimenu-row">
@@ -33,8 +33,8 @@
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+基本操作</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>列编辑+校验+修改校验提示</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>行编辑+校验</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>动态列+自定义列头</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>动态列+方向键&amp;Tab键切换</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>行编辑+动态列+自定义列头</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>列编辑+动态列+方向键&amp;Tab键切换</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">Excel表格</a>

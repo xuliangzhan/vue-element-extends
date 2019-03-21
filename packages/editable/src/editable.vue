@@ -926,10 +926,13 @@ export default {
       let columns = this.getColumns()
       let columnIndex = XEUtils.findIndexOf(columns, item => property ? property === item.property : item.property)
       let column = columns[columnIndex]
-      let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
-      let trElem = trElemList[rowIndex]
-      let cell = trElem.querySelector(`.${column.id}`)
-      return { row, rowIndex, column, columnIndex, cell }
+      if (column) {
+        let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
+        let trElem = trElemList[rowIndex]
+        let cell = trElem.querySelector(`.${column.id}`)
+        return { row, rowIndex, column, columnIndex, cell }
+      }
+      return { row, rowIndex }
     },
     _callTriggerEvent (type) {
       // 解决事件触发的同时调用了 active 和 validate 函数，导致重复执行 Clear

@@ -18,14 +18,17 @@
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod1}"
         style="width: 100%">
         <el-editable-column type="selection" width="55"></el-editable-column>
-        <el-editable-column type="index" width="55"></el-editable-column>
+        <el-editable-column prop="seq" label="序号" width="120" align="center" :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
         <el-editable-column prop="key" label="字段名" width="120" :edit-render="{name: 'ElSelect', options: keyList, events: {change: uniqueKey}}"></el-editable-column>
         <el-editable-column prop="name" label="字段描述" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
         <el-editable-column prop="readonly" label="是否只读" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
         <el-editable-column prop="required" label="是否必填" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
+        <el-editable-column prop="validator" label="校验规则" width="160" :edit-render="{name: 'ElInput'}"></el-editable-column>
         <el-editable-column prop="visible" label="默认显示" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
         <el-editable-column prop="type" label="渲染类型" width="140" :edit-render="{name: 'ElSelect', options: renderTypeList}"></el-editable-column>
-        <el-editable-column prop="describe" label="备注" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
+        <el-editable-column prop="width" label="设置宽度" width="100" :edit-render="{name: 'ElInput'}"></el-editable-column>
+        <el-editable-column prop="align" label="对齐方式" width="120" :edit-render="{name: 'ElSelect', options: alignList, attrs: {clearable: true}}"></el-editable-column>
+        <el-editable-column prop="describe" label="备注" :edit-render="{name: 'ElInput'}"></el-editable-column>
         <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
         <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
         <el-editable-column label="操作" width="160">
@@ -41,17 +44,6 @@
           </template>
         </el-editable-column>
       </el-editable>
-
-      <el-pagination
-        class="manual-table7-pagination"
-        @size-change="handleSizeChange1"
-        @current-change="handleCurrentChange1"
-        :current-page="columnPageVO.currentPage"
-        :page-sizes="[5, 10, 15, 20, 50, 100, 150, 200]"
-        :page-size="columnPageVO.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="columnPageVO.totalResult">
-      </el-pagination>
     </div>
 
     <div v-loading="userLoading">
@@ -139,6 +131,20 @@ export default {
           }
         }
       }),
+      alignList: [
+        {
+          value: 'left',
+          label: '居左'
+        },
+        {
+          value: 'center',
+          label: '居中'
+        },
+        {
+          value: 'right',
+          label: '居右'
+        }
+      ],
       renderTypeList: [
         {
           value: 'ElInput',
@@ -155,11 +161,6 @@ export default {
       ],
       columnList: [],
       columnLoading: false,
-      columnPageVO: {
-        currentPage: 1,
-        pageSize: 5,
-        totalResult: 0
-      },
       userList: [],
       userLoading: false,
       userPageVO: {
@@ -182,10 +183,8 @@ export default {
   methods: {
     findColumnList () {
       this.columnLoading = true
-      XEAjax.doGet(`/api/column/page/list/${this.columnPageVO.pageSize}/${this.columnPageVO.currentPage}`).then(response => {
-        let { page, result } = response.data
-        this.columnList = result
-        this.columnPageVO.totalResult = page.totalResult
+      XEAjax.doGet('/api/column/list').then(({ data }) => {
+        this.columnList = data
         this.columnLoading = false
         this.uniqueKey()
       })
@@ -200,13 +199,15 @@ export default {
       })
     },
     findConfColumnsList () {
-      return XEAjax.doGet('/api/column/list').then(({ data }) => {
+      return XEAjax.doGet('/api/column/list', { sort: 'seq', order: 'asc' }).then(({ data }) => {
         let validRules = {}
         let columnConfigs = []
         data.forEach(column => {
           let item = {
             prop: column.key,
             label: column.name,
+            width: column.width,
+            align: column.align,
             _default: column.visible,
             _show: column.visible
           }
@@ -215,6 +216,15 @@ export default {
             validRules[column.key] = [
               { required: true, message: `请填写${column.name}`, trigger: 'change' }
             ]
+          }
+          if (column.validator) {
+            if (validRules[column.key]) {
+              validRules[column.key].push({ pattern: new RegExp(column.validator), message: `${column.name}校验不通过，请重新填写`, trigger: 'change' })
+            } else {
+              validRules[column.key] = [
+                { pattern: new RegExp(column.validator), message: `${column.name}校验不通过，请重新填写`, trigger: 'change' }
+              ]
+            }
           }
           // 动态处理渲染
           if (!column.readonly) {
@@ -230,14 +240,6 @@ export default {
     },
     reloadConf () {
       this.findConfColumnsList()
-    },
-    handleSizeChange1 (pageSize) {
-      this.columnPageVO.pageSize = pageSize
-      this.findColumnList()
-    },
-    handleCurrentChange1 (currentPage) {
-      this.columnPageVO.currentPage = currentPage
-      this.findColumnList()
     },
     handleSizeChange2 (pageSize) {
       this.userPageVO.pageSize = pageSize
@@ -317,75 +319,79 @@ export default {
     },
     // 判断多表格切换时是否有数据没有保存
     checkSaveData (name, row) {
-      if (!row.id) {
-        this.isClearActiveFlag = false
-        MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
-          confirmButtonText: '移除数据',
-          cancelButtonText: '返回继续',
-          type: 'warning'
-        }).then(action => {
-          if (action === 'confirm') {
-            this.$refs[name].remove(row)
-          }
-        }).catch(e => e).then(() => {
-          this.isClearActiveFlag = true
-        })
-      } else if (this.$refs[name].hasRowChange(row)) {
-        this.isClearActiveFlag = false
-        MessageBox.confirm('您离开了表格，检测未保存的内容，是否在离开前保存修改?', '温馨提示', {
-          closeOnClickModal: false,
-          distinguishCancelAndClose: true,
-          confirmButtonText: '保存',
-          cancelButtonText: '放弃修改',
-          type: 'warning'
-        }).then(() => {
-          this.$refs[name].clearActive()
-          this.saveRowEvent(name, row)
-        }).catch(action => {
-          if (action === 'cancel') {
-            this.$refs[name].revert(row)
+      if (!this.$refs[name].checkValid().error) {
+        if (!row.id) {
+          this.isClearActiveFlag = false
+          MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
+            confirmButtonText: '移除数据',
+            cancelButtonText: '返回继续',
+            type: 'warning'
+          }).then(action => {
+            if (action === 'confirm') {
+              this.$refs[name].remove(row)
+            }
+          }).catch(e => e).then(() => {
+            this.isClearActiveFlag = true
+          })
+        } else if (this.$refs[name].hasRowChange(row)) {
+          this.isClearActiveFlag = false
+          MessageBox.confirm('您离开了表格，检测未保存的内容，是否在离开前保存修改?', '温馨提示', {
+            closeOnClickModal: false,
+            distinguishCancelAndClose: true,
+            confirmButtonText: '保存',
+            cancelButtonText: '放弃修改',
+            type: 'warning'
+          }).then(() => {
             this.$refs[name].clearActive()
-          } else {
-            this.$refs[name].setActiveRow(row)
-          }
-        }).then(() => {
-          this.isClearActiveFlag = true
-        })
-        return false
+            this.saveRowEvent(name, row)
+          }).catch(action => {
+            if (action === 'cancel') {
+              this.$refs[name].revert(row)
+              this.$refs[name].clearActive()
+            } else {
+              this.$refs[name].setActiveRow(row)
+            }
+          }).then(() => {
+            this.isClearActiveFlag = true
+          })
+          return false
+        }
       }
       return this.isClearActiveFlag
     },
     openActiveRowEvent (name, row) {
-      let activeInfo = this.$refs[name].getActiveRow()
-      // 如果当前行正在编辑中，禁止编辑其他行
-      if (activeInfo) {
-        if (activeInfo.row === row || !this.$refs[name].checkValid().error) {
-          if (activeInfo.isUpdate) {
-            this.isClearActiveFlag = false
-            MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
-              closeOnClickModal: false,
-              distinguishCancelAndClose: true,
-              confirmButtonText: '保存',
-              cancelButtonText: '放弃修改',
-              type: 'warning'
-            }).then(() => {
-              this.$refs[name].setActiveRow(row)
-              this.saveRowEvent(name, activeInfo.row)
-            }).catch(action => {
-              if (action === 'cancel') {
-                this.$refs[name].revert(activeInfo.row)
+      this.$nextTick(() => {
+        let activeInfo = this.$refs[name].getActiveRow()
+        // 如果当前行正在编辑中，禁止编辑其他行
+        if (activeInfo) {
+          if (activeInfo.row === row || !this.$refs[name].checkValid().error) {
+            if (activeInfo.isUpdate) {
+              this.isClearActiveFlag = false
+              MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
+                closeOnClickModal: false,
+                distinguishCancelAndClose: true,
+                confirmButtonText: '保存',
+                cancelButtonText: '放弃修改',
+                type: 'warning'
+              }).then(() => {
                 this.$refs[name].setActiveRow(row)
-              }
-            }).then(() => {
-              this.isClearActiveFlag = true
-            })
-          } else {
-            this.$refs[name].setActiveRow(row)
+                this.saveRowEvent(name, activeInfo.row)
+              }).catch(action => {
+                if (action === 'cancel') {
+                  this.$refs[name].revert(activeInfo.row)
+                  this.$refs[name].setActiveRow(row)
+                }
+              }).then(() => {
+                this.isClearActiveFlag = true
+              })
+            } else {
+              this.$refs[name].setActiveRow(row)
+            }
           }
+        } else {
+          this.$refs[name].setActiveRow(row)
         }
-      } else {
-        this.$refs[name].setActiveRow(row)
-      }
+      })
     },
     removeEvent (name, row) {
       if (row.id) {

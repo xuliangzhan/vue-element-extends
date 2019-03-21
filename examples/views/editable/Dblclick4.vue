@@ -153,7 +153,7 @@ export default {
         ],
         phone: [
           { required: true, message: '手机号码必须填写', trigger: 'change' },
-          { pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号码', trigger: 'change' }
+          { pattern: /^1[34578][0-9]{9}$/, message: '请输入正确的手机号码', trigger: 'change' }
         ],
         date: [
           { required: true, message: '请选择日期', trigger: 'change' }

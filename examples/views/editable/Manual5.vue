@@ -331,39 +331,41 @@ export default {
       return this.isClearActiveFlag
     },
     openActiveRowEvent (name, row) {
-      let activeInfo = this.$refs[name].getActiveRow()
-      // 如果当前行正在编辑中，禁止编辑其他行
-      if (activeInfo) {
-        if (activeInfo.row === row || !this.$refs[name].checkValid().error) {
-          if (activeInfo.isUpdate) {
-            this.isClearActiveFlag = false
-            MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
-              closeOnClickModal: false,
-              distinguishCancelAndClose: true,
-              confirmButtonText: '保存',
-              cancelButtonText: '放弃修改',
-              type: 'warning'
-            }).then(() => {
-              this.$refs[name].setActiveRow(row)
-              this.saveRowEvent(name, activeInfo.row)
-            }).catch(action => {
-              if (action === 'cancel') {
-                this.$refs[name].revert(activeInfo.row)
+      this.$nextTick(() => {
+        let activeInfo = this.$refs[name].getActiveRow()
+        // 如果当前行正在编辑中，禁止编辑其他行
+        if (activeInfo) {
+          if (activeInfo.row === row || !this.$refs[name].checkValid().error) {
+            if (activeInfo.isUpdate) {
+              this.isClearActiveFlag = false
+              MessageBox.confirm('检测到未保存的内容，是否在离开前保存修改?', '温馨提示', {
+                closeOnClickModal: false,
+                distinguishCancelAndClose: true,
+                confirmButtonText: '保存',
+                cancelButtonText: '放弃修改',
+                type: 'warning'
+              }).then(() => {
                 this.$refs[name].setActiveRow(row)
-                Message({ message: '放弃修改并离开当前行', type: 'warning' })
-              } else {
-                Message({ message: '停留在当前行编辑', type: 'info' })
-              }
-            }).then(() => {
-              this.isClearActiveFlag = true
-            })
-          } else {
-            this.$refs[name].setActiveRow(row)
+                this.saveRowEvent(name, activeInfo.row)
+              }).catch(action => {
+                if (action === 'cancel') {
+                  this.$refs[name].revert(activeInfo.row)
+                  this.$refs[name].setActiveRow(row)
+                  Message({ message: '放弃修改并离开当前行', type: 'warning' })
+                } else {
+                  Message({ message: '停留在当前行编辑', type: 'info' })
+                }
+              }).then(() => {
+                this.isClearActiveFlag = true
+              })
+            } else {
+              this.$refs[name].setActiveRow(row)
+            }
           }
+        } else {
+          this.$refs[name].setActiveRow(row)
         }
-      } else {
-        this.$refs[name].setActiveRow(row)
-      }
+      })
     },
     removeEvent (name, row) {
       if (row.id) {

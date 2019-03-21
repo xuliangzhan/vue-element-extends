@@ -18,7 +18,7 @@
   "unpkg": "lib/index.umd.js",
   "jsdelivr": "lib/index.umd.js",
   "dependencies": {
-    "element-ui": "^2.6.1",
+    "element-ui": "^2.6.3",
     "vue": "^2.6.6",
     "xe-utils": "^1.8.10"
   },

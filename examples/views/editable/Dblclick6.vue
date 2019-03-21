@@ -168,7 +168,7 @@ export default {
         age: 26,
         flag: false
       })
-      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
     },
     removeEvent (row) {
       if (row.id) {

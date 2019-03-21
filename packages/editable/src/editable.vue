@@ -1,7 +1,7 @@
 <template>
   <el-table ref="refElTable" v-bind="attrs" v-on="events">
     <slot></slot>
-    <template v-slot:append>
+    <template slot="append">
       <slot name="append"></slot>
     </template>
   </el-table>
@@ -949,9 +949,15 @@ export default {
             this._clearValidError(row)
           }
         })
-        this._validRowRules('all', row)
-          .then(valid => this._triggerActive(row, column, cell, { type: 'edit' }))
-          .catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
+        if (prop) {
+          this._validCellRules('all', row, column)
+            .then(valid => this._triggerActive(row, column, cell, { type: 'edit' }))
+            .catch(rule => this._toValidError(rule, row, column, cell))
+        } else {
+          this._validRowRules('all', row)
+            .then(valid => this._triggerActive(row, column, cell, { type: 'edit' }))
+            .catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
+        }
         return true
       }
       return false

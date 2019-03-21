@@ -3,28 +3,28 @@
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="type === 'index'" v-bind="attrs">
-    <template v-slot:header="scope">
+    <template slot="header" slot-scope="scope">
       <slot name="header" v-bind="getHeadScope(scope)">#</slot>
     </template>
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="type === 'expand'" v-bind="attrs">
-    <template v-slot:header="scope">
+    <template slot="header" slot-scope="scope">
       <slot name="header" v-bind="getHeadScope(scope)"></slot>
     </template>
-    <template v-slot="scope">
+    <template slot-scope="scope">
       <slot v-bind="getRowScope(scope)"></slot>
     </template>
   </el-table-column>
   <el-table-column v-else-if="editRender" v-bind="attrs">
-    <template v-slot:header="scope">
+    <template slot="header" slot-scope="scope">
       <slot name="header" v-bind="getHeadScope(scope)">
         <i v-if="checkRequired(scope)" class="editable-required-icon"></i>
         <i v-if="checkIcon(scope)" class="el-icon-edit-outline editable-header-icon"></i>
         {{ scope.column.label }}
       </slot>
     </template>
-    <template v-slot="scope">
+    <template slot-scope="scope">
       <template v-if="isEditRender(scope)">
         <slot name="edit" v-bind="getRowScope(scope)">
           <template v-if="compName === 'ElSelect'">
@@ -61,7 +61,7 @@
         <template v-else>
           <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
             <div class="editable-valid_wrapper"></div>
-            <template v-slot:content>
+            <template slot="content">
               <slot name="valid" v-bind="getVaildScope(scope)">
                 <div class="valid-message">{{ scope.row.validRule ? scope.row.validRule.message : '' }}</div>
               </slot>
@@ -72,10 +72,10 @@
     </template>
   </el-table-column>
   <el-table-column v-else v-bind="attrs">
-    <template v-slot:header="scope">
+    <template slot="header" slot-scope="scope">
       <slot name="header" v-bind="getHeadScope(scope)">{{ scope.column.label }}</slot>
     </template>
-    <template v-slot="scope">
+    <template slot-scope="scope">
       <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
     </template>
   </el-table-column>

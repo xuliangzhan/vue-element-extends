@@ -22,7 +22,7 @@
       style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
-      <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{type: 'default'}">
+      <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
         <template v-slot:edit="scope">
           <el-input v-model="scope.row.name" size="mini" @input="$refs.editable.updateStatus(scope)"></el-input>
         </template>

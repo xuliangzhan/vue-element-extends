@@ -502,6 +502,7 @@ export default {
       }
     },
     /**
+     * 事件顺序 clearActiveMethod -> clear -> blur
      * 如果点击了表格外会触发清除
      * 如果点击了表格内不同行或单元格会触发清除
      * 如果存在校验不通过，自动聚焦到错误单元格

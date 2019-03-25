@@ -18,7 +18,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableClick2'}" replace>行编辑+基本操作</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>列编辑+自定义渲染+禁止勾选</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>行编辑+浮动列</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>行编辑+多级表头</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>列编辑+多级表头+实时同步</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>行编辑+动态列</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>行编辑+表尾合计行</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>行编辑+合并行或列</router-link>

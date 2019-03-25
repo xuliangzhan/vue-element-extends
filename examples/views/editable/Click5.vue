@@ -21,7 +21,8 @@
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'row', useDefaultValidTip: true}"
+      :edit-config="{trigger: 'click', mode: 'cell', useDefaultValidTip: true}"
+      @blur-active="blurActiveEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
@@ -44,10 +45,9 @@
       <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="describe3" label="备注" width="200" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column label="操作" width="160" fixed="right">
+      <el-editable-column label="操作" width="80" fixed="right">
         <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
-          <el-button size="mini" type="info" @click="revertEvent(scope.row)">还原</el-button>
         </template>
       </el-editable-column>
     </el-editable>
@@ -172,13 +172,19 @@ export default {
       }
       return ''
     },
+    // 单元格失焦后实时保存数据
+    blurActiveEvent (row, column, cell, event) {
+      if (this.$refs.editable.hasRowChange(row)) {
+        this.saveRowEvent(row)
+      }
+    },
     insertEvent () {
       let row = this.$refs.editable.insert({
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
       })
-      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
     },
     removeEvent (row) {
       if (row.id) {
@@ -275,6 +281,25 @@ export default {
           Message({
             type: 'error',
             message: '校验不通过!'
+          })
+        }
+      })
+    },
+    saveRowEvent (row) {
+      this.$refs.editable.validateRow(row, valid => {
+        if (valid) {
+          let url = '/api/user/add'
+          if (row.id) {
+            url = '/api/user/update'
+          }
+          if (XEUtils.isDate(row.date)) {
+            row.date = row.date.getTime()
+          }
+          this.loading = true
+          this.$refs.editable.clearActive()
+          XEAjax.doPost(url, row).then(({ data }) => {
+            this.findList()
+            Message({ message: '保存成功', type: 'success' })
           })
         }
       })

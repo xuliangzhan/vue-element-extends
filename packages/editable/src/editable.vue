@@ -565,10 +565,18 @@ export default {
             this._restoreTooltip()
             if (this.configs.mode === 'row') {
               this.$emit('clear-active', row.data, evnt)
+              this.$emit('blur-active', row.data, evnt)
             } else {
               this.$emit('clear-active', row.data, column, cell, evnt)
+              this.$emit('blur-active', row.data, column, cell, evnt)
             }
           }).catch(e => e)
+        } else {
+          if (this.configs.mode === 'row') {
+            this.$emit('blur-active', row.data, evnt)
+          } else {
+            this.$emit('blur-active', row.data, column, cell, evnt)
+          }
         }
       }
       this.callEvent = null
@@ -583,7 +591,9 @@ export default {
      * 如果配置了规则且校验不通过，则停止激活新行，聚焦到校验错误行
      */
     _cellHandleEvent (type, row, column, cell, event) {
-      if (this.configs.trigger !== 'manual' &&
+      // 触发顺序 -> clear -> active
+      setTimeout(() => {
+        if (this.configs.trigger !== 'manual' &&
         this._hasClass(cell, 'editable-col_edit') &&
         (row.editActive
           ? this.configs.mode === 'row' && this.lastActive
@@ -591,28 +601,29 @@ export default {
             : (this.configs.mode === 'cell' && row.editActive !== column.property)
           : true
         )) {
-        this._validActiveCell().then(() => {
-          if (this.lastActive) {
-            this._clearValidError(this.lastActive.row)
-          }
-          if (this.configs.trigger === type) {
-            this._triggerActive(row, column, cell, event)
-            if (this.configs.mode === 'row') {
-              this._validRowRules('change', row)
-                .catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
-            } else {
-              this._validCellRules('change', row, column)
-                .catch(rule => this._toValidError(rule, row, column, cell))
+          this._validActiveCell().then(() => {
+            if (this.lastActive) {
+              this._clearValidError(this.lastActive.row)
             }
-          } else {
-            this.datas.forEach(item => {
-              item.checked = item === row ? column.property : null
-            })
-          }
-        }).catch(e => e).then(() => this.$emit(`cell-${type}`, row.data, column, cell, event))
-      } else {
-        this.$emit(`cell-${type}`, row.data, column, cell, event)
-      }
+            if (this.configs.trigger === type) {
+              this._triggerActive(row, column, cell, event)
+              if (this.configs.mode === 'row') {
+                this._validRowRules('change', row)
+                  .catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
+              } else {
+                this._validCellRules('change', row, column)
+                  .catch(rule => this._toValidError(rule, row, column, cell))
+              }
+            } else {
+              this.datas.forEach(item => {
+                item.checked = item === row ? column.property : null
+              })
+            }
+          }).catch(e => e).then(() => this.$emit(`cell-${type}`, row.data, column, cell, event))
+        } else {
+          this.$emit(`cell-${type}`, row.data, column, cell, event)
+        }
+      })
     },
     _rowClick (row, column, event) {
       this.$emit('row-click', row.data, column, event)

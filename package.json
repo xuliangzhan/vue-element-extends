@@ -43,7 +43,7 @@
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.22",
     "xe-ajax": "^3.5.3",
-    "xe-ajax-mock": "^1.7.9"
+    "xe-ajax-mock": "^1.7.10"
   },
   "repository": {
     "type": "git",

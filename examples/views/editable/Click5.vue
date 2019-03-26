@@ -163,7 +163,7 @@ export default {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
     },
     // 单元格失焦后实时保存数据
-    blurActiveEvent (row, column, cell, event) {
+    blurActiveEvent (row, column) {
       if (this.$refs.editable.hasRowChange(row)) {
         this.saveRowEvent(row)
       }

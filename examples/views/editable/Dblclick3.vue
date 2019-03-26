@@ -21,6 +21,7 @@
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', mode: 'cell', validTooltip: { placement: 'right', popperClass: 'dblclick-table3-validtip' }}"
+      @blur-active="blurActiveEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
@@ -136,6 +137,10 @@ export default {
         return 'delete-row'
       }
       return ''
+    },
+    // 失焦后检查其他列，实现单元格连续编辑效果
+    blurActiveEvent (row, column) {
+      this.$refs.editable.validateRow(row)
     },
     insertEvent () {
       let row = this.$refs.editable.insert({

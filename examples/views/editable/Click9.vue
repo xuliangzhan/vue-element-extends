@@ -25,7 +25,6 @@
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
-      <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </div>
@@ -40,6 +39,7 @@
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'cell', disabledValidTip: true}"
+      @blur-active="blurActiveEvent"
       @valid-error="validErrorEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
@@ -238,12 +238,16 @@ export default {
         message: rule.message
       })
     },
+    // 单元格失焦后实时保存数据
+    blurActiveEvent (row, column) {
+      this.$refs.editable.validateRow(row)
+    },
     insertEvent () {
       let row = this.$refs.editable.insert({
         age: 26,
         flag: false
       })
-      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
+      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
     },
     removeEvent (row) {
       if (row.id) {
@@ -314,55 +318,36 @@ export default {
         })
       }
     },
-    validEvent () {
-      this.$refs.editable.validate(valid => {
-        if (valid) {
+    submitEvent () {
+      let removeRecords = this.pendingRemoveList
+      let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+      if (insertRecords.length || updateRecords.length || removeRecords.length) {
+        insertRecords.forEach(item => {
+          if (XEUtils.isDate(item.date)) {
+            item.date = item.date.getTime()
+          }
+        })
+        updateRecords.forEach(item => {
+          if (XEUtils.isDate(item.date)) {
+            item.date = item.date.getTime()
+          }
+        })
+        this.loading = true
+        XEAjax.doPost('/api/user/save', { insertRecords, updateRecords, removeRecords }).then(({ data }) => {
           Message({
             type: 'success',
-            message: '校验通过!'
+            message: '保存成功!'
           })
-        } else {
-          Message({
-            type: 'error',
-            message: '校验不通过!'
-          })
-        }
-      })
-    },
-    submitEvent () {
-      this.$refs.editable.validate(valid => {
-        if (valid) {
-          let removeRecords = this.pendingRemoveList
-          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
-          if (insertRecords.length || updateRecords.length || removeRecords.length) {
-            insertRecords.forEach(item => {
-              if (XEUtils.isDate(item.date)) {
-                item.date = item.date.getTime()
-              }
-            })
-            updateRecords.forEach(item => {
-              if (XEUtils.isDate(item.date)) {
-                item.date = item.date.getTime()
-              }
-            })
-            this.loading = true
-            XEAjax.doPost('/api/user/save', { insertRecords, updateRecords, removeRecords }).then(({ data }) => {
-              Message({
-                type: 'success',
-                message: '保存成功!'
-              })
-              this.findList()
-            }).catch(e => {
-              this.loading = false
-            })
-          } else {
-            Message({
-              type: 'info',
-              message: '数据未改动！'
-            })
-          }
-        }
-      })
+          this.findList()
+        }).catch(e => {
+          this.loading = false
+        })
+      } else {
+        Message({
+          type: 'info',
+          message: '数据未改动！'
+        })
+      }
     },
     exportCsvEvent () {
       this.$refs.editable.exportCsv()

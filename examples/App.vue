@@ -22,7 +22,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>行编辑+动态列</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>行编辑+表尾合计行</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>行编辑+合并行或列</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>行编辑+校验</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>列编辑+校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick10'}" replace>列编辑+禁止编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick11'}" replace>列编辑+拖动表格</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableClick12'}" replace>列编辑+多级属性+方向键&amp;Tab键切换</router-link>

@@ -2,13 +2,11 @@
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">name字段（校验必填，校验4-20个字符）sex字段（校验必填）age字段（校验18-28）</p>
     <p style="color: red;font-size: 12px;">如果同时使用了数据校验和 fixed 列，请设置 useDefaultValidTip=true 使用默认的校验提示</p>
+    <p style="color: red;font-size: 12px;">通过 blur-active 事件在单元格失焦后实时保存数据</p>
 
     <div class="click-table5-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
-      <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
-      <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
-      <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </div>
 
@@ -82,7 +80,6 @@ export default {
         pageSize: 10,
         totalResult: 0
       },
-      pendingRemoveList: [],
       validRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
@@ -105,7 +102,6 @@ export default {
   methods: {
     findList () {
       this.loading = true
-      this.pendingRemoveList = []
       XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`).then(response => {
         let { page, result } = response.data
         this.list = result
@@ -166,12 +162,6 @@ export default {
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
     },
-    tableRowClassName ({ row, rowIndex }) {
-      if (this.pendingRemoveList.some(item => item === row)) {
-        return 'delete-row'
-      }
-      return ''
-    },
     // 单元格失焦后实时保存数据
     blurActiveEvent (row, column, cell, event) {
       if (this.$refs.editable.hasRowChange(row)) {
@@ -219,31 +209,6 @@ export default {
         })
       }
     },
-    pendingRemoveEvent () {
-      let selection = this.$refs.editable.getSelecteds()
-      if (selection.length) {
-        let plus = []
-        let minus = []
-        selection.forEach(data => {
-          if (this.pendingRemoveList.some(item => data === item)) {
-            minus.push(data)
-          } else {
-            plus.push(data)
-          }
-        })
-        if (minus.length) {
-          this.pendingRemoveList = this.pendingRemoveList.filter(item => minus.some(data => data !== item)).concat(plus)
-        } else if (plus) {
-          this.pendingRemoveList = this.pendingRemoveList.concat(plus)
-        }
-        this.$refs.editable.clearSelection()
-      } else {
-        Message({
-          type: 'info',
-          message: '请至少选择一条数据！'
-        })
-      }
-    },
     deleteSelectedEvent () {
       let removeRecords = this.$refs.editable.getSelecteds()
       if (removeRecords.length) {
@@ -270,21 +235,6 @@ export default {
         })
       }
     },
-    validEvent () {
-      this.$refs.editable.validate(valid => {
-        if (valid) {
-          Message({
-            type: 'success',
-            message: '校验通过!'
-          })
-        } else {
-          Message({
-            type: 'error',
-            message: '校验不通过!'
-          })
-        }
-      })
-    },
     saveRowEvent (row) {
       this.$refs.editable.validateRow(row, valid => {
         if (valid) {
@@ -304,41 +254,6 @@ export default {
         }
       })
     },
-    submitEvent () {
-      this.$refs.editable.validate(valid => {
-        if (valid) {
-          let removeRecords = this.pendingRemoveList
-          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
-          if (insertRecords.length || updateRecords.length || removeRecords.length) {
-            insertRecords.forEach(item => {
-              if (XEUtils.isDate(item.date)) {
-                item.date = item.date.getTime()
-              }
-            })
-            updateRecords.forEach(item => {
-              if (XEUtils.isDate(item.date)) {
-                item.date = item.date.getTime()
-              }
-            })
-            this.loading = true
-            XEAjax.doPost('/api/user/save', { insertRecords, updateRecords, removeRecords }).then(({ data }) => {
-              Message({
-                type: 'success',
-                message: '保存成功!'
-              })
-              this.findList()
-            }).catch(e => {
-              this.loading = false
-            })
-          } else {
-            Message({
-              type: 'info',
-              message: '数据未改动！'
-            })
-          }
-        }
-      })
-    },
     exportCsvEvent () {
       this.$refs.editable.exportCsv()
     }
@@ -349,10 +264,6 @@ export default {
 <style>
 .click-table5-oper {
   margin-bottom: 18px;
-}
-.click-table5 .delete-row {
-  color: #f56c6c;
-  text-decoration: line-through;
 }
 .click-table5-pagination {
   margin-top: 18px;

@@ -887,7 +887,7 @@ export default {
       let validPromise = Promise.resolve()
       if (property && !XEUtils.isEmpty(this.editRules)) {
         let rules = this.editRules[property]
-        let value = row.data[property]
+        let value = XEUtils.get(row.data, property)
         if (rules) {
           for (let rIndex = 0; rIndex < rules.length; rIndex++) {
             validPromise = validPromise.then(rest => new Promise((resolve, reject) => {

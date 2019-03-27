@@ -207,6 +207,12 @@ export default {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, message: '名称长度最小 3 个字符', trigger: 'change' }
+        ],
+        'userInfo.sex1': [
+          { required: true, message: '必填字段', trigger: 'change' }
+        ],
+        'userInfo.base.other.sex2': [
+          { required: true, message: '必填字段', trigger: 'blur' }
         ]
       }
     }

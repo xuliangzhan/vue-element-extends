@@ -358,10 +358,12 @@ export default {
       return XEUtils.toArray(values).map(date => this.getFormatDate(date, attrs, defaultFormat)).join(separator)
     },
     checkRequired ({ column, store }) {
-      if (column.property && this.$editable && this.$editable.editRules) {
-        let rules = this.$editable.editRules[column.property]
-        if (rules) {
-          return rules.some(rule => rule.required === true)
+      let property = column.property
+      let editRules = this.$editable && this.$editable.editRules
+      if (property && editRules) {
+        let columnRules = editRules[property] || XEUtils.get(editRules, property)
+        if (columnRules) {
+          return columnRules.some(rule => rule.required === true)
         }
       }
       return false

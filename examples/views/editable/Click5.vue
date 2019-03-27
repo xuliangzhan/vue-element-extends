@@ -17,7 +17,6 @@
       height="564"
       size="mini"
       :data.sync="list"
-      :row-class-name="tableRowClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'cell', useDefaultValidTip: true}"
       @blur-active="blurActiveEvent"

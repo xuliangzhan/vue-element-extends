@@ -361,7 +361,7 @@ export default {
       let property = column.property
       let editRules = this.$editable && this.$editable.editRules
       if (property && editRules) {
-        let columnRules = editRules[property] || XEUtils.get(editRules, property)
+        let columnRules = XEUtils.get(editRules, property)
         if (columnRules) {
           return columnRules.some(rule => rule.required === true)
         }

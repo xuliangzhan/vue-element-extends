@@ -857,7 +857,7 @@ export default {
         let rowIndex = this._getTDataIndex(row)
         this._clearValidError(row)
         this.getColumns().forEach((column, columnIndex) => {
-          if (editRules[column.property] || XEUtils.get(editRules, column.property)) {
+          if (XEUtils.has(editRules, column.property)) {
             validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
               this._validCellRules('all', row, column)
                 .then(resolve)
@@ -886,7 +886,7 @@ export default {
       let editRules = this.editRules
       let validPromise = Promise.resolve()
       if (property && !XEUtils.isEmpty(editRules)) {
-        let rules = editRules[property] || XEUtils.get(editRules, property)
+        let rules = XEUtils.get(editRules, property)
         let value = XEUtils.get(row.data, property)
         if (rules) {
           for (let rIndex = 0; rIndex < rules.length; rIndex++) {
@@ -1368,7 +1368,7 @@ export default {
         tableData.forEach((row, rowIndex) => {
           this._clearValidError(row)
           columns.forEach((column, columnIndex) => {
-            if (editRules[column.property] || XEUtils.get(editRules, column.property)) {
+            if (XEUtils.has(editRules, column.property)) {
               validPromise = validPromise.then(rest => new Promise((resolve, reject) => {
                 this._validCellRules('all', row, column)
                   .then(resolve)

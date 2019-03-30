@@ -167,7 +167,7 @@ export default {
       immediate: true,
       handler (value) {
         if (!this.isUpdateData) {
-          if (value.length) {
+          if (value && value.length) {
             this.reload(value)
           } else {
             this.clear()

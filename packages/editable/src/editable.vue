@@ -163,19 +163,23 @@ export default {
     }
   },
   watch: {
-    data (value) {
-      if (!this.isUpdateData) {
-        if (value.length) {
-          this.reload(value)
+    data: {
+      immediate: true,
+      handler (value) {
+        if (!this.isUpdateData) {
+          if (value.length) {
+            this.reload(value)
+          } else {
+            this.clear()
+          }
         } else {
-          this.clear()
+          this.isUpdateData = false
         }
-      } else {
-        this.isUpdateData = false
       }
     }
   },
   created () {
+    window.aa = this
     this._bindEvents()
     this._initial(this.data, true)
   },
@@ -236,8 +240,17 @@ export default {
         })
       })
     },
+    _getAllRows () {
+      return XEUtils.toTreeArray(this.datas, { children: 'children' })
+    },
     _getData (datas) {
-      return (datas || this.datas).map(item => item.data)
+      return (datas || this.datas).map(item => {
+        let data = item.data
+        if (item.children) {
+          data.children = this._getData(item.children)
+        }
+        return data
+      })
     },
     _defineProp (record) {
       let recordItem = Object.assign({}, record)
@@ -259,6 +272,7 @@ export default {
         checked: null,
         editActive: null,
         editStatus: status || 'initial',
+        children: item.children ? item.children.map(child => this._toData(child)) : null,
         config: {
           size: this.size,
           showIcon: this.configs.showIcon,
@@ -273,7 +287,7 @@ export default {
     },
     _updateData () {
       this.isUpdateData = true
-      this.$emit('update:data', this.datas.map(item => item.data))
+      this.$emit('update:data', this._getData())
     },
     _bindEvents () {
       GlobalEvents.on(this, 'click', evnt => this._triggerClear(evnt))
@@ -288,6 +302,9 @@ export default {
     _getIndex (list, item) {
       return XEUtils.findIndexOf(list, obj => obj === item)
     },
+    _getRowByRecord (record) {
+      return this.datas.find(item => item.data === record)
+    },
     _getDataIndex (row) {
       return this._getIndex(this.datas, row)
     },
@@ -299,6 +316,9 @@ export default {
     },
     _getTDataIndex (row) {
       return this._getIndex(this._getTDatas(), row)
+    },
+    _getTRowByRecord (record) {
+      return this._getTDatas().find(item => item.data === record)
     },
     _getTDataIndexByRecord (record) {
       return XEUtils.findIndexOf(this._getTDatas(), item => item.data === record)
@@ -664,7 +684,7 @@ export default {
       this.$emit('expand-change', row.data, expandedRows)
     },
     _clearChecked () {
-      this.datas.forEach(row => {
+      this._getTDatas().forEach(row => {
         row.checked = null
       })
     },
@@ -694,9 +714,9 @@ export default {
     },
     _clearActiveData () {
       this.lastActive = null
-      this.datas.forEach(item => {
-        item.editActive = null
-        item.showValidMsg = false
+      this._getTDatas().forEach(row => {
+        row.editActive = null
+        row.showValidMsg = false
       })
     },
     _restoreTooltip (cell) {
@@ -793,8 +813,8 @@ export default {
       }
       return this.configs.activeMethod ? !this.configs.activeMethod(param) : false
     },
-    _triggerActive (row, column, cell, event) {
-      let rest = { row, column, cell, event }
+    _triggerActive (row, column, cell, evnt) {
+      let rest = { row, column, cell, evnt }
       return new Promise((resolve, reject) => {
         if (!this._isDisabledEdit(row, column)) {
           this._restoreTooltip(cell)
@@ -806,13 +826,19 @@ export default {
           this.$nextTick(() => {
             this._scrollIntoView(cell)
             this._setCellFocus(cell)
-            if (row.editActive !== column.property) {
-              this.$emit('edit-active', row.data, column, cell, event)
+            if (this.configs.mode === 'row') {
+              this.$emit('edit-active', row.data, evnt)
+            } else {
+              this.$emit('edit-active', row.data, column, cell, evnt)
             }
             resolve(rest)
           })
         } else {
-          this.$emit('edit-disabled', row.data, column, cell, event)
+          if (this.configs.mode === 'row') {
+            this.$emit('edit-disabled', row.data, evnt)
+          } else {
+            this.$emit('edit-disabled', row.data, column, cell, evnt)
+          }
           resolve(rest)
         }
       })
@@ -963,11 +989,11 @@ export default {
         })
         if (prop) {
           this._validCellRules('all', row, column)
-            .then(valid => this._triggerActive(row, column, cell, { type: 'edit' }))
+            .then(valid => this._triggerActive(row, column, cell, { type: 'edit', trigger: 'call' }))
             .catch(rule => this._toValidError(rule, row, column, cell))
         } else {
           this._validRowRules('all', row)
-            .then(valid => this._triggerActive(row, column, cell, { type: 'edit' }))
+            .then(valid => this._triggerActive(row, column, cell, { type: 'edit', trigger: 'call' }))
             .catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
         }
         return true
@@ -1000,7 +1026,7 @@ export default {
       row.validActive = null
     },
     _toValidError (rule, row, column, cell) {
-      this._triggerActive(row, column, cell, { type: 'valid' }).then(() => {
+      this._triggerActive(row, column, cell, { type: 'valid', trigger: 'call' }).then(() => {
         row.validRule = rule
         row.validActive = column.property
         row.showValidMsg = true
@@ -1016,17 +1042,19 @@ export default {
         this.$emit('valid-error', rule, row, column, cell)
       })
     },
-    _deleteData (index) {
-      if (index > -1) {
-        let items = this.datas.splice(index, 1)
-        items.forEach(item => {
-          if (item.editStatus === 'initial') {
-            this.deleteRecords.push(item)
-          }
-        })
-        return items
-      }
-      return []
+    _deleteData (datas, records, items) {
+      XEUtils.remove(datas, item => {
+        if (records.includes(item.data)) {
+          items.push(item)
+          return true
+        }
+      })
+      XEUtils.lastEach(datas, (item, index) => {
+        if (item.children) {
+          this._deleteData(item.children, records, items)
+        }
+      })
+      return items
     },
     _clearAllOpers () {
       this.clearSelection()
@@ -1058,7 +1086,7 @@ export default {
       if (opts.columnFilterMethod) {
         columns = columns.filter(opts.columnFilterMethod)
       }
-      let datas = opts.data ? opts.data : (isOriginal ? this._getData(this._getTDatas()) : this._getCsvLabelData(opts, columns))
+      let datas = opts.data ? opts.data : (isOriginal ? this._getData() : this._getCsvLabelData(opts, columns))
       if (opts.dataFilterMethod) {
         datas = datas.filter(opts.dataFilterMethod)
       }
@@ -1114,7 +1142,7 @@ export default {
       this._updateData()
     },
     reloadRow (record) {
-      let row = this.datas.find(item => item.data === record)
+      let row = this._getTRowByRecord(record)
       if (row) {
         XEUtils.destructuring(row.data, record)
         Object.assign(row, { store: XEUtils.clone(row.data, true) })
@@ -1127,7 +1155,7 @@ export default {
      */
     revert (record) {
       if (record) {
-        let { data, store } = this.datas.find(item => item.data === record)
+        let { data, store } = this._getTRowByRecord(record)
         XEUtils.destructuring(data, XEUtils.clone(store, true))
       } else {
         this._clearAllOpers()
@@ -1172,39 +1200,25 @@ export default {
       return recordItem.data
     },
     hasRowInsert (record) {
-      let row = this.datas.find(item => item.data === record)
+      let row = this._getTRowByRecord(record)
       return row && row.editStatus === 'insert'
     },
-    /**
-     * 根据索引删除行数据
-     */
-    removeByIndex (rowIndex) {
-      let tableData = this._getTDatas()
-      let row = tableData[rowIndex]
-      if (row) {
-        return this.remove(row.data)
+    remove (record) {
+      if (record) {
+        let items = this.removes([record])
+        if (items.length) {
+          return items[0]
+        }
       }
       return null
     },
-    removeByIndexs (rowIndexs) {
-      let tableData = this._getTDatas()
-      return this.removes(rowIndexs.map(index => tableData[index] ? tableData[index].data : null))
-    },
-    remove (record) {
-      let items = this._deleteData(this._getDataIndexByRecord(record))
-      this._clearActiveData()
-      this._updateData()
-      return items.length ? items[0].data : null
-    },
     removes (records) {
       let items = []
-      XEUtils.lastEach(this.datas, (item, index) => {
-        if (records.includes(item.data)) {
-          items = items.concat(this._deleteData(index))
-        }
-      })
-      this._clearActiveData()
-      this._updateData()
+      if (records && records.length) {
+        items = this._deleteData(this.datas, records, items)
+        this._clearActiveData()
+        this._updateData()
+      }
       return items.map(item => item.data)
     },
     getSelecteds () {
@@ -1227,13 +1241,13 @@ export default {
       }
     },
     getInsertRecords () {
-      return this._getData(this.datas.filter(item => item.editStatus === 'insert'))
+      return this._getData(this._getAllRows().filter(item => item.editStatus === 'insert'))
     },
     getRemoveRecords () {
       return this._getData(this.deleteRecords)
     },
     getUpdateRecords () {
-      return this._getData(this.datas.filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
+      return this._getData(this._getAllRows().filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
     },
     clearActive () {
       this.callEvent = this._callTriggerEvent('clear')
@@ -1282,7 +1296,7 @@ export default {
       return null
     },
     hasRowChange (record, property) {
-      let row = this.datas.find(item => item.data === record)
+      let row = this._getTRowByRecord(record)
       return property ? this._isRowDataChange(row, { property }) : this._isRowDataChange(row)
     },
     /**

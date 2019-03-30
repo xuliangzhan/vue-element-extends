@@ -19,6 +19,9 @@
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-config="{trigger: 'click', mode: 'cell'}"
+      @edit-active="editActiveEvent"
+      @blur-active="blurActiveEvent"
+      @clear-active="clearActiveEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55" :selectable="selectableEvent"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
@@ -179,6 +182,15 @@ export default {
         return 'delete-row'
       }
       return ''
+    },
+    editActiveEvent (row, column) {
+      console.log('触发 edit-active 事件')
+    },
+    blurActiveEvent (row, column) {
+      console.log('触发 blur-active 事件')
+    },
+    clearActiveEvent (row, column) {
+      console.log('触发 clear-active 事件')
     },
     insertEvent () {
       let row = this.$refs.editable.insert({

@@ -219,7 +219,6 @@ export default {
         store: scope.store,
         $index: scope.$index,
         $render: this.renderOpts,
-        editRender: this.renderOpts,
         _self: scope._self
       }
     },
@@ -230,7 +229,6 @@ export default {
         store: scope.store,
         $index: scope.$index,
         $render: this.renderOpts,
-        editRender: this.renderOpts,
         _self: scope._self,
         _row: scope.row
       }
@@ -243,7 +241,6 @@ export default {
         store: scope.store,
         $index: scope.$index,
         $render: this.renderOpts,
-        editRender: this.renderOpts,
         _self: scope._self,
         _row: scope.row
       }

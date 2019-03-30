@@ -117,6 +117,8 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$refs.editable.remove(row)
+        // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 强制刷新
+        this.$refs.editable.refresh(this.list)
       }).catch(e => e)
     },
     pendingRemoveEvent () {

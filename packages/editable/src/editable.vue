@@ -30,6 +30,8 @@ export default {
     showHeader: { type: Boolean, default: true },
     highlightCurrentRow: Boolean,
     currentRowKey: [String, Number],
+    lazy: Boolean,
+    indent: Number,
     rowClassName: [Function, String],
     rowStyle: [Function, Object],
     cellClassName: [Function, String],
@@ -48,7 +50,8 @@ export default {
     sumText: String,
     summaryMethod: Function,
     selectOnIndeterminate: { type: Boolean, default: true },
-    spanMethod: Function
+    spanMethod: Function,
+    load: Function
   },
   provide () {
     return {
@@ -80,6 +83,8 @@ export default {
         showHeader: this.showHeader,
         highlightCurrentRow: this.highlightCurrentRow,
         currentRowKey: this.currentRowKey,
+        lazy: this.lazy,
+        indent: this.indent,
         rowClassName: this._rowClassName,
         rowStyle: XEUtils.isFunction(this.rowStyle) ? this._rowStyle : this.rowStyle,
         cellClassName: this._cellClassName,
@@ -98,7 +103,8 @@ export default {
         sumText: this.sumText,
         summaryMethod: this._summaryMethod,
         selectOnIndeterminate: this.selectOnIndeterminate,
-        spanMethod: this._spanMethod
+        spanMethod: this._spanMethod,
+        load: this._load
       }
     },
     events () {
@@ -179,9 +185,9 @@ export default {
     }
   },
   created () {
-    window.aa = this
     this._bindEvents()
     this._initial(this.data, true)
+    this._setDefaultChecked()
   },
   destroyed () {
     this._unbindEvents()
@@ -232,6 +238,8 @@ export default {
         this.initialStore = XEUtils.clone(datas, true)
       }
       this.datas = (datas || []).map(record => this._toData(this.datas.some(row => row.data === record) ? record : Object.assign(record, this._defineProp(record))))
+    },
+    _setDefaultChecked () {
       this.$nextTick(() => {
         this.datas.forEach(row => {
           if (row.data._checked) {
@@ -286,8 +294,9 @@ export default {
       }
     },
     _updateData () {
+      let data = this._getData()
       this.isUpdateData = true
-      this.$emit('update:data', this._getData())
+      this.$emit('update:data', data)
     },
     _bindEvents () {
       GlobalEvents.on(this, 'click', evnt => this._triggerClear(evnt))
@@ -863,9 +872,8 @@ export default {
     _spanMethod ({ row, column, rowIndex, columnIndex }) {
       let rowspan = 1
       let colspan = 1
-      let spanMethod = this.spanMethod
-      if (XEUtils.isFunction(spanMethod)) {
-        var result = spanMethod({ row: row.data, column, rowIndex, columnIndex })
+      if (this.spanMethod) {
+        var result = this.spanMethod({ row: row.data, column, rowIndex, columnIndex })
         if (XEUtils.isArray(result)) {
           rowspan = result[0]
           colspan = result[1]
@@ -875,6 +883,13 @@ export default {
         }
       }
       return { rowspan, colspan }
+    },
+    _load (row, treeNode, resolve) {
+      if (this.load) {
+        this.load(row.data, treeNode, function (rest) {
+          resolve(rest.map(item => this._toData(item)))
+        })
+      }
     },
     _validRowRules (type, row) {
       let validPromise = Promise.resolve()
@@ -1139,6 +1154,7 @@ export default {
       this._clearChecked()
       this._clearActiveData()
       this._initial(datas, true)
+      this._setDefaultChecked()
       this._updateData()
     },
     reloadRow (record) {
@@ -1161,6 +1177,13 @@ export default {
         this._clearAllOpers()
         this.reload(this.initialStore)
       }
+    },
+    // 刷新表格
+    refresh () {
+      this.$nextTick(() => {
+        this._initial(this._getData(), true)
+        this._updateData()
+      })
     },
     /**
      * 清空表格

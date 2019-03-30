@@ -6,45 +6,7 @@
 [![gzip size: CSS](http://img.badgesize.io/https://unpkg.com/vue-element-extends/lib/index.css?compression=gzip&label=gzip%20size:%20CSS)](http://img.badgesize.io/https://unpkg.com/vue-element-extends/lib/index.css?compression=gzip&label=gzip%20size:%20CSS)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xuliangzhan/vue-element-extends/blob/master/LICENSE)
 
-实现基于 ElementUI 2.x 的扩展组件：Editable.vue、EditableColumn.vue
-
-* 功能点：
-  * 支持只读、单元格编辑、整行编辑
-  * 支持手动、单击、双击编辑模式
-  * 支持渲染简化的 ElementUI 组件
-  * 支持自定义渲染任意 Vue 组件
-  * 支持动态列渲染
-  * 支持（同步、异步）校验
-  * 支持显示单元格值的修改状态
-  * 支持增/删/改/查/还原
-  * 支持导出 .csv 文件
-  * 支持方向键和 Tab 键切换单元格
-  * 支持原 ElTable 的所有功能、参数、方法、插槽
-
-## Installing
-
-```shell
-npm install xe-utils vue-element-extends --save
-```
-
-在 [unpkg](https://unpkg.com/vue-element-extends/) 和 [cdnjs](https://cdn.jsdelivr.net/npm/vue-element-extends/) 上获取
-
-```HTML
-<!-- 引入样式 -->
-<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-<link rel="stylesheet" href="https://unpkg.com/vue-element-extends/lib/index.css">
-<!-- 引入脚本 -->
-<script src="https://unpkg.com/xe-utils"></script>
-<script src="https://unpkg.com/vue-element-extends"></script>
-```
-
-```javascript
-import Vue from 'vue'
-import VueElementExtends from 'vue-element-extends'
-import 'vue-element-extends/lib/index.css'
-
-Vue.use(VueElementExtends)
-```
+实现基于 ElementUI (2.0 ~ 2.6) 的扩展组件：Editable.vue、EditableColumn.vue
 
 ## API
 

@@ -793,8 +793,8 @@ export default {
       }
       return this.configs.activeMethod ? !this.configs.activeMethod(param) : false
     },
-    _triggerActive (row, column, cell, event) {
-      let rest = { row, column, cell, event }
+    _triggerActive (row, column, cell, evnt) {
+      let rest = { row, column, cell, evnt }
       return new Promise((resolve, reject) => {
         if (!this._isDisabledEdit(row, column)) {
           this._restoreTooltip(cell)
@@ -806,13 +806,19 @@ export default {
           this.$nextTick(() => {
             this._scrollIntoView(cell)
             this._setCellFocus(cell)
-            if (row.editActive !== column.property) {
-              this.$emit('edit-active', row.data, column, cell, event)
+            if (this.configs.mode === 'row') {
+              this.$emit('edit-active', row.data, evnt)
+            } else {
+              this.$emit('edit-active', row.data, column, cell, evnt)
             }
             resolve(rest)
           })
         } else {
-          this.$emit('edit-disabled', row.data, column, cell, event)
+          if (this.configs.mode === 'row') {
+            this.$emit('edit-disabled', row.data, evnt)
+          } else {
+            this.$emit('edit-disabled', row.data, column, cell, evnt)
+          }
           resolve(rest)
         }
       })
@@ -963,11 +969,11 @@ export default {
         })
         if (prop) {
           this._validCellRules('all', row, column)
-            .then(valid => this._triggerActive(row, column, cell, { type: 'edit' }))
+            .then(valid => this._triggerActive(row, column, cell, { type: 'edit', trigger: 'call' }))
             .catch(rule => this._toValidError(rule, row, column, cell))
         } else {
           this._validRowRules('all', row)
-            .then(valid => this._triggerActive(row, column, cell, { type: 'edit' }))
+            .then(valid => this._triggerActive(row, column, cell, { type: 'edit', trigger: 'call' }))
             .catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
         }
         return true
@@ -1000,7 +1006,7 @@ export default {
       row.validActive = null
     },
     _toValidError (rule, row, column, cell) {
-      this._triggerActive(row, column, cell, { type: 'valid' }).then(() => {
+      this._triggerActive(row, column, cell, { type: 'valid', trigger: 'call' }).then(() => {
         row.validRule = rule
         row.validActive = column.property
         row.showValidMsg = true

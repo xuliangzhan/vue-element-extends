@@ -21,7 +21,9 @@
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', mode: 'cell', validTooltip: { placement: 'right', popperClass: 'dblclick-table3-validtip' }}"
+      @edit-active="editActiveEvent"
       @blur-active="blurActiveEvent"
+      @clear-active="clearActiveEvent"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
@@ -138,9 +140,16 @@ export default {
       }
       return ''
     },
+    editActiveEvent (row, column) {
+      console.log('触发 edit-active 事件')
+    },
     // 失焦后检查其他列，实现单元格连续编辑效果
     blurActiveEvent (row, column) {
+      console.log('触发 blur-active 事件')
       this.$refs.editable.validateRow(row)
+    },
+    clearActiveEvent (row, column) {
+      console.log('触发 clear-active 事件')
     },
     insertEvent () {
       let row = this.$refs.editable.insert({

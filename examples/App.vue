@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="apimenu-header">
-       <a href="https://github.com/xuliangzhan/vue-element-extends/tree/master/examples/views/editable">查看代码</a>
+       <a href="https://github.com/xuliangzhan/vue-element-extends/tree/1.0/examples/views/editable">查看代码</a>
       <div class="apimenu-row">
         <a class="apimenu-title">手动模式</a>
         <router-link class="apimenu-link" :to="{name: 'EditableManual1'}" replace>列编辑</router-link>

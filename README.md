@@ -21,10 +21,6 @@
   * 支持方向键和 Tab 键切换单元格
   * 支持原 ElTable 的所有功能、参数、方法、插槽
 
-## Docs
-
-[https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)
-
 ## Installing
 
 ```shell
@@ -175,85 +171,6 @@ edit-render 渲染参数配置
 | edit | 自定义渲染组件，参数为 { row, column, $index, $render } |
 | header | 自定义表头的内容，参数为 { column, $index, $render } |
 | valid | 自定义校验提示信息，参数为 { rule, row, column, $index, $render } |
-
-## Example
-
-Run this demo on [jsfiddle.net](https://jsfiddle.net/Lq5uza8r/) or [runjs](https://jsrun.net/zTXKp/edit)
-
-😱**编辑表格响应属性及渲染开销较大，不适用于一页显示海量数据的表格；适用于使用分页加载的数据表格**😱  
-也可以把 packages 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，再根据项目需求去做修改  
-如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
-
-```html
-<template>
-  <div>
-    <el-button @click="$refs.editable.insert({name: 'new1'})">新增</el-button>
-    <el-button @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button @click="$refs.editable.clear()">清空表格</el-button>
-
-    <el-editable
-      ref="editable"
-      :data.sync="tableData">
-      <el-editable-column
-        type="selection"
-        width="55"></el-editable-column>
-      <el-editable-column
-        type="index"
-        width="55"></el-editable-column>
-      <el-editable-column
-        prop="name"
-        label="只读"></el-editable-column>
-      <el-editable-column
-        prop="sex"
-        label="下拉"
-        :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column
-        prop="age"
-        label="数值"
-        :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
-      <el-editable-column
-        prop="date"
-        label="日期"
-        :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column
-        prop="flag"
-        label="开关"
-        :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column
-        prop="remark"
-        label="文本"
-        :edit-render="{name: 'ElInput'}"></el-editable-column>
-    </el-editable>
-  </div>
-</template>
-
-<script>
-export default {
-  data () {
-    return {
-      tableData: [{
-        date: 1551322088449,
-        name: '小徐',
-        sex: '1',
-        age: '26',
-        flag: false,
-        remark: '备注'
-      }],
-      sexList: [
-        {
-          'label': '男',
-          'value': '1'
-        },
-        {
-          'label': '女',
-          'value': '0'
-        }
-      ]
-    }
-  }
-}
-</script>
-```
 
 ## License
 

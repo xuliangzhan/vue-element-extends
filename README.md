@@ -6,7 +6,7 @@
 [![gzip size: CSS](http://img.badgesize.io/https://unpkg.com/vue-element-extends/lib/index.css?compression=gzip&label=gzip%20size:%20CSS)](http://img.badgesize.io/https://unpkg.com/vue-element-extends/lib/index.css?compression=gzip&label=gzip%20size:%20CSS)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xuliangzhan/vue-element-extends/blob/master/LICENSE)
 
-实现基于 ElementUI (2.0 ~ 2.6) 的扩展组件：Editable.vue、EditableColumn.vue
+实现基于 ElementUI (2.1 ~ 2.6) 的扩展组件：Editable.vue、EditableColumn.vue
 
 ## API
 

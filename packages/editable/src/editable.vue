@@ -1,7 +1,7 @@
 <template>
   <el-table ref="refElTable" v-bind="attrs" v-on="events">
     <slot></slot>
-    <template slot="append">
+    <template v-slot:append>
       <slot name="append"></slot>
     </template>
   </el-table>

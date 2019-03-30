@@ -185,6 +185,7 @@ export default {
     }
   },
   created () {
+    window.aa = this
     this._bindEvents()
     this._initial(this.data, true)
     this._setDefaultChecked()
@@ -1179,10 +1180,25 @@ export default {
       }
     },
     // 刷新表格
-    refresh () {
+    refresh (force) {
+      let expandeKeyList = []
+      if (!force) {
+        XEUtils.each(this.$refs.refElTable.store.states.treeData, (treeData, key) => {
+          if (treeData.expanded) {
+            expandeKeyList.push(key)
+          }
+        })
+      }
       this.$nextTick(() => {
         this._initial(this._getData(), true)
         this._updateData()
+        if (!force) {
+          this.$nextTick(() => {
+            XEUtils.lastEach(expandeKeyList, key => {
+              this.$refs.refElTable.store.toggleTreeExpansion(key)
+            })
+          })
+        }
       })
     },
     /**

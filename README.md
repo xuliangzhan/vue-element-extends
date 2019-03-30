@@ -115,6 +115,7 @@ edit-config 编辑参数配置
 
 | 方法名 | 描述 | 参数 |
 |------|------|-----|
+| refresh | 刷新表格 |  |
 | reload | 初始化完整表格数据 | datas |
 | reloadRow | 初始化指定行数据 | row |
 | revert | 放弃更改，还原指定行 row 或者整个表格的数据 | row? |

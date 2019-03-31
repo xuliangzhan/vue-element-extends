@@ -240,8 +240,17 @@ export default {
       return item ? item[labelProp] : null
     },
     insertEvent (index) {
-      let row = this.$refs.editable.insertAt({ name: '默认名字2', userInfo: { base: { age: 26 } }, slider: 20 }, index)
-      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
+      this.$refs.editable.insert({
+        name: '默认名字2',
+        userInfo: {
+          base: {
+            age: 26
+          }
+        },
+        slider: 20
+      }).then(row => {
+        this.$refs.editable.setActiveCell(row, 'name')
+      })
     },
     removeEvent (scope) {
       MessageBox.confirm('确定删除该数据?', '温馨提示', {

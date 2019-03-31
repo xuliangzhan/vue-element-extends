@@ -190,12 +190,13 @@ export default {
       return sums
     },
     insertEvent () {
-      let row = this.$refs.editable.insert({
+      this.$refs.editable.insert({
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
+      }).then(row => {
+        this.$refs.editable.setActiveRow(row)
       })
-      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
     },
     removeEvent (row) {
       if (row.id) {

@@ -62,12 +62,13 @@ export default {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
     },
     insertEvent () {
-      let row = this.$refs.editable.insert({
+      this.$refs.editable.insert({
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
+      }).then(row => {
+        this.$refs.editable.setActiveCell(row, 'name')
       })
-      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
     },
     removeEvent (row) {
       if (row.id) {

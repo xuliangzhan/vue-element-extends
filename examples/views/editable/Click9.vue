@@ -243,11 +243,12 @@ export default {
       this.$refs.editable.validateRow(row)
     },
     insertEvent () {
-      let row = this.$refs.editable.insert({
+      this.$refs.editable.insert({
         age: 26,
         flag: false
+      }).then(row => {
+        this.$refs.editable.setActiveCell(row, 'name')
       })
-      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
     },
     removeEvent (row) {
       if (row.id) {

@@ -101,10 +101,11 @@ export default {
       let activeInfo = this.$refs.editable.getActiveRow()
       let { insertRecords } = this.$refs.editable.getAllRecords()
       if (!activeInfo && !insertRecords.length) {
-        let row = this.$refs.editable.insert({
+        this.$refs.editable.insert({
           name: `New ${Date.now()}`
+        }).then(row => {
+          this.$refs.editable.setActiveRow(row)
         })
-        this.$nextTick(() => this.$refs.editable.setActiveRow(row))
       }
     },
     // 点击表格外面处理

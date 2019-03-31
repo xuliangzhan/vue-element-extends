@@ -230,11 +230,12 @@ export default {
       return ''
     },
     insertEvent () {
-      let row = this.$refs.editable.insert({
+      this.$refs.editable.insert({
         age: 26,
         flag: false
+      }).then(row => {
+        this.$refs.editable.setActiveRow(row)
       })
-      this.$nextTick(() => this.$refs.editable.setActiveRow(row))
     },
     removeEvent (row) {
       if (row.id) {

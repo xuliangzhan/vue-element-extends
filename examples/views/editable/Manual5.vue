@@ -285,8 +285,9 @@ export default {
       let activeInfo = this.$refs[name].getActiveRow()
       let { insertRecords } = this.$refs[name].getAllRecords()
       if (!activeInfo && !insertRecords.length) {
-        let row = this.$refs[name].insert()
-        this.$nextTick(() => this.$refs[name].setActiveRow(row))
+        this.$refs[name].insert().then(row => {
+          this.$refs[name].setActiveRow(row)
+        })
       }
     },
     customExportCsvEvent (name, opts) {

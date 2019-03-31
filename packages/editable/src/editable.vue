@@ -185,7 +185,6 @@ export default {
     }
   },
   created () {
-    window.aa = this
     this._bindEvents()
     this._initial(this.data, true)
     this._setDefaultChecked()
@@ -223,9 +222,6 @@ export default {
     },
     sort (prop, order) {
       this.$nextTick(() => this.$refs.refElTable.sort(prop, order))
-    },
-    insert (newRecord) {
-      return this.insertAt(newRecord, 0)
     },
     /**************************/
     /* Original methods end */
@@ -1058,6 +1054,18 @@ export default {
         this.$emit('valid-error', rule, row, column, cell)
       })
     },
+    _insertData (list, recordItem, record) {
+      for (let row, index = 0; index < list.length; index++) {
+        row = list[index]
+        if (row.data === record) {
+          list.splice(index, 0, recordItem)
+          return 1
+        }
+        if (row.children && this._insertData(row.children, recordItem, record)) {
+          return 1
+        }
+      }
+    },
     _deleteData (datas, records, items) {
       XEUtils.remove(datas, item => {
         if (records.includes(item.data)) {
@@ -1157,6 +1165,7 @@ export default {
       this._initial(datas, true)
       this._setDefaultChecked()
       this._updateData()
+      return this.$nextTick()
     },
     reloadRow (record) {
       let row = this._getTRowByRecord(record)
@@ -1164,6 +1173,7 @@ export default {
         XEUtils.destructuring(row.data, record)
         Object.assign(row, { store: XEUtils.clone(row.data, true) })
       }
+      return this.$nextTick()
     },
     /**
      * 还原更改，以最后一次 reload 或 reloadRow 的数据为源数据或者初始值 data
@@ -1176,8 +1186,9 @@ export default {
         XEUtils.destructuring(data, XEUtils.clone(store, true))
       } else {
         this._clearAllOpers()
-        this.reload(this.initialStore)
+        return this.reload(this.initialStore)
       }
+      return this.$nextTick()
     },
     // 刷新表格
     refresh (force) {
@@ -1189,15 +1200,12 @@ export default {
           }
         })
       }
-      this.$nextTick(() => {
-        this._initial(this._getData(), true)
-        this._updateData()
+      this._initial(this._getData(), true)
+      this._updateData()
+      return this.$nextTick().then(() => {
         if (!force) {
-          this.$nextTick(() => {
-            XEUtils.lastEach(expandeKeyList, key => {
-              this.$refs.refElTable.store.toggleTreeExpansion(key)
-            })
-          })
+          XEUtils.lastEach(expandeKeyList, key => this.$refs.refElTable.store.toggleTreeExpansion(key))
+          return this.$nextTick()
         }
       })
     },
@@ -1210,46 +1218,47 @@ export default {
       this._clearActiveData()
       this._initial([])
       this._updateData()
+      return this.$nextTick()
     },
     getColumns () {
       return this.$refs.refElTable ? this.$refs.refElTable.columns : []
     },
+    insert (newRecord) {
+      return this.insertAt(newRecord)
+    },
     /**
      * 插入数据
-     * 如果是 record 或 rowIndex 则在指定位置新增一行新数据
+     * 如果是 record 则在指定位置新增一行新数据
      * 如果是 null 或 0 则插入到第一行
-     * 如果是 -1 或 大于行索引 则使用 push 到表格最后
+     * 如果是 -1 则使用 push 到表格最后
      */
-    insertAt (newRecord, recordOrIndex) {
-      let len = this.datas.length
+    insertAt (newRecord, record) {
       let recordItem = this._toData(this._defineProp(newRecord), 'insert')
-      if (recordOrIndex) {
-        if (!XEUtils.isNumber(recordOrIndex)) {
-          recordOrIndex = XEUtils.findIndexOf(this.datas, item => item.data === recordOrIndex)
-        }
-        if (recordOrIndex === -1 || recordOrIndex >= len) {
+      if (record) {
+        if (record === -1) {
           this.datas.push(recordItem)
         } else {
-          this.datas.splice(recordOrIndex, 0, recordItem)
+          this._insertData(this.datas, recordItem, record)
         }
       } else {
         this.datas.unshift(recordItem)
       }
       this._updateData()
-      return recordItem.data
+      return this.$nextTick().then(() => recordItem.data)
     },
     hasRowInsert (record) {
       let row = this._getTRowByRecord(record)
       return row && row.editStatus === 'insert'
     },
     remove (record) {
+      let item = null
       if (record) {
         let items = this.removes([record])
         if (items.length) {
-          return items[0]
+          item = items[0]
         }
       }
-      return null
+      return this.$nextTick().then(() => item)
     },
     removes (records) {
       let items = []
@@ -1258,7 +1267,7 @@ export default {
         this._clearActiveData()
         this._updateData()
       }
-      return items.map(item => item.data)
+      return this.$nextTick().then(() => items.map(item => item.data))
     },
     getSelecteds () {
       return this.$refs.refElTable ? this.$refs.refElTable.selection.map(item => item.data) : []
@@ -1293,6 +1302,7 @@ export default {
       this._clearChecked()
       this._clearActiveData()
       this._restoreTooltip()
+      return this.$nextTick()
     },
     /**
      * 激活指定某一行为可编辑状态
@@ -1345,21 +1355,20 @@ export default {
      */
     updateStatus (scope) {
       if (scope) {
-        this.$nextTick(() => {
-          let { $index, column } = scope
-          let { row, cell } = this._getColumnByRowIndex($index, column.property)
-          if (cell) {
-            return this._validCellRules(row.validActive ? 'all' : 'change', row, column)
-              .then(rule => {
-                if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
-                  this._clearValidError(row)
-                }
-              }).catch(rule => {
-                this._toValidError(rule, row, column, cell)
-              })
-          }
-        })
+        let { $index, column } = scope
+        let { row, cell } = this._getColumnByRowIndex($index, column.property)
+        if (cell) {
+          return this._validCellRules(row.validActive ? 'all' : 'change', row, column)
+            .then(rule => {
+              if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
+                this._clearValidError(row)
+              }
+            })
+            .catch(rule => this._toValidError(rule, row, column, cell))
+            .then(() => this.$nextTick())
+        }
       }
+      return this.$nextTick()
     },
     checkValid () {
       let row = this.datas.find(item => item.validActive)

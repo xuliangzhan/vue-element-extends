@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">自定义校验提示内容</p>
+    <p style="color: red;font-size: 12px;">树表格</p>
 
     <div class="dblclick-table7-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
@@ -15,6 +15,7 @@
       ref="editable"
       class="dblclick-table7"
       border
+      highlight-current-row
       size="mini"
       row-key="id"
       :data.sync="list"
@@ -22,9 +23,10 @@
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', mode: 'cell', validTooltip: { placement: 'right', popperClass: 'dblclick-table7-validtip' }}"
       @blur-active="blurActiveEvent"
+      @current-change="handleCurrentChange"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column prop="id" label="ID" width="140"></el-editable-column>
+      <el-editable-column prop="id" label="ID" width="160"></el-editable-column>
       <el-editable-column prop="name" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
       <el-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></el-editable-column>
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
@@ -48,6 +50,7 @@ export default {
     return {
       loading: false,
       list: [],
+      currentRow: null,
       pendingRemoveList: [],
       validRules: {
         name: [
@@ -97,17 +100,26 @@ export default {
       }
       return ''
     },
+    handleCurrentChange (val) {
+      this.currentRow = val
+    },
     // 失焦后检查其他列，实现单元格连续编辑效果
     blurActiveEvent (row, column) {
       this.$refs.editable.validateRow(row)
     },
     insertEvent () {
-      let row = this.$refs.editable.insert({
+      let data = {
+        id: Date.now(),
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
+      }
+      this.$refs.editable.insertAt(data, this.currentRow).then(row => {
+        // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 刷新表格
+        this.$refs.editable.refresh().then(row => {
+          this.$refs.editable.setActiveCell(row, 'name')
+        })
       })
-      this.$nextTick(() => this.$refs.editable.setActiveCell(row, 'name'))
     },
     removeEvent (row) {
       MessageBox.confirm('确定移除该数据?', '温馨提示', {

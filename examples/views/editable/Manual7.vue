@@ -285,24 +285,26 @@ export default {
       let activeInfo = this.$refs[name].getActiveRow()
       let { insertRecords } = this.$refs[name].getAllRecords()
       if (!activeInfo && !insertRecords.length) {
-        let row
         switch (name) {
           case 'editable1':
             let nextItem = this.keyList.find(item => !item.attrs.disabled)
-            row = this.$refs[name].insert({
+            this.$refs[name].insert({
               key: nextItem.value,
               name: nextItem.value,
               readonly: false,
               required: false,
               visible: true,
               type: 'ElInput'
+            }).then(row => {
+              this.$refs[name].setActiveRow(row)
             })
             break
           case 'editable2':
-            row = this.$refs[name].insert()
+            this.$refs[name].insert().then(row => {
+              this.$refs[name].setActiveRow(row)
+            })
             break
         }
-        this.$nextTick(() => this.$refs[name].setActiveRow(row))
       } else {
         if (activeInfo) {
           this.checkSaveData(name, activeInfo.row)

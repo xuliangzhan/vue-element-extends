@@ -1008,6 +1008,9 @@ export default {
             .then(valid => this._triggerActive(row, column, cell, { type: 'edit', trigger: 'call' }))
             .catch(({ rule, row, column, cell }) => this._toValidError(rule, row, column, cell))
         }
+        if (this.highlightCurrentRow) {
+          this.$refs.refElTable.setCurrentRow(row)
+        }
         return true
       }
       return false

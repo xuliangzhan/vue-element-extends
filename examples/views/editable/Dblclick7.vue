@@ -116,7 +116,7 @@ export default {
       }
       this.$refs.editable.insertAt(data, this.currentRow).then(row => {
         // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 刷新表格
-        this.$refs.editable.refresh().then(row => {
+        this.$refs.editable.refresh().then(() => {
           this.$refs.editable.setActiveCell(row, 'name')
         })
       })

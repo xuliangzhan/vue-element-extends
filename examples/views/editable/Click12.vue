@@ -31,7 +31,7 @@
       @select="selectEvent"
       @current-change="currentChangeEvent"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, isTabKey: true, isArrowKey: true}"
+      :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
       style="width: 100%">
       <el-editable-column
         type="selection"

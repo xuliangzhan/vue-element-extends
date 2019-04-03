@@ -191,7 +191,7 @@ export default {
 </script>
 
 <style>
-.excel-table4.el-table--customSize .editable-column {
+.excel-table4.el-table--customSize .elx-editable-column {
   height: 30px;
 }
 .excel-table4 .el-table__body .el-table__row>td {

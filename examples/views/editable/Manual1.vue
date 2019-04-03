@@ -239,8 +239,8 @@ export default {
 .manual-table1-oper {
   margin-bottom: 18px;
 }
-.manual-table1.editable .editable-row.new-insert,
-.manual-table1.editable .editable-row.new-insert:hover>td {
+.manual-table1.elx-editable .editable-row.new-insert,
+.manual-table1.elx-editable .editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

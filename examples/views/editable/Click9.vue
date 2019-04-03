@@ -369,8 +369,8 @@ export default {
   margin: 15px 20px 0 0;
   text-align: right;
 }
-.click-table9.editable .editable-row.new-insert,
-.click-table9.editable .editable-row.new-insert:hover>td {
+.click-table9.elx-editable .editable-row.new-insert,
+.click-table9.elx-editable .editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

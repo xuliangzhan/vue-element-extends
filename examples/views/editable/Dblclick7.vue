@@ -251,8 +251,8 @@ export default {
   color: #f56c6c;
   text-decoration: line-through;
 }
-.dblclick-table7.editable .editable-row.new-insert,
-.dblclick-table7.editable .editable-row.new-insert:hover>td {
+.dblclick-table7.elx-editable .editable-row.new-insert,
+.dblclick-table7.elx-editable .editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 .el-tooltip__popper.editable-valid_tooltip.dblclick-table7-validtip {

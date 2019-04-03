@@ -73,7 +73,7 @@ export default {
   computed: {
     attrs () {
       return {
-        class: ['editable', `editable_${this.configs.trigger}`, { 'editable_icon': this.configs.showIcon }],
+        class: ['elx-editable', `editable_${this.configs.trigger}`, { 'editable_icon': this.configs.showIcon }],
         data: this.datas,
         height: this.height,
         maxHeight: this.maxHeight,
@@ -1366,21 +1366,22 @@ export default {
      * 由于缓存策略，但行数据发生增加或删除时，需要更新所有行
      */
     updateStatus (scope) {
-      if (scope) {
-        let { $index, column } = scope
-        let { row, cell } = this._getColumnByRowIndex($index, column.property)
-        if (cell) {
-          return this._validCellRules(row.validActive ? 'all' : 'change', row, column)
-            .then(rule => {
-              if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
-                this._clearValidError(row)
-              }
-            })
-            .catch(rule => this._toValidError(rule, row, column, cell))
-            .then(() => this.$nextTick())
+      return this.$nextTick().then(() => {
+        if (scope) {
+          let { $index, column } = scope
+          let { row, cell } = this._getColumnByRowIndex($index, column.property)
+          if (cell) {
+            return this._validCellRules(row.validActive ? 'all' : 'change', row, column)
+              .then(rule => {
+                if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
+                  this._clearValidError(row)
+                }
+              })
+              .catch(rule => this._toValidError(rule, row, column, cell))
+              .then(() => this.$nextTick())
+          }
         }
-      }
-      return this.$nextTick()
+      })
     },
     checkValid () {
       let row = this.datas.find(item => item.validActive)

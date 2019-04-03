@@ -200,7 +200,7 @@ export default {
         showOverflowTooltip: this.showOverflowTooltip,
         align: this.align,
         headerAlign: this.headerAlign,
-        className: `editable-column ${XEUtils.trimRight(clsName)}`,
+        className: `elx-editable-column ${XEUtils.trimRight(clsName)}`,
         labelClassName: this.labelClassName,
         selectable: this.selectableEvent,
         reserveSelection: this.reserveSelection,

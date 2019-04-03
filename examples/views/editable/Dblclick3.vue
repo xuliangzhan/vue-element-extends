@@ -298,8 +298,8 @@ export default {
   margin: 15px 20px 0 0;
   text-align: right;
 }
-.dblclick-table3.editable .editable-row.new-insert,
-.dblclick-table3.editable .editable-row.new-insert:hover>td {
+.dblclick-table3.elx-editable .editable-row.new-insert,
+.dblclick-table3.elx-editable .editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 .el-tooltip__popper.editable-valid_tooltip.dblclick-table3-validtip {

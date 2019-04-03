@@ -49,7 +49,7 @@
       <el-editable-column prop="date" label="日期" width="160" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></el-editable-column>
       <el-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
       <el-editable-column prop="rate" label="评分" min-width="150" :edit-render="{name: 'ElRate', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="describe" label="备注" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
+      <el-editable-column prop="describe" label="备注" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
       <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
       <el-editable-column label="操作" width="100">
@@ -167,6 +167,10 @@ export default {
         email: [
           { required: true, message: '邮件必须填写', trigger: 'change' },
           { pattern: /^[a-z0-9]+([._-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/, message: '格式：http(s)://xxx.com', trigger: 'change' }
+        ],
+        describe: [
+          { required: true, message: '备注必填', trigger: 'change' },
+          { min: 5, max: 20, message: '名称长度在 3 到 50 个字符', trigger: 'change' }
         ],
         attr1: [
           { type: 'number', message: '请输入数字', trigger: 'change' }
@@ -356,8 +360,8 @@ export default {
   margin: 15px 20px 0 0;
   text-align: right;
 }
-.dblclick-table4.editable .editable-row.new-insert,
-.dblclick-table4.editable .editable-row.new-insert:hover>td {
+.dblclick-table4.elx-editable .editable-row.new-insert,
+.dblclick-table4.elx-editable .editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

@@ -4,7 +4,7 @@
 
     <p>
       <el-button size="mini" @click="$refs.editable.insert()">新增</el-button>
-      <el-button size="mini" @click="getAllEvent">获取所有</el-button>
+      <el-button size="mini" @click="getInsertEvent">获取新增</el-button>
       <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
       <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
     </p>
@@ -66,9 +66,9 @@ export default {
     }, 300)
   },
   methods: {
-    getAllEvent () {
-      let rest = this.$refs.editable.getRecords()
-      MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
+    getInsertEvent () {
+      let rest = this.$refs.editable.getInsertRecords()
+      MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` }).catch(e => e)
     },
     getUpdateEvent () {
       let rest = this.$refs.editable.getUpdateRecords()

@@ -109,7 +109,7 @@ export default {
     },
     insertEvent () {
       let data = {
-        id: Date.now(),
+        id: `${XEUtils.uniqueId('ADD_')}`, // 树表格中 id 不能重复
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
@@ -250,10 +250,6 @@ export default {
 .dblclick-table7 .delete-row {
   color: #f56c6c;
   text-decoration: line-through;
-}
-.dblclick-table7.elx-editable .editable-row.new-insert,
-.dblclick-table7.elx-editable .editable-row.new-insert:hover>td {
-  background-color: #f0f9eb;
 }
 .el-tooltip__popper.editable-valid_tooltip.dblclick-table7-validtip {
   background: red;

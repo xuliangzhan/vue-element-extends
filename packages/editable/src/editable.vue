@@ -1,7 +1,11 @@
 <template>
-  <el-table ref="refElTable" v-bind="attrs" v-on="events">
+  <el-table
+    ref="refElTable"
+    class="elx-editable editable"
+    v-bind="attrs"
+    v-on="events">
     <slot></slot>
-    <template slot="append">
+    <template slot:append>
       <slot name="append"></slot>
     </template>
   </el-table>
@@ -69,7 +73,7 @@ export default {
   computed: {
     attrs () {
       return {
-        class: ['elx-editable editable', `editable_${this.configs.trigger}`, { 'editable_icon': this.configs.showIcon }],
+        class: [`editable_${this.configs.trigger}`, { 'editable_icon': this.configs.showIcon }],
         data: this.datas,
         height: this.height,
         maxHeight: this.maxHeight,

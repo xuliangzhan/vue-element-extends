@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <p style="color: red;font-size: 12px;">渲染成 Excel 表格</p>
 
     <p>
@@ -32,13 +32,8 @@ export default {
   data () {
     let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W']
     return {
-      list: Array.from(new Array(20), (v, i) => {
-        let rest = {}
-        columns.forEach(name => {
-          rest[name.toLowerCase()] = ''
-        })
-        return rest
-      }),
+      loading: false,
+      list: [],
       columnConfigs: columns.map(name => {
         return {
           prop: name.toLowerCase(),
@@ -47,6 +42,28 @@ export default {
         }
       })
     }
+  },
+  created () {
+    this.loading = true
+    setTimeout(() => {
+      let list = [
+        {
+          a: 'tt',
+          c: 'xx',
+          d: 'tt'
+        }, {
+          b: 'tt',
+          g: 'xx',
+          f: 'tt'
+        }, {
+          h: 'tt',
+          g: 'xx',
+          j: 'tt'
+        }
+      ]
+      this.list = list
+      this.loading = false
+    }, 300)
   },
   methods: {
     getAllEvent () {

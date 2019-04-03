@@ -280,9 +280,8 @@ export default {
     deleteSelectedEvent () {
       let selection = this.$refs.editable.getSelecteds()
       if (selection.length) {
-        this.postJSON('url', { selection }).then(data => {
-          Message({ message: '删除成功', type: 'success' })
-        })
+        this.$refs.editable.removeSelecteds()
+        Message({ message: '删除成功', type: 'success' })
       } else {
         Message({
           type: 'info',

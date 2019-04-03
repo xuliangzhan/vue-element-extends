@@ -17,6 +17,7 @@
       :data.sync="list"
       :edit-rules="validRules"
       :edit-config="{trigger: 'manual', mode: 'row', useDefaultValidTip: true, clearActiveMethod}"
+      @current-change="handleCurrentChange"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column prop="id" label="ID" width="140"></el-editable-column>
@@ -49,6 +50,7 @@ export default {
   data () {
     return {
       loading: false,
+      currentRow: null,
       sexList: [],
       regionList: [],
       list: [],
@@ -97,21 +99,32 @@ export default {
     clearActiveMethod ({ type, row }) {
       return this.isClearActiveFlag && type === 'out' ? this.checkOutSave(row) : this.isClearActiveFlag
     },
+    handleCurrentChange (val) {
+      this.currentRow = val
+    },
     insertEvent () {
       let activeInfo = this.$refs.editable.getActiveRow()
       let { insertRecords } = this.$refs.editable.getAllRecords()
       if (!activeInfo && !insertRecords.length) {
-        this.$refs.editable.insert({
+        let data = {
+          id: '-',
           name: `New ${Date.now()}`
-        }).then(row => {
-          this.$refs.editable.setActiveRow(row)
+        }
+        if (this.currentRow && this.currentRow.parentId) {
+          data.parentId = this.currentRow.parentId
+        }
+        this.$refs.editable.insertAt(data, this.currentRow).then(row => {
+          // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 刷新表格
+          this.$refs.editable.refresh().then(() => {
+            this.$refs.editable.setActiveCell(row, 'name')
+          })
         })
       }
     },
     // 点击表格外面处理
     checkOutSave (row) {
       if (!this.$refs.editable.checkValid().error) {
-        if (!row.id) {
+        if (row.id === '-') {
           this.isClearActiveFlag = false
           MessageBox.confirm('该数据未保存，请确认操作?', '温馨提示', {
             distinguishCancelAndClose: true,
@@ -124,6 +137,8 @@ export default {
           }).catch(action => {
             if (action === 'cancel') {
               this.$refs.editable.remove(row)
+              // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 刷新表格
+              this.$refs.editable.refresh()
             }
           }).then(() => {
             this.isClearActiveFlag = true
@@ -180,7 +195,7 @@ export default {
     },
     // 取消处理
     cancelRowEvent (row) {
-      if (!row.id) {
+      if (row.id === '-') {
         this.isClearActiveFlag = false
         MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
           distinguishCancelAndClose: true,
@@ -190,6 +205,8 @@ export default {
         }).then(action => {
           if (action === 'confirm') {
             this.$refs.editable.remove(row)
+            // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 刷新表格
+            this.$refs.editable.refresh()
           }
         }).catch(e => e).then(() => {
           this.isClearActiveFlag = true
@@ -216,7 +233,9 @@ export default {
       }
     },
     removeEvent (row) {
-      if (row.id) {
+      if (row.id === '-') {
+        this.$refs.editable.remove(row)
+      } else {
         this.isClearActiveFlag = false
         MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
           distinguishCancelAndClose: true,
@@ -230,8 +249,6 @@ export default {
         }).catch(action => action).then(() => {
           this.isClearActiveFlag = true
         })
-      } else {
-        this.$refs.editable.remove(row)
       }
     },
     deleteSelectedEvent () {
@@ -267,9 +284,9 @@ export default {
     saveRowEvent (row) {
       this.$refs.editable.validateRow(row, valid => {
         if (valid) {
-          let url = '/api/file/add'
-          if (row.id) {
-            url = '/api/file/update'
+          let url = '/api/file/update'
+          if (row.id === '-') {
+            url = '/api/file/add'
           }
           if (XEUtils.isDate(row.date)) {
             row.date = row.date.getTime()

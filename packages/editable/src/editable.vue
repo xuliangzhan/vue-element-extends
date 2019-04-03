@@ -65,6 +65,7 @@ export default {
       initialStore: [],
       deleteRecords: [],
       lastActive: null,
+      lastOperation: null,
       callEvent: null,
       isUpdateData: false
     }
@@ -234,7 +235,7 @@ export default {
       if (isReload) {
         this.initialStore = XEUtils.clone(datas, true)
       }
-      this.datas = (datas || []).map(record => this._toData(this.datas.some(row => row.data === record) ? record : Object.assign(record, this._defineProp(record))))
+      this.datas = this._toDatas(datas)
     },
     _setDefaultChecked () {
       this.$nextTick(() => {
@@ -266,18 +267,24 @@ export default {
       })
       return recordItem
     },
+    _toDatas (datas) {
+      return XEUtils.mapTree(datas, item => this._toData(item), { children: 'children' })
+    },
     _toData (item, status) {
-      return item && item._EDITABLE_PROTO === this.editProto ? item : {
+      if (item && item._EDITABLE_PROTO === this.editProto) {
+        return Object.assign({}, item)
+      }
+      let data = this._defineProp(item)
+      return {
         _EDITABLE_PROTO: this.editProto,
-        data: item,
-        store: XEUtils.clone(item, true),
+        data: data,
+        store: XEUtils.clone(data, true),
         validActive: null,
         validRule: null,
         showValidMsg: false,
         checked: null,
         editActive: null,
         editStatus: status || 'initial',
-        children: item.children ? item.children.map(child => this._toData(child)) : null,
         config: {
           size: this.size,
           showIcon: this.configs.showIcon,
@@ -884,7 +891,7 @@ export default {
     _load (row, treeNode, resolve) {
       if (this.load) {
         this.load(row.data, treeNode, function (rest) {
-          resolve(rest.map(item => this._toData(item)))
+          resolve(this._toDatas(rest))
         })
       }
     },
@@ -1057,32 +1064,6 @@ export default {
         this.$emit('valid-error', rule, row, column, cell)
       })
     },
-    _insertData (list, recordItem, record) {
-      for (let row, index = 0; index < list.length; index++) {
-        row = list[index]
-        if (row.data === record) {
-          list.splice(index, 0, recordItem)
-          return 1
-        }
-        if (row.children && this._insertData(row.children, recordItem, record)) {
-          return 1
-        }
-      }
-    },
-    _deleteData (datas, records, items) {
-      XEUtils.remove(datas, item => {
-        if (records.includes(item.data)) {
-          items.push(item)
-          return true
-        }
-      })
-      XEUtils.lastEach(datas, (item, index) => {
-        if (item.children) {
-          this._deleteData(item.children, records, items)
-        }
-      })
-      return items
-    },
     _clearAllOpers () {
       this.clearSelection()
       this.clearFilter()
@@ -1171,10 +1152,11 @@ export default {
       return this.$nextTick()
     },
     reloadRow (record) {
-      let row = this._getTRowByRecord(record)
-      if (row) {
-        XEUtils.destructuring(row.data, record)
-        Object.assign(row, { store: XEUtils.clone(row.data, true) })
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+      if (matchObj) {
+        let { item } = matchObj
+        XEUtils.destructuring(item.data, record)
+        item.store = XEUtils.clone(item.data, true)
       }
       return this.$nextTick()
     },
@@ -1195,19 +1177,12 @@ export default {
     },
     // 刷新表格
     refresh (force) {
-      let expandeKeyList = []
-      if (!force) {
-        XEUtils.each(this.$refs.refElTable.store.states.treeData, (treeData, key) => {
-          if (treeData.expanded) {
-            expandeKeyList.push(key)
-          }
-        })
-      }
-      this._initial(this._getData(), true)
+      this._initial(this.datas)
       this._updateData()
       return this.$nextTick().then(() => {
-        if (!force) {
-          XEUtils.lastEach(expandeKeyList, key => this.$refs.refElTable.store.toggleTreeExpansion(key))
+        if (!force && this.lastOperation) {
+          let { expandeKeys } = this.lastOperation
+          XEUtils.lastEach(expandeKeys, key => this.$refs.refElTable.store.toggleTreeExpansion(key))
           return this.$nextTick()
         }
       })
@@ -1216,10 +1191,11 @@ export default {
      * 清空表格
      */
     clear () {
+      this.lastOperation = null
       this.deleteRecords = []
       this._clearChecked()
       this._clearActiveData()
-      this._initial([])
+      this._initial([], true)
       this._updateData()
       return this.$nextTick()
     },
@@ -1229,6 +1205,17 @@ export default {
     insert (newRecord) {
       return this.insertAt(newRecord)
     },
+    _saveOperStatus () {
+      let expandeKeys = []
+      XEUtils.each(this.$refs.refElTable.store.states.treeData, (treeData, key) => {
+        if (treeData.expanded) {
+          expandeKeys.push(key)
+        }
+      })
+      this.lastOperation = {
+        expandeKeys
+      }
+    },
     /**
      * 插入数据
      * 如果是 record 则在指定位置新增一行新数据
@@ -1236,12 +1223,18 @@ export default {
      * 如果是 -1 则使用 push 到表格最后
      */
     insertAt (newRecord, record) {
-      let recordItem = this._toData(this._defineProp(newRecord), 'insert')
+      let recordItem = this._toData(newRecord, 'insert')
+      this._saveOperStatus()
       if (record) {
         if (record === -1) {
           this.datas.push(recordItem)
         } else {
-          this._insertData(this.datas, recordItem, record)
+          let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+          if (matchObj) {
+            matchObj.items.splice(matchObj.index, 0, recordItem)
+          } else {
+            this.datas.push(recordItem)
+          }
         }
       } else {
         this.datas.unshift(recordItem)
@@ -1250,8 +1243,8 @@ export default {
       return this.$nextTick().then(() => recordItem.data)
     },
     hasRowInsert (record) {
-      let row = this._getTRowByRecord(record)
-      return row && row.editStatus === 'insert'
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+      return matchObj && matchObj.item.editStatus === 'insert'
     },
     remove (record) {
       let item = null
@@ -1266,11 +1259,17 @@ export default {
     removes (records) {
       let items = []
       if (records && records.length) {
-        items = this._deleteData(this.datas, records, items)
+        this._saveOperStatus()
+        records.forEach(record => {
+          let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+          if (matchObj) {
+            items.push(matchObj.items.splice(matchObj.index, 1).data)
+          }
+        })
         this._clearActiveData()
         this._updateData()
       }
-      return this.$nextTick().then(() => items.map(item => item.data))
+      return this.$nextTick().then(() => items)
     },
     getSelecteds () {
       return this.$refs.refElTable ? this.$refs.refElTable.selection.map(item => item.data) : []
@@ -1292,13 +1291,17 @@ export default {
       }
     },
     getInsertRecords () {
-      return this._getData(this._getAllRows().filter(item => item.editStatus === 'insert'))
+      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'insert'))
     },
     getRemoveRecords () {
       return this._getData(this.deleteRecords)
     },
     getUpdateRecords () {
-      return this._getData(this._getAllRows().filter(item => item.editStatus === 'initial' && !XEUtils.isEqual(item.data, item.store)))
+      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'initial' && !XEUtils.isEqualWith(item.data, item.store, (v1, v2, key) => {
+        if (key === 'children') {
+          return true
+        }
+      })))
     },
     clearActive () {
       this.callEvent = this._callTriggerEvent('clear')
@@ -1348,8 +1351,8 @@ export default {
       return null
     },
     hasRowChange (record, property) {
-      let row = this._getTRowByRecord(record)
-      return property ? this._isRowDataChange(row, { property }) : this._isRowDataChange(row)
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+      return property ? this._isRowDataChange(matchObj.item, { property }) : this._isRowDataChange(matchObj.item)
     },
     /**
      * 更新列状态

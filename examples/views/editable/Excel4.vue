@@ -21,7 +21,7 @@
       size="customSize"
       :data.sync="list"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true}"
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
       style="width: 100%" >
       <el-editable-column type="index" align="center" width="50">
         <template v-slot:header>

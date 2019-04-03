@@ -13,7 +13,8 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import GlobalEvents from './globalEvents.js'
+import GlobalEvent from './event.js'
+import UtilHandle from './util'
 
 export default {
   name: 'ElEditable',
@@ -190,6 +191,7 @@ export default {
     }
   },
   created () {
+    window.aa = this
     this._bindEvents()
     this._initial(this.data, true)
     this._setDefaultChecked()
@@ -198,23 +200,23 @@ export default {
     this._unbindEvents()
   },
   methods: {
-    /**************************/
-    /* Original methods statrt */
-    /**************************/
+    /****************************/
+    /* Original methods statrt  */
+    /****************************/
     clearSelection () {
       this.$nextTick(() => this.$refs.refElTable.clearSelection())
     },
     toggleRowSelection (record, selected) {
-      this.$nextTick(() => this.$refs.refElTable.toggleRowSelection(this.datas.find(item => item.data === record), selected))
+      this.$nextTick(() => this.$refs.refElTable.toggleRowSelection(XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' }), selected))
     },
     toggleAllSelection () {
       this.$nextTick(() => this.$refs.refElTable.toggleAllSelection())
     },
     toggleRowExpansion (record, expanded) {
-      this.$nextTick(() => this.$refs.refElTable.toggleRowExpansion(this.datas.find(item => item.data === record), expanded))
+      this.$nextTick(() => this.$refs.refElTable.toggleRowExpansion(XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' }), expanded))
     },
     setCurrentRow (record) {
-      this.$nextTick(() => this.$refs.refElTable.setCurrentRow(this.datas.find(item => item.data === record)))
+      this.$nextTick(() => this.$refs.refElTable.setCurrentRow(XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })))
     },
     clearSort () {
       this.$nextTick(() => this.$refs.refElTable.clearSort())
@@ -228,125 +230,13 @@ export default {
     sort (prop, order) {
       this.$nextTick(() => this.$refs.refElTable.sort(prop, order))
     },
-    /**************************/
-    /* Original methods end */
-    /**************************/
+    /****************************/
+    /* Original methods end     */
+    /****************************/
 
-    /***************************/
-    /* Interior methods statrt */
-    /***************************/
-    _initial (datas, isReload) {
-      if (isReload) {
-        this.initialStore = XEUtils.clone(datas, true)
-      }
-      this.datas = this._toDatas(datas)
-      this._updateData()
-    },
-    _setDefaultChecked () {
-      this.$nextTick(() => {
-        this.datas.forEach(row => {
-          if (row.data._checked) {
-            this.$refs.refElTable.toggleRowSelection(row, true)
-          }
-        })
-      })
-    },
-    _getAllRows () {
-      return XEUtils.toTreeArray(this.datas, { children: 'children' })
-    },
-    _getData (datas) {
-      return (datas || this.datas).map(item => {
-        let data = item.data
-        if (item.children) {
-          data.children = this._getData(item.children)
-        }
-        return data
-      })
-    },
-    _defineProp (record) {
-      let recordItem = Object.assign({}, record)
-      this.getColumns().forEach(column => {
-        if (column.property && !XEUtils.has(recordItem, column.property)) {
-          XEUtils.set(recordItem, column.property, null)
-        }
-      })
-      return recordItem
-    },
-    _toDatas (datas) {
-      return XEUtils.mapTree(datas, item => this._toData(item), { children: 'children' })
-    },
-    _toData (item, status) {
-      if (item && item._EDITABLE_PROTO === this.editProto) {
-        return Object.assign({}, item)
-      }
-      let data = this._defineProp(item)
-      return {
-        _EDITABLE_PROTO: this.editProto,
-        data: data,
-        store: XEUtils.clone(data, true),
-        validActive: null,
-        validRule: null,
-        showValidMsg: false,
-        checked: null,
-        editActive: null,
-        editStatus: status || 'initial',
-        config: {
-          size: this.size,
-          showIcon: this.configs.showIcon,
-          showStatus: this.configs.showStatus,
-          mode: this.configs.mode,
-          useDefaultValidTip: this.configs.useDefaultValidTip,
-          validTooltip: this.configs.validTooltip,
-          disabledValidTip: this.configs.disabledValidTip,
-          rules: this.editRules
-        }
-      }
-    },
-    _updateData () {
-      let data = this._getData()
-      this.isUpdateData = true
-      this.$emit('update:data', data)
-    },
-    _bindEvents () {
-      GlobalEvents.on(this, 'click', evnt => this._triggerClear(evnt))
-      if (this.configs.trigger !== 'manual') {
-        GlobalEvents.on(this, 'keydown', evnt => this._triggerKeydown(evnt))
-      }
-    },
-    _unbindEvents () {
-      GlobalEvents.off(this, 'click')
-      GlobalEvents.off(this, 'keydown')
-    },
-    _getIndex (list, item) {
-      return XEUtils.findIndexOf(list, obj => obj === item)
-    },
-    _getRowByRecord (record) {
-      return this.datas.find(item => item.data === record)
-    },
-    _getDataIndex (row) {
-      return this._getIndex(this.datas, row)
-    },
-    _getDataIndexByRecord (record) {
-      return XEUtils.findIndexOf(this.datas, item => item.data === record)
-    },
-    _getTDatas () {
-      return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
-    },
-    _getTDataIndex (row) {
-      return this._getIndex(this._getTDatas(), row)
-    },
-    _getTRowByRecord (record) {
-      return this._getTDatas().find(item => item.data === record)
-    },
-    _getTDataIndexByRecord (record) {
-      return XEUtils.findIndexOf(this._getTDatas(), item => item.data === record)
-    },
-    _getColumnIndex (column) {
-      return this._getIndex(this.getColumns(), column)
-    },
-    _getColumnIndexByProp (prop) {
-      return this._getIndex(this.getColumns(), column => column.property === prop)
-    },
+    /****************************/
+    /* Attribute methods statrt */
+    /****************************/
     _rowClassName ({ row, rowIndex }) {
       let clsName = 'editable-row '
       let rowClassName = this.rowClassName
@@ -430,13 +320,185 @@ export default {
     _cellDBLclick (row, column, cell, event) {
       this._cellHandleEvent('dblclick', row, column, cell, event)
     },
-    _arrowLeftAndRightColumn (row, columns, offsetColumnIndex) {
+    _rowClick (row, column, event) {
+      this.$emit('row-click', row.data, column, event)
+    },
+    _rowContextmenu (row, column, event) {
+      this.$emit('row-contextmenu', row.data, column, event)
+    },
+    _rowDBLclick (row, column, event) {
+      this.$emit('row-dblclick', row.data, column, event)
+    },
+    _headerClick (column, event) {
+      this._clearChecked()
+      this.$emit('header-click', column, event)
+    },
+    _headerContextmenu (column, event) {
+      this.$emit('header-contextmenu', column, event)
+    },
+    _sortChange ({ column, prop, order }) {
+      this.$emit('sort-change', { column, prop, order })
+    },
+    _filterChange (filters) {
+      this.$emit('filter-change', filters)
+    },
+    _currentChange (currentRow, oldCurrentRow) {
+      if (currentRow && oldCurrentRow) {
+        this.$emit('current-change', currentRow.data, oldCurrentRow.data)
+      } else if (currentRow) {
+        this.$emit('current-change', currentRow.data, null)
+      } else if (oldCurrentRow) {
+        this.$emit('current-change', null, oldCurrentRow.data)
+      }
+    },
+    _headerDragend (newWidth, oldWidth, column, event) {
+      this.$emit('header-dragend', newWidth, oldWidth, column, event)
+    },
+    _expandChange (row, expandedRows) {
+      this.$emit('expand-change', row.data, expandedRows)
+    },
+    _summaryMethod (param) {
+      let { columns } = param
+      let data = param.data.map(item => item.data)
+      let sums = []
+      if (this.summaryMethod) {
+        sums = this.summaryMethod({ columns, data })
+      } else {
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = this.sumText || (this.$t ? this.$t('el.table.sumText') : '合计')
+            return
+          }
+          sums[index] = data.some(item => isNaN(Number(item[column.property]))) ? '' : XEUtils.sum(data, column.property)
+        })
+      }
+      return sums
+    },
+    _spanMethod ({ row, column, rowIndex, columnIndex }) {
+      let rowspan = 1
+      let colspan = 1
+      if (this.spanMethod) {
+        var result = this.spanMethod({ row: row.data, column, rowIndex, columnIndex })
+        if (XEUtils.isArray(result)) {
+          rowspan = result[0]
+          colspan = result[1]
+        } else if (XEUtils.isPlainObject(result)) {
+          rowspan = result.rowspan
+          colspan = result.colspan
+        }
+      }
+      return { rowspan, colspan }
+    },
+    _load (row, treeNode, resolve) {
+      if (this.load) {
+        this.load(row.data, treeNode, function (rest) {
+          resolve(this._toDatas(rest))
+        })
+      }
+    },
+    /****************************/
+    /* Attribute methods end    */
+    /****************************/
+
+    /****************************/
+    /* Interior methods statrt  */
+    /****************************/
+    _initial (datas, isReload) {
+      if (isReload) {
+        this.initialStore = XEUtils.clone(datas, true)
+      }
+      this.datas = this._toDatas(datas)
+      this._updateData()
+    },
+    _getData (datas) {
+      return XEUtils.mapTree(datas || this.datas, row => row.data, { children: 'children' })
+    },
+    _toDatas (datas) {
+      return XEUtils.mapTree(datas, item => this._toData(item), { children: 'children' })
+    },
+    _toData (item, status) {
+      if (item && item._EDITABLE_PROTO === this.editProto) {
+        return Object.assign({}, item)
+      }
+      let data = this._defineProp(item)
+      return {
+        _EDITABLE_PROTO: this.editProto,
+        data: data,
+        store: XEUtils.clone(data, true),
+        validActive: null,
+        validRule: null,
+        showValidMsg: false,
+        checked: null,
+        editActive: null,
+        editStatus: status || 'initial',
+        config: {
+          size: this.size,
+          showIcon: this.configs.showIcon,
+          showStatus: this.configs.showStatus,
+          mode: this.configs.mode,
+          useDefaultValidTip: this.configs.useDefaultValidTip,
+          validTooltip: this.configs.validTooltip,
+          disabledValidTip: this.configs.disabledValidTip,
+          rules: this.editRules
+        }
+      }
+    },
+    _updateData () {
+      let data = this._getData()
+      this.isUpdateData = true
+      this.$emit('update:data', data)
+    },
+    _bindEvents () {
+      GlobalEvent.on(this, 'click', evnt => this._triggerClear(evnt))
+      if (this.configs.trigger !== 'manual') {
+        GlobalEvent.on(this, 'keydown', evnt => this._triggerKeydown(evnt))
+      }
+    },
+    _unbindEvents () {
+      GlobalEvent.off(this, 'click')
+      GlobalEvent.off(this, 'keydown')
+    },
+    // 定义列属性
+    _defineProp (record) {
+      let recordItem = Object.assign({}, record)
+      this.getColumns().forEach(column => {
+        if (column.property && !XEUtils.has(recordItem, column.property)) {
+          XEUtils.set(recordItem, column.property, null)
+        }
+      })
+      return recordItem
+    },
+    // 获取表格真实列表
+    _getTDatas () {
+      return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
+    },
+    // 获取 row 在表格中的索引
+    _getRowIndex (row) {
+      return XEUtils.findIndexOf(this._getTDatas(), item => item === row)
+    },
+    // 获取列的索引
+    _getColumnIndex (column) {
+      return XEUtils.findIndexOf(this.getColumns(), item => item === column)
+    },
+    // 设置默认勾选
+    _setDefaultChecked () {
+      this.$nextTick(() => {
+        XEUtils.eachTree(this.datas, row => {
+          if (row.data._checked) {
+            this.$refs.refElTable.toggleRowSelection(row, true)
+          }
+        }, { children: 'children' })
+      })
+    },
+    // 方向键左右移动
+    _moveLeftAndRight (row, columns, offsetColumnIndex) {
       let offsetColumn = columns[offsetColumnIndex]
       if (offsetColumn && offsetColumn.property) {
         row.checked = offsetColumn.property
       }
     },
-    _arrowUpAndDownColumn (list, row, column, offsetRowIndex) {
+    // 方向键上下移动
+    _moveUpAndDown (list, row, column, offsetRowIndex) {
       let offsetRow = list[offsetRowIndex]
       if (offsetRow) {
         row.checked = null
@@ -502,22 +564,22 @@ export default {
                   break
                 case 37:
                   if (columnIndex > 0) {
-                    this._arrowLeftAndRightColumn(row, columns, columnIndex - 1)
+                    this._moveLeftAndRight(row, columns, columnIndex - 1)
                   }
                   break
                 case 39:
                   if (columnIndex < columns.length - 1) {
-                    this._arrowLeftAndRightColumn(row, columns, columnIndex + 1)
+                    this._moveLeftAndRight(row, columns, columnIndex + 1)
                   }
                   break
                 case 38:
                   if (rowIndex > 0) {
-                    this._arrowUpAndDownColumn(tableData, row, column, rowIndex - 1)
+                    this._moveUpAndDown(tableData, row, column, rowIndex - 1)
                   }
                   break
                 case 40:
                   if (rowIndex < tableData.length - 1) {
-                    this._arrowUpAndDownColumn(tableData, row, column, rowIndex + 1)
+                    this._moveUpAndDown(tableData, row, column, rowIndex + 1)
                   }
                   break
               }
@@ -553,7 +615,7 @@ export default {
         let target = evnt.target
         let clearActiveMethod = this.configs.clearActiveMethod
         let { row, column, cell } = this.lastActive
-        let rowIndex = this._getDataIndex(row)
+        let rowIndex = this._getRowIndex(row)
         let trElem = cell.parentNode
         let isClearActive = true
         let type = null
@@ -561,8 +623,8 @@ export default {
           if (this.configs.mode === 'row') {
             if (target === trElem) {
               return
-            } else if (this._hasClass(target, 'editable-row')) {
-              if (this._getIndex(Array.from(target.parentNode.children), target) === rowIndex) {
+            } else if (UtilHandle.hasClass(target, 'editable-row')) {
+              if (XEUtils.findIndexOf(Array.from(target.parentNode.children), item => item === target) === rowIndex) {
                 return
               } else {
                 type = 'in'
@@ -571,11 +633,11 @@ export default {
           } else {
             if (target === cell) {
               return
-            } else if (this._hasClass(target, 'editable-column')) {
+            } else if (UtilHandle.hasClass(target, 'editable-column')) {
               type = 'in'
             }
           }
-          if (type && this._hasClass(target, 'editable')) {
+          if (type && UtilHandle.hasClass(target, 'editable')) {
             if (target !== this.$el) {
               type = 'out'
             }
@@ -633,7 +695,7 @@ export default {
       // 触发顺序 -> clear -> active
       setTimeout(() => {
         if (this.configs.trigger !== 'manual' &&
-        this._hasClass(cell, 'editable-col_edit') &&
+        UtilHandle.hasClass(cell, 'editable-col_edit') &&
         (row.editActive
           ? this.configs.mode === 'row' && this.lastActive
             ? this.lastActive.column.property !== column.property
@@ -664,61 +726,19 @@ export default {
         }
       })
     },
-    _rowClick (row, column, event) {
-      this.$emit('row-click', row.data, column, event)
-    },
-    _rowContextmenu (row, column, event) {
-      this.$emit('row-contextmenu', row.data, column, event)
-    },
-    _rowDBLclick (row, column, event) {
-      this.$emit('row-dblclick', row.data, column, event)
-    },
-    _headerClick (column, event) {
-      this._clearChecked()
-      this.$emit('header-click', column, event)
-    },
-    _headerContextmenu (column, event) {
-      this.$emit('header-contextmenu', column, event)
-    },
-    _sortChange ({ column, prop, order }) {
-      this.$emit('sort-change', { column, prop, order })
-    },
-    _filterChange (filters) {
-      this.$emit('filter-change', filters)
-    },
-    _currentChange (currentRow, oldCurrentRow) {
-      if (currentRow && oldCurrentRow) {
-        this.$emit('current-change', currentRow.data, oldCurrentRow.data)
-      } else if (currentRow) {
-        this.$emit('current-change', currentRow.data, null)
-      } else if (oldCurrentRow) {
-        this.$emit('current-change', null, oldCurrentRow.data)
-      }
-    },
-    _headerDragend (newWidth, oldWidth, column, event) {
-      this.$emit('header-dragend', newWidth, oldWidth, column, event)
-    },
-    _expandChange (row, expandedRows) {
-      this.$emit('expand-change', row.data, expandedRows)
-    },
-    _clearChecked () {
-      this._getTDatas().forEach(row => {
-        row.checked = null
-      })
-    },
     _triggerClearChecked (evnt) {
       let target = evnt.target
       let isRow = false
       let isColumn = false
       let isHeader = false
       while (target && target.nodeType && target !== document) {
-        if (!isRow && this._hasClass(target, 'editable-row')) {
+        if (!isRow && UtilHandle.hasClass(target, 'editable-row')) {
           isRow = true
         }
-        if (!isColumn && this._hasClass(target, 'editable-column')) {
+        if (!isColumn && UtilHandle.hasClass(target, 'editable-column')) {
           isColumn = true
         }
-        if (!isHeader && this._hasClass(target, 'el-table__header-wrapper')) {
+        if (!isHeader && UtilHandle.hasClass(target, 'el-table__header-wrapper')) {
           isHeader = true
         }
         if (target === this.$el) {
@@ -730,6 +750,19 @@ export default {
       }
       this._clearChecked()
     },
+    // 清除校验
+    _clearValidError (row) {
+      row.showValidMsg = false
+      row.validRule = null
+      row.validActive = null
+    },
+    // 清除操作
+    _clearAllOpers () {
+      this.clearSelection()
+      this.clearFilter()
+      this.clearSort()
+    },
+    // 清除活动
     _clearActiveData () {
       this.lastActive = null
       this._getTDatas().forEach(row => {
@@ -737,49 +770,35 @@ export default {
         row.showValidMsg = false
       })
     },
+    // 清除选中
+    _clearChecked () {
+      this._getTDatas().forEach(row => {
+        row.checked = null
+      })
+    },
+    // 还原列 Tooltip
     _restoreTooltip (cell) {
       Array.from(this.$el.querySelectorAll('.disabled-el-tooltip')).forEach(elem => {
-        this._removeClass(elem, ['disabled-el-tooltip'])
-        this._addClass(elem, ['el-tooltip'])
+        UtilHandle.removeClass(elem, ['disabled-el-tooltip'])
+        UtilHandle.addClass(elem, ['el-tooltip'])
       })
     },
     /**
-     * 阻止带有 tooltip 组件的列
+     * 禁用列 Tooltip
      * 如果行或列被激活编辑时，关闭 tooltip 提示并禁用
      */
     _disabledTooltip (cell) {
       let tElems = ['row', 'manual'].includes(this.configs.mode) ? cell.parentNode.querySelectorAll('td.editable-col_edit>.cell.el-tooltip') : cell.querySelectorAll('.cell.el-tooltip')
       if (this.$refs.refElTable) {
-        let refElTableBody = this.$refs.refElTable.$children.find(comp => this._hasClass(comp.$el, 'el-table__body'))
+        let refElTableBody = this.$refs.refElTable.$children.find(comp => UtilHandle.hasClass(comp.$el, 'el-table__body'))
         if (refElTableBody && refElTableBody.$refs.tooltip) {
           refElTableBody.$refs.tooltip.hide()
         }
       }
       Array.from(tElems).forEach(elem => {
-        this._removeClass(elem, ['el-tooltip'])
-        this._addClass(elem, ['disabled-el-tooltip'])
+        UtilHandle.removeClass(elem, ['el-tooltip'])
+        UtilHandle.addClass(elem, ['disabled-el-tooltip'])
       })
-    },
-    _addClass (cell, clss) {
-      let classList = cell.className.split(' ')
-      clss.forEach(name => {
-        if (classList.indexOf(name) === -1) {
-          classList.push(name)
-        }
-      })
-      cell.className = classList.join(' ')
-    },
-    _hasClass (cell, cls) {
-      return cell.className.split(' ').includes(cls)
-    },
-    _removeClass (cell, clss) {
-      let classList = []
-      cell.className.split(' ').forEach(name => {
-        if (clss.indexOf(name) === -1) {
-          classList.push(name)
-        }
-      })
-      cell.className = classList.join(' ')
     },
     /**
      * 设置单元格聚焦
@@ -795,7 +814,7 @@ export default {
           inpElem = cell.querySelector('.editable-custom_input')
         }
       }
-      if (inpElem && this._hasClass(cell, 'editable-col_autofocus')) {
+      if (inpElem && UtilHandle.hasClass(cell, 'editable-col_autofocus')) {
         inpElem.focus()
       }
     },
@@ -821,7 +840,7 @@ export default {
     _isDisabledEdit (row, column, columnIndex) {
       let param = {
         row: row.data,
-        rowIndex: this._getTDataIndex(row)
+        rowIndex: this._getRowIndex(row)
       }
       if (this.configs.mode === 'cell') {
         Object.assign(param, {
@@ -861,50 +880,10 @@ export default {
         }
       })
     },
-    _summaryMethod (param) {
-      let { columns } = param
-      let data = param.data.map(item => item.data)
-      let sums = []
-      if (this.summaryMethod) {
-        sums = this.summaryMethod({ columns, data })
-      } else {
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = this.sumText || (this.$t ? this.$t('el.table.sumText') : '合计')
-            return
-          }
-          sums[index] = data.some(item => isNaN(Number(item[column.property]))) ? '' : XEUtils.sum(data, column.property)
-        })
-      }
-      return sums
-    },
-    _spanMethod ({ row, column, rowIndex, columnIndex }) {
-      let rowspan = 1
-      let colspan = 1
-      if (this.spanMethod) {
-        var result = this.spanMethod({ row: row.data, column, rowIndex, columnIndex })
-        if (XEUtils.isArray(result)) {
-          rowspan = result[0]
-          colspan = result[1]
-        } else if (XEUtils.isPlainObject(result)) {
-          rowspan = result.rowspan
-          colspan = result.colspan
-        }
-      }
-      return { rowspan, colspan }
-    },
-    _load (row, treeNode, resolve) {
-      if (this.load) {
-        this.load(row.data, treeNode, function (rest) {
-          resolve(this._toDatas(rest))
-        })
-      }
-    },
     _validRowRules (type, row) {
       let validPromise = Promise.resolve()
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
-        let rowIndex = this._getTDataIndex(row)
         this._clearValidError(row)
         this.getColumns().forEach((column, columnIndex) => {
           if (XEUtils.has(editRules, column.property)) {
@@ -912,7 +891,7 @@ export default {
               this._validCellRules('all', row, column)
                 .then(resolve)
                 .catch(rule => {
-                  let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+                  let { cell } = this._getColumnByRowIndex(null, column.property, row.data)
                   let rest = { rule, row, column, cell }
                   return reject(rest)
                 })
@@ -982,12 +961,16 @@ export default {
       }
       return validPromise
     },
-    _getColumnByRowIndex (rowIndex, property) {
+    _getColumnByRowIndex (rowIndex, property, record) {
+      let row
       let tableData = this._getTDatas()
-      let row = tableData[rowIndex]
       let columns = this.getColumns()
       let columnIndex = XEUtils.findIndexOf(columns, item => property ? property === item.property : item.property)
       let column = columns[columnIndex]
+      if (rowIndex === null) {
+        rowIndex = XEUtils.findIndexOf(tableData, row => row.data === record)
+      }
+      row = tableData[rowIndex]
       if (column) {
         let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
         let trElem = trElemList[rowIndex]
@@ -1002,8 +985,7 @@ export default {
       return { vT: Date.now() + 100 }
     },
     _toActiveRow (record, prop) {
-      let rowIndex = this._getTDataIndexByRecord(record)
-      let { row, column, cell } = this._getColumnByRowIndex(rowIndex, prop)
+      let { row, column, cell } = this._getColumnByRowIndex(null, prop, record)
       if (row && column) {
         this.callEvent = this._callTriggerEvent('activate')
         this.datas.forEach(row => {
@@ -1047,11 +1029,6 @@ export default {
       }
       return Promise.resolve()
     },
-    _clearValidError (row) {
-      row.showValidMsg = false
-      row.validRule = null
-      row.validActive = null
-    },
     _toValidError (rule, row, column, cell) {
       this._triggerActive(row, column, cell, { type: 'valid', trigger: 'call' }).then(() => {
         row.validRule = rule
@@ -1069,10 +1046,16 @@ export default {
         this.$emit('valid-error', rule, row, column, cell)
       })
     },
-    _clearAllOpers () {
-      this.clearSelection()
-      this.clearFilter()
-      this.clearSort()
+    _saveOperStatus () {
+      let expandeKeys = []
+      XEUtils.each(this.$refs.refElTable.store.states.treeData, (treeData, key) => {
+        if (treeData.expanded) {
+          expandeKeys.push(key)
+        }
+      })
+      this.lastOperation = {
+        expandeKeys
+      }
     },
     _getCsvUrl (opts, content) {
       let browse = XEUtils.browse()
@@ -1139,13 +1122,13 @@ export default {
         document.body.removeChild(linkElem)
       }
     },
-    /***************************/
-    /* Interior methods end    */
-    /***************************/
+    /****************************/
+    /* Interior methods end     */
+    /****************************/
 
-    /***************************/
-    /* Public methods start    */
-    /***************************/
+    /****************************/
+    /* Public methods start     */
+    /****************************/
     reload (datas) {
       this.deleteRecords = []
       this._clearAllOpers()
@@ -1157,7 +1140,7 @@ export default {
       return this.$nextTick()
     },
     reloadRow (record) {
-      let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
       if (matchObj) {
         let { item } = matchObj
         XEUtils.destructuring(item.data, record)
@@ -1172,7 +1155,8 @@ export default {
      */
     revert (record) {
       if (record) {
-        let { data, store } = this._getTRowByRecord(record)
+        let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
+        let { data, store } = matchObj.item
         XEUtils.destructuring(data, XEUtils.clone(store, true))
       } else {
         this._clearAllOpers()
@@ -1210,17 +1194,6 @@ export default {
     insert (newRecord) {
       return this.insertAt(newRecord)
     },
-    _saveOperStatus () {
-      let expandeKeys = []
-      XEUtils.each(this.$refs.refElTable.store.states.treeData, (treeData, key) => {
-        if (treeData.expanded) {
-          expandeKeys.push(key)
-        }
-      })
-      this.lastOperation = {
-        expandeKeys
-      }
-    },
     /**
      * 插入数据
      * 如果是 record 则在指定位置新增一行新数据
@@ -1234,7 +1207,7 @@ export default {
         if (record === -1) {
           this.datas.push(recordItem)
         } else {
-          let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+          let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
           if (matchObj) {
             matchObj.items.splice(matchObj.index, 0, recordItem)
           } else {
@@ -1248,7 +1221,7 @@ export default {
       return this.$nextTick().then(() => recordItem.data)
     },
     hasRowInsert (record) {
-      let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
       return matchObj && matchObj.item.editStatus === 'insert'
     },
     remove (record) {
@@ -1266,7 +1239,7 @@ export default {
       if (records && records.length) {
         this._saveOperStatus()
         records.forEach(record => {
-          let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+          let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
           if (matchObj) {
             let { index, items } = matchObj
             let removeRow = items.splice(index, 1)
@@ -1301,7 +1274,7 @@ export default {
       }
     },
     getInsertRecords () {
-      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'insert'))
+      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'insert', { children: 'children' }))
     },
     getRemoveRecords () {
       return this._getData(this.deleteRecords)
@@ -1311,7 +1284,7 @@ export default {
         if (key === 'children') {
           return true
         }
-      })))
+      })), { children: 'children' })
     },
     clearActive () {
       this.callEvent = this._callTriggerEvent('clear')
@@ -1342,7 +1315,7 @@ export default {
     getActiveRow () {
       if (this.lastActive) {
         let { row, column } = this.lastActive
-        let rowIndex = this._getTDataIndex(row)
+        let rowIndex = this._getRowIndex(row)
         if (this.configs.mode === 'row') {
           return {
             row: row.data,
@@ -1361,7 +1334,7 @@ export default {
       return null
     },
     hasRowChange (record, property) {
-      let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
       return property ? this._isRowDataChange(matchObj.item, { property }) : this._isRowDataChange(matchObj.item)
     },
     /**
@@ -1388,13 +1361,14 @@ export default {
       })
     },
     checkValid () {
-      let row = this.datas.find(item => item.validActive)
+      // 查找是否存在校验不通过的列
+      let row = XEUtils.findTree(this.datas, row => row.validActive, { children: 'children' })
       if (row) {
-        let column = this._getColumnIndexByProp(row.validActive)
+        let column = XEUtils.findIndexOf(this.getColumns(), column => column.property === row.validActive)
         return {
           error: true,
           row: row.data,
-          rowIndex: this._getTDataIndex(row),
+          rowIndex: this._getRowIndex(row),
           column,
           columnIndex: this._getColumnIndex(column),
           rule: row.validRule
@@ -1409,11 +1383,10 @@ export default {
      * 返回 Promise 对象，或者使用回调方式
      */
     validateRow (record, cb) {
-      let rowIndex = this._getTDataIndexByRecord(record)
       this.callEvent = this._callTriggerEvent('valid')
       return new Promise((resolve, reject) => {
-        let tableData = this._getTDatas()
-        let row = tableData[rowIndex]
+        let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
+        let row = matchObj.item
         this._validRowRules('all', row)
           .then(rest => {
             let valid = true
@@ -1442,9 +1415,8 @@ export default {
       this.callEvent = this._callTriggerEvent('valid')
       if (!XEUtils.isEmpty(this.editRules)) {
         let editRules = this.editRules
-        let tableData = this._getTDatas()
         let columns = this.getColumns()
-        tableData.forEach((row, rowIndex) => {
+        this._getTDatas().forEach((row, rowIndex) => {
           this._clearValidError(row)
           columns.forEach((column, columnIndex) => {
             if (XEUtils.has(editRules, column.property)) {
@@ -1499,9 +1471,9 @@ export default {
       }
       this._downloadCsc(opts, this._getCsvContent(opts))
     }
-    /***************************/
-    /* Public methods end      */
-    /***************************/
+    /****************************/
+    /* Public methods end       */
+    /****************************/
   }
 }
 </script>

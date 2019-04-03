@@ -1248,29 +1248,34 @@ export default {
       return matchObj && matchObj.item.editStatus === 'insert'
     },
     remove (record) {
-      let item = null
+      let rest = null
       if (record) {
         let items = this.removes([record])
         if (items.length) {
-          item = items[0]
+          rest = items[0]
         }
       }
-      return this.$nextTick().then(() => item)
+      return this.$nextTick().then(() => rest)
     },
     removes (records) {
-      let items = []
+      let rest = []
       if (records && records.length) {
         this._saveOperStatus()
         records.forEach(record => {
           let matchObj = XEUtils.findTree(this.datas, row => row.data === record)
           if (matchObj) {
-            items.push(matchObj.items.splice(matchObj.index, 1).data)
+            let { index, items } = matchObj
+            let removeRow = items.splice(index, 1)
+            if (removeRow.editStatus === 'initial') {
+              this.deleteRecords.push(removeRow)
+            }
+            rest.push(removeRow.data)
           }
         })
         this._clearActiveData()
         this._updateData()
       }
-      return this.$nextTick().then(() => items)
+      return this.$nextTick().then(() => rest)
     },
     getSelecteds () {
       return this.$refs.refElTable ? this.$refs.refElTable.selection.map(item => item.data) : []

@@ -17,6 +17,7 @@
       class="excel-table3"
       border
       size="customSize"
+      :data.sync="list"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false}"
       style="width: 100%" >
@@ -148,11 +149,6 @@ export default {
         ]
       }
     }
-  },
-  created () {
-    this.$nextTick(() => {
-      this.$refs.editable.reload(this.list)
-    })
   },
   methods: {
     getAllEvent () {

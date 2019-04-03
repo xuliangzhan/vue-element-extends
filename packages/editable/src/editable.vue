@@ -236,6 +236,7 @@ export default {
         this.initialStore = XEUtils.clone(datas, true)
       }
       this.datas = this._toDatas(datas)
+      this._updateData()
     },
     _setDefaultChecked () {
       this.$nextTick(() => {

@@ -80,8 +80,8 @@ edit-config 编辑参数配置
 | insertAt | 第二个参数如果是 row 或 $index 则在指定位置新增一条数据，如果是 -1 则从最后新增一条数据 | data,rowOrIndex |
 | remove | 根据数据删除 | row |
 | removes | 根据多条数据删除 | rows |
-| removeByIndex | 根据行号删除某一行数据 | $index |
-| removeByIndexs | 根据多个行号删除多行数据 | $indexs |
+| （废弃）removeByIndex | 根据行号删除某一行数据 | $index |
+| （废弃）removeByIndexs | 根据多个行号删除多行数据 | $indexs |
 | removeSelecteds | 删除选中行数据 | — |
 | clear | 清空所有数据 | — |
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |

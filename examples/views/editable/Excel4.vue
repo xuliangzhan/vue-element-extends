@@ -19,6 +19,7 @@
       class="excel-table4"
       border
       size="customSize"
+      :data.sync="list"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true}"
       style="width: 100%" >
@@ -147,11 +148,6 @@ export default {
         ]
       }
     }
-  },
-  created () {
-    this.$nextTick(() => {
-      this.$refs.editable.reload(this.list)
-    })
   },
   methods: {
     exportCsvEvent () {

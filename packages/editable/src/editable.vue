@@ -69,7 +69,7 @@ export default {
   computed: {
     attrs () {
       return {
-        class: ['editable', `editable_${this.configs.trigger}`, { 'editable_icon': this.configs.showIcon }],
+        class: ['elx-editable editable', `editable_${this.configs.trigger}`, { 'editable_icon': this.configs.showIcon }],
         data: this.datas,
         height: this.height,
         maxHeight: this.maxHeight,
@@ -1118,6 +1118,7 @@ export default {
       this._clearActiveData()
       this._initial(datas, true)
       this._updateData()
+      return this.$nextTick()
     },
     reloadRow (record) {
       let row = this.datas.find(item => item.data === record)
@@ -1125,6 +1126,7 @@ export default {
         XEUtils.destructuring(row.data, record)
         Object.assign(row, { store: XEUtils.clone(row.data, true) })
       }
+      return this.$nextTick()
     },
     /**
      * 还原更改，以最后一次 reload 或 reloadRow 的数据为源数据或者初始值 data
@@ -1137,8 +1139,9 @@ export default {
         XEUtils.destructuring(data, XEUtils.clone(store, true))
       } else {
         this._clearAllOpers()
-        this.reload(this.initialStore)
+        return this.reload(this.initialStore)
       }
+      return this.$nextTick()
     },
     /**
      * 清空表格
@@ -1149,6 +1152,7 @@ export default {
       this._clearActiveData()
       this._initial([])
       this._updateData()
+      return this.$nextTick()
     },
     getColumns () {
       return this.$refs.refElTable ? this.$refs.refElTable.columns : []
@@ -1246,6 +1250,7 @@ export default {
       this._clearChecked()
       this._clearActiveData()
       this._restoreTooltip()
+      return this.$nextTick()
     },
     /**
      * 激活指定某一行为可编辑状态
@@ -1297,8 +1302,8 @@ export default {
      * 由于缓存策略，但行数据发生增加或删除时，需要更新所有行
      */
     updateStatus (scope) {
-      if (scope) {
-        this.$nextTick(() => {
+      return this.$nextTick().then(() => {
+        if (scope) {
           let { $index, column } = scope
           let { row, cell } = this._getColumnByRowIndex($index, column.property)
           if (cell) {
@@ -1307,12 +1312,12 @@ export default {
                 if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
                   this._clearValidError(row)
                 }
-              }).catch(rule => {
-                this._toValidError(rule, row, column, cell)
               })
+              .catch(rule => this._toValidError(rule, row, column, cell))
+              .then(() => this.$nextTick())
           }
-        })
-      }
+        }
+      })
     },
     checkValid () {
       let row = this.datas.find(item => item.validActive)

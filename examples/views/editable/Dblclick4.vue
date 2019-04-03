@@ -168,6 +168,10 @@ export default {
           { required: true, message: '邮件必须填写', trigger: 'change' },
           { pattern: /^[a-z0-9]+([._-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/, message: '格式：http(s)://xxx.com', trigger: 'change' }
         ],
+        describe: [
+          { required: true, message: '备注必填', trigger: 'change' },
+          { min: 5, max: 20, message: '名称长度在 3 到 50 个字符', trigger: 'change' }
+        ],
         attr1: [
           { type: 'number', message: '请输入数字', trigger: 'change' }
         ],

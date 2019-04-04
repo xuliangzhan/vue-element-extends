@@ -231,7 +231,7 @@ export default {
       if (isReload) {
         this.initialStore = XEUtils.clone(datas, true)
       }
-      this.datas = (datas || []).map(record => this._toData(this.datas.some(row => row.data === record) ? record : Object.assign(record, this._defineProp(record))))
+      this.datas = (datas || []).map(record => this._toData(this.datas.some(row => row.data === record) ? record : this._defineProp(record)))
       this.$nextTick(() => {
         this.datas.forEach(row => {
           if (row.data._checked) {

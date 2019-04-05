@@ -59,7 +59,8 @@ edit-config 编辑参数配置
 | autoScrollIntoView | 当单元格被激活时，自动将单元格滚动到可视区域内 | Boolean | — | false |
 | isTabKey | 只对 trigger!=manual 有效，是否启用 Tab 键切换到下一个单元格 | Boolean | — | false |
 | isArrowKey | 只对 trigger!=manual 有效，是否启用箭头键切换行和单元格 | Boolean | — | false |
-| isCheckedEdit | 只对 trigger!=manual 有效，是否启用选中状态允许值覆盖式编辑 | Boolean | — | false |
+| isCheckedEdit | 只对 trigger!=manual 有效，是否启用选中状态单的元格允许直接编辑 | Boolean | — | false |
+| checkedEditMethod | 只对 isCheckedEdit=true 有效，可以通过重写该函数 Function({row, rowIndex, column, columnIndex, cell}) 返回 false 来覆盖默认值的覆盖行为 | Function | — | — |
 
 ### Editable Events
 
@@ -70,6 +71,7 @@ edit-config 编辑参数配置
 | edit-active | 当点击后改变为编辑状态之后会触发该事件 | row[,column,cell]?,event |
 | clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row[,column,cell]?,event |
 | blur-active | 当行或者单元格失焦之后会触发该事件 | row[,column,cell]?,event |
+| checked-edit | 只对 isCheckedEdit=true 有效，当选择状态的单元格被激活之后会触发该事件 | row[,column,cell]?,event |
 
 ### Editable Methods
 

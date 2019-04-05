@@ -18,7 +18,7 @@
       size="mini"
       :data.sync="list"
       :row-class-name="tableRowClassName"
-      :edit-config="{trigger: 'dblclick', mode: 'cell', isTabKey: true, isArrowKey: true, isCheckedEdit: false}"
+      :edit-config="{trigger: 'dblclick', mode: 'row', isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
       style="width: 100%">
       <el-editable-column type="selection" width="55"></el-editable-column>
       <el-editable-column type="index" width="55">

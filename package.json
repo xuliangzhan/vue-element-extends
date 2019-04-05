@@ -1,6 +1,6 @@
 {
   "name": "vue-element-extends",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Extension component based on ElementUI 2.x",
   "scripts": {
     "serve": "vue-cli-service serve",

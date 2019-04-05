@@ -2,6 +2,7 @@
   <div>
     <p style="color: red;font-size: 12px;">自定义设置动态列</p>
     <p style="color: red;font-size: 12px;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
+    <p style="color: red;font-size: 12px;">可以通过重写 checkedEditMethod 函数实现选中单元格编辑内容追加方式</p>
 
     <p>
       <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
@@ -19,7 +20,7 @@
       size="customSize"
       :data.sync="list"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false}"
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, checkedEditMethod}"
       style="width: 100%" >
       <el-editable-column type="index" align="center" width="50">
         <template v-slot:header>
@@ -151,6 +152,25 @@ export default {
     }
   },
   methods: {
+    // 该函数会重写默认的值覆盖行为，可以通过重写该函数自行实现更多自定义功能
+    checkedEditMethod ({ row, column, cell }) {
+      // 例如：指定光标位置插入新内容
+      let inpElem = cell.querySelector('.el-input__inner')
+      let value = XEUtils.get(row, column.property)
+      let pos = value.length // 将光标移到最后并将新内容追加到后面
+      if (inpElem.setSelectionRange) {
+        inpElem.focus()
+        inpElem.setSelectionRange(pos, pos)
+      } else if (inpElem.createTextRange) {
+        var range = inpElem.createTextRange()
+        range.collapse(true)
+        range.moveStart('character', pos)
+        range.moveEnd('character', pos)
+        range.select()
+      }
+      // 通过 return false 阻止默认行为
+      return false
+    },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)

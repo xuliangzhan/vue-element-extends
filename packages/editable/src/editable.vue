@@ -500,7 +500,11 @@ export default {
           if (column) {
             let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
             this._triggerActive(row, column, cell, event)
-              .then(() => XEUtils.set(row.data, column.property, null))
+              .then(() => {
+                if (this.configs.checkedEditMethod ? this.configs.checkedEditMethod({ row: row.data, rowIndex, column, columnIndex, cell }) !== false : true) {
+                  XEUtils.set(row.data, column.property, null)
+                }
+              })
           }
         }
       }

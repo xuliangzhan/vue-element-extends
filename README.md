@@ -1,4 +1,4 @@
-# vue-element-extends
+# vue-element-extends 1.0.x
 
 [![npm version](https://img.shields.io/npm/v/vue-element-extends.svg?style=flat-square)](https://www.npmjs.org/package/vue-element-extends)
 [![npm downloads](https://img.shields.io/npm/dm/vue-element-extends.svg?style=flat-square)](http://npm-stat.com/charts.html?package=vue-element-extends)
@@ -10,7 +10,7 @@
 注意：ElementUI 2.3.x ~ 2.6.x 对应 vue-element-extends 1.0.x 版本
 ***
 
-## Installing 1.0.x
+## Installing
 
 ```javascript
 import 'vue-element-extends/lib/index.css'

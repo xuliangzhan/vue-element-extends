@@ -12,18 +12,25 @@
 
 ## Installing
 
+使用旧的方式:
+
+```javascript
+import Vue from 'vue'
+import VueElementExtends from 'vue-element-extends'
+import 'vue-element-extends/lib/index.css'
+
+Vue.use(VueElementExtends)
+```
+
+向后兼容方式:
+
 ```javascript
 import Vue from 'vue'
 import { Editable, EditableColumn } from 'vue-element-extends'
 import 'vue-element-extends/lib/index.css'
 
-// 向后兼容方式
 Vue.component('ElxEditable', Editable)
 Vue.component('ElxEditableColumn', EditableColumn)
-
-// 使用旧的方式
-Vue.component('ElEditable', Editable)
-Vue.component('ElEditableColumn', EditableColumn)
 ```
 
 ## API

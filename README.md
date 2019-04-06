@@ -28,7 +28,7 @@
 ## Installing
 
 ```shell
-npm install xe-utils vue-element-extends --save
+npm install xe-utils vue-element-extends
 ```
 
 在 [unpkg](https://unpkg.com/vue-element-extends/) 和 [cdnjs](https://cdn.jsdelivr.net/npm/vue-element-extends/) 上获取

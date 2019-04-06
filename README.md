@@ -44,11 +44,19 @@ npm install xe-utils vue-element-extends --save
 
 ```javascript
 import Vue from 'vue'
-import 'vue-element-extends/lib/index.css'
 import { Editable, EditableColumn } from 'vue-element-extends'
+import 'vue-element-extends/lib/index.css'
 
-Vue.component(Editable.name, Editable)
-Vue.component(EditableColumn.name, EditableColumn)
+Vue.use(Editable)
+Vue.use(EditableColumn)
+```
+
+```javascript
+import Vue from 'vue'
+import VueElementExtends from 'vue-element-extends'
+import 'vue-element-extends/lib/index.css'
+
+Vue.use(VueElementExtends)
 ```
 
 ## API

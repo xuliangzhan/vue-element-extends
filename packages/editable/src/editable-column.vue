@@ -48,8 +48,8 @@
       <template v-else>
         <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
       </template>
-      <template v-if="scope.row.validActive && !scope.row.config.disabledValidTip && scope.row.validActive === scope.column.property">
-        <template v-if="scope.row.config.useDefaultValidTip">
+      <template v-if="scope.row.validActive && !elxConfig.disabledValidTip && scope.row.validActive === scope.column.property">
+        <template v-if="elxConfig.useDefaultValidTip">
           <template v-if="scope.row.showValidMsg">
             <slot name="valid" v-bind="getVaildScope(scope)">
               <div class="editable-valid_error">
@@ -59,7 +59,7 @@
           </template>
         </template>
         <template v-else>
-          <el-tooltip :value="scope.row.showValidMsg" v-bind="scope.row.config.validTooltip">
+          <el-tooltip :value="scope.row.showValidMsg" v-bind="elxConfig.validTooltip">
             <div class="editable-valid_wrapper"></div>
             <template v-slot:content>
               <slot name="valid" v-bind="getVaildScope(scope)">
@@ -121,7 +121,9 @@ export default {
     filteredValue: Array
   },
   inject: [
-    '$editable'
+    '$editable',
+    'elxConfig',
+    'elxRules'
   ],
   data () {
     return {
@@ -249,7 +251,7 @@ export default {
       return XEUtils.get(row.data, column.property)
     },
     getRendAttrs (scope) {
-      let size = scope.row.config.size
+      let size = this.$editable.size
       return Object.assign({ size }, this.renderOpts.attrs)
     },
     getRendEvents ({ $index, row, column, store }) {
@@ -356,9 +358,8 @@ export default {
     },
     checkRequired ({ column, store }) {
       let property = column.property
-      let editRules = this.$editable && this.$editable.editRules
-      if (property && editRules) {
-        let columnRules = XEUtils.get(editRules, property)
+      if (property && this.elxRules) {
+        let columnRules = XEUtils.get(this.elxRules, property)
         if (columnRules) {
           return columnRules.some(rule => rule.required === true)
         }
@@ -366,10 +367,10 @@ export default {
       return false
     },
     isEditRender ({ row, column }) {
-      return this.renderOpts.type === 'visible' || (row.editActive && (row.config.mode === 'row' ? row.editActive : row.editActive === column.property))
+      return this.renderOpts.type === 'visible' || (row.editActive && (this.elxConfig.mode === 'row' ? row.editActive : row.editActive === column.property))
     },
     checkIcon ({ column, store }) {
-      return column.property && this.$editable && this.$editable.editConfig ? !(this.$editable.editConfig.showIcon === false) : true
+      return column.property && this.elxConfig.showIcon
     },
     sortByEvent (row, index) {
       return this.sortBy(row.data, index)

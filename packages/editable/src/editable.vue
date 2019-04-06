@@ -60,7 +60,9 @@ export default {
   },
   provide () {
     return {
-      $editable: this
+      $editable: this,
+      elxConfig: this.configs,
+      elxRules: this.editRules
     }
   },
   data () {
@@ -137,6 +139,15 @@ export default {
     configs () {
       let editConfig = this.editConfig || {}
       let tipConf = editConfig ? (editConfig.validTooltip || {}) : {}
+      // 限制 Tooltip 固定参数不允许修改
+      let validTooltip = Object.assign({
+        disabled: false,
+        offset: 10,
+        placement: 'bottom-start'
+      }, tipConf, {
+        manual: true,
+        popperClass: ['editable-valid_tooltip'].concat(tipConf.popperClass ? tipConf.popperClass.split(' ') : []).join(' ')
+      })
       let conf = Object.assign({
         // 触发方式
         trigger: 'click',
@@ -160,17 +171,7 @@ export default {
         isArrowKey: false,
         // 是否启用选中状态是否允许值覆盖式编辑，当 isTabKey 或 isArrowKey 为true 时启用时默认 true，否则 false
         isCheckedEdit: !!(editConfig.isTabKey || editConfig.isArrowKey)
-      }, editConfig, {
-        // 限制 Tooltip 固定参数不允许修改
-        validTooltip: Object.assign({
-          disabled: false,
-          offset: 10,
-          placement: 'bottom-start'
-        }, tipConf, {
-          manual: true,
-          popperClass: ['editable-valid_tooltip'].concat(tipConf.popperClass ? tipConf.popperClass.split(' ') : []).join(' ')
-        })
-      })
+      }, editConfig, { validTooltip })
       return conf
     }
   },
@@ -423,24 +424,22 @@ export default {
       let data = this._defineProp(item)
       return {
         _EDITABLE_PROTO: this.editProto,
+        // 数据
         data: data,
+        // 数据源
         store: XEUtils.clone(data, true),
+        // 当前触发的校验的字段
         validActive: null,
+        // 当前触发的校验规则
         validRule: null,
+        // 显示校验提示
         showValidMsg: false,
+        // 是否选中状态
         checked: null,
+        // 激活编辑的字段
         editActive: null,
-        editStatus: status || 'initial',
-        config: {
-          size: this.size,
-          showIcon: this.configs.showIcon,
-          showStatus: this.configs.showStatus,
-          mode: this.configs.mode,
-          useDefaultValidTip: this.configs.useDefaultValidTip,
-          validTooltip: this.configs.validTooltip,
-          disabledValidTip: this.configs.disabledValidTip,
-          rules: this.editRules
-        }
+        // 编辑状态
+        editStatus: status || 'initial'
       }
     },
     _updateData () {

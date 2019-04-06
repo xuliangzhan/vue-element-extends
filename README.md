@@ -10,15 +10,15 @@
 注意：ElementUI 2.3.x ~ 2.6.x 对应 vue-element-extends 1.0.x 版本
 ***
 
-## Installing
+## Installing 1.0.x
 
 ```javascript
 import 'vue-element-extends/lib/index.css'
 import { Editable, EditableColumn } from 'vue-element-extends'
 
-// 新的方式
-Vue.component(Editable.name, Editable)
-Vue.component(EditableColumn.name, EditableColumn)
+// 向后兼容方式
+Vue.component('ElxEditable', Editable)
+Vue.component('ElxEditableColumn', EditableColumn)
 
 // 兼容旧的方式
 Vue.component('ElEditable', Editable)

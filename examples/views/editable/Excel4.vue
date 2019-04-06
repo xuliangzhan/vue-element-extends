@@ -14,7 +14,7 @@
       <el-button size="mini" @click="exportCsvEvent">导出数据</el-button>
     </p>
 
-    <el-editable
+    <elx-editable
       ref="editable"
       class="excel-table4"
       border
@@ -23,17 +23,17 @@
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
       style="width: 100%" >
-      <el-editable-column type="index" align="center" width="50">
+      <elx-editable-column type="index" align="center" width="50">
         <template v-slot:header>
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
-      </el-editable-column>
+      </elx-editable-column>
       <template v-for="(item, index) in columnConfigs">
         <template v-if="item.customShow">
-          <el-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip></el-editable-column>
+          <elx-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip></elx-editable-column>
         </template>
       </template>
-    </el-editable>
+    </elx-editable>
 
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
       <el-transfer

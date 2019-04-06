@@ -8,7 +8,7 @@
         <el-button type="danger" size="mini" @click="deleteSelectedEvent('editable1')">删除选中</el-button>
       </div>
 
-      <el-editable
+      <elx-editable
         ref="editable1"
         class="manual-table7"
         size="mini"
@@ -17,21 +17,21 @@
         :data.sync="columnList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod1}"
         style="width: 100%">
-        <el-editable-column type="selection" width="55"></el-editable-column>
-        <el-editable-column prop="seq" label="序号" width="120" align="center" :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
-        <el-editable-column prop="key" label="字段名" width="120" :edit-render="{name: 'ElSelect', options: keyList, events: {change: uniqueKey}}"></el-editable-column>
-        <el-editable-column prop="name" label="字段描述" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-        <el-editable-column prop="readonly" label="是否只读" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
-        <el-editable-column prop="required" label="是否必填" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
-        <el-editable-column prop="validator" label="校验规则" width="160" :edit-render="{name: 'ElInput'}"></el-editable-column>
-        <el-editable-column prop="visible" label="默认显示" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
-        <el-editable-column prop="type" label="渲染类型" width="140" :edit-render="{name: 'ElSelect', options: renderTypeList}"></el-editable-column>
-        <el-editable-column prop="width" label="设置宽度" width="100" :edit-render="{name: 'ElInput'}"></el-editable-column>
-        <el-editable-column prop="align" label="对齐方式" width="120" :edit-render="{name: 'ElSelect', options: alignList, attrs: {clearable: true}}"></el-editable-column>
-        <el-editable-column prop="describe" label="备注" :edit-render="{name: 'ElInput'}"></el-editable-column>
-        <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
-        <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
-        <el-editable-column label="操作" width="160">
+        <elx-editable-column type="selection" width="55"></elx-editable-column>
+        <elx-editable-column prop="seq" label="序号" width="120" align="center" :edit-render="{name: 'ElInputNumber'}"></elx-editable-column>
+        <elx-editable-column prop="key" label="字段名" width="120" :edit-render="{name: 'ElSelect', options: keyList, events: {change: uniqueKey}}"></elx-editable-column>
+        <elx-editable-column prop="name" label="字段描述" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="readonly" label="是否只读" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>
+        <elx-editable-column prop="required" label="是否必填" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>
+        <elx-editable-column prop="validator" label="校验规则" width="160" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="visible" label="默认显示" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>
+        <elx-editable-column prop="type" label="渲染类型" width="140" :edit-render="{name: 'ElSelect', options: renderTypeList}"></elx-editable-column>
+        <elx-editable-column prop="width" label="设置宽度" width="100" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="align" label="对齐方式" width="120" :edit-render="{name: 'ElSelect', options: alignList, attrs: {clearable: true}}"></elx-editable-column>
+        <elx-editable-column prop="describe" label="备注" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column label="操作" width="160">
           <template v-slot="scope">
             <template v-if="$refs.editable1.hasActiveRow(scope.row)">
               <el-button size="mini" type="success" @click="saveRowEvent('editable1', scope.row)">保存</el-button>
@@ -42,8 +42,8 @@
               <el-button size="mini" type="danger" @click="removeEvent('editable1', scope.row)">删除</el-button>
             </template>
           </template>
-        </el-editable-column>
-      </el-editable>
+        </elx-editable-column>
+      </elx-editable>
     </div>
 
     <div v-loading="userLoading">
@@ -53,7 +53,7 @@
         <el-button type="primary" size="mini" @click="reloadConf">刷新配置</el-button>
       </div>
 
-      <el-editable
+      <elx-editable
         ref="editable2"
         size="mini"
         border
@@ -62,18 +62,18 @@
         :edit-rules="validRules"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod2}"
         style="width: 100%">
-        <el-editable-column type="selection" width="55"></el-editable-column>
-        <el-editable-column type="index" width="55">
+        <elx-editable-column type="selection" width="55"></elx-editable-column>
+        <elx-editable-column type="index" width="55">
           <template v-slot:header>
             <i class="el-icon-setting" @click="dialogVisible = true"></i>
           </template>
-        </el-editable-column>
+        </elx-editable-column>
         <template v-for="item in columnConfigs">
           <template v-if="item._show">
-            <el-editable-column v-bind="item" :key="item.prop"></el-editable-column>
+            <elx-editable-column v-bind="item" :key="item.prop"></elx-editable-column>
           </template>
         </template>
-        <el-editable-column label="操作" width="150">
+        <elx-editable-column label="操作" width="150">
           <template v-slot="scope">
             <template v-if="$refs.editable2.hasActiveRow(scope.row)">
               <el-button size="mini" type="success" @click="saveRowEvent('editable2', scope.row)">保存</el-button>
@@ -84,8 +84,8 @@
               <el-button size="mini" type="danger" @click="removeEvent('editable2', scope.row)">删除</el-button>
             </template>
           </template>
-        </el-editable-column>
-      </el-editable>
+        </elx-editable-column>
+      </elx-editable>
 
       <el-pagination
         class="manual-table7-pagination"

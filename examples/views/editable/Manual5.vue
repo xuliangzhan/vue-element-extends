@@ -10,7 +10,7 @@
         <el-button type="success" size="mini" @click="customExportCsvEvent('editable1', {filename: '实际数据.csv', original: true})">导出实际数据</el-button>
       </div>
 
-      <el-editable
+      <elx-editable
         ref="editable1"
         class="manual-table7"
         size="mini"
@@ -19,13 +19,13 @@
         :data.sync="roleList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod1}"
         style="width: 100%">
-        <el-editable-column type="selection" width="55"></el-editable-column>
-        <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
-        <el-editable-column prop="name" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-        <el-editable-column prop="describe" label="描述" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
-        <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
-        <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
-        <el-editable-column label="操作" width="160">
+        <elx-editable-column type="selection" width="55"></elx-editable-column>
+        <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
+        <elx-editable-column prop="name" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="describe" label="描述" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>
+        <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column label="操作" width="160">
           <template v-slot="scope">
             <template v-if="$refs.editable1.hasActiveRow(scope.row)">
               <el-button size="mini" type="success" @click="saveRowEvent('editable1', scope.row)">保存</el-button>
@@ -36,8 +36,8 @@
               <el-button size="mini" type="danger" @click="removeEvent('editable1', scope.row)">删除</el-button>
             </template>
           </template>
-        </el-editable-column>
-      </el-editable>
+        </elx-editable-column>
+      </elx-editable>
 
       <el-pagination
         class="manual-table5-pagination"
@@ -59,7 +59,7 @@
         <el-button type="success" size="mini" @click="customExportCsvEvent('editable2', {filename: '实际数据.csv', original: true})">导出实际数据</el-button>
       </div>
 
-      <el-editable
+      <elx-editable
         ref="editable2"
         size="mini"
         border
@@ -67,19 +67,19 @@
         :data.sync="userList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod2}"
         style="width: 100%">
-        <el-editable-column type="selection" width="55"></el-editable-column>
-        <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
-        <el-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-        <el-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-        <el-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-        <el-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-        <el-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-        <el-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
-        <el-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></el-editable-column>
-        <el-editable-column prop="flag" label="是否启用" :formatter="formatterFlag" :edit-render="{name: 'ElSwitch'}"></el-editable-column>
-        <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
-        <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
-        <el-editable-column label="操作" width="150">
+        <elx-editable-column type="selection" width="55"></elx-editable-column>
+        <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
+        <elx-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
+        <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
+        <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
+        <elx-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>
+        <elx-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+        <elx-editable-column prop="flag" label="是否启用" :formatter="formatterFlag" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>
+        <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column label="操作" width="150">
           <template v-slot="scope">
             <template v-if="$refs.editable2.hasActiveRow(scope.row)">
               <el-button size="mini" type="success" @click="saveRowEvent('editable2', scope.row)">保存</el-button>
@@ -90,8 +90,8 @@
               <el-button size="mini" type="danger" @click="removeEvent('editable2', scope.row)">删除</el-button>
             </template>
           </template>
-        </el-editable-column>
-      </el-editable>
+        </elx-editable-column>
+      </elx-editable>
 
       <el-pagination
         class="manual-table5-pagination"
@@ -113,7 +113,7 @@
         <el-button type="success" size="mini" @click="customExportCsvEvent('editable3', {filename: '实际数据.csv', original: true})">导出实际数据</el-button>
       </div>
 
-      <el-editable
+      <elx-editable
         ref="editable3"
         size="mini"
         border
@@ -121,13 +121,13 @@
         :data.sync="fileList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod3}"
         style="width: 100%">
-        <el-editable-column type="selection" width="55"></el-editable-column>
-        <el-editable-column prop="id" label="ID" width="100"></el-editable-column>
-        <el-editable-column prop="name" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-        <el-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></el-editable-column>
-        <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
-        <el-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatterDate"></el-editable-column>
-        <el-editable-column label="操作" width="160">
+        <elx-editable-column type="selection" width="55"></elx-editable-column>
+        <elx-editable-column prop="id" label="ID" width="100"></elx-editable-column>
+        <elx-editable-column prop="name" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></elx-editable-column>
+        <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column label="操作" width="160">
           <template v-slot="scope">
             <template v-if="$refs.editable3.hasActiveRow(scope.row)">
               <el-button size="mini" type="success" @click="saveRowEvent('editable3', scope.row)">保存</el-button>
@@ -138,8 +138,8 @@
               <el-button size="mini" type="danger" @click="removeEvent('editable3', scope.row)">删除</el-button>
             </template>
           </template>
-        </el-editable-column>
-      </el-editable>
+        </elx-editable-column>
+      </elx-editable>
 
       <el-pagination
         class="manual-table5-pagination"

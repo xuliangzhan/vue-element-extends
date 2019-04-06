@@ -10,7 +10,7 @@
       <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
     </p>
 
-    <el-editable
+    <elx-editable
       ref="editable"
       class="manual-table4"
       size="mini"
@@ -19,47 +19,47 @@
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'cell'}"
       style="width: 100%">
-      <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column type="index" width="55"></el-editable-column>
-      <el-editable-column prop="select1" label="ElSelect" :edit-render="{name: 'ElSelect', options: sexList, attrs: {clearable: true}}"></el-editable-column>
-      <el-editable-column prop="select2" label="iSelect" :edit-render="{type: 'default'}">
+      <elx-editable-column type="selection" width="55"></elx-editable-column>
+      <elx-editable-column type="index" width="55"></elx-editable-column>
+      <elx-editable-column prop="select1" label="ElSelect" :edit-render="{name: 'ElSelect', options: sexList, attrs: {clearable: true}}"></elx-editable-column>
+      <elx-editable-column prop="select2" label="iSelect" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
           <Select v-model="scope.row.select2" clearable>
             <Option v-for="item in sexList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </template>
         <template v-slot="scope">{{ getSelectLabel(scope.row.select2) }}</template>
-      </el-editable-column>
-      <el-editable-column prop="cascader1" label="ElCascader" :edit-render="{name: 'ElCascader', attrs: {options: regionList, clearable: true}}"></el-editable-column>
-      <el-editable-column prop="cascader2" label="iCascader" :edit-render="{type: 'default'}">
+      </elx-editable-column>
+      <elx-editable-column prop="cascader1" label="ElCascader" :edit-render="{name: 'ElCascader', attrs: {options: regionList, clearable: true}}"></elx-editable-column>
+      <elx-editable-column prop="cascader2" label="iCascader" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
           <Cascader :data="regionList" v-model="scope.row.cascader2"></Cascader>
         </template>
         <template v-slot="scope">{{ getCascaderLabel(scope.row.cascader2) }}</template>
-      </el-editable-column>
-      <el-editable-column prop="date1" label="ElDatePicker" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></el-editable-column>
-      <el-editable-column prop="date2" label="iDatePicker" :edit-render="{type: 'default'}">
+      </elx-editable-column>
+      <elx-editable-column prop="date1" label="ElDatePicker" :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+      <elx-editable-column prop="date2" label="iDatePicker" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
           <DatePicker v-model="scope.row.date2" type="date" show-week-numbers></DatePicker>
         </template>
         <template v-slot="scope">{{ getDateLabel(scope.row.date2) }}</template>
-      </el-editable-column>
-      <el-editable-column prop="flag1" label="ElSwitch" :edit-render="{name: 'ElSwitch', type: 'visible'}"></el-editable-column>
-      <el-editable-column prop="flag2" label="iSwitch" :edit-render="{type: 'visible'}">
+      </elx-editable-column>
+      <elx-editable-column prop="flag1" label="ElSwitch" :edit-render="{name: 'ElSwitch', type: 'visible'}"></elx-editable-column>
+      <elx-editable-column prop="flag2" label="iSwitch" :edit-render="{type: 'visible'}">
         <template v-slot:edit="scope">
           <i-switch v-model="scope.row.flag2">
             <span slot="open">开</span>
             <span slot="close">关</span>
           </i-switch>
         </template>
-      </el-editable-column>
-      <el-editable-column label="操作" width="160">
+      </elx-editable-column>
+      <elx-editable-column label="操作" width="160">
         <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
           <el-button size="mini" type="warning" @click="revertEvent(scope.row)">还原</el-button>
         </template>
-      </el-editable-column>
-    </el-editable>
+      </elx-editable-column>
+    </elx-editable>
   </div>
 </template>
 

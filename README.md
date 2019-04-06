@@ -12,7 +12,7 @@
 
 ## Installing
 
-使用旧的方式:
+使用旧的方式：
 
 ```javascript
 import Vue from 'vue'
@@ -22,7 +22,7 @@ import 'vue-element-extends/lib/index.css'
 Vue.use(VueElementExtends)
 ```
 
-向后兼容方式(=> 1.1.x):
+向后兼容方式（-> 1.1.x）：
 
 ```javascript
 import Vue from 'vue'

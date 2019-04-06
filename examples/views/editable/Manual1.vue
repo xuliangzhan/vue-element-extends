@@ -7,7 +7,7 @@
       <el-button type="success" size="small" @click="exportCsvEvent">导出</el-button>
     </div>
 
-    <el-editable
+    <elx-editable
       ref="editable"
       class="manual-table1"
       border
@@ -15,12 +15,12 @@
       :data.sync="list"
       :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
       style="width: 100%">
-      <el-editable-column prop="id" label="ID" width="80"></el-editable-column>
-      <el-editable-column prop="name" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="describe" label="描述" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></el-editable-column>
-      <el-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></el-editable-column>
-      <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
-      <el-editable-column label="操作" width="160">
+      <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
+      <elx-editable-column prop="name" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="describe" label="描述" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>
+      <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
+      <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
+      <elx-editable-column label="操作" width="160">
         <template v-slot="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
             <el-button size="small" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
@@ -31,11 +31,11 @@
             <el-button size="small" type="danger" @click="removeEvent(scope.row)">删除</el-button>
           </template>
         </template>
-      </el-editable-column>
+      </elx-editable-column>
       <template v-slot:append>
         <div>-- slot append --</div>
       </template>
-    </el-editable>
+    </elx-editable>
   </div>
 </template>
 

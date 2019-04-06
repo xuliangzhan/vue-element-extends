@@ -10,7 +10,7 @@
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </div>
 
-    <el-editable
+    <elx-editable
       ref="editable"
       class="dblclick-table6"
       border
@@ -20,29 +20,29 @@
       :row-class-name="tableRowClassName"
       :edit-config="{trigger: 'dblclick', mode: 'cell', isTabKey: true, isArrowKey: true, isCheckedEdit: false}"
       style="width: 100%">
-      <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column type="index" width="55">
+      <elx-editable-column type="selection" width="55"></elx-editable-column>
+      <elx-editable-column type="index" width="55">
         <template v-slot:header>
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
-      </el-editable-column>
+      </elx-editable-column>
       <template v-for="(item, index) in columnConfigs">
         <template v-if="item._show">
           <!-- 给列渲染做特殊处理，也可以写成全动态的数据参数 -->
-          <el-editable-column v-if="item.prop === 'sex'" :key="index" v-bind="item" :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-          <el-editable-column v-else-if="item.prop === 'age'" :key="index" v-bind="item" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></el-editable-column>
-          <el-editable-column v-else-if="item.prop === 'region'" :key="index" v-bind="item" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></el-editable-column>
-          <el-editable-column v-else-if="item.prop === 'date'" :key="index" v-bind="item" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></el-editable-column>
-          <el-editable-column v-else-if="item.prop === 'rate'" :key="index" v-bind="item" :edit-render="{name: 'ElRate', type: 'visible'}"></el-editable-column>
-          <el-editable-column v-else :key="index" v-bind="item" :edit-render="{name: 'ElInput'}"></el-editable-column>
+          <elx-editable-column v-if="item.prop === 'sex'" :key="index" v-bind="item" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
+          <elx-editable-column v-else-if="item.prop === 'age'" :key="index" v-bind="item" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
+          <elx-editable-column v-else-if="item.prop === 'region'" :key="index" v-bind="item" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
+          <elx-editable-column v-else-if="item.prop === 'date'" :key="index" v-bind="item" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+          <elx-editable-column v-else-if="item.prop === 'rate'" :key="index" v-bind="item" :edit-render="{name: 'ElRate', type: 'visible'}"></elx-editable-column>
+          <elx-editable-column v-else :key="index" v-bind="item" :edit-render="{name: 'ElInput'}"></elx-editable-column>
         </template>
       </template>
-      <el-editable-column label="操作" width="100">
+      <elx-editable-column label="操作" width="100">
         <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
-      </el-editable-column>
-    </el-editable>
+      </elx-editable-column>
+    </elx-editable>
 
     <el-pagination
       class="dblclick-table6-pagination"

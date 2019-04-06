@@ -50,7 +50,10 @@
     "url": "git+https://github.com/xuliangzhan/vue-element-extends.git"
   },
   "keywords": [
-    "vue-element-extends"
+    "vue-element-extends",
+    "elx-editable",
+    "vue editable",
+    "el-editable"
   ],
   "author": {
     "name": "Xu Liangzhan",

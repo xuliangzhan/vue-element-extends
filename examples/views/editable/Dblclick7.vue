@@ -11,7 +11,7 @@
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </div>
 
-    <el-editable
+    <elx-editable
       ref="editable"
       class="dblclick-table7"
       border
@@ -25,18 +25,18 @@
       @blur-active="blurActiveEvent"
       @current-change="handleCurrentChange"
       style="width: 100%">
-      <el-editable-column type="selection" width="55"></el-editable-column>
-      <el-editable-column prop="id" label="ID" width="160"></el-editable-column>
-      <el-editable-column prop="name" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></el-editable-column>
-      <el-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></el-editable-column>
-      <el-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></el-editable-column>
-      <el-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatterDate"></el-editable-column>
-      <el-editable-column label="操作" width="100">
+      <elx-editable-column type="selection" width="55"></elx-editable-column>
+      <elx-editable-column prop="id" label="ID" width="160"></elx-editable-column>
+      <elx-editable-column prop="name" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></elx-editable-column>
+      <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
+      <elx-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatterDate"></elx-editable-column>
+      <elx-editable-column label="操作" width="100">
         <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
         </template>
-      </el-editable-column>
-    </el-editable>
+      </elx-editable-column>
+    </elx-editable>
   </div>
 </template>
 

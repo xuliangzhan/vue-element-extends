@@ -20,7 +20,7 @@
       <el-button type="primary" size="mini" @click="getAllEvent">获取所有数据</el-button>
     </p>
 
-    <el-editable
+    <elx-editable
       ref="editable"
       class="click-table12"
       stripe
@@ -33,24 +33,24 @@
       :edit-rules="validRules"
       :edit-config="{trigger: 'click', mode: 'cell', showIcon: true, showStatus: true, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
       style="width: 100%">
-      <el-editable-column
+      <elx-editable-column
         type="selection"
-        width="55"></el-editable-column>
-      <el-editable-column
+        width="55"></elx-editable-column>
+      <elx-editable-column
         type="index"
-        width="55"></el-editable-column>
-      <el-editable-column
+        width="55"></elx-editable-column>
+      <elx-editable-column
         prop="name"
         label="名字"
         min-width="220"
         show-overflow-tooltip
-        :edit-render="{name: 'ElInput'}"> </el-editable-column>
-      <el-editable-column
+        :edit-render="{name: 'ElInput'}"> </elx-editable-column>
+      <elx-editable-column
         prop="sex"
         label="性别"
         width="100"
-        :edit-render="{name: 'ElSelect', options: sexList}"></el-editable-column>
-      <el-editable-column
+        :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
+      <elx-editable-column
         prop="userInfo.sex1"
         label="方式1"
         width="160"
@@ -65,8 +65,8 @@
           </el-select>
         </template>
         <template v-slot="scope">{{ getSelectLabel(scope.row.userInfo.sex1, 'val', 'spell', sexList) }}</template>
-      </el-editable-column>
-      <el-editable-column
+      </elx-editable-column>
+      <elx-editable-column
         prop="userInfo.base.other.sex2"
         label="方式2"
         width="160"
@@ -80,8 +80,8 @@
               :label="item.spell"></el-option>
           </el-select>
         </template>
-      </el-editable-column>
-      <el-editable-column
+      </elx-editable-column>
+      <elx-editable-column
         prop="userInfo.base.age"
         label="年龄"
         width="160"
@@ -92,8 +92,8 @@
             v-bind="scope.$render.attrs"
             @input="$refs.editable.updateStatus(scope)"></el-input-number>
         </template>
-      </el-editable-column>
-      <el-editable-column
+      </elx-editable-column>
+      <elx-editable-column
         prop="userInfo.region"
         label="地区"
         min-width="180"
@@ -104,8 +104,8 @@
             v-bind="scope.$render.attrs"
             @change="$refs.editable.updateStatus(scope)"></el-cascader>
         </template>
-      </el-editable-column>
-      <el-editable-column
+      </elx-editable-column>
+      <elx-editable-column
         prop="dateObj.date1"
         label="选择日期"
         width="220"
@@ -117,19 +117,19 @@
             v-bind="scope.$render.attrs"
             @change="$refs.editable.updateStatus(scope)"></el-date-picker>
         </template>
-      </el-editable-column>
-      <el-editable-column
+      </elx-editable-column>
+      <elx-editable-column
         prop="slider"
         label="滑块"
         width="200"
-        :edit-render="{name: 'ElSlider', type: 'visible'}"></el-editable-column>
-      <el-editable-column label="操作" width="180">
+        :edit-render="{name: 'ElSlider', type: 'visible'}"></elx-editable-column>
+      <elx-editable-column label="操作" width="180">
         <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope)">删除</el-button>
           <el-button size="mini" type="warning" @click="revertEvent(scope.row)">默认值</el-button>
         </template>
-      </el-editable-column>
-    </el-editable>
+      </elx-editable-column>
+    </elx-editable>
   </div>
 </template>
 

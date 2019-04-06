@@ -16,8 +16,13 @@
 import 'vue-element-extends/lib/index.css'
 import { Editable, EditableColumn } from 'vue-element-extends'
 
+// 新的方式
+Vue.component(Editable.name, Editable)
+Vue.component(EditableColumn.name, EditableColumn)
+
+// 兼容旧的方式
 Vue.component('ElEditable', Editable)
-Vue.component('ElEditableColumn ', EditableColumn)
+Vue.component('ElEditableColumn', EditableColumn)
 ```
 
 ## API

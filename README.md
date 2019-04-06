@@ -10,7 +10,7 @@
 注意：ElementUI 2.3.x ~ 2.6.x 对应 vue-element-extends 1.0.x 版本
 ***
 
-## Install
+## Installing
 
 ```javascript
 import 'vue-element-extends/lib/index.css'

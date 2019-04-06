@@ -42,6 +42,8 @@ npm install xe-utils vue-element-extends
 <script src="https://unpkg.com/vue-element-extends"></script>
 ```
 
+Case 1:
+
 ```javascript
 import Vue from 'vue'
 import { Editable, EditableColumn } from 'vue-element-extends'
@@ -50,6 +52,8 @@ import 'vue-element-extends/lib/index.css'
 Vue.use(Editable)
 Vue.use(EditableColumn)
 ```
+
+Case 2:
 
 ```javascript
 import Vue from 'vue'

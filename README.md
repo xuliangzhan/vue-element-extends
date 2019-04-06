@@ -30,19 +30,19 @@ Vue.component('ElEditableColumn', EditableColumn)
 ### Editable Attributes
 
 ```html
-<el-editable
+<elx-editable
   ref="editable"
   :edit-config="{trigger: 'click', mode: 'cell'}"
   :edit-rules="{name: [{required: true, message: 'Please enter a name.', trigger: 'blur'}]}">
-  <el-editable-column
+  <elx-editable-column
     prop="name"
     label="Name"
-    :edit-render="{name: 'ElInput'}"></el-editable-column>
-  <el-editable-column
+    :edit-render="{name: 'ElInput'}"></elx-editable-column>
+  <elx-editable-column
     prop="age"
     label="Age"
-    :edit-render="{name: 'ElInputNumber'}"></el-editable-column>
-</el-editable>
+    :edit-render="{name: 'ElInputNumber'}"></elx-editable-column>
+</elx-editable>
 ```
 
 edit-rules 校验规则配置
@@ -124,10 +124,10 @@ edit-config 编辑参数配置
 ### Editable-Column Attributes
 
 ```html
-<el-editable-column
+<elx-editable-column
   prop="name"
   label="Name"
-  :edit-render="{name: 'ElInput'}"></el-editable-column>
+  :edit-render="{name: 'ElInput'}"></elx-editable-column>
 ```
 
 edit-render 渲染参数配置

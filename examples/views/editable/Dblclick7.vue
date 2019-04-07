@@ -1,6 +1,7 @@
 <template>
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">树表格</p>
+    <p style="color: red;font-size: 12px;">可以通过 props 指定 children 属性：props: {children: 'children'}</p>
 
     <div class="dblclick-table7-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
@@ -21,7 +22,7 @@
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', mode: 'cell', validTooltip: { placement: 'right', popperClass: 'dblclick-table7-validtip' }}"
+      :edit-config="{trigger: 'dblclick', mode: 'cell', props: {children: 'children3'}, validTooltip: { placement: 'right', popperClass: 'dblclick-table7-validtip' }}"
       @blur-active="blurActiveEvent"
       @current-change="handleCurrentChange"
       style="width: 100%">
@@ -68,7 +69,7 @@ export default {
       this.loading = true
       this.pendingRemoveList = []
       XEAjax.doGet('/api/file/list').then(({ data }) => {
-        this.list = XEUtils.toArrayTree(data, { key: 'id', parentKey: 'parentId' })
+        this.list = XEUtils.toArrayTree(data, { key: 'id', parentKey: 'parentId', children: 'children3' })
         this.loading = false
       }).catch(e => {
         this.loading = false

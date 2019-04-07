@@ -74,7 +74,10 @@ export default {
       lastActive: null,
       lastOperation: null,
       callEvent: null,
-      isUpdateData: false
+      isUpdateData: false,
+      elTreeOpts: {
+        children: 'children'
+      }
     }
   },
   computed: {
@@ -157,6 +160,8 @@ export default {
         showStatus: true,
         // 编辑模式
         mode: 'cell',
+        // 配置项
+        props: this.elTreeOpts,
         // 是否使用默认的 tip 校验提示框，如果同时使用了数据校验和 fixed 列，建议设置为 true，否则会出现多个 tip 提示（因为隐藏的 fixed 列部分也会被渲染，所以会导致同时出现多个校验提示）
         useDefaultValidTip: false,
         // 是否关闭校验提示
@@ -208,16 +213,16 @@ export default {
       this.$nextTick(() => this.$refs.refElTable.clearSelection())
     },
     toggleRowSelection (record, selected) {
-      this.$nextTick(() => this.$refs.refElTable.toggleRowSelection(XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' }), selected))
+      this.$nextTick(() => this.$refs.refElTable.toggleRowSelection(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts), selected))
     },
     toggleAllSelection () {
       this.$nextTick(() => this.$refs.refElTable.toggleAllSelection())
     },
     toggleRowExpansion (record, expanded) {
-      this.$nextTick(() => this.$refs.refElTable.toggleRowExpansion(XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' }), expanded))
+      this.$nextTick(() => this.$refs.refElTable.toggleRowExpansion(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts), expanded))
     },
     setCurrentRow (record) {
-      this.$nextTick(() => this.$refs.refElTable.setCurrentRow(XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })))
+      this.$nextTick(() => this.$refs.refElTable.setCurrentRow(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)))
     },
     clearSort () {
       this.$nextTick(() => this.$refs.refElTable.clearSort())
@@ -412,10 +417,16 @@ export default {
       this._updateData()
     },
     _getData (datas) {
-      return XEUtils.mapTree(datas || this.datas, row => row.data, { children: 'children' })
+      return XEUtils.mapTree(datas || this.datas, row => row.data, {
+        children: this.elTreeOpts.children,
+        mapChildren: this.configs.props.children
+      })
     },
     _toDatas (datas) {
-      return XEUtils.mapTree(datas, item => this._toData(item), { children: 'children' })
+      return XEUtils.mapTree(datas, item => this._toData(item), {
+        children: this.configs.props.children,
+        mapChildren: this.elTreeOpts.children
+      })
     },
     _toData (item, status) {
       if (item && item._EDITABLE_PROTO === this.editProto) {
@@ -486,7 +497,7 @@ export default {
           if (row.data._checked) {
             this.$refs.refElTable.toggleRowSelection(row, true)
           }
-        }, { children: 'children' })
+        }, this.elTreeOpts)
       })
     },
     // 方向键左右移动
@@ -1143,7 +1154,7 @@ export default {
       return this.$nextTick()
     },
     reloadRow (record) {
-      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
       if (matchObj) {
         let { item } = matchObj
         XEUtils.destructuring(item.data, record)
@@ -1158,7 +1169,7 @@ export default {
      */
     revert (record) {
       if (record) {
-        let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
+        let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
         let { data, store } = matchObj.item
         XEUtils.destructuring(data, XEUtils.clone(store, true))
       } else {
@@ -1210,7 +1221,7 @@ export default {
         if (record === -1) {
           this.datas.push(recordItem)
         } else {
-          let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
+          let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
           if (matchObj) {
             matchObj.items.splice(matchObj.index, 0, recordItem)
           } else {
@@ -1224,7 +1235,7 @@ export default {
       return this.$nextTick().then(() => recordItem.data)
     },
     hasRowInsert (record) {
-      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
       return matchObj && matchObj.item.editStatus === 'insert'
     },
     remove (record) {
@@ -1242,7 +1253,7 @@ export default {
       if (records && records.length) {
         this._saveOperStatus()
         records.forEach(record => {
-          let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
+          let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
           if (matchObj) {
             let { index, items } = matchObj
             let removeRow = items.splice(index, 1)
@@ -1277,17 +1288,17 @@ export default {
       }
     },
     getInsertRecords () {
-      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'insert', { children: 'children' }))
+      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'insert', this.elTreeOpts))
     },
     getRemoveRecords () {
       return this._getData(this.deleteRecords)
     },
     getUpdateRecords () {
       return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'initial' && !XEUtils.isEqualWith(item.data, item.store, (v1, v2, key) => {
-        if (key === 'children') {
+        if (key === this.elTreeOpts.children) {
           return true
         }
-      })), { children: 'children' })
+      })), this.elTreeOpts)
     },
     clearActive () {
       this.callEvent = this._callTriggerEvent('clear')
@@ -1337,7 +1348,7 @@ export default {
       return null
     },
     hasRowChange (record, property) {
-      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
       return property ? this._isRowDataChange(matchObj.item, { property }) : this._isRowDataChange(matchObj.item)
     },
     /**
@@ -1365,7 +1376,7 @@ export default {
     },
     checkValid () {
       // 查找是否存在校验不通过的列
-      let row = XEUtils.findTree(this.datas, row => row.validActive, { children: 'children' })
+      let row = XEUtils.findTree(this.datas, row => row.validActive, this.elTreeOpts)
       if (row) {
         let column = XEUtils.findIndexOf(this.getColumns(), column => column.property === row.validActive)
         return {
@@ -1388,7 +1399,7 @@ export default {
     validateRow (record, cb) {
       this.callEvent = this._callTriggerEvent('valid')
       return new Promise((resolve, reject) => {
-        let matchObj = XEUtils.findTree(this.datas, row => row.data === record, { children: 'children' })
+        let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
         let row = matchObj.item
         this._validRowRules('all', row)
           .then(rest => {

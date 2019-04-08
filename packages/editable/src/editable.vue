@@ -451,8 +451,8 @@ export default {
         // 编辑状态
         editStatus: status || 'initial'
       }
-      if (item.hasChildren) {
-        rest.hasChildren = item.hasChildren
+      if (data.hasChildren) {
+        rest.hasChildren = data.hasChildren
       }
       return rest
     },

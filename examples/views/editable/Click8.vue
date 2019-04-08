@@ -5,10 +5,27 @@
     <div class="click-table8-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
-      <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </div>
+
+    <el-form ref="tableform" class="click-table2-form" size="mini" :inline="true" :model="formData">
+      <el-form-item label="键值" prop="key">
+        <el-input v-model="formData.key" placeholder="请输入键值"></el-input>
+      </el-form-item>
+      <el-form-item label="内容" prop="name">
+        <el-input v-model="formData.name" placeholder="请输入内容"></el-input>
+      </el-form-item>
+      <el-form-item label="语言" prop="language">
+        <el-select v-model="formData.language" placeholder="请选择语言">
+          <el-option v-for="(item, index) in languageList" :key="index" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="searchEvent">查询</el-button>
+        <el-button @click="$refs.tableform.resetFields()">重置</el-button>
+      </el-form-item>
+    </el-form>
 
     <elx-editable
       ref="editable"
@@ -19,25 +36,15 @@
       :data.sync="list"
       :span-method="objectSpanMethod"
       :row-class-name="tableRowClassName"
-      :edit-config="{trigger: 'click', mode: 'row'}"
+      :edit-rules="validRules"
+      :edit-config="{trigger: 'click', mode: 'cell'}"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
-      <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
-      <elx-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
-      <elx-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
-      <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
-      <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
-      <elx-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
-      <elx-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>
-      <elx-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
-      <elx-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></elx-editable-column>
+      <elx-editable-column prop="key" label="键值" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="name" label="内容" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="language" label="语言" width="160" :edit-render="{name: 'ElSelect', options: languageList}"></elx-editable-column>
       <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
-      <elx-editable-column label="操作" width="100">
-        <template v-slot="scope">
-          <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
-        </template>
-      </elx-editable-column>
     </elx-editable>
 
     <el-pagination
@@ -56,33 +63,44 @@
 <script>
 import XEUtils from 'xe-utils'
 import XEAjax from 'xe-ajax'
-import { MessageBox, Message } from 'element-ui'
+import { Message } from 'element-ui'
 
 export default {
   data () {
     return {
       loading: false,
-      sexList: [],
-      regionList: [],
+      languageList: [],
       list: [],
+      formData: {
+        key: null,
+        name: null,
+        language: null
+      },
       pageVO: {
         currentPage: 1,
         pageSize: 10,
         totalResult: 0
       },
+      validRules: {
+        key: [
+          { required: true, message: '请输入键值', trigger: 'change' }
+        ],
+        language: [
+          { required: true, message: '请选择语言', trigger: 'change' }
+        ]
+      },
       pendingRemoveList: []
     }
   },
   created () {
-    this.findSexList()
-    this.findRegionList()
+    this.findLanguageList()
     this.findList()
   },
   methods: {
     findList () {
       this.loading = true
       this.pendingRemoveList = []
-      XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`).then(response => {
+      XEAjax.doGet(`/api/i18n/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`, this.formData).then(response => {
         let { page, result } = response.data
         this.list = result
         this.pageVO.totalResult = page.totalResult
@@ -91,14 +109,9 @@ export default {
         this.loading = false
       })
     },
-    findSexList () {
-      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
-        this.sexList = data
-      })
-    },
-    findRegionList () {
-      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
-        this.regionList = data
+    findLanguageList () {
+      XEAjax.doGet('/api/conf/languages/list').then(({ data }) => {
+        this.languageList = data
       })
     },
     searchEvent () {
@@ -123,46 +136,27 @@ export default {
       return ''
     },
     objectSpanMethod ({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 2) {
-        if (rowIndex % 2 === 0) {
-          return {
-            rowspan: 2,
-            colspan: 1
-          }
-        } else {
+      let prevRow = this.list[rowIndex - 1]
+      let nextRow = this.list[rowIndex + 1]
+      if (column.property === 'key') {
+        if (prevRow && prevRow.key === row.key) {
           return {
             rowspan: 0,
             colspan: 0
           }
         }
+        if (nextRow && nextRow.key === row.key) {
+          return {
+            rowspan: 2,
+            colspan: 1
+          }
+        }
       }
     },
     insertEvent () {
-      this.$refs.editable.insert({
-        name: `New ${Date.now()}`,
-        age: 26,
-        flag: false
-      }).then(({ row }) => {
-        this.$refs.editable.setActiveRow(row)
+      this.$refs.editable.insert().then(({ row }) => {
+        this.$refs.editable.setActiveCell(row, 'key')
       })
-    },
-    removeEvent (row) {
-      if (row.id) {
-        MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.loading = true
-          XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
-            this.findList()
-          }).catch(e => {
-            this.loading = false
-          })
-        }).catch(e => e)
-      } else {
-        this.$refs.editable.remove(row)
-      }
     },
     pendingRemoveEvent () {
       let selection = this.$refs.editable.getSelecteds()
@@ -189,32 +183,6 @@ export default {
         })
       }
     },
-    deleteSelectedEvent () {
-      let removeRecords = this.$refs.editable.getSelecteds()
-      if (removeRecords.length) {
-        MessageBox.confirm('确定删除所选数据?', '温馨提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.loading = true
-          XEAjax.doPost('/api/user/save', { removeRecords }).then(({ data }) => {
-            Message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.findList()
-          }).catch(e => {
-            this.loading = false
-          })
-        }).catch(e => e)
-      } else {
-        Message({
-          type: 'info',
-          message: '请至少选择一条数据！'
-        })
-      }
-    },
     submitEvent () {
       this.$refs.editable.validate(valid => {
         if (valid) {
@@ -232,7 +200,7 @@ export default {
               }
             })
             this.loading = true
-            XEAjax.doPost('/api/user/save', { insertRecords, updateRecords, removeRecords }).then(({ data }) => {
+            XEAjax.doPost('/api/i18n/save', { insertRecords, updateRecords, removeRecords }).then(({ data }) => {
               Message({
                 type: 'success',
                 message: '保存成功!'

@@ -115,7 +115,7 @@ export default {
     insertEvent (hasChild) {
       let data = {
         id: XEUtils.uniqueId('N_'), // 树表格中 id 不能重复
-        name: `New ${Date.now()}`,
+        name: `Name_${XEUtils.uniqueId()}`,
         age: 26,
         flag: false
       }
@@ -124,7 +124,7 @@ export default {
         data.children3 = [{
           id: XEUtils.uniqueId('N_'),
           parentId: data.id,
-          name: `New ${Date.now()}`,
+          name: `Name_${XEUtils.uniqueId()}`,
           age: 26,
           flag: false
         }]

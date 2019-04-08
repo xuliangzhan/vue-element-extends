@@ -26,7 +26,7 @@
       <elx-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatterDate"></elx-editable-column>
-      <elx-editable-column label="操作" width="150" fixed="right">
+      <elx-editable-column label="操作" width="150">
         <template v-slot="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
             <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
@@ -112,7 +112,7 @@ export default {
       if (!activeInfo && !insertRecords.length) {
         let data = {
           id: '-',
-          name: `New ${Date.now()}`
+          name: `Name_${XEUtils.uniqueId()}`
         }
         if (this.currentRow && this.currentRow.parentId) {
           data.parentId = this.currentRow.parentId

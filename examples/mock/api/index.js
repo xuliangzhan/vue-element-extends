@@ -4,6 +4,7 @@ import Helper from './helper'
 GET('/api/conf/region/list', require('./conf/region.json'))
 GET('/api/conf/sex/list', require('./conf/sex.json'))
 GET('/api/conf/columns/list', require('./conf/columns.json'))
+GET('/api/conf/languages/list', require('./conf/languages.json'))
 
 class RoleVO {
   constructor (data) {
@@ -96,3 +97,21 @@ POST('/api/column/update', columnHelper.updateByBody())
 POST('/api/column/save', columnHelper.saveListByBody())
 GET('/api/column/list', columnHelper.findList())
 GET('/api/column/page/list/{pageSize}/{currentPage}', columnHelper.findPageList())
+
+class i18nVO {
+  constructor (data) {
+    this.id = data.id
+    this.key = data.key
+    this.name = data.name
+    this.language = data.language
+    this.createTime = data.createTime
+    this.updateTime = data.updateTime
+  }
+}
+const i18nHelper = new Helper(require('./i18n/list.json'), i18nVO)
+DELETE('/api/i18n/delete/{id}', i18nHelper.deleteByPathVariable())
+POST('/api/i18n/add', i18nHelper.insertByBody())
+POST('/api/i18n/update', i18nHelper.updateByBody())
+POST('/api/i18n/save', i18nHelper.saveListByBody())
+GET('/api/i18n/list', i18nHelper.findList())
+GET('/api/i18n/page/list/{pageSize}/{currentPage}', i18nHelper.findPageList({ sort: ['key'], order: 'asc' }))

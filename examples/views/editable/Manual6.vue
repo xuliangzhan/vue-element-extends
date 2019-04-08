@@ -14,6 +14,7 @@
       border
       size="mini"
       row-key="id"
+      highlight-current-row
       :data.sync="list"
       :edit-rules="validRules"
       :edit-config="{trigger: 'manual', mode: 'row', useDefaultValidTip: true, clearActiveMethod}"
@@ -113,11 +114,10 @@ export default {
         if (this.currentRow && this.currentRow.parentId) {
           data.parentId = this.currentRow.parentId
         }
-        this.$refs.editable.insertAt(data, this.currentRow).then(row => {
+        this.$refs.editable.insertAt(data, this.currentRow).then(({ row }) => {
           // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 刷新表格
-          this.$refs.editable.refresh().then(() => {
-            this.$refs.editable.setActiveCell(row, 'name')
-          })
+          this.$refs.editable.refresh()
+            .then(() => this.$refs.editable.setActiveCell(row, 'name'))
         })
       }
     },
@@ -293,9 +293,15 @@ export default {
           }
           this.loading = true
           this.$refs.editable.clearActive()
+          // 局部保存
           XEAjax.doPost(url, row).then(({ data }) => {
-            this.findList()
+            // 更新数据
+            XEUtils.destructuring(row, data[0])
+            // 改变状态
+            this.$refs.editable.reloadRow(row)
+              .then(() => this.$refs.editable.refresh())
             Message({ message: '保存成功', type: 'success' })
+            this.loading = false
           }).catch(e => {
             this.loading = false
           })

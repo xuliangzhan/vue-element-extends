@@ -237,7 +237,7 @@ export default {
       this.$refs.editable.insert({
         age: 26,
         flag: false
-      }).then(row => {
+      }).then(({ row }) => {
         this.$refs.editable.setActiveRow(row)
       })
     },

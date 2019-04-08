@@ -256,7 +256,7 @@ export default {
           }
         },
         slider: 20
-      }).then(row => {
+      }).then(({ row }) => {
         this.$refs.editable.setActiveCell(row, 'name')
       })
     },

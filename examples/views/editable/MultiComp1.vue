@@ -137,7 +137,7 @@ export default {
         cascader2: [],
         flag1: false,
         flag2: false
-      }).then(row => {
+      }).then(({ row }) => {
         this.$refs.editable.setActiveRow(row)
       })
     },

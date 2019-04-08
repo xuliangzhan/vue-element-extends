@@ -71,7 +71,7 @@ const fileHelper = new Helper(require('./file/list.json'), FileVO)
 DELETE('/api/file/delete/{id}', fileHelper.deleteByPathVariable())
 POST('/api/file/add', fileHelper.insertByBody())
 POST('/api/file/update', fileHelper.updateByBody())
-POST('/api/file/save', fileHelper.saveListByBody())
+POST('/api/file/save', fileHelper.saveTreeListByBody())
 GET('/api/file/list', fileHelper.findList())
 GET('/api/file/page/list/{pageSize}/{currentPage}', fileHelper.findPageList())
 

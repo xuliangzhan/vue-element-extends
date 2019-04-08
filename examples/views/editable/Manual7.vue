@@ -295,12 +295,12 @@ export default {
               required: false,
               visible: true,
               type: 'ElInput'
-            }).then(row => {
+            }).then(({ row }) => {
               this.$refs[name].setActiveRow(row)
             })
             break
           case 'editable2':
-            this.$refs[name].insert().then(row => {
+            this.$refs[name].insert().then(({ row }) => {
               this.$refs[name].setActiveRow(row)
             })
             break

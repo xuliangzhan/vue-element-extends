@@ -158,6 +158,61 @@ class Helper {
       return response
     }
   }
+  // 树结构 批量保存
+  saveTreeListByBody (options) {
+    let { list, ModelVO } = this
+    let { key = 'id', parentKey = 'parentId', page } = options || {}
+    return function (request, response) {
+      let insertRest = []
+      let updateRest = []
+      let removeRest = []
+      if (request.body) {
+        let updateTime = Date.now()
+        let updateRecords = request.body[page && page.update ? page.update : 'updateRecords'] || []
+        let removeRecords = request.body[page && page.remove ? page.remove : 'removeRecords'] || []
+        let insertRecords = request.body[page && page.insert ? page.insert : 'insertRecords'] || []
+        removeRest = XEUtils.remove(list, item => removeRecords.some(row => row[key] === item[key]))
+        updateRecords.forEach(data => {
+          let item = list.find(item => item[key] === data[key])
+          if (item) {
+            XEUtils.destructuring(item, data, { updateTime })
+            updateRest.push(item)
+          }
+        })
+        let doneList = []
+        XEUtils.each(XEUtils.groupBy(insertRecords.filter(item => item[parentKey]), parentKey), (childs, parentId) => {
+          let parentItem = insertRecords.find(item => item[key] === parentId)
+          if (parentItem) {
+            let rest = Object.assign(new ModelVO(parentItem), { [key]: idIndex++, updateTime, createTime: updateTime })
+            insertRest.push(rest)
+            list.push(rest)
+            doneList.push(parentItem)
+            childs.forEach(item => {
+              let child = Object.assign(new ModelVO(item), { [key]: idIndex++, [parentKey]: rest[key], updateTime, createTime: updateTime })
+              insertRest.push(child)
+              list.push(child)
+              doneList.push(item)
+            })
+          } else {
+            parentItem = list.find(item => '' + item[key] === parentId)
+            childs.forEach(item => {
+              let child = Object.assign(new ModelVO(item), { [key]: idIndex++, [parentKey]: parentItem[key], updateTime, createTime: updateTime })
+              insertRest.push(child)
+              list.push(child)
+              doneList.push(item)
+            })
+          }
+        })
+        insertRecords.filter(item => !doneList.includes(item)).forEach(data => {
+          let rest = Object.assign(new ModelVO(data), { [key]: idIndex++, updateTime, createTime: updateTime })
+          insertRest.push(rest)
+          list.push(rest)
+        })
+      }
+      response.body = { insertRest, updateRest, removeRest }
+      return response
+    }
+  }
 }
 
 export default Helper

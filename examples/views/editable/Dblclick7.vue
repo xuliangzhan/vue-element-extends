@@ -4,7 +4,8 @@
     <p style="color: red;font-size: 12px;">可以通过 props 指定 children 属性：props: {children: 'children'}</p>
 
     <div class="dblclick-table7-oper">
-      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(true)">新增大类</el-button>
+      <el-button type="success" size="mini" @click="insertEvent()">新增小类</el-button>
       <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
@@ -68,7 +69,7 @@ export default {
     findList () {
       this.loading = true
       this.pendingRemoveList = []
-      XEAjax.doGet('/api/file/list').then(({ data }) => {
+      return XEAjax.doGet('/api/file/list').then(({ data }) => {
         this.list = XEUtils.toArrayTree(data, { key: 'id', parentKey: 'parentId', children: 'children3' })
         this.loading = false
       }).catch(e => {
@@ -108,19 +109,31 @@ export default {
     blurActiveEvent (row, column) {
       this.$refs.editable.validateRow(row)
     },
-    insertEvent () {
+    insertEvent (hasChild) {
       let data = {
         id: `${XEUtils.uniqueId('ADD_')}`, // 树表格中 id 不能重复
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
       }
-      if (this.currentRow && this.currentRow.parentId) {
-        data.parentId = this.currentRow.parentId
+      // 如果新增大类，默认一个子节点
+      if (hasChild) {
+        data.children3 = [{
+          id: `${XEUtils.uniqueId('ADD_')}`,
+          parentId: data.id,
+          name: `New ${Date.now()}`,
+          age: 26,
+          flag: false
+        }]
       }
-      this.$refs.editable.insertAt(data, this.currentRow).then(row => {
+      this.$refs.editable.insertAt(data, this.currentRow).then(({ row, parent }) => {
+        // 组装层级关系
+        if (parent) {
+          row.parentId = parent.id
+        }
         // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 刷新表格
         this.$refs.editable.refresh().then(() => {
+          // 默认 name 字段为编辑状态
           this.$refs.editable.setActiveCell(row, 'name')
         })
       })

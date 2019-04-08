@@ -66,7 +66,7 @@ export default {
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
-      }).then(row => {
+      }).then(({ row }) => {
         this.$refs.editable.setActiveCell(row, 'name')
       })
     },

@@ -28,7 +28,7 @@
       @current-change="handleCurrentChange"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
-      <elx-editable-column prop="id" label="ID" width="160"></elx-editable-column>
+      <elx-editable-column prop="id" label="ID" width="160" :formatter="formatterId"></elx-editable-column>
       <elx-editable-column prop="name" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
@@ -76,6 +76,9 @@ export default {
         this.loading = false
       })
     },
+    formatterId (row, column, cellValue, index) {
+      return this.$refs.editable.hasRowInsert(row) ? '' : cellValue
+    },
     formatColumnSize (row, column, cellValue, index) {
       if (XEUtils.isNumber(cellValue)) {
         let units = ['B', 'KB', 'MB', 'GB', 'TB']
@@ -111,7 +114,7 @@ export default {
     },
     insertEvent (hasChild) {
       let data = {
-        id: `${XEUtils.uniqueId('ADD_')}`, // 树表格中 id 不能重复
+        id: XEUtils.uniqueId('N_'), // 树表格中 id 不能重复
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
@@ -119,7 +122,7 @@ export default {
       // 如果新增大类，默认一个子节点
       if (hasChild) {
         data.children3 = [{
-          id: `${XEUtils.uniqueId('ADD_')}`,
+          id: XEUtils.uniqueId('N_'),
           parentId: data.id,
           name: `New ${Date.now()}`,
           age: 26,

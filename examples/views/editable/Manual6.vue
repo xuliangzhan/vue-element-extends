@@ -21,7 +21,7 @@
       @current-change="handleCurrentChange"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
-      <elx-editable-column prop="id" label="ID" width="140"></elx-editable-column>
+      <elx-editable-column prop="id" label="ID" width="140" :formatter="formatterId"></elx-editable-column>
       <elx-editable-column prop="name" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
@@ -76,6 +76,9 @@ export default {
       }).catch(e => {
         this.loading = false
       })
+    },
+    formatterId (row, column, cellValue, index) {
+      return this.$refs.editable.hasRowInsert(row) ? '' : cellValue
     },
     formatColumnSize (row, column, cellValue, index) {
       if (XEUtils.isNumber(cellValue)) {

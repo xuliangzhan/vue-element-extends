@@ -198,7 +198,7 @@ edit-render 渲染参数配置
 
 ## Example
 
-Run 1.0.x demo on [jsfiddle.net](https://jsfiddle.net/3vo8qhtk/) or [runjs](https://jsrun.net/HFXKp/edit)
+Run 1.0.x demo on [jsfiddle.net](https://jsfiddle.net/3vo8qhtk/) or [runjs](https://jsrun.net/HFXKp/edit)  
 Run 1.1.x demo on [jsfiddle.net](https://jsfiddle.net/0u86zwbv/) or [runjs](https://jsrun.net/zTXKp/edit)
 
 😱**编辑表格响应属性及渲染开销较大，不适用于一页显示海量数据的表格；适用于使用分页加载的数据表格**😱  

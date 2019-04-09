@@ -1,5 +1,6 @@
 <template>
   <div v-loading="loading">
+    <p style="color: red;font-size: 12px;">注意：element-ui table 的实现方式 fixed 列 left 和 right 都是克隆一份独立的 table，所以如果使用了 fixed 列不可避免的会多次渲染 template</p>
     <p style="color: red;font-size: 12px;">带校验：name字段（校验必填，校验3-50个字符）；sex字段（校验必填）；age（校验18-28）</p>
     <p style="color: red;font-size: 12px;">默认勾选：可以给 data 设置特殊；_checked=true 默认选中；_disabled=true 默认禁止勾选，如果自定义了 selectable 方法，则根据该方法结果决定是否允许勾选</p>
 

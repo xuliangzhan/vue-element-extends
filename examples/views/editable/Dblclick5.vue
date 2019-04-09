@@ -94,6 +94,9 @@
 
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
       <el-transfer
+        filterable
+        :filter-method="filterColumnMethod"
+        filter-placeholder="请输入列名"
         v-model="selectColumns"
         :data="columnConfigs"
         :titles="['隐藏列', '显示列']"
@@ -208,6 +211,9 @@ export default {
         return 'delete-row'
       }
       return ''
+    },
+    filterColumnMethod (query, item) {
+      return item.label.indexOf(query) > -1
     },
     insertEvent () {
       this.$refs.editable.insert({

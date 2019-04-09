@@ -302,8 +302,7 @@ export default {
         if (valid) {
           alert('成功')
         } else {
-          console.log('error submit!!')
-          return false
+          Message({ message: '校验不通过', type: 'error' })
         }
       })
     },

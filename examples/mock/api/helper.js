@@ -89,6 +89,24 @@ class Helper {
       return response
     }
   }
+  // 树结构 删除单条
+  deleteTreeByPathVariable (options) {
+    let { list } = this
+    let { key = 'id', parentKey = 'parentId' } = options || {}
+    return function (request, response, { pathVariable }) {
+      let rest = []
+      if (pathVariable) {
+        let removes = XEUtils.remove(list, item => item[key] === pathVariable[key])
+        rest = rest.concat(removes)
+        while (removes.length) {
+          removes = XEUtils.remove(list, item => removes.some(row => row[key] === item[parentKey]))
+          rest = rest.concat(removes)
+        }
+      }
+      response.body = rest
+      return response
+    }
+  }
   // 插入单条
   insertByBody (options) {
     let { list, ModelVO } = this
@@ -103,6 +121,31 @@ class Helper {
           result.push(rest)
           list.push(rest)
         })
+      }
+      return result
+    }
+  }
+  // 树结构 插入单条
+  insertTreeByBody (options) {
+    let { list, ModelVO } = this
+    let { key = 'id', parentKey = 'parentId' } = options || {}
+    return function (request, response) {
+      let result = []
+      if (request.body) {
+        let updateTime = Date.now()
+        let insertRecords = [request.body]
+        let insertTree = (records, parentObj) => {
+          records.forEach(item => {
+            let rest = Object.assign(new ModelVO(item), { [key]: idIndex++, updateTime, createTime: updateTime })
+            if (parentObj) {
+              rest[parentKey] = parentObj[key]
+            }
+            result.push(rest)
+            list.push(rest)
+            insertTree(item.children || [], rest)
+          })
+        }
+        insertTree(XEUtils.toArrayTree(insertRecords, { key, parentKey }))
       }
       return result
     }
@@ -171,7 +214,14 @@ class Helper {
         let updateRecords = request.body[page && page.update ? page.update : 'updateRecords'] || []
         let removeRecords = request.body[page && page.remove ? page.remove : 'removeRecords'] || []
         let insertRecords = request.body[page && page.insert ? page.insert : 'insertRecords'] || []
-        removeRest = XEUtils.remove(list, item => removeRecords.some(row => row[key] === item[key]))
+        // 删除树
+        let removes = XEUtils.remove(list, item => removeRecords.some(row => row[key] === item[key]))
+        removeRest = removeRest.concat(removes)
+        while (removes.length) {
+          removes = XEUtils.remove(list, item => removes.some(row => row[key] === item[parentKey]))
+          removeRest = removeRest.concat(removes)
+        }
+        // 更新树
         updateRecords.forEach(data => {
           let item = list.find(item => item[key] === data[key])
           if (item) {
@@ -179,35 +229,19 @@ class Helper {
             updateRest.push(item)
           }
         })
-        let doneList = []
-        XEUtils.each(XEUtils.groupBy(insertRecords.filter(item => item[parentKey]), parentKey), (childs, parentId) => {
-          let parentItem = insertRecords.find(item => item[key] === parentId)
-          if (parentItem) {
-            let rest = Object.assign(new ModelVO(parentItem), { [key]: idIndex++, updateTime, createTime: updateTime })
+        // 插入树
+        let insertTree = (records, parentObj) => {
+          records.forEach(item => {
+            let rest = Object.assign(new ModelVO(item), { [key]: idIndex++, updateTime, createTime: updateTime })
+            if (parentObj) {
+              rest[parentKey] = parentObj[key]
+            }
             insertRest.push(rest)
             list.push(rest)
-            doneList.push(parentItem)
-            childs.forEach(item => {
-              let child = Object.assign(new ModelVO(item), { [key]: idIndex++, [parentKey]: rest[key], updateTime, createTime: updateTime })
-              insertRest.push(child)
-              list.push(child)
-              doneList.push(item)
-            })
-          } else {
-            parentItem = list.find(item => '' + item[key] === parentId)
-            childs.forEach(item => {
-              let child = Object.assign(new ModelVO(item), { [key]: idIndex++, [parentKey]: parentItem[key], updateTime, createTime: updateTime })
-              insertRest.push(child)
-              list.push(child)
-              doneList.push(item)
-            })
-          }
-        })
-        insertRecords.filter(item => !doneList.includes(item)).forEach(data => {
-          let rest = Object.assign(new ModelVO(data), { [key]: idIndex++, updateTime, createTime: updateTime })
-          insertRest.push(rest)
-          list.push(rest)
-        })
+            insertTree(item.children || [], rest)
+          })
+        }
+        insertTree(XEUtils.toArrayTree(insertRecords, { key, parentKey }))
       }
       response.body = { insertRest, updateRest, removeRest }
       return response

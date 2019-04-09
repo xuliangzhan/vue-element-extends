@@ -18,19 +18,20 @@
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod1}"
         style="width: 100%">
         <elx-editable-column type="selection" width="55"></elx-editable-column>
-        <elx-editable-column prop="seq" label="序号" width="120" align="center" :edit-render="{name: 'ElInputNumber'}"></elx-editable-column>
+        <elx-editable-column prop="seq" label="序号" width="80" align="center" :edit-render="{name: 'ElInputNumber'}"></elx-editable-column>
         <elx-editable-column prop="key" label="字段名" width="120" :edit-render="{name: 'ElSelect', options: keyList, events: {change: uniqueKey}}"></elx-editable-column>
-        <elx-editable-column prop="name" label="字段描述" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="name" label="字段描述" width="120" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
         <elx-editable-column prop="readonly" label="是否只读" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>
         <elx-editable-column prop="required" label="是否必填" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>
         <elx-editable-column prop="validator" label="校验规则" width="160" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+        <elx-editable-column prop="validMsg" label="校验提示消息" width="160" :edit-render="{name: 'ElInput'}"></elx-editable-column>
         <elx-editable-column prop="visible" label="默认显示" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>
-        <elx-editable-column prop="type" label="渲染类型" width="140" :edit-render="{name: 'ElSelect', options: renderTypeList}"></elx-editable-column>
+        <elx-editable-column prop="type" label="渲染类型" width="100" :edit-render="{name: 'ElSelect', options: renderTypeList}"></elx-editable-column>
         <elx-editable-column prop="width" label="设置宽度" width="100" :edit-render="{name: 'ElInput'}"></elx-editable-column>
-        <elx-editable-column prop="align" label="对齐方式" width="120" :edit-render="{name: 'ElSelect', options: alignList, attrs: {clearable: true}}"></elx-editable-column>
+        <elx-editable-column prop="align" label="对齐方式" width="100" :edit-render="{name: 'ElSelect', options: alignList, attrs: {clearable: true}}"></elx-editable-column>
         <elx-editable-column prop="describe" label="备注" :edit-render="{name: 'ElInput'}"></elx-editable-column>
-        <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
-        <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column prop="updateTime" label="更新时间" width="150" :formatter="formatterDate"></elx-editable-column>
+        <elx-editable-column prop="createTime" label="创建时间" width="150" :formatter="formatterDate"></elx-editable-column>
         <elx-editable-column label="操作" width="160">
           <template v-slot="scope">
             <template v-if="$refs.editable1.hasActiveRow(scope.row)">
@@ -219,10 +220,10 @@ export default {
           }
           if (column.validator) {
             if (validRules[column.key]) {
-              validRules[column.key].push({ pattern: new RegExp(column.validator), message: `${column.name}校验不通过，请重新填写`, trigger: 'change' })
+              validRules[column.key].push({ pattern: new RegExp(column.validator), message: column.validMsg || `${column.name}校验不通过，请重新填写`, trigger: 'change' })
             } else {
               validRules[column.key] = [
-                { pattern: new RegExp(column.validator), message: `${column.name}校验不通过，请重新填写`, trigger: 'change' }
+                { pattern: new RegExp(column.validator), message: column.validMsg || `${column.name}校验不通过，请重新填写`, trigger: 'change' }
               ]
             }
           }

@@ -83,6 +83,8 @@ class ColumnVO {
     this.name = data.name
     this.readonly = data.readonly
     this.required = data.required
+    this.validator = data.validator
+    this.validMsg = data.validMsg
     this.visible = data.visible
     this.width = data.width
     this.describe = data.describe

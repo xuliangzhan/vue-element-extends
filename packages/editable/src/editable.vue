@@ -1086,7 +1086,7 @@ export default {
         let trElem = trElemList[rowIndex]
         columns.forEach(column => {
           let cell = trElem.querySelector(`.${column.id}`)
-          item[column.id] = cell.innerText.trim()
+          item[column.id] = cell ? cell.innerText.trim() : XEUtils.get(row.data, column.property)
         })
         return item
       })

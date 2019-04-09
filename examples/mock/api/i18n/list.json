@@ -30,5 +30,45 @@
     "language": "en_US",
     "createTime": 1550923830095,
     "updateTime": 1552923830095
+  },
+  {
+    "id": 104,
+    "key": "home.label.role",
+    "name": "Role",
+    "language": "en_US",
+    "createTime": 1550923830095,
+    "updateTime": 1552923830095
+  },
+  {
+    "id": 105,
+    "key": "comm.label.cancel",
+    "name": "取消",
+    "language": "zh_CN",
+    "createTime": 1550923830095,
+    "updateTime": 1552923830095
+  },
+  {
+    "id": 106,
+    "key": "comm.label.cancel",
+    "name": "Cancel",
+    "language": "en_US",
+    "createTime": 1550923830095,
+    "updateTime": 1552923830095
+  },
+  {
+    "id": 107,
+    "key": "home.label.phone",
+    "name": "手机",
+    "language": "zh_CN",
+    "createTime": 1550923830095,
+    "updateTime": 1552923830095
+  },
+  {
+    "id": 108,
+    "key": "comm.label.confirm",
+    "name": "确认",
+    "language": "zh_CN",
+    "createTime": 1550923830095,
+    "updateTime": 1552923830095
   }
 ]

@@ -2,14 +2,7 @@
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">合并行或列</p>
 
-    <div class="click-table8-oper">
-      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
-      <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
-      <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
-      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
-    </div>
-
-    <el-form ref="tableform" class="click-table2-form" size="mini" :inline="true" :model="formData">
+     <el-form ref="tableform" class="click-table2-form" size="mini" :inline="true" :model="formData">
       <el-form-item label="键值" prop="key">
         <el-input v-model="formData.key" placeholder="请输入键值"></el-input>
       </el-form-item>
@@ -26,6 +19,13 @@
         <el-button @click="$refs.tableform.resetFields()">重置</el-button>
       </el-form-item>
     </el-form>
+
+    <div class="click-table8-oper">
+      <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
+      <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
+      <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
+    </div>
 
     <elx-editable
       ref="editable"

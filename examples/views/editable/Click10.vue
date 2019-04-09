@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">通过 activeMethod 方法来返回 true 或 false 来决定该单元格是否允许编辑；通过监听 edit-disabled 事件用于提示信息</p>
+    <p style="color: red;font-size: 12px;">通过 activeMethod 方法返回 true 或 false 来决定该单元格是否允许编辑；通过监听 edit-disabled 事件用于提示信息</p>
     <p style="color: red;font-size: 12px;">未启用的行禁止编辑；已经设置过性别，不允许再次修改；年龄列禁止编辑</p>
 
     <div class="click-table10-oper">

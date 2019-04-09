@@ -110,7 +110,7 @@
         label="选择日期"
         width="220"
         sortable
-        :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd hh:mm:ss'}}">
+        :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}">
         <template v-slot:edit="scope">
           <el-date-picker
             v-model="scope.row.dateObj.date1"

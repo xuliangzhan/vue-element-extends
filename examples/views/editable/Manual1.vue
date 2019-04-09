@@ -66,7 +66,7 @@ export default {
       })
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     clearActiveMethod ({ type, row }) {
       return this.isClearActiveFlag && type === 'out' ? this.checkOutSave(row) : this.isClearActiveFlag

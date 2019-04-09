@@ -139,7 +139,7 @@ export default {
       return XEUtils.toDateString(value, 'yyyy/MM/dd')
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     rowDrop () {
       this.$nextTick(() => {

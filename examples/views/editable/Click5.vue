@@ -159,7 +159,7 @@ export default {
       return XEUtils.toDateString(value, 'yyyy/MM/dd')
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     // 单元格失焦后实时保存数据
     blurActiveEvent (row, column) {

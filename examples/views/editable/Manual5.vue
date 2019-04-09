@@ -262,7 +262,7 @@ export default {
       return cellValue ? '是' : '否'
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     formatColumnSize (row, column, cellValue, index) {
       if (XEUtils.isNumber(cellValue)) {

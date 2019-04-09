@@ -4,7 +4,6 @@
 
     <div class="dblclick-table3-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
-      <el-button type="danger" size="mini" @click="pendingRemoveEvent">标记/取消删除</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="warning" size="mini" @click="validEvent">校验</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
@@ -18,7 +17,6 @@
       height="466"
       size="mini"
       :data.sync="list"
-      :row-class-name="tableRowClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', mode: 'cell', validTooltip: { placement: 'right', popperClass: 'dblclick-table3-validtip' }}"
       @edit-active="editActiveEvent"
@@ -76,14 +74,10 @@ export default {
         pageSize: 10,
         totalResult: 0
       },
-      pendingRemoveList: [],
       validRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, max: 50, message: '名称长度 4-20 个字符', trigger: 'change' }
-        ],
-        sex: [
-          { required: true, message: '请选择性别', trigger: 'change' }
         ],
         age: [
           { type: 'number', min: 18, max: 28, message: '年龄范围18-28', trigger: 'change' }
@@ -99,7 +93,6 @@ export default {
   methods: {
     findList () {
       this.loading = true
-      this.pendingRemoveList = []
       XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`).then(response => {
         let { page, result } = response.data
         this.list = result
@@ -134,12 +127,6 @@ export default {
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
-    tableRowClassName ({ row, rowIndex }) {
-      if (this.pendingRemoveList.some(item => item === row)) {
-        return 'delete-row'
-      }
-      return ''
-    },
     editActiveEvent (row, column) {
       console.log('触发 edit-active 事件')
     },
@@ -162,45 +149,15 @@ export default {
     },
     removeEvent (row) {
       if (row.id) {
-        MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
+        MessageBox.confirm('确定删除该数据?', '温馨提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.loading = true
-          XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
-            this.findList()
-          }).catch(e => {
-            this.loading = false
-          })
+          this.$refs.editable.remove(row)
         }).catch(e => e)
       } else {
         this.$refs.editable.remove(row)
-      }
-    },
-    pendingRemoveEvent () {
-      let selection = this.$refs.editable.getSelecteds()
-      if (selection.length) {
-        let plus = []
-        let minus = []
-        selection.forEach(data => {
-          if (this.pendingRemoveList.some(item => data === item)) {
-            minus.push(data)
-          } else {
-            plus.push(data)
-          }
-        })
-        if (minus.length) {
-          this.pendingRemoveList = this.pendingRemoveList.filter(item => minus.some(data => data !== item)).concat(plus)
-        } else if (plus) {
-          this.pendingRemoveList = this.pendingRemoveList.concat(plus)
-        }
-        this.$refs.editable.clearSelection()
-      } else {
-        Message({
-          type: 'info',
-          message: '请至少选择一条数据！'
-        })
       }
     },
     deleteSelectedEvent () {
@@ -211,16 +168,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.loading = true
-          XEAjax.doPost('/api/user/save', { removeRecords }).then(({ data }) => {
-            Message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.findList()
-          }).catch(e => {
-            this.loading = false
-          })
+          this.$refs.editable.removeSelecteds()
         }).catch(e => e)
       } else {
         Message({
@@ -247,8 +195,7 @@ export default {
     submitEvent () {
       this.$refs.editable.validate(valid => {
         if (valid) {
-          let removeRecords = this.pendingRemoveList
-          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          let { insertRecords, updateRecords, removeRecords } = this.$refs.editable.getAllRecords()
           if (insertRecords.length || updateRecords.length || removeRecords.length) {
             insertRecords.forEach(item => {
               if (XEUtils.isDate(item.date)) {
@@ -289,10 +236,6 @@ export default {
 <style>
 .dblclick-table3-oper {
   margin-bottom: 18px;
-}
-.dblclick-table3 .delete-row {
-  color: #f56c6c;
-  text-decoration: line-through;
 }
 .dblclick-table3-pagination {
   margin: 15px 20px 0 0;

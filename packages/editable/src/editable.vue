@@ -1266,7 +1266,7 @@ export default {
           let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
           if (matchObj) {
             let { index, items } = matchObj
-            let removeRow = items.splice(index, 1)
+            let removeRow = items.splice(index, 1)[0]
             if (removeRow.editStatus === 'initial') {
               this.deleteRecords.push(removeRow)
             }

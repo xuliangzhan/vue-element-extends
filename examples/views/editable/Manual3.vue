@@ -1,11 +1,12 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">带校验：name字段（校验必填，校验3-50个字符）；sex字段（校验必填）；age（校验18-28）</p>
+    <p style="color: red;font-size: 12px;">带校验：name字段（校验必填，校验3-50个字符）；age（校验必填）</p>
     <p style="color: red;font-size: 12px;">默认勾选：可以给 data 设置特殊；_checked=true 默认选中；_disabled=true 默认禁止勾选，如果自定义了 selectable 方法，则根据该方法结果决定是否允许勾选</p>
 
     <div class="manual-table3-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
+      <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </div>
 
@@ -18,7 +19,7 @@
       row-key="id"
       :data.sync="list"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'manual', mode: 'row', useDefaultValidTip: true, clearActiveMethod}"
+      :edit-config="{trigger: 'manual', mode: 'row', useDefaultValidTip: true}"
       @edit-active="editActiveEvent"
       @blur-active="blurActiveEvent"
       @clear-active="clearActiveEvent"
@@ -40,8 +41,8 @@
       <elx-editable-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
           <template v-if="$refs.editable.hasActiveRow(scope.row)">
-            <el-button size="mini" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
+            <el-button size="mini" type="info" @click="$refs.editable.revert(scope.row)">还原</el-button>
           </template>
           <template v-else>
             <el-button size="mini" type="primary" @click="openActiveRowEvent(scope.row)">编辑</el-button>
@@ -49,9 +50,6 @@
           </template>
         </template>
       </elx-editable-column>
-      <template v-slot:append>
-        <div>-- slot append --</div>
-      </template>
     </elx-editable>
 
     <el-pagination
@@ -84,17 +82,13 @@ export default {
         pageSize: 10,
         totalResult: 0
       },
-      isClearActiveFlag: true,
       validRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, max: 50, message: '名称长度 4-20 个字符', trigger: 'change' }
         ],
-        sex: [
-          { required: true, message: '请选择性别', trigger: 'change' }
-        ],
         age: [
-          { type: 'number', min: 18, max: 28, message: '年龄范围18-28', trigger: 'change' }
+          { required: true, message: '请输入年龄', trigger: 'change' }
         ]
       }
     }
@@ -144,9 +138,6 @@ export default {
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
-    clearActiveMethod ({ type, row }) {
-      return this.isClearActiveFlag && type === 'out' ? this.checkOutSave(row) : this.isClearActiveFlag
-    },
     editActiveEvent (row, column) {
       // 判断是否通过函数触发的
       if (event.trigger === 'call') {
@@ -174,127 +165,25 @@ export default {
         })
       }
     },
-    // 点击表格外面处理
-    checkOutSave (row) {
-      if (!this.$refs.editable.checkValid().error) {
-        if (!row.id) {
-          this.isClearActiveFlag = false
-          MessageBox.confirm('该数据未保存，请确认操作?', '温馨提示', {
-            distinguishCancelAndClose: true,
-            confirmButtonText: '保存数据',
-            cancelButtonText: '移除数据',
-            type: 'warning'
-          }).then(action => {
-            this.$refs.editable.clearActive()
-            this.saveRowEvent(row)
-          }).catch(action => {
-            if (action === 'cancel') {
-              this.$refs.editable.remove(row)
-            }
-          }).then(() => {
-            this.isClearActiveFlag = true
-          })
-        } else if (this.$refs.editable.hasRowChange(row)) {
-          this.isClearActiveFlag = false
-          MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
-            distinguishCancelAndClose: true,
-            confirmButtonText: '保存数据',
-            cancelButtonText: '取消修改',
-            type: 'warning'
-          }).then(() => {
-            this.$refs.editable.clearActive()
-            this.saveRowEvent(row)
-          }).catch(action => {
-            if (action === 'cancel') {
-              this.$refs.editable.revert(row)
-              this.$refs.editable.clearActive()
-            }
-          }).then(() => {
-            this.isClearActiveFlag = true
-          })
-          return false
-        }
-      }
-      return this.isClearActiveFlag
-    },
     // 编辑处理
     openActiveRowEvent (row) {
-      this.$nextTick(() => {
-        let activeInfo = this.$refs.editable.getActiveRow()
-        if (activeInfo && activeInfo.isUpdate) {
-          this.isClearActiveFlag = false
-          MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
-            distinguishCancelAndClose: true,
-            confirmButtonText: '保存数据',
-            cancelButtonText: '取消修改',
-            type: 'warning'
-          }).then(() => {
-            this.$refs.editable.setActiveRow(row)
-            this.saveRowEvent(activeInfo.row)
-          }).catch(action => {
-            if (action === 'cancel') {
-              this.$refs.editable.revert(activeInfo.row)
-              this.$refs.editable.setActiveRow(row)
-            }
-          }).then(() => {
-            this.isClearActiveFlag = true
-          })
-        } else {
-          this.$refs.editable.setActiveRow(row)
-        }
-      })
+      if (!this.$refs.editable.checkValid().error) {
+        this.$refs.editable.setActiveRow(row)
+      }
     },
     // 取消处理
     cancelRowEvent (row) {
-      if (!row.id) {
-        this.isClearActiveFlag = false
-        MessageBox.confirm('该数据未保存，是否移除?', '温馨提示', {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '移除数据',
-          cancelButtonText: '返回继续',
-          type: 'warning'
-        }).then(action => {
-          if (action === 'confirm') {
-            this.$refs.editable.remove(row)
-          }
-        }).catch(e => e).then(() => {
-          this.isClearActiveFlag = true
-        })
-      } else if (this.$refs.editable.hasRowChange(row)) {
-        this.isClearActiveFlag = false
-        MessageBox.confirm('检测到未保存的内容，是否取消修改?', '温馨提示', {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '取消修改',
-          cancelButtonText: '返回继续',
-          type: 'warning'
-        }).then(action => {
-          this.$refs.editable.clearActive()
-          this.$refs.editable.revert(row)
-        }).catch(action => {
-          if (action === 'cancel') {
-            this.$refs.editable.setActiveRow(row)
-          }
-        }).then(() => {
-          this.isClearActiveFlag = true
-        })
-      } else {
-        this.$refs.editable.clearActive()
-      }
+      this.$refs.editable.clearActive()
     },
     removeEvent (row) {
       if (row.id) {
-        this.isClearActiveFlag = false
-        MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
+        MessageBox.confirm('确定删除该数据?', '温馨提示', {
           distinguishCancelAndClose: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
-            this.findList()
-          })
-        }).catch(action => action).then(() => {
-          this.isClearActiveFlag = true
+          this.$refs.editable.remove(row)
         })
       } else {
         this.$refs.editable.remove(row)
@@ -303,25 +192,13 @@ export default {
     deleteSelectedEvent () {
       let removeRecords = this.$refs.editable.getSelecteds()
       if (removeRecords.length) {
-        this.isClearActiveFlag = false
         MessageBox.confirm('确定删除所选数据?', '温馨提示', {
           distinguishCancelAndClose: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.loading = true
-          XEAjax.doPost('/api/user/save', { removeRecords }).then(({ data }) => {
-            Message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.findList()
-          }).catch(e => {
-            this.loading = false
-          })
-        }).catch(action => action).then(() => {
-          this.isClearActiveFlag = true
+          this.$refs.editable.removeSelecteds()
         })
       } else {
         Message({
@@ -330,24 +207,37 @@ export default {
         })
       }
     },
-    saveRowEvent (row) {
-      this.$refs.editable.validateRow(row, valid => {
+    submitEvent () {
+      this.$refs.editable.validate(valid => {
         if (valid) {
-          let url = '/api/user/add'
-          if (row.id) {
-            url = '/api/user/update'
+          let { insertRecords, updateRecords, removeRecords } = this.$refs.editable.getAllRecords()
+          if (insertRecords.length || updateRecords.length || removeRecords.length) {
+            insertRecords.forEach(item => {
+              if (XEUtils.isDate(item.date)) {
+                item.date = item.date.getTime()
+              }
+            })
+            updateRecords.forEach(item => {
+              if (XEUtils.isDate(item.date)) {
+                item.date = item.date.getTime()
+              }
+            })
+            this.loading = true
+            XEAjax.doPost('/api/user/save', { insertRecords, updateRecords, removeRecords }).then(({ data }) => {
+              Message({
+                type: 'success',
+                message: '保存成功!'
+              })
+              this.findList()
+            }).catch(e => {
+              this.loading = false
+            })
+          } else {
+            Message({
+              type: 'info',
+              message: '数据未改动！'
+            })
           }
-          if (XEUtils.isDate(row.date)) {
-            row.date = row.date.getTime()
-          }
-          this.loading = true
-          this.$refs.editable.clearActive()
-          XEAjax.doPost(url, row).then(({ data }) => {
-            this.findList()
-            Message({ message: '保存成功', type: 'success' })
-          }).catch(e => {
-            this.loading = false
-          })
         }
       })
     },

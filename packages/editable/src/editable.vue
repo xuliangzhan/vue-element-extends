@@ -958,7 +958,7 @@ export default {
                   } else {
                     restVal = '' + (value || '')
                   }
-                  if (isRequired && !value) {
+                  if (isRequired && (XEUtils.isNull(value) || XEUtils.isUndefined(value))) {
                     reject(rule)
                   } else if (value &&
                     ((isNumber && isNaN(value)) ||

@@ -229,7 +229,7 @@ Run 1.0.x demo on [jsfiddle.net](https://jsfiddle.net/3vo8qhtk/) or [runjs](http
         label="下拉"
         :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
       <elx-editable-column
-        prop="age"
+        prop="num"
         label="数值"
         :edit-render="{name: 'ElInputNumber'}"></elx-editable-column>
       <elx-editable-column
@@ -256,7 +256,7 @@ export default {
         date: 1551322088449,
         name: '小徐',
         sex: '1',
-        age: '26',
+        num: '26',
         flag: false,
         remark: '备注'
       }],

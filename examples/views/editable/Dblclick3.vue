@@ -132,7 +132,7 @@ export default {
       this.findList()
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     tableRowClassName ({ row, rowIndex }) {
       if (this.pendingRemoveList.some(item => item === row)) {
@@ -298,8 +298,8 @@ export default {
   margin: 15px 20px 0 0;
   text-align: right;
 }
-.dblclick-table3.elx-editable .editable-row.new-insert,
-.dblclick-table3.elx-editable .editable-row.new-insert:hover>td {
+.dblclick-table3.elx-editable .elx-editable-row.new-insert,
+.dblclick-table3.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 .el-tooltip__popper.editable-valid_tooltip.dblclick-table3-validtip {

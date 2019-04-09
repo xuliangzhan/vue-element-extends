@@ -66,7 +66,7 @@ export default {
       })
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     clearActiveMethod ({ type, row }) {
       return this.isClearActiveFlag && type === 'out' ? this.checkOutSave(row) : this.isClearActiveFlag
@@ -239,8 +239,8 @@ export default {
 .manual-table1-oper {
   margin-bottom: 18px;
 }
-.manual-table1.elx-editable .editable-row.new-insert,
-.manual-table1.elx-editable .editable-row.new-insert:hover>td {
+.manual-table1.elx-editable .elx-editable-row.new-insert,
+.manual-table1.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

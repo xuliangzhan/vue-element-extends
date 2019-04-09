@@ -82,7 +82,7 @@ export default {
       validRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
-          { min: 3, max: 50, message: '名称长度 4-20 个字符', trigger: 'change' }
+          { min: 3, max: 50, message: '名称长度 3-50 个字符', trigger: 'change' }
         ],
         sex: [
           { required: true, message: '请选择性别', trigger: 'change' }
@@ -159,7 +159,7 @@ export default {
       return XEUtils.toDateString(value, 'yyyy/MM/dd')
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     // 单元格失焦后实时保存数据
     blurActiveEvent (row, column) {
@@ -269,8 +269,8 @@ export default {
   margin-top: 18px;
   text-align: right;
 }
-.click-table5.elx-editable .editable-row.new-insert,
-.click-table5.elx-editable .editable-row.new-insert:hover>td {
+.click-table5.elx-editable .elx-editable-row.new-insert,
+.click-table5.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

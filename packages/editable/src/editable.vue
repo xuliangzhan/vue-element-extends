@@ -238,7 +238,7 @@ export default {
     /* Attribute methods statrt */
     /****************************/
     _rowClassName ({ row, rowIndex }) {
-      let clsName = 'editable-row '
+      let clsName = 'elx-editable-row '
       let rowClassName = this.rowClassName
       if (this.configs.mode === 'row' && this._isDisabledEdit(row)) {
         clsName += 'editable-row_disabled '
@@ -391,8 +391,10 @@ export default {
     },
     _load (row, treeNode, resolve) {
       if (this.load) {
-        this.load(row.data, treeNode, function (rest) {
-          resolve(this._toDatas(rest))
+        this.load(row.data, treeNode, rest => {
+          let nodeList = this._toDatas(rest)
+          row.children = nodeList
+          resolve(nodeList)
         })
       }
     },
@@ -483,7 +485,7 @@ export default {
     },
     // 获取表格真实列表
     _getTDatas () {
-      return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas
+      return this.lazy ? XEUtils.toTreeArray(this.datas, this.configs.props) : (this.$refs.refElTable ? this.$refs.refElTable.tableData : this.datas)
     },
     // 获取 row 在表格中的索引
     _getRowIndex (row) {
@@ -541,7 +543,7 @@ export default {
                   // 如果找不到则从下一行开始找
                   if (offsetColumn && offsetColumn.property) {
                     if (this.configs.mode === 'cell' && row.editActive) {
-                      let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+                      let { cell } = this._getColumnByRowIndex(row.data, column.property)
                       this._validCellRules('blur', row, column)
                         .then(() => {
                           this._restoreTooltip()
@@ -559,7 +561,7 @@ export default {
                       columnIndex = XEUtils.findIndexOf(columns, column => column.property)
                       let offsetColumn = columns[columnIndex]
                       if (this.configs.mode === 'cell' && row.editActive) {
-                        let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+                        let { cell } = this._getColumnByRowIndex(row.data, column.property)
                         this._validCellRules('blur', row, column)
                           .then(() => {
                             row.editActive = null
@@ -607,7 +609,7 @@ export default {
           let columnIndex = XEUtils.findIndexOf(columns, column => column.property === row.checked)
           let column = columns[columnIndex]
           if (column) {
-            let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+            let { cell } = this._getColumnByRowIndex(row.data, column.property)
             this._triggerActive(row, column, cell, event)
               .then(() => {
                 if (this.configs.checkedEditMethod ? this.configs.checkedEditMethod({ row: row.data, rowIndex, column, columnIndex, cell }) !== false : true) {
@@ -640,7 +642,7 @@ export default {
           if (this.configs.mode === 'row') {
             if (target === trElem) {
               return
-            } else if (UtilHandle.hasClass(target, 'editable-row')) {
+            } else if (UtilHandle.hasClass(target, 'elx-editable-row')) {
               if (XEUtils.findIndexOf(Array.from(target.parentNode.children), item => item === target) === rowIndex) {
                 return
               } else {
@@ -650,7 +652,7 @@ export default {
           } else {
             if (target === cell) {
               return
-            } else if (UtilHandle.hasClass(target, 'editable-column')) {
+            } else if (UtilHandle.hasClass(target, 'elx-editable-column')) {
               type = 'in'
             }
           }
@@ -749,10 +751,10 @@ export default {
       let isColumn = false
       let isHeader = false
       while (target && target.nodeType && target !== document) {
-        if (!isRow && UtilHandle.hasClass(target, 'editable-row')) {
+        if (!isRow && UtilHandle.hasClass(target, 'elx-editable-row')) {
           isRow = true
         }
-        if (!isColumn && UtilHandle.hasClass(target, 'editable-column')) {
+        if (!isColumn && UtilHandle.hasClass(target, 'elx-editable-column')) {
           isColumn = true
         }
         if (!isHeader && UtilHandle.hasClass(target, 'el-table__header-wrapper')) {
@@ -782,16 +784,16 @@ export default {
     // 清除活动
     _clearActiveData () {
       this.lastActive = null
-      this._getTDatas().forEach(row => {
+      XEUtils.eachTree(this.datas, row => {
         row.editActive = null
         row.showValidMsg = false
-      })
+      }, this.elTreeOpts)
     },
     // 清除选中
     _clearChecked () {
-      this._getTDatas().forEach(row => {
+      XEUtils.eachTree(this.datas, row => {
         row.checked = null
-      })
+      }, this.elTreeOpts)
     },
     // 还原列 Tooltip
     _restoreTooltip (cell) {
@@ -908,7 +910,7 @@ export default {
               this._validCellRules('all', row, column)
                 .then(resolve)
                 .catch(rule => {
-                  let { cell } = this._getColumnByRowIndex(null, column.property, row.data)
+                  let { cell } = this._getColumnByRowIndex(row.data, column.property)
                   let rest = { rule, row, column, cell }
                   return reject(rest)
                 })
@@ -978,18 +980,15 @@ export default {
       }
       return validPromise
     },
-    _getColumnByRowIndex (rowIndex, property, record) {
-      let row
+    _getColumnByRowIndex (record, property) {
       let tableData = this._getTDatas()
       let columns = this.getColumns()
       let columnIndex = XEUtils.findIndexOf(columns, item => property ? property === item.property : item.property)
       let column = columns[columnIndex]
-      if (rowIndex === null) {
-        rowIndex = XEUtils.findIndexOf(tableData, row => row.data === record)
-      }
-      row = tableData[rowIndex]
+      let rowIndex = XEUtils.findIndexOf(tableData, row => row.data === record)
+      let row = tableData[rowIndex]
       if (column) {
-        let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
+        let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .elx-editable-row')
         let trElem = trElemList[rowIndex]
         let cell = trElem.querySelector(`.${column.id}`)
         return { row, rowIndex, column, columnIndex, cell }
@@ -1002,7 +1001,7 @@ export default {
       return { vT: Date.now() + 100 }
     },
     _toActiveRow (record, prop) {
-      let { row, column, cell } = this._getColumnByRowIndex(null, prop, record)
+      let { row, column, cell } = this._getColumnByRowIndex(record, prop)
       if (row && column) {
         this.callEvent = this._callTriggerEvent('activate')
         this.datas.forEach(row => {
@@ -1080,13 +1079,14 @@ export default {
       return `data:attachment/csv;charset=utf-8,${encodeURIComponent(content)}`
     },
     _getCsvLabelData (opts, columns) {
-      let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
-      return this._getTDatas().map((row, rowIndex) => {
+      let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .elx-editable-row')
+      let oData = this._getData(this._getTDatas())
+      return Array.from(trElemList).map((trElem, rowIndex) => {
         let item = {}
-        let trElem = trElemList[rowIndex]
+        let row = oData[rowIndex]
         columns.forEach(column => {
           let cell = trElem.querySelector(`.${column.id}`)
-          item[column.id] = cell ? cell.innerText.trim() : XEUtils.get(row.data, column.property)
+          item[column.id] = cell ? cell.innerText.trim() : (row ? XEUtils.get(row, column.property) : '')
         })
         return item
       })
@@ -1097,7 +1097,7 @@ export default {
       if (opts.columnFilterMethod) {
         columns = columns.filter(opts.columnFilterMethod)
       }
-      let datas = opts.data ? opts.data : (isOriginal ? this._getData() : this._getCsvLabelData(opts, columns))
+      let datas = opts.data ? opts.data : (isOriginal ? this._getData(this._getTDatas()) : this._getCsvLabelData(opts, columns))
       if (opts.dataFilterMethod) {
         datas = datas.filter(opts.dataFilterMethod)
       }
@@ -1304,7 +1304,7 @@ export default {
       return this._getData(this.deleteRecords)
     },
     getUpdateRecords () {
-      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'initial' && !XEUtils.isEqualWith(item.data, item.store, (v1, v2, key) => {
+      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'initial' && !XEUtils.isEqualWith(Object.assign({}, item.data, { children: [] }), Object.assign({}, item.store, { children: [] }), (v1, v2, key) => {
         if (key === this.elTreeOpts.children) {
           return true
         }
@@ -1369,8 +1369,9 @@ export default {
     updateStatus (scope) {
       return this.$nextTick().then(() => {
         if (scope) {
-          let { $index, column } = scope
-          let { row, cell } = this._getColumnByRowIndex($index, column.property)
+          let column = scope.column
+          let record = scope.row
+          let { row, cell } = this._getColumnByRowIndex(record, column.property)
           if (cell) {
             return this._validCellRules(row.validActive ? 'all' : 'change', row, column)
               .then(rule => {
@@ -1448,7 +1449,7 @@ export default {
                 this._validCellRules('all', row, column)
                   .then(resolve)
                   .catch(rule => {
-                    let { cell } = this._getColumnByRowIndex(rowIndex, column.property)
+                    let { cell } = this._getColumnByRowIndex(row.data, column.property)
                     let rest = { rule, row, column, cell }
                     return reject(rest)
                   })

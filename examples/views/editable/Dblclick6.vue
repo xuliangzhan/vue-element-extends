@@ -154,7 +154,7 @@ export default {
       this.findList()
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     tableRowClassName ({ row, rowIndex }) {
       if (this.pendingRemoveList.some(item => item === row)) {
@@ -315,8 +315,8 @@ export default {
   margin-top: 18px;
   text-align: right;
 }
-.dblclick-table6.elx-editable .editable-row.new-insert,
-.dblclick-table6.elx-editable .editable-row.new-insert:hover>td {
+.dblclick-table6.elx-editable .elx-editable-row.new-insert,
+.dblclick-table6.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

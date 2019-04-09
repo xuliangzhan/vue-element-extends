@@ -13,7 +13,7 @@ class Helper {
   findList (options) {
     let { list } = this
     let { sort = ['updateTime'], order = 'desc', max } = options || {}
-    return function (request, response) {
+    return function (request) {
       let rest = list
       let params = request.params
       let sortProp = sort
@@ -31,6 +31,45 @@ class Helper {
         }
       }
       rest = XEUtils.sortBy(list, sortProp)
+      if (orderPrpo === 'desc') {
+        rest = rest.reverse()
+      }
+      return max ? rest.slice(0, max) : rest
+    }
+  }
+  // 树形结构 获取节点数据、支持排序
+  findTreeNodeList (options) {
+    let { list } = this
+    let { sort = ['updateTime'], order = 'desc', key = 'id', parentKey = 'parentId', max } = options || {}
+    return function (request) {
+      let rest = list
+      let params = request.params
+      let sortProp = sort
+      let orderPrpo = order
+      if (params) {
+        let filterProps = XEUtils.keys(params).filter(key => !['sort', 'order'].includes(key) && params[key])
+        if (filterProps) {
+          rest = rest.filter(data => filterProps.every(key => '' + data[key] === '' + params[key]))
+        }
+        if (params.order) {
+          orderPrpo = params.order
+        }
+        if (params.sort) {
+          sortProp = params.sort.split(',')
+        }
+      }
+      rest = XEUtils.toArrayTree(list, { key, parentKey, sortKey: sortProp })
+      if (params && params[key]) {
+        let matchObj = XEUtils.findTree(rest, item => '' + item[key] === '' + params[key], { key, parentKey })
+        rest = matchObj ? matchObj.item.children : []
+      }
+      rest = rest.map(item => {
+        if (item.children && item.children.length) {
+          item.hasChildren = true
+        }
+        delete item.children
+        return item
+      })
       if (orderPrpo === 'desc') {
         rest = rest.reverse()
       }

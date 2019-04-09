@@ -170,7 +170,7 @@ export default {
         ],
         describe: [
           { required: true, message: '备注必填', trigger: 'change' },
-          { min: 5, max: 20, message: '名称长度在 3 到 50 个字符', trigger: 'change' }
+          { min: 5, max: 20, message: '名称长度在 5 到 20 个字符', trigger: 'change' }
         ],
         attr1: [
           { type: 'number', message: '请输入数字', trigger: 'change' }
@@ -225,7 +225,7 @@ export default {
       this.findList()
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     tableRowClassName ({ row, rowIndex }) {
       if (this.pendingRemoveList.some(item => item === row)) {
@@ -360,8 +360,8 @@ export default {
   margin: 15px 20px 0 0;
   text-align: right;
 }
-.dblclick-table4.elx-editable .editable-row.new-insert,
-.dblclick-table4.elx-editable .editable-row.new-insert:hover>td {
+.dblclick-table4.elx-editable .elx-editable-row.new-insert,
+.dblclick-table4.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

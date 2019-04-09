@@ -59,7 +59,7 @@ export default {
       })
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     insertEvent () {
       this.$refs.editable.insert({
@@ -133,8 +133,8 @@ export default {
 .dblclick-table1-oper {
   margin-bottom: 18px;
 }
-.dblclick-table1.elx-editable .editable-row.new-insert,
-.dblclick-table1.elx-editable .editable-row.new-insert:hover>td {
+.dblclick-table1.elx-editable .elx-editable-row.new-insert,
+.dblclick-table1.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

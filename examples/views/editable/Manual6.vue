@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">默认编辑树表格</p>
+    <p style="color: red;font-size: 12px;">树表格：支持大部分功能</p>
 
     <div class="manual-table6-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
@@ -98,7 +98,7 @@ export default {
       return ''
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     clearActiveMethod ({ type, row }) {
       return this.isClearActiveFlag && type === 'out' ? this.checkOutSave(row) : this.isClearActiveFlag
@@ -326,8 +326,8 @@ export default {
   margin-top: 18px;
   text-align: right;
 }
-.manual-table6.elx-editable .editable-row.new-insert,
-.manual-table6.elx-editable .editable-row.new-insert:hover>td {
+.manual-table6.elx-editable .elx-editable-row.new-insert,
+.manual-table6.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

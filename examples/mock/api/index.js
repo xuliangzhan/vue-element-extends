@@ -74,6 +74,7 @@ POST('/api/file/add', fileHelper.insertByBody())
 POST('/api/file/update', fileHelper.updateByBody())
 POST('/api/file/save', fileHelper.saveTreeListByBody())
 GET('/api/file/list', fileHelper.findList())
+GET('/api/file/node/list', fileHelper.findTreeNodeList())
 GET('/api/file/page/list/{pageSize}/{currentPage}', fileHelper.findPageList())
 
 class ColumnVO {

@@ -9,7 +9,7 @@
         <router-link class="apimenu-link" :to="{name: 'EditableManual3'}" replace>行编辑+校验+默认勾选</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual4'}" replace>行编辑+关闭自动清除</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual5'}" replace>行编辑+多表格</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableManual6'}" replace>行编辑+校验+树表格</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableManual6'}" replace>行编辑+校验+树形表格</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableManual7'}" replace>可配置的动态列</router-link>
       </div>
       <div class="apimenu-row">
@@ -35,7 +35,8 @@
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>行编辑+校验</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>行编辑+动态列+自定义列头</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>列编辑+动态列+方向键&amp;Tab键切换</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableDblclick7'}" replace>列编辑+校验+树表格</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick7'}" replace>列编辑+校验+树形表格</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableDblclick8'}" replace>列编辑+校验+懒加载树形表格</router-link>
       </div>
       <div class="apimenu-row">
         <a class="apimenu-title">Excel表格</a>

@@ -1,6 +1,7 @@
 <template>
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">未启用的行禁止编辑</p>
+    <p style="color: red;font-size: 12px;">已经设置过性别，不允许再次修改</p>
     <p style="color: red;font-size: 12px;">年龄列禁止编辑</p>
 
     <div class="click-table10-oper">
@@ -59,7 +60,7 @@
         </template>
         <template v-slot="scope">{{ getDatePicker(scope.row.date) }}</template>
       </elx-editable-column>
-      <elx-editable-column prop="flag" label="是否启用" :edit-render="{type: 'visible'}">
+      <elx-editable-column prop="flag" label="行是否允许编辑" :edit-render="{type: 'visible'}">
         <template v-slot:edit="scope">
           <el-switch v-model="scope.row.flag" size="mini" @change="$refs.editable.updateStatus(scope)"></el-switch>
         </template>
@@ -118,7 +119,10 @@ export default {
       this.pendingRemoveList = []
       XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`).then(response => {
         let { page, result } = response.data
-        this.list = result
+        this.list = result.map(item => {
+          item.hasSex = item.sex != null
+          return item
+        })
         this.pageVO.totalResult = page.totalResult
         this.loading = false
       }).catch(e => {
@@ -139,14 +143,8 @@ export default {
       this.pageVO.currentPage = 1
       this.findList()
     },
-    activeMethod ({ row, rowIndex, column, columnIndex }) {
-      if (!row.flag) {
-        return false
-      }
-      if (['age'].includes(column.property)) {
-        return false
-      }
-      return true
+    activeMethod ({ row, column }) {
+      return this.checkEditStatus(row, column).status
     },
     handleSizeChange (pageSize) {
       this.pageVO.pageSize = pageSize
@@ -181,7 +179,7 @@ export default {
       return XEUtils.toDateString(value, 'yyyy/MM/dd')
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     tableRowClassName ({ row, rowIndex }) {
       if (this.pendingRemoveList.some(item => item === row)) {
@@ -195,20 +193,39 @@ export default {
     blurActiveEvent (row, column) {
       console.log('触发 blur-active 事件')
     },
-    editDisabledEvent (row, column, cell, event) {
-      Message({
-        type: 'error',
-        message: '该列禁止编辑！'
-      })
+    editDisabledEvent (row, column) {
+      let rest = this.checkEditStatus(row, column)
+      if (!rest.status) {
+        Message({
+          type: 'error',
+          message: rest.message
+        })
+        console.log('触发 edit-disabled 事件')
+      }
     },
     clearActiveEvent (row, column) {
       console.log('触发 clear-active 事件')
+    },
+    checkEditStatus (row, column) {
+      let message = ''
+      let status = true
+      if (!row.flag) {
+        status = false
+        message = '请先设置允许编辑，然后再修改'
+      } else if (['age'].includes(column.property)) {
+        status = false
+        message = '年龄不允许修改'
+      } else if (['sex'].includes(column.property) && row.hasSex) {
+        status = false
+        message = '已经设置过性别，不允许再次修改'
+      }
+      return { status, message }
     },
     insertEvent () {
       this.$refs.editable.insert({
         name: `New ${Date.now()}`,
         age: 26,
-        flag: false
+        flag: true
       }).then(({ row }) => {
         this.$refs.editable.setActiveRow(row)
       })
@@ -351,8 +368,8 @@ export default {
   margin-top: 18px;
   text-align: right;
 }
-.click-table10.elx-editable .editable-row.new-insert,
-.click-table10.elx-editable .editable-row.new-insert:hover>td {
+.click-table10.elx-editable .elx-editable-row.new-insert,
+.click-table10.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

@@ -139,7 +139,7 @@ export default {
       return XEUtils.toDateString(value, 'yyyy/MM/dd')
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     rowDrop () {
       this.$nextTick(() => {
@@ -195,16 +195,16 @@ export default {
   font-size: 16px;
   cursor: move;
 }
-.click-table11.elx-editable .editable-row.new-insert,
-.click-table11.elx-editable .editable-row.new-insert:hover>td {
+.click-table11.elx-editable .elx-editable-row.new-insert,
+.click-table11.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 .click-table11 .el-table__body tr.hover-row>td,
 .click-table11 .el-table__body .el-table__row:hover>td {
   background-color: inherit;
 }
-.click-table11.elx-editable .editable-row.sortable-ghost,
-.click-table11.elx-editable .editable-row.sortable-chosen {
+.click-table11.elx-editable .elx-editable-row.sortable-ghost,
+.click-table11.elx-editable .elx-editable-row.sortable-chosen {
   background-color: #fff6b2;
 }
 </style>

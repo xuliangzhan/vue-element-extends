@@ -78,7 +78,7 @@ export default {
       validRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
-          { min: 3, max: 50, message: '名称长度 4-20 个字符', trigger: 'change' }
+          { min: 3, max: 50, message: '名称长度 3-50 个字符', trigger: 'change' }
         ],
         sex: [
           { required: true, message: '请选择性别', trigger: 'change' }
@@ -156,7 +156,7 @@ export default {
       return XEUtils.toDateString(value, 'yyyy/MM/dd')
     },
     formatterDate (row, column, cellValue, index) {
-      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd hh:mm:ss')
+      return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     tableRowClassName ({ row, rowIndex }) {
       if (this.pendingRemoveList.some(item => item === row)) {
@@ -326,8 +326,8 @@ export default {
   margin-top: 18px;
   text-align: right;
 }
-.click-table4.elx-editable .editable-row.new-insert,
-.click-table4.elx-editable .editable-row.new-insert:hover>td {
+.click-table4.elx-editable .elx-editable-row.new-insert,
+.click-table4.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

@@ -564,7 +564,7 @@ export default {
 .manual-table6 .el-table__body .el-table__row:hover>td {
   background-color: inherit;
 }
-.manual-table6 .editable-row .editable-column.editable-col_edit.editable-col_disabled {
+.manual-table6 .elx-editable-row .elx-editable-column.editable-col_edit.editable-col_disabled {
   cursor: auto;
 }
 .manual-table6 .error-msg {

@@ -131,8 +131,8 @@ export default {
 .click-table1-oper {
   margin-bottom: 18px;
 }
-.click-table1.editable .editable-row.new-insert,
-.click-table1.editable .editable-row.new-insert:hover>td {
+.click-table1.elx-editable .elx-editable-row.new-insert,
+.click-table1.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

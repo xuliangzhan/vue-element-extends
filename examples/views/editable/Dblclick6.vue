@@ -314,8 +314,8 @@ export default {
   margin-top: 18px;
   text-align: right;
 }
-.dblclick-table6.editable .editable-row.new-insert,
-.dblclick-table6.editable .editable-row.new-insert:hover>td {
+.dblclick-table6.elx-editable .elx-editable-row.new-insert,
+.dblclick-table6.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

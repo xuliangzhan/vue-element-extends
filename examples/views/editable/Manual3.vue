@@ -365,8 +365,8 @@ export default {
   margin-top: 18px;
   text-align: right;
 }
-.manual-table3.editable .editable-row.new-insert,
-.manual-table3.editable .editable-row.new-insert:hover>td {
+.manual-table3.elx-editable .elx-editable-row.new-insert,
+.manual-table3.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

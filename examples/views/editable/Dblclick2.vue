@@ -280,8 +280,8 @@ export default {
   margin: 15px 20px 0 0;
   text-align: right;
 }
-.dblclick-table2.editable .editable-row.new-insert,
-.dblclick-table2.editable .editable-row.new-insert:hover>td {
+.dblclick-table2.elx-editable .elx-editable-row.new-insert,
+.dblclick-table2.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

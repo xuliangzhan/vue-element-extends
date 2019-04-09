@@ -578,8 +578,8 @@ export default {
   margin-top: 18px;
   text-align: right;
 }
-.manual-table7.editable .editable-row.new-insert,
-.manual-table7.editable .editable-row.new-insert:hover>td {
+.manual-table7.elx-editable .elx-editable-row.new-insert,
+.manual-table7.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

@@ -314,7 +314,7 @@ export default {
       return this._getIndex(this.getColumns(), column => column.property === prop)
     },
     _rowClassName ({ row, rowIndex }) {
-      let clsName = 'editable-row '
+      let clsName = 'elx-editable-row editable-row '
       let rowClassName = this.rowClassName
       if (this.configs.mode === 'row' && this._isDisabledEdit(row)) {
         clsName += 'editable-row_disabled '
@@ -531,7 +531,7 @@ export default {
           if (this.configs.mode === 'row') {
             if (target === trElem) {
               return
-            } else if (this._hasClass(target, 'editable-row')) {
+            } else if (this._hasClass(target, 'elx-editable-row')) {
               if (this._getIndex(Array.from(target.parentNode.children), target) === rowIndex) {
                 return
               } else {
@@ -541,7 +541,7 @@ export default {
           } else {
             if (target === cell) {
               return
-            } else if (this._hasClass(target, 'editable-column')) {
+            } else if (this._hasClass(target, 'elx-editable-column')) {
               type = 'in'
             }
           }
@@ -682,10 +682,10 @@ export default {
       let isColumn = false
       let isHeader = false
       while (target && target.nodeType && target !== document) {
-        if (!isRow && this._hasClass(target, 'editable-row')) {
+        if (!isRow && this._hasClass(target, 'elx-editable-row')) {
           isRow = true
         }
-        if (!isColumn && this._hasClass(target, 'editable-column')) {
+        if (!isColumn && this._hasClass(target, 'elx-editable-column')) {
           isColumn = true
         }
         if (!isHeader && this._hasClass(target, 'el-table__header-wrapper')) {
@@ -953,7 +953,7 @@ export default {
       let columnIndex = XEUtils.findIndexOf(columns, item => property ? property === item.property : item.property)
       let column = columns[columnIndex]
       if (column) {
-        let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
+        let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .elx-editable-row')
         let trElem = trElemList[rowIndex]
         let cell = trElem.querySelector(`.${column.id}`)
         return { row, rowIndex, column, columnIndex, cell }
@@ -1055,7 +1055,7 @@ export default {
       return `data:attachment/csv;charset=utf-8,${encodeURIComponent(content)}`
     },
     _getCsvLabelData (opts, columns) {
-      let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .editable-row')
+      let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .elx-editable-row')
       return this._getTDatas().map((row, rowIndex) => {
         let item = {}
         let trElem = trElemList[rowIndex]

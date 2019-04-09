@@ -1,6 +1,6 @@
 {
   "name": "vue-element-extends",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Extension component based on ElementUI 2.x",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -20,7 +20,7 @@
   "dependencies": {
     "element-ui": "^2.6.3",
     "vue": "^2.6.6",
-    "xe-utils": "^1.8.16"
+    "xe-utils": "^1.8.17"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",

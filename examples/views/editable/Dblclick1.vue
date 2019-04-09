@@ -132,8 +132,8 @@ export default {
 .dblclick-table1-oper {
   margin-bottom: 18px;
 }
-.dblclick-table1.editable .editable-row.new-insert,
-.dblclick-table1.editable .editable-row.new-insert:hover>td {
+.dblclick-table1.elx-editable .elx-editable-row.new-insert,
+.dblclick-table1.elx-editable .elx-editable-row.new-insert:hover>td {
   background-color: #f0f9eb;
 }
 </style>

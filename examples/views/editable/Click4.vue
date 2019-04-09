@@ -1,6 +1,7 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">name字段（校验必填，校验4-20个字符）sex字段（校验必填）age字段（校验18-28）</p>
+    <p style="color: red;font-size: 12px;">注意：element-ui table 的实现方式 fixed 列 left 和 right 都是克隆一份独立的 table，所以如果使用了 fixed 列不可避免的会多次渲染 template</p>
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验4-20个字符）age字段（校验18-28）</p>
     <p style="color: red;font-size: 12px;">如果同时使用了数据校验和 fixed 列，请设置 useDefaultValidTip=true 使用默认的校验提示</p>
 
     <div class="click-table4-oper">
@@ -79,9 +80,6 @@ export default {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, max: 50, message: '名称长度 3-50 个字符', trigger: 'change' }
-        ],
-        sex: [
-          { required: true, message: '请选择性别', trigger: 'change' }
         ],
         age: [
           { type: 'number', min: 18, max: 28, message: '年龄范围18-28', trigger: 'change' }

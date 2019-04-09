@@ -89,7 +89,7 @@
   top: calc(100% + 10px);
   left: 10px;
   bottom: auto;
-  z-index: 9;
+  z-index: 2;
   min-width: 300px;
 }
 .elx-editable .elx-editable-column.valid-error .editable-valid_error>.valid-message,

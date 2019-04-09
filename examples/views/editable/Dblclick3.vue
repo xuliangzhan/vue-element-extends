@@ -29,7 +29,7 @@
         <template v-slot:valid="scope">自定义校验提示语的样式：<br>{{ scope.rule.message }}<br>名称为必填字段<br><a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">参考API说明</a></template>
       </elx-editable-column>
       <elx-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
-      <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber'}"></elx-editable-column>
+      <elx-editable-column prop="age" label="年龄" align="center" :edit-render="{name: 'ElInputNumber'}"></elx-editable-column>
       <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
       <elx-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>

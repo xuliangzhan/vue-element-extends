@@ -129,6 +129,9 @@
           <el-button size="mini" type="warning" @click="revertEvent(scope.row)">默认值</el-button>
         </template>
       </elx-editable-column>
+      <template v-slot:empty>
+        <span>自定义无数据提示语</span>
+      </template>
     </elx-editable>
   </div>
 </template>

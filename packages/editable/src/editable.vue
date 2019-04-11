@@ -5,7 +5,10 @@
     v-bind="attrs"
     v-on="events">
     <slot></slot>
-    <template slot:append>
+    <template slot="empty">
+      <slot name="empty"></slot>
+    </template>
+    <template slot="append">
       <slot name="append"></slot>
     </template>
   </el-table>

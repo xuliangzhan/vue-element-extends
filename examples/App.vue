@@ -56,17 +56,7 @@
 
 <script>
 export default {
-  name: 'App',
-  computed: {
-    activeName: {
-      get () {
-        return this.$route.name
-      },
-      set (value) {
-        this.$router.replace({ name: value })
-      }
-    }
-  }
+  name: 'App'
 }
 </script>
 

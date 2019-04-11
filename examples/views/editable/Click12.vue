@@ -70,13 +70,13 @@
         prop="userInfo.base.other.sex2"
         label="方式2"
         width="160"
-        :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value', label: 'spell'}, attrs: {clearable: true, placeholder: '请选择性别'}}">
+        :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value2', label: 'spell'}, attrs: {clearable: true, placeholder: '请选择性别'}}">
         <template v-slot:edit="scope">
           <el-select v-model="scope.row.userInfo.base.other.sex2" v-bind="scope.$render.attrs" @change="$refs.editable.updateStatus(scope)">
             <el-option
               v-for="(item, index) in sexList"
               :key="index"
-              :value="item.value"
+              :value="item.value2"
               :label="item.spell"></el-option>
           </el-select>
         </template>
@@ -158,7 +158,7 @@ export default {
             base: {
               age: 24,
               other: {
-                sex2: '1'
+                sex2: 1
               }
             }
           },
@@ -177,7 +177,7 @@ export default {
             base: {
               age: 26,
               other: {
-                sex2: '0'
+                sex2: 0
               }
             }
           },
@@ -196,7 +196,7 @@ export default {
             base: {
               age: 28,
               other: {
-                sex2: '1'
+                sex2: 1
               }
             }
           },

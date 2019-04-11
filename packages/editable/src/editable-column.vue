@@ -297,7 +297,7 @@ export default {
       let valueProp = renderOpts.optionProps.value
       let optionsProp = renderOpts.optionGroupProps.options
       let value = this.getRowIdentity(row, column)
-      if (value) {
+      if (!(value === null || value === undefined || value === '')) {
         return (attrs.multiple ? value : [value]).map(renderOpts.optionGroups ? value => {
           let selectItem = XEUtils.find(renderOpts.optionGroups, group => group[optionsProp].find(item => item[valueProp] === value))
           return selectItem ? selectItem[labelProp] : null

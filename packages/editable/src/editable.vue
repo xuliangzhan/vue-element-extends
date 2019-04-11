@@ -956,12 +956,13 @@ export default {
                 } else {
                   let restVal
                   let isNumber = rule.type === 'number'
+                  let isEmpty = value === null || value === undefined || value === ''
                   if (isNumber) {
                     restVal = XEUtils.toNumber(value)
                   } else {
-                    restVal = '' + (value || '')
+                    restVal = isEmpty ? '' : '' + value
                   }
-                  if (isRequired && (XEUtils.isNull(value) || XEUtils.isUndefined(value))) {
+                  if (isRequired && isEmpty) {
                     reject(rule)
                   } else if (value &&
                     ((isNumber && isNaN(value)) ||

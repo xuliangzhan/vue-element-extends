@@ -1,26 +1,23 @@
 <template>
   <div>
-    <p style="color: red;font-size: 12px;">上下左右方向键切换列、Tab 键切换列、选中后可直接输入值覆盖旧值</p>
+    <p style="color: red;font-size: 12px;">显示表格右键菜单：通过配置 options 分组指定显示菜单列表 context-menu-config="{options: []}</p>
     <p style="color: red;font-size: 12px;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
 
     <p>
-      <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
-      <el-button size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
-      <el-button size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
       <el-button size="mini" @click="getAllEvent">获取所有</el-button>
       <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
       <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
-      <el-button size="mini" @click="exportCsvEvent">导出数据</el-button>
     </p>
 
     <elx-editable
       ref="editable"
-      class="excel-table4"
+      class="excel-table5"
       border
       size="customSize"
       :data.sync="list"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
+      :context-menu-config="{options: contextMenuOptions}"
       style="width: 100%" >
       <elx-editable-column type="index" align="center" width="50">
         <template v-slot:header>
@@ -145,16 +142,42 @@ export default {
         e: [
           { validator: checkE, trigger: 'change' }
         ]
-      }
+      },
+      contextMenuOptions: [
+        [
+          {
+            code: 'row-insert',
+            name: '插入新行',
+            prefixIcon: 'el-icon-plus'
+          },
+          {
+            code: 'row-remove',
+            name: '删除当前行',
+            prefixIcon: 'el-icon-minus'
+          }
+        ],
+        [
+          {
+            code: 'clear',
+            name: '清除内容',
+            prefixIcon: 'el-icon-close'
+          },
+          {
+            code: 'revert',
+            name: '还原内容'
+          }
+        ],
+        [
+          {
+            code: 'all-export',
+            name: '导出全部数据',
+            prefixIcon: 'el-icon-download'
+          }
+        ]
+      ]
     }
   },
   methods: {
-    exportCsvEvent () {
-      this.$refs.editable.exportCsv({
-        filename: 'Excel5数据.csv',
-        columnFilterMethod: (column, columnIndex) => !['index'].includes(column.type)
-      })
-    },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
@@ -190,44 +213,44 @@ export default {
 </script>
 
 <style>
-.excel-table4.el-table--customSize .elx-editable-column {
+.excel-table5.el-table--customSize .elx-editable-column {
   height: 30px;
 }
-.excel-table4 .el-table__body .el-table__row>td {
+.excel-table5 .el-table__body .el-table__row>td {
   cursor: cell;
 }
-.excel-table4 .el-table__header th,
-.excel-table4 .el-table__body .el-table__row>td:first-child,
-.excel-table4 .el-table__body .el-table__row:hover>td:first-child {
+.excel-table5 .el-table__header th,
+.excel-table5 .el-table__body .el-table__row>td:first-child,
+.excel-table5 .el-table__body .el-table__row:hover>td:first-child {
   background-color: #f5f5f5;
 }
-.excel-table4 .el-table__body .el-table__row>td:first-child {
+.excel-table5 .el-table__body .el-table__row>td:first-child {
   cursor: default;
 }
-.excel-table4 .el-table__body .el-table__row:hover>td {
+.excel-table5 .el-table__body .el-table__row:hover>td {
   background-color: inherit;
 }
-.excel-table4 .el-table__body .el-table__row>td.editable-col_checked {
+.excel-table5 .el-table__body .el-table__row>td.editable-col_checked {
   border: 1px solid #217346;
 }
-.excel-table4 .el-table__body .el-table__row>td .cell {
+.excel-table5 .el-table__body .el-table__row>td .cell {
   width: 100% !important;
   line-height: 30px;
   padding: 0 3px;
 }
-.excel-table4 .el-table__body .el-table__row>td.editable-col_checked .cell {
+.excel-table5 .el-table__body .el-table__row>td.editable-col_checked .cell {
   padding: 0 2px;
   line-height: 28px;
 }
-.excel-table4 .el-table__body .el-table__row>td.editable-col_active .cell {
+.excel-table5 .el-table__body .el-table__row>td.editable-col_active .cell {
   padding: 0;
 }
-.excel-table4 .el-table__body .el-table__row>td .cell,
-.excel-table4 .el-table__body .el-table__row>td .cell .el-input,
-.excel-table4 .el-table__body .el-table__row>td .cell .el-input__inner {
+.excel-table5 .el-table__body .el-table__row>td .cell,
+.excel-table5 .el-table__body .el-table__row>td .cell .el-input,
+.excel-table5 .el-table__body .el-table__row>td .cell .el-input__inner {
   height: 100%;
 }
-.excel-table4 .el-table__body .el-table__row>td .cell .el-input__inner {
+.excel-table5 .el-table__body .el-table__row>td .cell .el-input__inner {
   border-radius: 0;
   padding: 0 2px;
   line-height: 30px;

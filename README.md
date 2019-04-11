@@ -101,7 +101,7 @@ edit-config 编辑参数配置
 |------|------|-----|-----|-----|
 | trigger | 触发方式 | String | manual（手动触发方式，只能用于 mode=row） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑模式 | String | cell（单元格编辑模式） / row（行编辑模式） | cell |
-| props | 配置选项，具体看下表 | Object | — | — |
+| props | 配置节点对应属性值 | Object | — | {children: 'children'} |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
 | activeMethod | 只对 type=default 的列有效，该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
@@ -116,11 +116,31 @@ edit-config 编辑参数配置
 | isCheckedEdit | 只对 trigger!=manual 有效，是否启用选中状态允许值覆盖式编辑 | Boolean | — | false |
 | checkedEditMethod | 只对 isCheckedEdit=true 有效，可以通过重写该函数 Function({row, rowIndex, column, columnIndex, cell}) 返回 false 来阻止默认值的覆盖行为 | Function | — | — |
 
-props
+context-menu-config 表格右键菜单参数
 
-| 属性 | 描述 | 类型 | 可选值 | 默认值 |
+| 属性 | 描述 | 类型 | 参数 |
 |------|------|-----|-----|-----|
-| children | 指定子树为节点对象的某个属性值 | String | — | 'children' |
+| options | 菜单分组列表 | Object | { code, name, prefixIcon, suffixIcon } |
+
+code 可选值:
+
+| 属性 | 描述 |
+|------|------|
+| clear | 清除单元格数据 |
+| revert  | 还原单元格数据 |
+| select-remove  | 删除选中的数据 |
+| select-clear  | 清除选中的数据 |
+| select-revert  | 还原选中的数据 |
+| select-export  | 导出选中的数据 |
+| row-insert  | 在当前位置插入行 |
+| row-remove | 删除当前行 |
+| row-clear | 清除当前行数据 |
+| row-revert | 还原当前行数据 |
+| row-export  | 导出当前行数据 |
+| all-remove | 删除表格数据 |
+| all-clear | 清除表格数据 |
+| all-revert | 还原表格数据 |
+| all-export  | 导出所有数据 |
 
 ### Editable Events
 

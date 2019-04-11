@@ -33,6 +33,7 @@ import EditableExcel1 from './views/editable/Excel1'
 import EditableExcel2 from './views/editable/Excel2'
 import EditableExcel3 from './views/editable/Excel3'
 import EditableExcel4 from './views/editable/Excel4'
+import EditableExcel5 from './views/editable/Excel5'
 
 Vue.use(Router)
 
@@ -205,6 +206,11 @@ export default new Router({
       path: '/editable/excel4',
       name: 'EditableExcel4',
       component: EditableExcel4
+    },
+    {
+      path: '/editable/excel5',
+      name: 'EditableExcel5',
+      component: EditableExcel5
     }
   ]
 })

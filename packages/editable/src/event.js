@@ -11,7 +11,7 @@ var GlobalEvent = {
   },
   trigger (evnt) {
     eventStore.forEach(({ comp, type, cb }) => {
-      if (type === evnt.type) {
+      if (type === evnt.type || (evnt.type === 'wheel' && type === 'mousewheel')) {
         cb.call(comp, evnt)
       }
     })
@@ -19,6 +19,8 @@ var GlobalEvent = {
 }
 
 window.addEventListener('click', GlobalEvent.trigger, false)
+window.addEventListener(document.onmousewheel === undefined ? 'wheel' : 'mousewheel', GlobalEvent.trigger, false)
 document.addEventListener('keydown', GlobalEvent.trigger, false)
+document.addEventListener('contextmenu', GlobalEvent.trigger, false)
 
 export default GlobalEvent

@@ -42,8 +42,9 @@
         <a class="apimenu-title">Excel表格</a>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>列编辑</router-link>
         <router-link class="apimenu-link" :to="{name: 'EditableExcel2'}" replace>列编辑+校验</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>列编辑+校验+动态列+方向键&amp;Tab键切换</router-link>
-        <router-link class="apimenu-link" :to="{name: 'EditableExcel4'}" replace>列编辑+校验+动态列+方向键&amp;Tab键切换</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>列编辑+动态列</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel4'}" replace>列编辑+方向键&amp;Tab键切换</router-link>
+        <router-link class="apimenu-link" :to="{name: 'EditableExcel5'}" replace>列编辑+右键菜单</router-link>
       </div>
       <!-- <div class="apimenu-row">
         <a class="apimenu-title">El和iView</a>

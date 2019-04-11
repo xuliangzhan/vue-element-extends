@@ -5,6 +5,9 @@
     v-bind="attrs"
     v-on="events">
     <slot></slot>
+    <template v-slot:empty>
+      <slot name="empty"></slot>
+    </template>
     <template v-slot:append>
       <slot name="append"></slot>
     </template>

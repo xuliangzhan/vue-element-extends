@@ -9,16 +9,16 @@
       <slot name="empty"></slot>
     </template>
     <template v-slot:append>
-      <div v-if="contextMenuConfig" ref="contextmenu" class="elx-contextmenu" v-show="ctxMenuStore.visible" :style="ctxMenuStore.style">
-        <slot name="contextmenu">
-          <div class="ctx-menu_wrapper" v-for="(options, index) in contextMenuConfig.options" :key="index">
-            <a class="ctx-menu_link" v-for="item in options" :key="item.code" @click="_contextmenuEvent(item, $event)">
+      <div v-if="ctxMenuConfig.bodyMenus || ctxMenuConfig.headerMenus" ref="contextmenu" class="elx-contextmenu" v-show="ctxMenuStore.visible" :style="ctxMenuStore.style">
+        <div class="ctx-menu_wrapper" v-for="(options, index) in ctxMenuStore.list" :key="index">
+          <template v-for="item in options">
+            <a v-if="item.visible !== false" class="ctx-menu_link" :key="item.code" :class="[item.code, {disabled: item.disabled}]" @click="_contextmenuEvent(item, $event)">
               <i v-if="item.prefixIcon" class="ctx-prefix-icon" :class="item.prefixIcon"></i>
               <span>{{ item.name }}</span>
               <i v-if="item.suffixIcon" class="ctx-suffix-icon" :class="item.suffixIcon"></i>
             </a>
-          </div>
-        </slot>
+          </template>
+        </div>
       </div>
       <template v-if="$slots.append">
         <slot name="append"></slot>
@@ -98,6 +98,7 @@ export default {
       },
       ctxMenuStore: {
         visible: false,
+        list: [],
         style: {
           top: 0,
           left: 0
@@ -203,6 +204,9 @@ export default {
         isCheckedEdit: !!(editConfig.isTabKey || editConfig.isArrowKey)
       }, editConfig, { validTooltip })
       return conf
+    },
+    ctxMenuConfig () {
+      return Object.assign({}, this.contextMenuConfig)
     }
   },
   watch: {
@@ -221,7 +225,7 @@ export default {
     this._updateData()
   },
   mounted () {
-    if (this.contextMenuConfig && this.contextMenuConfig.options && this.$refs.contextmenu) {
+    if ((this.ctxMenuConfig.bodyMenus || this.ctxMenuConfig.headerMenus) && this.$refs.contextmenu) {
       this.ctxMenuStore.el = this.$refs.contextmenu
       document.body.appendChild(this.ctxMenuStore.el)
     }
@@ -500,16 +504,16 @@ export default {
     },
     _bindEvents () {
       GlobalEvent.on(this, 'click', evnt => this._triggerClear(evnt))
+      GlobalEvent.on(this, 'contextmenu', evnt => this._triggerContextMenu(evnt))
       GlobalEvent.on(this, 'mousewheel', evnt => this._triggerMousewheel(evnt))
-      GlobalEvent.on(this, 'contextmenu', evnt => this._triggerContextmenu(evnt))
       if (this.configs.trigger !== 'manual') {
         GlobalEvent.on(this, 'keydown', evnt => this._triggerKeydown(evnt))
       }
     },
     _unbindEvents () {
       GlobalEvent.off(this, 'click')
-      GlobalEvent.off(this, 'mousewheel')
       GlobalEvent.off(this, 'contextmenu')
+      GlobalEvent.off(this, 'mousewheel')
       GlobalEvent.off(this, 'keydown')
     },
     // 定义列属性
@@ -533,6 +537,10 @@ export default {
     // 获取列的索引
     _getColumnIndex (column) {
       return XEUtils.findIndexOf(this.getColumns(), item => item === column)
+    },
+    // 获取选中
+    _getSelectRows () {
+      return this.$refs.refElTable ? this.$refs.refElTable.selection : []
     },
     // 设置默认勾选
     _setDefaultChecked () {
@@ -658,31 +666,45 @@ export default {
           }
         }
       }
+      this.closeContextMenu()
     },
-    // 鼠标滚轮处理
-    _triggerMousewheel (evnt) {
-      this.closeContextmenu()
+    _showContextMenu (isHeader, params, evnt) {
+      let ctxMenuStore = this.ctxMenuStore
+      let menus = this.ctxMenuConfig[isHeader ? 'headerMenus' : 'bodyMenus']
+      let visibleMethod = this.ctxMenuConfig[isHeader ? 'headerVisibleMethod' : 'bodyVisibleMethod']
+      if (menus && menus.length) {
+        if (!visibleMethod || visibleMethod(params)) {
+          evnt.preventDefault()
+          let scrollTop = document.documentElement ? document.documentElement.scrollTop : document.body.scrollTop
+          let scrollLeft = document.documentElement ? document.documentElement.scrollLeft : document.body.scrollLeft
+          ctxMenuStore.visible = true
+          ctxMenuStore.list = menus
+          ctxMenuStore.style.top = `${evnt.clientY + scrollTop}px`
+          ctxMenuStore.style.left = `${evnt.clientX + scrollLeft}px`
+          ctxMenuStore.info = params
+        } else {
+          this.closeContextMenu()
+        }
+      }
     },
     /**
      * 鼠标右键菜单
      */
-    _triggerContextmenu (evnt) {
-      let showMenu, rowElem, cellElem, tableElem
+    _triggerContextMenu (evnt) {
+      let showMenu, cellElem, headerElem, bodyElem
       let target = evnt.target
-      let ctxMenuStore = this.ctxMenuStore
       while (target && target.nodeType && target !== document) {
         if (UtilHandle.hasClass(target, 'elx-contextmenu')) {
           evnt.preventDefault()
           return
-        }
-        if (UtilHandle.hasClass(target, 'elx-editable-column')) {
+        } else if (UtilHandle.hasClass(target, 'el-table__header')) {
+          headerElem = target
+        } else if (UtilHandle.hasClass(target, 'el-table__body')) {
+          bodyElem = target
+        } else if (UtilHandle.hasClass(target, 'elx-editable-column')) {
           cellElem = target
-        } else if (UtilHandle.hasClass(target, 'elx-editable-row')) {
-          rowElem = target
-        }
-        if (UtilHandle.hasClass(target, 'el-table__body')) {
-          tableElem = target
-          if (cellElem && rowElem) {
+        } else if (UtilHandle.hasClass(target, 'elx-editable')) {
+          if ((headerElem || bodyElem) && cellElem && target === this.$el) {
             showMenu = true
           }
           break
@@ -691,24 +713,29 @@ export default {
       }
       this._triggerClear(evnt)
       if (showMenu) {
-        let tableData = this._getTDatas()
-        let rowIndex = XEUtils.findIndexOf(Array.from(tableElem.querySelector('tbody').children), trElem => trElem === rowElem)
+        let rowElem = cellElem.parentNode
         let columnIndex = XEUtils.findIndexOf(Array.from(rowElem.children), tdElem => tdElem === cellElem)
-        let row = tableData[rowIndex]
         let column = this.getColumns()[columnIndex]
-        if (row.editActive !== column.property) {
-          if (this.contextMenuConfig && this.contextMenuConfig.options) {
-            evnt.preventDefault()
-            ctxMenuStore.visible = true
-            ctxMenuStore.style.top = `${evnt.clientY}px`
-            ctxMenuStore.style.left = `${evnt.clientX}px`
-            ctxMenuStore.info = { row, rowIndex, column, columnIndex, cell: cellElem, evnt }
+        if (headerElem) {
+          this._showContextMenu(1, { column, columnIndex, cell: cellElem }, evnt)
+        } else {
+          let tableData = this._getTDatas()
+          let rowIndex = XEUtils.findIndexOf(Array.from(bodyElem.querySelector('tbody').children), trElem => trElem === rowElem)
+          let row = tableData[rowIndex]
+          if (row.editActive !== column.property) {
+            this._showContextMenu(0, { row, rowIndex, column, columnIndex, cell: cellElem }, evnt)
+            this._setChecked(row, column)
           }
-          this._setChecked(row, column)
         }
       } else {
-        this.closeContextmenu()
+        this.closeContextMenu()
       }
+    },
+    /**
+     * 鼠标滚轮处理
+     */
+    _triggerMousewheel (evnt) {
+      this.closeContextMenu()
     },
     /**
      * 事件顺序 clearActiveMethod -> clear -> blur
@@ -719,15 +746,23 @@ export default {
      * type=out 如果是点击当前表格之外
      */
     _triggerClear (evnt) {
+      let target = evnt.target
+      while (target && target.nodeType && target !== document) {
+        if (UtilHandle.hasClass(target, 'elx-contextmenu')) {
+          evnt.preventDefault()
+          return
+        }
+        target = target.parentNode
+      }
       this._triggerClearChecked(evnt)
       if (this.configs.autoClearActive && this.lastActive && (this.callEvent ? this.callEvent.vT < Date.now() : true)) {
-        let target = evnt.target
         let clearActiveMethod = this.configs.clearActiveMethod
         let { row, column, cell } = this.lastActive
         let rowIndex = this._getRowIndex(row)
         let trElem = cell.parentNode
         let isClearActive = true
         let type = null
+        target = evnt.target
         while (target && target.nodeType && target !== document) {
           if (this.configs.mode === 'row') {
             if (target === trElem) {
@@ -746,7 +781,7 @@ export default {
               type = 'in'
             }
           }
-          if (type && UtilHandle.hasClass(target, 'editable')) {
+          if (type && UtilHandle.hasClass(target, 'elx-editable')) {
             if (target !== this.$el) {
               type = 'out'
             }
@@ -790,7 +825,7 @@ export default {
         }
       }
       this.callEvent = null
-      this.closeContextmenu()
+      this.closeContextMenu()
     },
     /**
      * 触发编辑事件
@@ -842,14 +877,11 @@ export default {
       while (target && target.nodeType && target !== document) {
         if (!isRow && UtilHandle.hasClass(target, 'elx-editable-row')) {
           isRow = true
-        }
-        if (!isColumn && UtilHandle.hasClass(target, 'elx-editable-column')) {
+        } else if (!isColumn && UtilHandle.hasClass(target, 'elx-editable-column')) {
           isColumn = true
-        }
-        if (!isHeader && UtilHandle.hasClass(target, 'el-table__header-wrapper')) {
+        } else if (!isHeader && UtilHandle.hasClass(target, 'el-table__header-wrapper')) {
           isHeader = true
-        }
-        if (target === this.$el) {
+        } else if (target === this.$el) {
           if (!isHeader && (isRow || isColumn)) {
             return
           }
@@ -1173,7 +1205,7 @@ export default {
       }
       return `data:attachment/csv;charset=utf-8,${encodeURIComponent(content)}`
     },
-    _getCsvLabelData (opts, columns) {
+    _getCsvLabelData (columns) {
       let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .elx-editable-row')
       let oData = this._getData(this._getTDatas())
       return Array.from(trElemList).map((trElem, rowIndex) => {
@@ -1186,16 +1218,21 @@ export default {
         return item
       })
     },
-    _getCsvContent (opts) {
+    _getCsvData (opts) {
       let isOriginal = opts.original
       let columns = opts.columns ? opts.columns : this.getColumns()
       if (opts.columnFilterMethod) {
         columns = columns.filter(opts.columnFilterMethod)
       }
-      let datas = opts.data ? opts.data : (isOriginal ? this._getData(this._getTDatas()) : this._getCsvLabelData(opts, columns))
+      let datas = opts.data ? opts.data : (isOriginal ? this._getData(this._getTDatas()) : this._getCsvLabelData(columns))
       if (opts.dataFilterMethod) {
         datas = datas.filter(opts.dataFilterMethod)
       }
+      return { columns, datas }
+    },
+    _getCsvContent (opts) {
+      let isOriginal = opts.original
+      let { columns, datas } = this._getCsvData(opts)
       let content = '\ufeff'
       datas.forEach((record, rowIndex) => {
         if (isOriginal) {
@@ -1233,60 +1270,98 @@ export default {
       }
     },
     // 右菜单事件
-    _contextmenuEvent ({ code }, evnt) {
-      let ctxMenuStore = this.ctxMenuStore
-      if (ctxMenuStore.info) {
-        let { row, column } = ctxMenuStore.info
-        switch (code) {
-          case 'clear':
-            evnt.preventDefault()
-            evnt.stopPropagation()
-            XEUtils.set(row.data, column.property, null)
-            break
-          case 'revert':
-            XEUtils.set(row.data, column.property, XEUtils.get(row.store, column.property))
-            break
-          case 'select-insert':
-            this.insertAt(null, row.data)
-            break
-          case 'select-remove':
-            this.remove(row.data)
-            break
-          case 'select-revert':
-            this.getSelecteds().forEach(record => this.revert(record))
-            break
-          case 'select-export':
-            break
-          case 'row-insert':
-            this.insertAt(null, row.data)
-            break
-          case 'row-remove':
-            this.remove(row.data)
-            break
-          case 'row-clear':
-            break
-          case 'row-revert':
-            this.revert(row.data)
-            break
-          case 'row-export':
-            break
-          case 'all-remove':
-            break
-          case 'all-clear':
-            this.clear()
-            break
-          case 'all-revert':
-            this.revert()
-            break
-          case 'all-export':
-            this.exportCsv()
-            break
-          default:
-            this.$emit('context-menu-link', ctxMenuStore.info)
-            break
+    _contextmenuEvent ({ code, disabled }, evnt) {
+      if (!disabled) {
+        let ctxMenuStore = this.ctxMenuStore
+        if (ctxMenuStore.info) {
+          let { row, rowIndex, column, cell } = ctxMenuStore.info
+          let columns = this.getColumns()
+          switch (code) {
+            case 'cell_clear':
+              evnt.preventDefault()
+              evnt.stopPropagation()
+              XEUtils.set(row.data, column.property, null)
+              break
+            case 'cell_revert':
+              XEUtils.set(row.data, column.property, XEUtils.get(row.store, column.property))
+              break
+            case 'select_clear':
+              this._getSelectRows().forEach(row => {
+                columns.forEach(column => {
+                  if (column.property) {
+                    XEUtils.set(row.data, column.property, null)
+                  }
+                })
+              })
+              break
+            case 'select_remove':
+              this.removeSelecteds()
+              break
+            case 'select_revert':
+              this.getSelecteds().forEach(record => this.revert(record))
+              break
+            case 'select_export':
+              let selectRows = this._getSelectRows()
+              let selectIndexs = []
+              this._getTDatas().forEach((row, index) => {
+                if (selectRows.includes(row)) {
+                  selectIndexs.push(index)
+                }
+              })
+              this.exportCsv({
+                dataFilterMethod (item, index) {
+                  return selectIndexs.includes(index)
+                }
+              })
+              break
+            case 'row_insert':
+              this.insertAt(null, row.data)
+              break
+            case 'row_remove':
+              this.remove(row.data)
+              break
+            case 'row_clear':
+              columns.forEach(column => {
+                if (column.property) {
+                  XEUtils.set(row.data, column.property, null)
+                }
+              })
+              break
+            case 'row_revert':
+              this.revert(row.data)
+              break
+            case 'row_export':
+              this.exportCsv({
+                dataFilterMethod (item, index) {
+                  return rowIndex === index
+                }
+              })
+              break
+            case 'all_remove':
+              this.clear()
+              break
+            case 'all_clear':
+              this.datas.forEach(row => {
+                columns.forEach(column => {
+                  if (column.property) {
+                    XEUtils.set(row.data, column.property, null)
+                  }
+                })
+              })
+              break
+            case 'all_revert':
+              this.revert()
+              break
+            case 'all_export':
+              this.exportCsv()
+              break
+            default:
+              this.$emit('custom-menu-link', code, row, column, cell, evnt)
+              break
+          }
         }
+        this.closeContextMenu()
       }
-      this.closeContextmenu()
     },
     /****************************/
     /* Interior methods end     */
@@ -1430,7 +1505,7 @@ export default {
       return this.$nextTick().then(() => rest)
     },
     getSelecteds () {
-      return this.$refs.refElTable ? this.$refs.refElTable.selection.map(item => item.data) : []
+      return this._getSelectRows().map(item => item.data)
     },
     removeSelecteds () {
       this.removes(this.getSelecteds())
@@ -1647,7 +1722,7 @@ export default {
       }
       this._downloadCsc(opts, this._getCsvContent(opts))
     },
-    closeContextmenu () {
+    closeContextMenu () {
       this.ctxMenuStore.info = null
       this.ctxMenuStore.visible = false
     }

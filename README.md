@@ -120,27 +120,30 @@ context-menu-config 表格右键菜单参数
 
 | 属性 | 描述 | 类型 | 参数 |
 |------|------|-----|-----|-----|
-| options | 菜单分组列表 | Object | { code, name, prefixIcon, suffixIcon } |
+| headerMenus | 头部菜单配置 | Object | { code, name, prefixIcon, suffixIcon, visible, disabled } |
+| bodyMenus | 内容菜单配置 | Object | { code, name, prefixIcon, suffixIcon, visible, disabled } |
+| headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示头部右键菜单 | Function | — |
+| bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 
 code 可选值:
 
 | 属性 | 描述 |
 |------|------|
-| clear | 清除单元格数据 |
-| revert  | 还原单元格数据 |
-| select-remove  | 删除选中的数据 |
-| select-clear  | 清除选中的数据 |
-| select-revert  | 还原选中的数据 |
-| select-export  | 导出选中的数据 |
-| row-insert  | 在当前位置插入行 |
-| row-remove | 删除当前行 |
-| row-clear | 清除当前行数据 |
-| row-revert | 还原当前行数据 |
-| row-export  | 导出当前行数据 |
-| all-remove | 删除表格数据 |
-| all-clear | 清除表格数据 |
-| all-revert | 还原表格数据 |
-| all-export  | 导出所有数据 |
+| cell_clear | 清除单元格数据 |
+| cell_revert  | 还原单元格数据 |
+| select_remove  | 删除选中的数据 |
+| select_clear  | 清除选中的数据 |
+| select_revert  | 还原选中的数据 |
+| select_export  | 导出选中的数据 |
+| row_insert  | 在当前位置插入行 |
+| row_remove | 删除当前行 |
+| row_clear | 清除当前行数据 |
+| row_revert | 还原当前行数据 |
+| row_export  | 导出当前行数据 |
+| all_remove | 删除表格数据 |
+| all_clear | 清除表格数据 |
+| all_revert | 还原表格数据 |
+| all_export  | 导出所有数据 |
 
 ### Editable Events
 
@@ -151,6 +154,7 @@ code 可选值:
 | edit-active | 当点击后改变为编辑状态之后会触发该事件 | row[,column,cell]?,event |
 | clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row[,column,cell]?,event |
 | blur-active | 当行或者单元格失焦之后会触发该事件 | row[,column,cell]?,event |
+| custom-menu-link | 自定义的右键菜单点击后触发该函数 | code,row,column,cell,event |
 
 ### Editable Methods
 

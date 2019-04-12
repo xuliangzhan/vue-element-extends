@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p style="color: red;font-size: 12px;">显示表格右键菜单：通过配置 options 分组指定显示菜单列表 context-menu-config="{options: []}</p>
+    <p style="color: red;font-size: 12px;">显示表格右键菜单：通过参数 context-menu-config 配置菜单列表；可以通过 custom-menu-link 事件处理自定义菜单</p>
     <p style="color: red;font-size: 12px;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
 
     <p>
@@ -17,7 +17,8 @@
       :data.sync="list"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
-      :context-menu-config="{options: contextMenuOptions}"
+      :context-menu-config="{headerMenus, bodyMenus}"
+      @custom-menu-link="customMenuLinkEvent"
       style="width: 100%" >
       <elx-editable-column type="index" align="center" width="50">
         <template v-slot:header>
@@ -143,7 +144,7 @@ export default {
           { validator: checkE, trigger: 'change' }
         ]
       },
-      contextMenuOptions: [
+      headerMenus: [
         [
           {
             code: 'row-insert',
@@ -155,29 +156,79 @@ export default {
             name: '删除当前行',
             prefixIcon: 'el-icon-minus'
           }
-        ],
+        ]
+      ],
+      bodyMenus: [
         [
           {
-            code: 'clear',
-            name: '清除内容',
-            prefixIcon: 'el-icon-close'
+            code: 'row_insert',
+            name: '插入新行',
+            prefixIcon: 'el-icon-plus'
           },
           {
-            code: 'revert',
-            name: '还原内容'
+            code: 'row_remove',
+            name: '删除当前行',
+            prefixIcon: 'el-icon-minus'
           }
         ],
         [
           {
-            code: 'all-export',
+            code: 'cell_clear',
+            name: '清除内容',
+            prefixIcon: 'el-icon-close'
+          },
+          {
+            code: 'row_clear',
+            name: '清除当前行内容',
+            prefixIcon: 'el-icon-close'
+          },
+          {
+            code: 'all_clear',
+            name: '清除所有内容',
+            prefixIcon: 'el-icon-close'
+          },
+          {
+            code: 'cell_revert',
+            name: '还原内容'
+          },
+          {
+            code: 'row_revert',
+            name: '还原当前行内容',
+            prefixIcon: 'el-icon-close'
+          },
+          {
+            code: 'all_revert',
+            name: '还原所有内容'
+          }
+        ],
+        [
+          {
+            code: 'all_export',
             name: '导出全部数据',
             prefixIcon: 'el-icon-download'
+          },
+          {
+            code: 'custom_printer',
+            name: '打印',
+            prefixIcon: 'el-icon-printer',
+            disabled: true
+          },
+          {
+            code: 'custom_refresh',
+            name: '自定义菜单2',
+            prefixIcon: 'el-icon-refresh'
           }
         ]
       ]
     }
   },
   methods: {
+    customMenuLinkEvent (code, row, column, cell) {
+      Message({
+        type: 'info',
+        message: `点击了自定义菜单 ${code}`
+      })
+    },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)

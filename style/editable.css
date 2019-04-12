@@ -19,7 +19,7 @@
   border-right-color: #f56c6c;
 }
 .elx-contextmenu {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 99;
@@ -57,6 +57,12 @@
 .elx-contextmenu > .ctx-menu_wrapper > .ctx-menu_link:hover {
   color: #2B2B2B;
   background-color: #C5C5C5;
+}
+.elx-contextmenu > .ctx-menu_wrapper > .ctx-menu_link.disabled {
+  color: #B1B1B1;
+}
+.elx-contextmenu > .ctx-menu_wrapper > .ctx-menu_link.disabled:hover {
+  background-color: inherit;
 }
 .elx-contextmenu > .ctx-menu_wrapper .ctx-prefix-icon,
 .elx-contextmenu > .ctx-menu_wrapper .ctx-suffix-icon {

@@ -19,8 +19,8 @@ var GlobalEvent = {
 }
 
 window.addEventListener('click', GlobalEvent.trigger, false)
-window.addEventListener(document.onmousewheel === undefined ? 'wheel' : 'mousewheel', GlobalEvent.trigger, false)
 document.addEventListener('keydown', GlobalEvent.trigger, false)
 document.addEventListener('contextmenu', GlobalEvent.trigger, false)
+window.addEventListener(document.onmousewheel === undefined ? 'wheel' : 'mousewheel', GlobalEvent.trigger, false)
 
 export default GlobalEvent

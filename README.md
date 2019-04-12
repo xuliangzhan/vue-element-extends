@@ -170,7 +170,7 @@ context-menu-config 表格右键菜单参数
 | insert | 从第一行新增一行新数据 | data |
 | insertAt | 第二个参数 row 从指定位置新增一条数据； null 从第一行新增一行新数据；-1 从最后新增一条数据 | data,row |
 | remove | 数据删除，指定 row 或 [row, ...] 删除多条数据 | row?rows? |
-|  (v1.1.3+废弃) removes | 根据多条数据删除 | rows |
+|  (v1.2+废弃) removes | 根据多条数据删除 | rows |
 | removeSelecteds | 删除选中行数据 | — |
 | clear | 清空表格，删除表格所有行 | — |
 | reset | 重置数据，重置指定行 row 或者 [row, ...] 或者整个表格的数据 | row?rows? |

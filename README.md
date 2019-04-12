@@ -121,8 +121,8 @@ context-menu-config 表格右键菜单参数
 
 | 属性 | 描述 | 类型 | 参数 |
 |------|------|-----|-----|
-| headerMenus | 表格头部菜单配置 | Object | { code, name, prefixIcon, suffixIcon, visible, disabled } |
-| bodyMenus | 表格内容菜单配置 | Object | { code, name, prefixIcon, suffixIcon, visible, disabled } |
+| headerMenus | 表格头部菜单配置 | Array | { code, name, prefixIcon, suffixIcon, visible, disabled } |
+| bodyMenus | 表格内容菜单配置 | Array | { code, name, prefixIcon, suffixIcon, visible, disabled } |
 | headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示头部右键菜单 | Function | — |
 | bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 

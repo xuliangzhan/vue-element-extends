@@ -169,12 +169,12 @@ export default {
     },
     attrs () {
       let sortBy
-      let clsName = this.isReadonly ? 'editable-col_readonly ' : 'editable-col_edit '
+      let clsName = this.isReadonly ? 'elx_readonly ' : 'editable-col_edit '
       if (this.className) {
         clsName += `${this.className} `
       }
       if (this.renderOpts.autofocus) {
-        clsName += 'editable-col_autofocus '
+        clsName += 'elx_autofocus '
       }
       if (XEUtils.isFunction(this.sortBy)) {
         sortBy = this.sortBy

@@ -129,7 +129,7 @@ export default {
         cellStyle: XEUtils.isFunction(this.cellStyle) ? this._cellStyle : this.cellStyle,
         headerRowClassName: XEUtils.isFunction(this.headerRowClassName) ? this._headerRowClassName : this.headerRowClassName,
         headerRowStyle: XEUtils.isFunction(this.headerRowStyle) ? this._headerRowStyle : this.headerRowStyle,
-        headerCellClassName: XEUtils.isFunction(this.headerCellClassName) ? this._headerCellClassName : this.headerCellClassName,
+        headerCellClassName: this._headerCellClassName,
         headerCellStyle: XEUtils.isFunction(this.headerCellStyle) ? this._headerCellStyle : this.headerCellStyle,
         rowKey: XEUtils.isFunction(this.rowKey) ? this._rowKey : this.rowKey ? `data.${this.rowKey}` : this.rowKey,
         emptyText: this.emptyText,
@@ -176,7 +176,7 @@ export default {
         placement: 'bottom-start'
       }, tipConf, {
         manual: true,
-        popperClass: ['editable-valid_tooltip'].concat(tipConf.popperClass ? tipConf.popperClass.split(' ') : []).join(' ')
+        popperClass: ['elx-valid_tooltip'].concat(tipConf.popperClass ? tipConf.popperClass.split(' ') : []).join(' ')
       })
       let conf = Object.assign({
         // 触发方式
@@ -293,10 +293,16 @@ export default {
       let clsName = 'elx-editable-row '
       let rowClassName = this.rowClassName
       if (this.configs.mode === 'row' && this._isDisabledEdit(row)) {
-        clsName += 'editable-row_disabled '
+        clsName += 'elx_disabled '
       }
       if (row.editStatus === 'insert') {
         clsName += 'new-insert '
+      }
+      if (row.checked) {
+        clsName += 'elx_checked '
+      }
+      if (row.editActive) {
+        clsName += 'elx_active '
       }
       if (XEUtils.isFunction(rowClassName)) {
         clsName += rowClassName({ row: row.data, rowIndex }) || ''
@@ -312,19 +318,19 @@ export default {
       let clsName = ''
       let cellClassName = this.cellClassName
       if (this.configs.mode === 'cell' && row.editActive && row.editActive === column.property) {
-        clsName += 'editable-col_active '
+        clsName += 'elx_active editable-col_active '
       }
       if (this.configs.showStatus && !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))) {
-        clsName += 'editable-col_dirty '
+        clsName += 'elx_dirty '
       }
       if (row.checked && row.checked === column.property) {
-        clsName = 'editable-col_checked '
+        clsName = 'elx_checked editable-col_checked '
       }
       if (row.validActive && row.validActive === column.property) {
         clsName += 'valid-error '
       }
       if (this.configs.mode === 'cell' && this._isDisabledEdit(row, column, columnIndex)) {
-        clsName += 'editable-col_disabled '
+        clsName += 'elx_disabled '
       }
       if (XEUtils.isFunction(cellClassName)) {
         clsName += cellClassName({ row: row.data, column, rowIndex, columnIndex }) || ''
@@ -343,7 +349,22 @@ export default {
       return this.headerRowStyle({ row: row.data, rowIndex })
     },
     _headerCellClassName ({ row, column, rowIndex, columnIndex }) {
-      return this.headerCellClassName({ row: row.data, column, rowIndex, columnIndex })
+      let clsName = ''
+      let headerCellClassName = this.headerCellClassName
+      let matchObj = XEUtils.findTree(this.datas, row => row.checked || row.editActive, this.elTreeOpts)
+      if (matchObj) {
+        if (matchObj.item.checked === column.property) {
+          clsName += 'elx_checked '
+        } else if (matchObj.item.editActive === column.property) {
+          clsName += 'elx_active '
+        }
+      }
+      if (XEUtils.isFunction(headerCellClassName)) {
+        clsName += headerCellClassName({ row: row.data, column, rowIndex, columnIndex }) || ''
+      } else if (XEUtils.isString(headerCellClassName)) {
+        clsName += `${headerCellClassName}`
+      }
+      return XEUtils.trimRight(clsName)
     },
     _headerCellStyle ({ row, column, rowIndex, columnIndex }) {
       return this.headerCellStyle({ row: row.data, column, rowIndex, columnIndex })
@@ -895,7 +916,7 @@ export default {
       // 触发顺序 -> clear -> active
       setTimeout(() => {
         if (this.configs.trigger !== 'manual' &&
-        UtilHandle.hasClass(cell, 'editable-col_edit') &&
+        UtilHandle.hasClass(cell, 'elx_edit') &&
         (row.editActive
           ? this.configs.mode === 'row' && this.lastActive
             ? this.lastActive.column.property !== column.property
@@ -988,7 +1009,7 @@ export default {
      * 如果行或列被激活编辑时，关闭 tooltip 提示并禁用
      */
     _disabledTooltip (cell) {
-      let tElems = ['row', 'manual'].includes(this.configs.mode) ? cell.parentNode.querySelectorAll('td.editable-col_edit>.cell.el-tooltip') : cell.querySelectorAll('.cell.el-tooltip')
+      let tElems = ['row', 'manual'].includes(this.configs.mode) ? cell.parentNode.querySelectorAll('td.elx_edit>.cell.el-tooltip') : cell.querySelectorAll('.cell.el-tooltip')
       if (this.$refs.refElTable) {
         let refElTableBody = this.$refs.refElTable.$children.find(comp => UtilHandle.hasClass(comp.$el, 'el-table__body'))
         if (refElTableBody && refElTableBody.$refs.tooltip) {
@@ -1003,7 +1024,7 @@ export default {
     /**
      * 设置单元格聚焦
      * 默认对文本款类的激活后自动聚焦
-     * 如果是自定义渲染，也可以指定 class=editable-custom_input 使该单元格自动聚焦
+     * 如果是自定义渲染，也可以指定 class=elx-custom_input 使该单元格自动聚焦
      * 允许通过单元格渲染配置指定 autofocus 来打开或关闭自动聚焦
      */
     _setCellFocus (cell) {
@@ -1011,10 +1032,13 @@ export default {
       if (!inpElem) {
         inpElem = cell.querySelector('.el-textarea>textarea')
         if (!inpElem) {
-          inpElem = cell.querySelector('.editable-custom_input')
+          inpElem = cell.querySelector('.elx-custom_input')
+          if (!inpElem) {
+            inpElem = cell.querySelector('.editable-custom_input')
+          }
         }
       }
-      if (inpElem && UtilHandle.hasClass(cell, 'editable-col_autofocus')) {
+      if (inpElem && UtilHandle.hasClass(cell, 'elx_autofocus')) {
         inpElem.focus()
       }
     },

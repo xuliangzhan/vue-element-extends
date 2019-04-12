@@ -308,7 +308,7 @@ export default {
   color: #f56c6c;
   text-decoration: line-through;
 }
-.dblclick-table6 .el-table__body .el-table__row>td.editable-col_checked {
+.dblclick-table6 .el-table__body .el-table__row>td.elx_checked {
   box-shadow: inset 0 0 6px #409EFF;
 }
 .dblclick-table6-pagination {

@@ -342,7 +342,7 @@ export default {
 </script>
 
 <style>
-.click-table12 .el-table__body .el-table__row>td.editable-col_checked {
+.click-table12 .el-table__body .el-table__row>td.elx_checked {
   box-shadow: inset 0 0 6px #409EFF;
 }
 </style>

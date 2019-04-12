@@ -86,39 +86,39 @@ export default {
 .excel-table1.el-table--customSize .elx-editable-column {
   height: 30px;
 }
-.excel-table1 .el-table__body .el-table__row>td {
+.excel-table1 .el-table__body .elx-editable-row>td {
   cursor: cell;
 }
 .excel-table1 .el-table__header th,
-.excel-table1 .el-table__body .el-table__row>td:first-child,
-.excel-table1 .el-table__body .el-table__row:hover>td:first-child {
+.excel-table1 .el-table__body .elx-editable-row>td:first-child,
+.excel-table1 .el-table__body .elx-editable-row:hover>td:first-child {
   background-color: #f5f5f5;
 }
-.excel-table1 .el-table__body .el-table__row>td:first-child {
+.excel-table1 .el-table__body .elx-editable-row>td:first-child {
   cursor: default;
 }
-.excel-table1 .el-table__body .el-table__row:hover>td {
+.excel-table1 .el-table__body .elx-editable-row:hover>td {
   background-color: inherit;
 }
-.excel-table1 .el-table__body .el-table__row>td.editable-col_checked {
+.excel-table1 .el-table__body .elx-editable-row>td.elx_checked {
   border: 1px solid #217346;
 }
-.excel-table1 .el-table__body .el-table__row>td .cell {
+.excel-table1 .el-table__body .elx-editable-row>td .cell {
   width: 100% !important;
   padding: 0 3px;
 }
-.excel-table1 .el-table__body .el-table__row>td.editable-col_checked .cell {
+.excel-table1 .el-table__body .elx-editable-row>td.elx_checked .cell {
   padding: 0 2px;
 }
-.excel-table1 .el-table__body .el-table__row>td.editable-col_active .cell {
+.excel-table1 .el-table__body .elx-editable-row>td.elx_active .cell {
   padding: 0;
 }
-.excel-table1 .el-table__body .el-table__row>td .cell,
-.excel-table1 .el-table__body .el-table__row>td .cell .el-input,
-.excel-table1 .el-table__body .el-table__row>td .cell .el-input__inner {
+.excel-table1 .el-table__body .elx-editable-row>td .cell,
+.excel-table1 .el-table__body .elx-editable-row>td .cell .el-input,
+.excel-table1 .el-table__body .elx-editable-row>td .cell .el-input__inner {
   height: 100%;
 }
-.excel-table1 .el-table__body .el-table__row>td .cell .el-input__inner {
+.excel-table1 .el-table__body .elx-editable-row>td .cell .el-input__inner {
   border-radius: 0;
   padding: 0 2px;
   border-color: #217346;

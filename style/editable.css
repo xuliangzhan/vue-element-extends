@@ -1,21 +1,21 @@
 /* el tooltip */
-.el-tooltip__popper.editable-valid_tooltip {
+.el-tooltip__popper.elx-valid_tooltip {
   background: #f56c6c;
 }
-.el-tooltip__popper.editable-valid_tooltip[x-placement^=top] .popper__arrow,
-.el-tooltip__popper.editable-valid_tooltip[x-placement^=top] .popper__arrow::after {
+.el-tooltip__popper.elx-valid_tooltip[x-placement^=top] .popper__arrow,
+.el-tooltip__popper.elx-valid_tooltip[x-placement^=top] .popper__arrow::after {
   border-top-color: #f56c6c;
 }
-.el-tooltip__popper.editable-valid_tooltip[x-placement^=bottom] .popper__arrow,
-.el-tooltip__popper.editable-valid_tooltip[x-placement^=bottom] .popper__arrow::after {
+.el-tooltip__popper.elx-valid_tooltip[x-placement^=bottom] .popper__arrow,
+.el-tooltip__popper.elx-valid_tooltip[x-placement^=bottom] .popper__arrow::after {
   border-bottom-color: #f56c6c;
 }
-.el-tooltip__popper.editable-valid_tooltip[x-placement^=left] .popper__arrow,
-.el-tooltip__popper.editable-valid_tooltip[x-placement^=left] .popper__arrow::after {
+.el-tooltip__popper.elx-valid_tooltip[x-placement^=left] .popper__arrow,
+.el-tooltip__popper.elx-valid_tooltip[x-placement^=left] .popper__arrow::after {
   border-left-color: #f56c6c;
 }
-.el-tooltip__popper.editable-valid_tooltip[x-placement^=right] .popper__arrow,
-.el-tooltip__popper.editable-valid_tooltip[x-placement^=right] .popper__arrow::after {
+.el-tooltip__popper.elx-valid_tooltip[x-placement^=right] .popper__arrow,
+.el-tooltip__popper.elx-valid_tooltip[x-placement^=right] .popper__arrow::after {
   border-right-color: #f56c6c;
 }
 .elx-contextmenu {

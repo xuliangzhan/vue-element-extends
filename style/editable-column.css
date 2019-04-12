@@ -13,10 +13,10 @@
   height: 62px;
   padding: 0;
 }
-.elx-editable .elx-editable-column.editable-col_dirty {
+.elx-editable .elx-editable-column.elx_dirty {
   position: relative;
 }
-.elx-editable .elx-editable-column.editable-col_dirty:before {
+.elx-editable .elx-editable-column.elx_dirty:before {
   content: '';
   top: -5px;
   left: -5px;
@@ -36,17 +36,17 @@
 .elx-editable .elx-editable-column .cell > .el-select {
   width: 100%;
 }
-.elx-editable .editable-row_disabled,
-.elx-editable .elx-editable-column.editable-col_edit.editable-col_disabled {
+.elx-editable .elx-editable-row.elx_disabled,
+.elx-editable .elx-editable-column.elx_edit.elx_disabled {
   cursor: not-allowed;
 }
-.elx-editable .elx-editable-column.editable-col_edit.editable-col_active .cell {
+.elx-editable .elx-editable-column.elx_edit.elx_active .cell {
   line-height: inherit;
   overflow: inherit;
   position: relative;
 }
-.elx-editable.editable_click .elx-editable-column.editable-col_edit,
-.elx-editable.editable_dblclick .elx-editable-column.editable-col_edit {
+.elx-editable.editable_click .elx-editable-column.elx_edit,
+.elx-editable.editable_dblclick .elx-editable-column.elx_edit {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

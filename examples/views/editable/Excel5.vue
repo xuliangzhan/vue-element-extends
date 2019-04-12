@@ -311,41 +311,68 @@ export default {
 .excel-table5.el-table--customSize .elx-editable-column {
   height: 30px;
 }
-.excel-table5 .el-table__body .el-table__row>td {
+.excel-table5 .el-table__body .elx-editable-row>td {
   cursor: cell;
 }
 .excel-table5 .el-table__header th,
-.excel-table5 .el-table__body .el-table__row>td:first-child,
-.excel-table5 .el-table__body .el-table__row:hover>td:first-child {
+.excel-table5 .el-table__body .elx-editable-row>td:first-child,
+.excel-table5 .el-table__body .elx-editable-row:hover>td:first-child {
   background-color: #f5f5f5;
 }
-.excel-table5 .el-table__body .el-table__row>td:first-child {
+.excel-table5 .el-table__body .elx-editable-row>td:first-child {
   cursor: default;
 }
-.excel-table5 .el-table__body .el-table__row:hover>td {
+.excel-table5 .el-table__body .elx-editable-row:hover>td {
   background-color: inherit;
 }
-.excel-table5 .el-table__body .el-table__row>td.editable-col_checked {
+.excel-table5 .el-table__header .elx-editable-column.elx_checked .cell:after,
+  .excel-table5 .el-table__header .elx-editable-column.elx_active .cell:after{
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #217346;
+}
+.excel-table5 .el-table__header .elx-editable-column.elx_checked,
+.excel-table5 .el-table__header .elx-editable-column.elx_active,
+.excel-table5 .el-table__body .elx-editable-row.elx_checked>td:first-child,
+.excel-table5 .el-table__body .elx-editable-row.elx_active>td:first-child{
+  background-color: #D2D2D2;
+  color: #1B5D39;
+}
+.excel-table5 .el-table__body .elx-editable-row.elx_checked>td:first-child .cell:after,
+.excel-table5 .el-table__body .elx-editable-row.elx_active>td:first-child .cell:after{
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  top: 0;
+  right: 0;
+  background-color: #217346;
+}
+.excel-table5 .el-table__body .elx-editable-row>td.elx_checked {
   border: 1px solid #217346;
 }
-.excel-table5 .el-table__body .el-table__row>td .cell {
+.excel-table5 .el-table__body .elx-editable-row>td .cell {
   width: 100% !important;
   line-height: 30px;
   padding: 0 3px;
 }
-.excel-table5 .el-table__body .el-table__row>td.editable-col_checked .cell {
+.excel-table5 .el-table__body .elx-editable-row>td.elx_checked .cell {
   padding: 0 2px;
   line-height: 28px;
 }
-.excel-table5 .el-table__body .el-table__row>td.editable-col_active .cell {
+.excel-table5 .el-table__body .elx-editable-row>td.elx_active .cell {
   padding: 0;
 }
-.excel-table5 .el-table__body .el-table__row>td .cell,
-.excel-table5 .el-table__body .el-table__row>td .cell .el-input,
-.excel-table5 .el-table__body .el-table__row>td .cell .el-input__inner {
+.excel-table5 .el-table__body .elx-editable-row>td .cell,
+.excel-table5 .el-table__body .elx-editable-row>td .cell .el-input,
+.excel-table5 .el-table__body .elx-editable-row>td .cell .el-input__inner {
   height: 100%;
 }
-.excel-table5 .el-table__body .el-table__row>td .cell .el-input__inner {
+.excel-table5 .el-table__body .elx-editable-row>td .cell .el-input__inner {
   border-radius: 0;
   padding: 0 2px;
   line-height: 30px;

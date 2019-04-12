@@ -1275,30 +1275,21 @@ export default {
         let ctxMenuStore = this.ctxMenuStore
         if (ctxMenuStore.info) {
           let { row, rowIndex, column, cell } = ctxMenuStore.info
-          let columns = this.getColumns()
           switch (code) {
             case 'cell_clear':
-              evnt.preventDefault()
-              evnt.stopPropagation()
               XEUtils.set(row.data, column.property, null)
               break
             case 'cell_revert':
               XEUtils.set(row.data, column.property, XEUtils.get(row.store, column.property))
               break
             case 'select_clear':
-              this._getSelectRows().forEach(row => {
-                columns.forEach(column => {
-                  if (column.property) {
-                    XEUtils.set(row.data, column.property, null)
-                  }
-                })
-              })
+              this.reset(this.getSelecteds())
               break
             case 'select_remove':
               this.removeSelecteds()
               break
             case 'select_revert':
-              this.getSelecteds().forEach(record => this.revert(record))
+              this.revert(this.getSelecteds())
               break
             case 'select_export':
               let selectRows = this._getSelectRows()
@@ -1321,11 +1312,7 @@ export default {
               this.remove(row.data)
               break
             case 'row_clear':
-              columns.forEach(column => {
-                if (column.property) {
-                  XEUtils.set(row.data, column.property, null)
-                }
-              })
+              this.reset(row.data)
               break
             case 'row_revert':
               this.revert(row.data)
@@ -1341,13 +1328,7 @@ export default {
               this.clear()
               break
             case 'all_clear':
-              this.datas.forEach(row => {
-                columns.forEach(column => {
-                  if (column.property) {
-                    XEUtils.set(row.data, column.property, null)
-                  }
-                })
-              })
+              this.reset()
               break
             case 'all_revert':
               this.revert()
@@ -1400,15 +1381,21 @@ export default {
     },
     /**
      * 还原更改，以最后一次 reload 或 reloadRow 的数据为源数据或者初始值 data
+     * 还原行数据
      * 还原指定行数据
      * 还原整个表格数据
      */
-    revert (record) {
+    revert (records) {
       this.currentRow = null
-      if (record) {
-        let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
-        let { data, store } = matchObj.item
-        XEUtils.destructuring(data, XEUtils.clone(store, true))
+      if (records) {
+        if (!XEUtils.isArray(records)) {
+          records = [records]
+        }
+        XEUtils.eachTree(this.datas, row => {
+          if (records.includes(row.data)) {
+            XEUtils.destructuring(row.data, XEUtils.clone(row.store, true))
+          }
+        }, this.elTreeOpts)
       } else {
         this._clearAllOpers()
         return this.reload(this.initialStore)
@@ -1432,6 +1419,26 @@ export default {
      */
     clear () {
       return this.reload([])
+    },
+    /**
+     * 重置数据
+     * 重置行数据
+     * 重置指定行数据
+     * 重置整个表格数据
+     */
+    reset (records = this._getData()) {
+      let columns = this.getColumns()
+      if (records && !XEUtils.isArray(records)) {
+        records = [records]
+      }
+      records.forEach(record => {
+        columns.forEach(column => {
+          if (column.property) {
+            XEUtils.set(record, column.property, null)
+          }
+        })
+      })
+      return this.$nextTick()
     },
     getColumns () {
       return this.$refs.refElTable ? this.$refs.refElTable.columns : []
@@ -1474,19 +1481,12 @@ export default {
       let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
       return matchObj && matchObj.item.editStatus === 'insert'
     },
-    remove (record) {
-      let rest = null
-      if (record) {
-        let items = this.removes([record])
-        if (items.length) {
-          rest = items[0]
-        }
-      }
-      return this.$nextTick().then(() => rest)
-    },
-    removes (records) {
+    remove (records) {
       let rest = []
-      if (records && records.length) {
+      if (records && !XEUtils.isArray(records)) {
+        records = [records]
+      }
+      if (records.length) {
         this._saveOperStatus()
         records.forEach(record => {
           let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
@@ -1504,11 +1504,14 @@ export default {
       }
       return this.$nextTick().then(() => rest)
     },
+    removes (records) {
+      return this.remove(records)
+    },
     getSelecteds () {
       return this._getSelectRows().map(item => item.data)
     },
     removeSelecteds () {
-      this.removes(this.getSelecteds())
+      this.remove(this.getSelecteds())
     },
     getRecords (rowIndex) {
       let list = this._getData()

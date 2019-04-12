@@ -126,25 +126,25 @@ context-menu-config 表格右键菜单参数
 | headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示头部右键菜单 | Function | — |
 | bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 
-code 可选值:
+内置的 code 可选值:
 
 | 属性 | 描述 |
 |------|------|
-| cell_clear | 清除单元格数据 |
+| cell_reset | 重置单元格数据 |
 | cell_revert  | 还原单元格数据 |
-| select_remove  | 删除选中的数据 |
-| select_clear  | 清除选中的数据 |
+| select_remove  | 删除选中的行 |
+| select_reset  | 重置选中的数据 |
 | select_revert  | 还原选中的数据 |
 | select_export  | 导出选中的数据 |
-| row_insert  | 在当前位置插入行 |
+| row_insert  | 在当前位置插入新行 |
 | row_remove | 删除当前行 |
-| row_clear | 清除当前行数据 |
+| row_reset | 重置当前行数据 |
 | row_revert | 还原当前行数据 |
 | row_export  | 导出当前行数据 |
-| all_remove | 删除表格数据 |
-| all_clear | 清除表格数据 |
-| all_revert | 还原表格数据 |
-| all_export  | 导出所有数据 |
+| all_remove | 删除表格所有行 |
+| all_reset | 重置表格所有数据 |
+| all_revert | 还原表格所有数据 |
+| all_export  | 导出表格所有数据 |
 
 ### Editable Events
 
@@ -164,13 +164,14 @@ code 可选值:
 | refresh | 手动刷新表格 |  |
 | reload | 初始化完整表格数据 | datas |
 | reloadRow | 初始化指定行数据 | row |
-| revert | 放弃更改，还原指定行 row 或者整个表格的数据 | row? |
+| revert | 放弃更改，还原指定行 row 或者整个表格的数据 | row?rows? |
 | insert | 从第一行新增一行新数据 | data |
 | insertAt | 第二个参数 row 从指定位置新增一条数据； null 从第一行新增一行新数据；-1 从最后新增一条数据 | data,row |
-| remove | 根据数据删除 | row |
-| removes | 根据多条数据删除 | rows |
+| remove | 数据删除，指定 row 或 [row, ...] 删除多条数据 | row?rows? |
+|  (v1.1.3+废弃) removes | 根据多条数据删除 | rows |
 | removeSelecteds | 删除选中行数据 | — |
-| clear | 清空所有数据 | — |
+| clear | 清空表格，删除表格所有行 | — |
+| reset | 重置数据，重置指定行 row 或者 [row, ...] 或者整个表格的数据 | row?rows? |
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |
 | hasActiveRow | 判断当前是否活动行 | row |
 | getActiveRow | 获取当前活动行或列的信息 | — |

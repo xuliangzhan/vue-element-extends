@@ -5,7 +5,7 @@
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增一行</el-button>
       <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空表格</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
     </p>

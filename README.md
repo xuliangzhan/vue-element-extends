@@ -132,19 +132,19 @@ context-menu-config 表格右键菜单配置：
 
 | 编码 | 描述 |
 |------|------|
-| CELL_RESET | 重置单元格数据 |
+| CELL_RESET | 清除单元格数据的值 |
 | CELL_REVERT  | 还原单元格数据 |
 | SELECT_REMOVE  | 删除选中的行 |
-| SELECT_RESET  | 重置选中的数据 |
+| SELECT_RESET  | 清除选中的数据的值 |
 | SELECT_REVERT  | 还原选中的数据 |
 | SELECT_EXPORT  | 导出选中的数据 |
 | ROW_INSERT  | 在当前位置插入新行 |
 | ROW_REMOVE | 删除当前行 |
-| ROW_RESET | 重置当前行数据 |
+| ROW_RESET | 清除当前行数据的值 |
 | ROW_REVERT | 还原当前行数据 |
 | ROW_EXPORT  | 导出当前行数据 |
 | ALL_REMOVE | 删除表格所有行 |
-| ALL_RESET | 重置表格所有数据 |
+| ALL_RESET | 清除表格所有数据的值 |
 | ALL_REVERT | 还原表格所有数据 |
 | ALL_EXPORT  | 导出表格所有数据 |
 
@@ -163,7 +163,7 @@ context-menu-config 表格右键菜单配置：
 
 | 方法名 | 描述 | 参数 |
 |------|------|-----|
-| refresh | 手动刷新表格 |  |
+| refresh | 手动刷新表格，对于非双向同步的树形结构可能会用到 |  |
 | reload | 初始化完整表格数据 | datas |
 | reloadRow | 初始化指定行数据 | row |
 | revert | 放弃更改，还原指定行 row 或者整个表格的数据 | row?rows? |
@@ -173,10 +173,10 @@ context-menu-config 表格右键菜单配置：
 |  (v1.2+废弃) removes | 根据多条数据删除 | rows |
 | removeSelecteds | 删除选中行数据 | — |
 | clear | 清空表格，删除表格所有行 | — |
-| reset | 重置数据，重置指定行 row 或者 [row, ...] 或者整个表格的数据 | row?rows? |
-| clearActive | 清除所有活动行或列为不可编辑状态 | — |
-| hasActiveRow | 判断当前是否活动行 | row |
-| getActiveRow | 获取当前活动行或列的信息 | — |
+| reset | 重置数据，清除指定行 row 或者 [row, ...] 或者整个表格的值 | row?rows? |
+| clearActive | 清除所有已激活的行或列为不可编辑状态 | — |
+| hasActiveRow | 判断当前是否已激活为编辑状态的行 | row |
+| getActiveRow | 获取当前已激活为编辑行或列的信息 | — |
 | setActiveRow | 只对 mode=row 有效，激活指定行为可编辑状态 | row |
 | setActiveCell | 激活指定某一行的某个单元格为可编辑状态 | row,prop? |
 | hasRowInsert | 检查是否为新增的行数据 | row |

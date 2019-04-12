@@ -1486,9 +1486,9 @@ export default {
     },
     /**
      * 重置数据
-     * 重置行数据
-     * 重置指定行数据
-     * 重置整个表格数据
+     * 清除行数据
+     * 清除指定行数据
+     * 清除整个表格数据
      */
     reset (records = this._getData()) {
       let columns = this.getColumns()
@@ -1545,6 +1545,12 @@ export default {
       let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
       return matchObj && matchObj.item.editStatus === 'insert'
     },
+    /**
+     * 删除行
+     * 删除行数据
+     * 删除指定行数据
+     * 删除整个表格数据
+     */
     remove (records) {
       let rest = []
       if (records && !XEUtils.isArray(records)) {

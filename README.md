@@ -106,11 +106,11 @@ edit-config 编辑参数配置
 | insert | 从第一行新增一行新数据 | data |
 | insertAt | 第二个参数 row 从指定位置新增一条数据； null 从第一行新增一行新数据；-1 从最后新增一条数据 | data,row |
 | remove | 根据数据删除 | row |
-| removes | 根据多条数据删除 | rows |
-| (废弃) removeByIndex | 根据行号删除某一行数据 | $index |
-| (废弃) removeByIndexs | 根据多个行号删除多行数据 | $indexs |
+| (v1.1.3+废弃) removes | 根据多条数据删除 | rows |
+| (v1.1.0+废弃) removeByIndex | 根据行号删除某一行数据 | $index |
+| (v1.1.0+废弃) removeByIndexs | 根据多个行号删除多行数据 | $indexs |
 | removeSelecteds | 删除选中行数据 | — |
-| clear | 清空所有数据 | — |
+| clear | 清空表格 | — |
 | clearActive | 清除所有活动行或列为不可编辑状态 | — |
 | hasActiveRow | 判断当前是否活动行 | row |
 | getActiveRow | 获取当前活动行或列的信息 | — |

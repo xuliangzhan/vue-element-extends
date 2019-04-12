@@ -548,7 +548,7 @@ export default {
               type = 'in'
             }
           }
-          if (type && this._hasClass(target, 'editable')) {
+          if (type && this._hasClass(target, 'elx-editable')) {
             if (target !== this.$el) {
               type = 'out'
             }

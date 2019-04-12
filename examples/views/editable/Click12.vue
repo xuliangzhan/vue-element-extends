@@ -9,7 +9,7 @@
       <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空数据</el-button>
+      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空表格</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
       <el-button type="info" size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>

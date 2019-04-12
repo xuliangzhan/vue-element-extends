@@ -169,7 +169,7 @@ export default {
     },
     attrs () {
       let sortBy
-      let clsName = this.isReadonly ? 'elx_readonly ' : 'editable-col_edit '
+      let clsName = this.isReadonly ? 'elx_readonly ' : 'elx_edit '
       if (this.className) {
         clsName += `${this.className} `
       }

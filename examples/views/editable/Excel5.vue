@@ -262,17 +262,7 @@ export default {
             column,
             content: row[column.property]
           }
-          if (XEClipboard.copy(this.lastCopy.content)) {
-            Message({
-              type: 'success',
-              message: '成功复制到剪贴板'
-            })
-          } else {
-            Message({
-              type: 'error',
-              message: '您的浏览器不支持该功能！'
-            })
-          }
+          XEClipboard.copy(this.lastCopy.content)
           break
         case 'paste':
           row[column.property] = this.lastCopy.content || null

@@ -110,10 +110,10 @@ edit-config 编辑参数配置
 | (v1.1+废弃) removeByIndex | 根据行号删除某一行数据 | $index |
 | (v1.1+废弃) removeByIndexs | 根据多个行号删除多行数据 | $indexs |
 | removeSelecteds | 删除选中行数据 | — |
-| clear | 清空表格 | — |
-| clearActive | 清除所有活动行或列为不可编辑状态 | — |
-| hasActiveRow | 判断当前是否活动行 | row |
-| getActiveRow | 获取当前活动行或列的信息 | — |
+| clear | 清空表格，删除表格所有行 | — |
+| clearActive | 清除所有已激活的行或列为不可编辑状态 | — |
+| hasActiveRow | 判断当前是否已激活为编辑状态的行 | row |
+| getActiveRow | 获取当前已激活为编辑行或列的信息 | — |
 | setActiveRow | 只对 mode=row 有效，激活指定行为可编辑状态 | row |
 | setActiveCell | 激活指定某一行的某个单元格为可编辑状态 | row,prop? |
 | hasRowInsert | 检查是否为新增的行数据 | row |

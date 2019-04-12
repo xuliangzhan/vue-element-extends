@@ -25,7 +25,7 @@
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', mode: 'cell', props: {children: 'childList'}}"
-      :context-menu-config="{disabledHeader: false, bodyMenus}"
+      :context-menu-config="{disabledHeader: true, bodyMenus}"
       @blur-active="blurActiveEvent"
       @current-change="handleCurrentChange"
       @custom-menu-link="customMenuLinkEvent"
@@ -77,19 +77,19 @@ export default {
           },
           {
             code: 'removeRow',
-            name: '删除当前行',
+            name: '删除行',
             prefixIcon: 'el-icon-minus'
           }
         ],
         [
           {
             code: 'CELL_RESET',
-            name: '重置数据',
+            name: '清除内容',
             prefixIcon: 'el-icon-close'
           },
           {
             code: 'CELL_REVERT',
-            name: '还原数据'
+            name: '还原内容'
           }
         ],
         [

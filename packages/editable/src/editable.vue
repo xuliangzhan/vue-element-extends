@@ -710,7 +710,7 @@ export default {
       let menus = this.ctxMenuConfig[isHeader ? 'headerMenus' : 'bodyMenus']
       let visibleMethod = this.ctxMenuConfig[isHeader ? 'headerVisibleMethod' : 'bodyVisibleMethod']
       let disabled = this.ctxMenuConfig[isHeader ? 'disabledHeader' : 'disabledBody']
-      if (disabled === false) {
+      if (disabled) {
         evnt.preventDefault()
       } else if (menus && menus.length) {
         if (!visibleMethod || visibleMethod(params)) {

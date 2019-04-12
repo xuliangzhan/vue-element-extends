@@ -1568,9 +1568,6 @@ export default {
       }
       return this.$nextTick().then(() => rest)
     },
-    removes (records) {
-      return this.remove(records)
-    },
     getSelecteds () {
       return this._getSelectRows().map(item => item.data)
     },

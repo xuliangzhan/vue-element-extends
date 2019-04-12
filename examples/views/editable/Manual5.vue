@@ -12,12 +12,13 @@
 
       <elx-editable
         ref="editable1"
-        class="manual-table7"
         size="mini"
         border
         height="260"
         :data.sync="roleList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod1}"
+        :context-menu-config="{bodyMenus, bodyVisibleMethod: bodyVisibleMethod1}"
+        @custom-menu-link="customMenuLinkEvent1"
         style="width: 100%">
         <elx-editable-column type="selection" width="55"></elx-editable-column>
         <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
@@ -66,6 +67,8 @@
         height="260"
         :data.sync="userList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod2}"
+        :context-menu-config="{bodyMenus, bodyVisibleMethod: bodyVisibleMethod2}"
+        @custom-menu-link="customMenuLinkEvent2"
         style="width: 100%">
         <elx-editable-column type="selection" width="55"></elx-editable-column>
         <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
@@ -120,6 +123,8 @@
         height="260"
         :data.sync="fileList"
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod3}"
+        :context-menu-config="{bodyMenus, bodyVisibleMethod: bodyVisibleMethod3}"
+        @custom-menu-link="customMenuLinkEvent3"
         style="width: 100%">
         <elx-editable-column type="selection" width="55"></elx-editable-column>
         <elx-editable-column prop="id" label="ID" width="100"></elx-editable-column>
@@ -186,6 +191,41 @@ export default {
         pageSize: 5,
         totalResult: 0
       },
+      bodyMenus: [
+        [
+          {
+            code: 'editRow',
+            name: '编辑',
+            prefixIcon: 'el-icon-edit-outline'
+          },
+          {
+            code: 'removeRow',
+            name: '删除',
+            prefixIcon: 'el-icon-delete'
+          },
+          {
+            code: 'ROW_INSERT',
+            name: '插入新行',
+            prefixIcon: 'el-icon-plus'
+          },
+          {
+            code: 'ROW_REMOVE',
+            name: '删除行',
+            prefixIcon: 'el-icon-minus'
+          }
+        ],
+        [
+          {
+            code: 'CELL_RESET',
+            name: '清除内容',
+            prefixIcon: 'el-icon-close'
+          },
+          {
+            code: 'CELL_REVERT',
+            name: '还原数据'
+          }
+        ]
+      ],
       isClearActiveFlag: true
     }
   },
@@ -280,6 +320,38 @@ export default {
         return `${size} ${unit}`
       }
       return ''
+    },
+    customMenuLinkEvent1 (code, row, column, cell) {
+      this.handleMenuLink('editable1', code, row, column, cell)
+    },
+    customMenuLinkEvent2 (code, row, column, cell) {
+      this.handleMenuLink('editable2', code, row, column, cell)
+    },
+    customMenuLinkEvent3 (code, row, column, cell) {
+      this.handleMenuLink('editable3', code, row, column, cell)
+    },
+    // 自定义菜单事件
+    handleMenuLink (name, code, row, column, cell) {
+      switch (code) {
+        case 'editRow':
+          this.openActiveRowEvent(name, row)
+          break
+        case 'removeRow':
+          this.removeEvent(name, row)
+          break
+      }
+    },
+    bodyVisibleMethod1 ({ row, column }, event) {
+      event.preventDefault()
+      return this.isClearActiveFlag
+    },
+    bodyVisibleMethod2 ({ row, column }, event) {
+      event.preventDefault()
+      return this.isClearActiveFlag
+    },
+    bodyVisibleMethod3 ({ row, column }, event) {
+      event.preventDefault()
+      return this.isClearActiveFlag
     },
     insertEvent (name) {
       let activeInfo = this.$refs[name].getActiveRow()

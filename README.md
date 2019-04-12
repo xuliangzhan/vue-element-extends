@@ -107,7 +107,7 @@ edit-config 编辑参数配置：
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
 | activeMethod | 只对 type=default 的列有效，该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
 | autoClearActive | 当点击其它地方后，是否自动清除最后活动行或列 | Boolean | — | true |
-| clearActiveMethod | 该函数 Function({type, row, rowIndex, column?, columnIndex?}) 的返回值用来决定是否允许清除当前活动行或单元格 | Function | — | — |
+| clearActiveMethod | 该函数 Function({type, row, rowIndex, column?, columnIndex?}, event) 的返回值用来决定是否允许清除当前活动行或单元格 | Function | — | — |
 | useDefaultValidTip | 如果同时使用了数据校验和 fixed 列，请设置为 true 使用默认提示  | Boolean | — | false |
 | validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
 | disabledValidTip | 关闭校验提示 | Boolean | — | false |
@@ -115,7 +115,7 @@ edit-config 编辑参数配置：
 | isTabKey | 只对 trigger!=manual 有效，是否启用 Tab 键切换到下一个单元格 | Boolean | — | false |
 | isArrowKey | 只对 trigger!=manual 有效，是否启用箭头键切换行和单元格 | Boolean | — | false |
 | isCheckedEdit | 只对 trigger!=manual 有效，是否启用选中状态允许值覆盖式编辑 | Boolean | — | false |
-| checkedEditMethod | 只对 isCheckedEdit=true 有效，可以通过重写该函数 Function({row, rowIndex, column, columnIndex, cell}) 返回 false 来阻止默认值的覆盖行为 | Function | — | — |
+| checkedEditMethod | 只对 isCheckedEdit=true 有效，可以通过重写该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 返回 false 来阻止默认值的覆盖行为 | Function | — | — |
 
 context-menu-config 表格右键菜单配置：
 
@@ -125,8 +125,8 @@ context-menu-config 表格右键菜单配置：
 | headerMenus | 表格头部菜单配置 | Array | { code, name, prefixIcon, suffixIcon, visible, disabled } |
 | disabledBody | 是否禁用表格内容右键 | Boolean | — |
 | bodyMenus | 表格内容菜单配置 | Array | { code, name, prefixIcon, suffixIcon, visible, disabled } |
-| headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示头部右键菜单 | Function | — |
-| bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示内容右键菜单 | Function | — |
+| headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 的返回值用来决定是否显示头部右键菜单 | Function | — |
+| bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 
 内置的菜单 code 可选值:
 

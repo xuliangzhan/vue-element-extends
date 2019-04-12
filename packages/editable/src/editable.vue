@@ -693,7 +693,7 @@ export default {
             let { cell } = this._getColumnByRowIndex(row.data, column.property)
             this._triggerActive(row, column, cell, event)
               .then(() => {
-                if (this.configs.checkedEditMethod ? this.configs.checkedEditMethod({ row: row.data, rowIndex, column, columnIndex, cell }) !== false : true) {
+                if (this.configs.checkedEditMethod ? this.configs.checkedEditMethod({ row: row.data, rowIndex, column, columnIndex, cell }, evnt) !== false : true) {
                   XEUtils.set(row.data, column.property, null)
                 }
               })
@@ -713,7 +713,7 @@ export default {
       if (disabled) {
         evnt.preventDefault()
       } else if (menus && menus.length) {
-        if (!visibleMethod || visibleMethod(params)) {
+        if (!visibleMethod || visibleMethod(params, evnt)) {
           evnt.preventDefault()
           let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
           let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
@@ -815,31 +815,30 @@ export default {
         let clearActiveMethod = this.configs.clearActiveMethod
         let { row, column, cell } = this.lastActive
         let rowIndex = this._getRowIndex(row)
-        let trElem = cell.parentNode
+        let type = 'out'
         let isClearActive = true
-        let type = null
+        let trElem, cellElem
         target = evnt.target
         while (target && target.nodeType && target !== document) {
-          if (this.configs.mode === 'row') {
-            if (target === trElem) {
-              return
-            } else if (UtilHandle.hasClass(target, 'elx-editable-row')) {
-              if (XEUtils.findIndexOf(Array.from(target.parentNode.children), item => item === target) === rowIndex) {
-                return
+          if (UtilHandle.hasClass(target, 'elx-editable-row')) {
+            trElem = target
+          } else if (UtilHandle.hasClass(target, 'elx-editable-column')) {
+            cellElem = target
+          } else if (UtilHandle.hasClass(target, 'elx-editable')) {
+            // 如果是同表格
+            if (trElem && cellElem && target === this.$el) {
+              if (this.configs.mode === 'row') {
+                // 并且是同一行
+                if (XEUtils.findIndexOf(Array.from(trElem.parentNode.children), item => item === trElem) === rowIndex) {
+                  return
+                }
               } else {
-                type = 'in'
+                // 并且是同一单元格
+                if (cellElem === cell) {
+                  return
+                }
               }
-            }
-          } else {
-            if (target === cell) {
-              return
-            } else if (UtilHandle.hasClass(target, 'elx-editable-column')) {
               type = 'in'
-            }
-          }
-          if (type && UtilHandle.hasClass(target, 'elx-editable')) {
-            if (target !== this.$el) {
-              type = 'out'
             }
             break
           }
@@ -847,7 +846,7 @@ export default {
         }
         if (clearActiveMethod) {
           let param = {
-            type: type || 'out',
+            type: type,
             row: row.data,
             rowIndex
           }
@@ -857,7 +856,7 @@ export default {
               columnIndex: this._getColumnIndex(column)
             })
           }
-          isClearActive = clearActiveMethod(param)
+          isClearActive = clearActiveMethod(param, evnt)
         }
         if (isClearActive) {
           this._validActiveCell().then(() => {

@@ -19,7 +19,7 @@
   * 支持增/删/改/查/还原
   * 支持导出 .csv 文件
   * 支持方向键和 Tab 键切换单元格
-  * 支持右键菜单
+  * 支持表格右键菜单
   * 支持原 ElTable 的所有功能、参数、方法、插槽
 
 ## Docs
@@ -121,8 +121,8 @@ context-menu-config 表格右键菜单参数
 
 | 属性 | 描述 | 类型 | 参数 |
 |------|------|-----|-----|-----|
-| headerMenus | 头部菜单配置 | Object | { code, name, prefixIcon, suffixIcon, visible, disabled } |
-| bodyMenus | 内容菜单配置 | Object | { code, name, prefixIcon, suffixIcon, visible, disabled } |
+| headerMenus | 表格头部菜单配置 | Object | { code, name, prefixIcon, suffixIcon, visible, disabled } |
+| bodyMenus | 表格内容菜单配置 | Object | { code, name, prefixIcon, suffixIcon, visible, disabled } |
 | headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示头部右键菜单 | Function | — |
 | bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 
@@ -155,7 +155,7 @@ code 可选值:
 | edit-active | 当点击后改变为编辑状态之后会触发该事件 | row[,column,cell]?,event |
 | clear-active | 只对 autoClearActive=true 有效，当点击其它地方后，自动清除最后活动行或列之后会触发该事件 | row[,column,cell]?,event |
 | blur-active | 当行或者单元格失焦之后会触发该事件 | row[,column,cell]?,event |
-| custom-menu-link | 自定义的右键菜单点击后触发该函数 | code,row,column,cell,event |
+| custom-menu-link | 自定义的菜单点击后触发该函数 | code,row,column,cell,event |
 
 ### Editable Methods
 

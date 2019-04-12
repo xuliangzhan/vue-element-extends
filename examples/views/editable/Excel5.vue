@@ -15,9 +15,11 @@
       border
       size="customSize"
       :data.sync="list"
+      :cell-class-name="cellClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
       :context-menu-config="{headerMenus, bodyMenus}"
+      @edit-active="editActiveEvent"
       @custom-menu-link="customMenuLinkEvent"
       style="width: 100%" >
       <elx-editable-column type="index" align="center" width="50">
@@ -27,7 +29,11 @@
       </elx-editable-column>
       <template v-for="(item, index) in columnConfigs">
         <template v-if="item.customShow">
-          <elx-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip></elx-editable-column>
+          <elx-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip>
+            <template v-slot="scope">
+              <span class="content">{{ scope.row[scope.column.property] }}</span>
+            </template>
+          </elx-editable-column>
         </template>
       </template>
     </elx-editable>
@@ -49,6 +55,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
+import XEClipboard from 'xe-clipboard'
 import { Message, MessageBox } from 'element-ui'
 
 export default {
@@ -144,6 +151,9 @@ export default {
           { validator: checkE, trigger: 'change' }
         ]
       },
+      lastCopy: {
+        content: null
+      },
       headerMenus: [
         [
           {
@@ -165,26 +175,35 @@ export default {
       bodyMenus: [
         [
           {
+            code: 'copy',
+            name: '复制',
+            prefixIcon: 'el-icon-document'
+          },
+          {
+            code: 'paste',
+            name: '粘贴',
+            prefixIcon: 'el-icon-news'
+          },
+          {
             code: 'ROW_INSERT',
             name: '插入新行',
             prefixIcon: 'el-icon-plus'
           },
           {
             code: 'ROW_REMOVE',
-            name: '删除当前行',
+            name: '删除行',
             prefixIcon: 'el-icon-minus'
           }
         ],
         [
           {
             code: 'CELL_RESET',
-            name: '重置数据',
+            name: '清除内容',
             prefixIcon: 'el-icon-close'
           },
           {
             code: 'ROW_RESET',
-            name: '重置当前行数据',
-            prefixIcon: 'el-icon-close'
+            name: '清除行数据'
           },
           {
             code: 'CELL_REVERT',
@@ -192,41 +211,76 @@ export default {
           },
           {
             code: 'ROW_REVERT',
-            name: '还原当前行数据'
+            name: '还原行数据'
           }
         ],
         [
-          {
-            code: 'ROW_EXPORT',
-            name: '导出当前行数据',
-            prefixIcon: 'el-icon-download'
-          },
           {
             code: 'ALL_EXPORT',
             name: '导出全部数据',
             prefixIcon: 'el-icon-download'
           },
           {
-            code: 'printer',
-            name: '打印',
-            prefixIcon: 'el-icon-printer',
-            disabled: true
+            code: 'ROW_EXPORT',
+            name: '导出行数据'
           },
           {
-            code: 'refresh',
-            name: '刷新',
-            prefixIcon: 'el-icon-edit'
+            code: 'printer',
+            name: '打印',
+            prefixIcon: 'el-icon-printer'
+          },
+          {
+            code: 'test',
+            name: '更多功能',
+            prefixIcon: 'el-icon-view',
+            disabled: true
           }
         ]
       ]
     }
   },
   methods: {
+    cellClassName ({ row, column }) {
+      if (this.lastCopy) {
+        return this.lastCopy.row === row && this.lastCopy.column === column ? 'to-copy' : ''
+      }
+      return ''
+    },
+    editActiveEvent () {
+      this.lastCopy = {
+        row: null,
+        column: null,
+        content: null
+      }
+    },
+    // 自定义菜单事件
     customMenuLinkEvent (code, row, column, cell) {
-      Message({
-        type: 'info',
-        message: `点击了自定义菜单 ${code}`
-      })
+      switch (code) {
+        case 'copy':
+          this.lastCopy = {
+            row,
+            column,
+            content: row[column.property]
+          }
+          if (XEClipboard.copy(this.lastCopy.content)) {
+            Message({
+              type: 'success',
+              message: '成功复制到剪贴板'
+            })
+          } else {
+            Message({
+              type: 'error',
+              message: '您的浏览器不支持该功能！'
+            })
+          }
+          break
+        case 'paste':
+          row[column.property] = this.lastCopy.content || null
+          break
+        case 'printer':
+          print()
+          break
+      }
     },
     getAllEvent () {
       let rest = this.$refs.editable.getRecords()
@@ -248,10 +302,11 @@ export default {
     },
     saveCustomEvent () {
       if (!this.selectColumns.length) {
-        return Message({
+        Message({
           type: 'error',
           message: '请至少选择一列！'
         })
+        return
       }
       this.dialogVisible = false
       this.columnConfigs.forEach(column => {
@@ -306,8 +361,31 @@ export default {
   line-height: 30px;
   border-color: #217346;
 }
+.excel-table5.el-table--customSize .el-table__body .elx-editable-column.to-copy .cell {
+  position: relative;
+  background: repeating-linear-gradient(135deg, transparent, transparent 3px, #217346 3px, #217346 8px);
+  animation: shine 1s infinite linear;
+  overflow: hidden;
+}
+.excel-table5.el-table--customSize .el-table__body .elx-editable-column.to-copy .cell .content {
+  content: '';
+  background-color: #fff;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+}
 .custom-wrapper {
   height: 200px;
   overflow: auto;
+}
+@keyframes shine {
+  0% {
+    background-position: -1px -1px;
+  }
+  100% {
+    background-position: -12px -12px;
+  }
 }
 </style>

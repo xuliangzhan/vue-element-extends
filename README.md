@@ -84,7 +84,7 @@ Vue.use(VueElementExtends)
 </elx-editable>
 ```
 
-edit-rules 校验规则配置
+edit-rules 校验规则配置：
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
@@ -96,7 +96,7 @@ edit-rules 校验规则配置
 | validator  | 自定义校验方法 | Function(rule, value, callback) | — | — |
 | trigger  | 触发校验方式 | String | blur / change | blur |
 
-edit-config 编辑参数配置
+edit-config 编辑参数配置：
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
@@ -117,7 +117,7 @@ edit-config 编辑参数配置
 | isCheckedEdit | 只对 trigger!=manual 有效，是否启用选中状态允许值覆盖式编辑 | Boolean | — | false |
 | checkedEditMethod | 只对 isCheckedEdit=true 有效，可以通过重写该函数 Function({row, rowIndex, column, columnIndex, cell}) 返回 false 来阻止默认值的覆盖行为 | Function | — | — |
 
-context-menu-config 表格右键菜单参数
+context-menu-config 表格右键菜单配置：
 
 | 属性 | 描述 | 类型 | 参数 |
 |------|------|-----|-----|

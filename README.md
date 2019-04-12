@@ -117,7 +117,7 @@ edit-config 编辑参数配置
 | isCheckedEdit | 只对 trigger!=manual 有效，是否启用选中状态允许值覆盖式编辑 | Boolean | — | false |
 | checkedEditMethod | 只对 isCheckedEdit=true 有效，可以通过重写该函数 Function({row, rowIndex, column, columnIndex, cell}) 返回 false 来阻止默认值的覆盖行为 | Function | — | — |
 
-context-menu-config 表格右键菜单参数（v1.1.3+）
+context-menu-config 表格右键菜单参数
 
 | 属性 | 描述 | 类型 | 参数 |
 |------|------|-----|-----|

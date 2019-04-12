@@ -9,10 +9,10 @@
       <slot name="empty"></slot>
     </template>
     <template v-slot:append>
-      <div v-if="ctxMenuConfig.bodyMenus || ctxMenuConfig.headerMenus" ref="contextmenu" class="elx-contextmenu" v-show="ctxMenuStore.visible" :style="ctxMenuStore.style">
+      <div v-if="isCtxMenu" ref="contextMenu" class="elx-contextmenu" v-show="ctxMenuStore.visible" :style="ctxMenuStore.style">
         <div class="ctx-menu_wrapper" v-for="(options, index) in ctxMenuStore.list" :key="index">
           <template v-for="item in options">
-            <a v-if="item.visible !== false" class="ctx-menu_link" :key="item.code" :class="[item.code, {disabled: item.disabled}]" @click="_contextmenuEvent(item, $event)">
+            <a v-if="item.visible !== false" class="ctx-menu_link" :key="item.code" :class="[item.code, {disabled: item.disabled, 'active': item === ctxMenuStore.selected}]" @click="_ctxMenuEvent(item, $event)" @mouseover="_ctxMenuMouseoverEvent(item, $event)" @mouseout="_ctxMenuMouseoutEvent(item, $event)">
               <i v-if="item.prefixIcon" class="ctx-prefix-icon" :class="item.prefixIcon"></i>
               <span>{{ item.name }}</span>
               <i v-if="item.suffixIcon" class="ctx-suffix-icon" :class="item.suffixIcon"></i>
@@ -97,6 +97,7 @@ export default {
         children: 'children'
       },
       ctxMenuStore: {
+        selected: null,
         visible: false,
         list: [],
         style: {
@@ -205,8 +206,20 @@ export default {
       }, editConfig, { validTooltip })
       return conf
     },
+    isCtxMenu () {
+      return this.ctxMenuConfig.bodyMenus || this.ctxMenuConfig.headerMenus
+    },
     ctxMenuConfig () {
       return Object.assign({}, this.contextMenuConfig)
+    },
+    ctxMenuList () {
+      let rest = []
+      this.ctxMenuStore.list.forEach(list => {
+        list.forEach(item => {
+          rest.push(item)
+        })
+      })
+      return rest
     }
   },
   watch: {
@@ -225,8 +238,8 @@ export default {
     this._updateData()
   },
   mounted () {
-    if ((this.ctxMenuConfig.bodyMenus || this.ctxMenuConfig.headerMenus) && this.$refs.contextmenu) {
-      this.ctxMenuStore.el = this.$refs.contextmenu
+    if (this.isCtxMenu && this.$refs.contextMenu) {
+      this.ctxMenuStore.el = this.$refs.contextMenu
       document.body.appendChild(this.ctxMenuStore.el)
     }
   },
@@ -504,10 +517,12 @@ export default {
     },
     _bindEvents () {
       GlobalEvent.on(this, 'click', evnt => this._triggerClear(evnt))
-      GlobalEvent.on(this, 'contextmenu', evnt => this._triggerContextMenu(evnt))
-      GlobalEvent.on(this, 'mousewheel', evnt => this._triggerMousewheel(evnt))
-      if (this.configs.trigger !== 'manual') {
+      if (this.isCtxMenu || this.configs.trigger !== 'manual') {
         GlobalEvent.on(this, 'keydown', evnt => this._triggerKeydown(evnt))
+      }
+      if (this.isCtxMenu) {
+        GlobalEvent.on(this, 'mousewheel', evnt => this._triggerMousewheel(evnt))
+        GlobalEvent.on(this, 'contextmenu', evnt => this._triggerContextMenu(evnt))
       }
     },
     _unbindEvents () {
@@ -574,7 +589,25 @@ export default {
       let keyCode = evnt.keyCode
       let isTab = keyCode === 9
       let tableData = this._getTDatas()
-      if (isTab || (keyCode >= 37 && keyCode <= 40)) {
+      let ctxMenuStore = this.ctxMenuStore
+      if (ctxMenuStore.visible && [13, 32, 37, 38, 39, 40].includes(keyCode)) {
+        // 如果配置了右键菜单并使用上下箭头移动
+        evnt.preventDefault()
+        evnt.stopPropagation()
+        if (![37, 39].includes(keyCode)) {
+          let ctxMenuList = this.ctxMenuList
+          let selectIndex = XEUtils.findIndexOf(ctxMenuList, item => ctxMenuStore.selected === item)
+          if (keyCode === 38) {
+            ctxMenuStore.selected = ctxMenuList[selectIndex - 1] || ctxMenuList[ctxMenuList.length - 1]
+          } else if (keyCode === 40) {
+            ctxMenuStore.selected = ctxMenuList[selectIndex + 1] || ctxMenuList[0]
+          } else if (ctxMenuStore.selected) {
+            this._ctxMenuEvent(ctxMenuStore.selected, evnt)
+          }
+        }
+        return
+      } else if (isTab || (keyCode >= 37 && keyCode <= 40)) {
+        // 方向键、Tab 键处理
         if ((this.configs.isTabKey && isTab) || this.configs.isArrowKey) {
           let rowIndex = XEUtils.findIndexOf(tableData, isTab ? row => row.editActive || row.checked : row => row.checked)
           let row = tableData[rowIndex]
@@ -649,6 +682,7 @@ export default {
           }
         }
       } else if (this.configs.isCheckedEdit) {
+        // 如果是选中状态，按任意键进入编辑
         let rowIndex = XEUtils.findIndexOf(tableData, row => !row.editActive && row.checked)
         let row = tableData[rowIndex]
         if (row) {
@@ -668,20 +702,42 @@ export default {
       }
       this.closeContextMenu()
     },
+    /**
+     * 显示右键菜单
+     */
     _showContextMenu (isHeader, params, evnt) {
       let ctxMenuStore = this.ctxMenuStore
       let menus = this.ctxMenuConfig[isHeader ? 'headerMenus' : 'bodyMenus']
       let visibleMethod = this.ctxMenuConfig[isHeader ? 'headerVisibleMethod' : 'bodyVisibleMethod']
-      if (menus && menus.length) {
+      let disabled = this.ctxMenuConfig[isHeader ? 'disabledHeader' : 'disabledBody']
+      if (disabled === false) {
+        evnt.preventDefault()
+      } else if (menus && menus.length) {
         if (!visibleMethod || visibleMethod(params)) {
           evnt.preventDefault()
-          let scrollTop = document.documentElement ? document.documentElement.scrollTop : document.body.scrollTop
-          let scrollLeft = document.documentElement ? document.documentElement.scrollLeft : document.body.scrollLeft
+          let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+          let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
+          let top = evnt.clientY + scrollTop
+          let left = evnt.clientX + scrollLeft
           ctxMenuStore.visible = true
           ctxMenuStore.list = menus
-          ctxMenuStore.style.top = `${evnt.clientY + scrollTop}px`
-          ctxMenuStore.style.left = `${evnt.clientX + scrollLeft}px`
+          ctxMenuStore.style.top = `${top}px`
+          ctxMenuStore.style.left = `${left}px`
           ctxMenuStore.info = params
+          this.$nextTick(() => {
+            let viewHeight = document.documentElement.clientHeight || document.body.clientHeight
+            let viewWidth = document.documentElement.clientWidth || document.body.clientWidth
+            let clientHeight = this.$refs.contextMenu.clientHeight
+            let clientWidth = this.$refs.contextMenu.clientWidth
+            let offsetTop = evnt.clientY + clientHeight - viewHeight
+            let offsetLeft = evnt.clientX + clientWidth - viewWidth
+            if (offsetTop > -10) {
+              ctxMenuStore.style.top = `${top - clientHeight}px`
+            }
+            if (offsetLeft > -10) {
+              ctxMenuStore.style.left = `${left - clientWidth}px`
+            }
+          })
         } else {
           this.closeContextMenu()
         }
@@ -1269,29 +1325,37 @@ export default {
         document.body.removeChild(linkElem)
       }
     },
+    _ctxMenuMouseoverEvent (item, evnt) {
+      evnt.preventDefault()
+      evnt.stopPropagation()
+      this.ctxMenuStore.selected = item
+    },
+    _ctxMenuMouseoutEvent (item, evnt) {
+      this.ctxMenuStore.selected = null
+    },
     // 右菜单事件
-    _contextmenuEvent ({ code, disabled }, evnt) {
+    _ctxMenuEvent ({ code, disabled }, evnt) {
       if (!disabled) {
         let ctxMenuStore = this.ctxMenuStore
         if (ctxMenuStore.info) {
           let { row, rowIndex, column, cell } = ctxMenuStore.info
           switch (code) {
-            case 'cell_clear':
+            case 'CELL_RESET':
               XEUtils.set(row.data, column.property, null)
               break
-            case 'cell_revert':
+            case 'CELL_REVERT':
               XEUtils.set(row.data, column.property, XEUtils.get(row.store, column.property))
               break
-            case 'select_clear':
-              this.reset(this.getSelecteds())
-              break
-            case 'select_remove':
+            case 'SELECT_REMOVE':
               this.removeSelecteds()
               break
-            case 'select_revert':
+            case 'SELECT_RESET':
+              this.reset(this.getSelecteds())
+              break
+            case 'SELECT_REVERT':
               this.revert(this.getSelecteds())
               break
-            case 'select_export':
+            case 'SELECT_EXPORT':
               let selectRows = this._getSelectRows()
               let selectIndexs = []
               this._getTDatas().forEach((row, index) => {
@@ -1305,39 +1369,39 @@ export default {
                 }
               })
               break
-            case 'row_insert':
+            case 'ROW_INSERT':
               this.insertAt(null, row.data)
               break
-            case 'row_remove':
+            case 'ROW_REMOVE':
               this.remove(row.data)
               break
-            case 'row_clear':
+            case 'ROW_RESET':
               this.reset(row.data)
               break
-            case 'row_revert':
+            case 'ROW_REVERT':
               this.revert(row.data)
               break
-            case 'row_export':
+            case 'ROW_EXPORT':
               this.exportCsv({
                 dataFilterMethod (item, index) {
                   return rowIndex === index
                 }
               })
               break
-            case 'all_remove':
+            case 'ALL_REMOVE':
               this.clear()
               break
-            case 'all_clear':
+            case 'ALL_RESET':
               this.reset()
               break
-            case 'all_revert':
+            case 'ALL_REVERT':
               this.revert()
               break
-            case 'all_export':
+            case 'ALL_EXPORT':
               this.exportCsv()
               break
             default:
-              this.$emit('custom-menu-link', code, row, column, cell, evnt)
+              this.$emit('custom-menu-link', code, row.data, column, cell, evnt)
               break
           }
         }

@@ -2,6 +2,7 @@
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">树表格：支持大部分功能</p>
     <p style="color: red;font-size: 12px;">可以通过 props 指定 children 属性：props: {children: 'children'}</p>
+    <p style="color: red;font-size: 12px;">通过参数 context-menu-config 配置右键菜单；通过 custom-menu-link 事件处理自定义菜单</p>
 
     <div class="dblclick-table7-oper">
       <el-button type="success" size="mini" @click="insertEvent(true)">新增大类</el-button>
@@ -24,8 +25,10 @@
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', mode: 'cell', props: {children: 'childList'}}"
+      :context-menu-config="{disabledHeader: false, bodyMenus}"
       @blur-active="blurActiveEvent"
       @current-change="handleCurrentChange"
+      @custom-menu-link="customMenuLinkEvent"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
       <elx-editable-column prop="id" label="ID" width="160" :formatter="formatterId"></elx-editable-column>
@@ -59,7 +62,44 @@ export default {
           { required: true, message: '请输入名称', trigger: 'change' },
           { min: 3, max: 50, message: '名称长度 4-20 个字符', trigger: 'change' }
         ]
-      }
+      },
+      bodyMenus: [
+        [
+          {
+            code: 'insertParent',
+            name: '插入大类',
+            prefixIcon: 'el-icon-plus'
+          },
+          {
+            code: 'insertChild',
+            name: '插入小类',
+            prefixIcon: 'el-icon-plus'
+          },
+          {
+            code: 'removeRow',
+            name: '删除当前行',
+            prefixIcon: 'el-icon-minus'
+          }
+        ],
+        [
+          {
+            code: 'CELL_RESET',
+            name: '重置数据',
+            prefixIcon: 'el-icon-close'
+          },
+          {
+            code: 'CELL_REVERT',
+            name: '还原数据'
+          }
+        ],
+        [
+          {
+            code: 'ALL_EXPORT',
+            name: '导出全部数据',
+            prefixIcon: 'el-icon-download'
+          }
+        ]
+      ]
     }
   },
   created () {
@@ -112,13 +152,27 @@ export default {
     blurActiveEvent (row, column) {
       this.$refs.editable.validateRow(row)
     },
-    insertEvent (hasChild) {
+    customMenuLinkEvent (code, row, column, cell) {
+      switch (code) {
+        case 'insertParent':
+          this.insertEvent(true, row)
+          break
+        case 'insertChild':
+          this.insertEvent(false, row)
+          break
+        case 'removeRow':
+          this.removeEvent(row)
+          break
+      }
+    },
+    insertEvent (hasChild, currentRow) {
       let data = {
         id: XEUtils.uniqueId('N_'), // 树表格中 id 不能重复
         name: `Name_${XEUtils.uniqueId()}`,
         age: 26,
         flag: false
       }
+      currentRow = currentRow || this.currentRow
       // 如果新增大类，默认一个子节点
       if (hasChild) {
         data.childList = [{
@@ -129,7 +183,7 @@ export default {
           flag: false
         }]
       }
-      this.$refs.editable.insertAt(data, this.currentRow).then(({ row, parent }) => {
+      this.$refs.editable.insertAt(data, currentRow).then(({ row, parent }) => {
         // 组装层级关系
         if (parent) {
           row.parentId = parent.id

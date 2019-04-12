@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p style="color: red;font-size: 12px;">显示表格右键菜单：通过参数 context-menu-config 配置菜单列表；可以通过 custom-menu-link 事件处理自定义菜单</p>
+    <p style="color: red;font-size: 12px;">通过参数 context-menu-config 配置右键菜单；通过 custom-menu-link 事件处理自定义菜单</p>
     <p style="color: red;font-size: 12px;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
 
     <p>
@@ -147,76 +147,75 @@ export default {
       headerMenus: [
         [
           {
-            code: 'row-insert',
-            name: '插入新行',
-            prefixIcon: 'el-icon-plus'
+            code: 'all_clear',
+            name: '重置所有数据',
+            prefixIcon: 'el-icon-close'
           },
           {
-            code: 'row-remove',
-            name: '删除当前行',
-            prefixIcon: 'el-icon-minus'
+            code: 'ALL_REVERT',
+            name: '还原所有数据'
+          },
+          {
+            code: 'ALL_EXPORT',
+            name: '导出全部数据',
+            prefixIcon: 'el-icon-download'
           }
         ]
       ],
       bodyMenus: [
         [
           {
-            code: 'row_insert',
+            code: 'ROW_INSERT',
             name: '插入新行',
             prefixIcon: 'el-icon-plus'
           },
           {
-            code: 'row_remove',
+            code: 'ROW_REMOVE',
             name: '删除当前行',
             prefixIcon: 'el-icon-minus'
           }
         ],
         [
           {
-            code: 'cell_clear',
-            name: '清除内容',
+            code: 'CELL_RESET',
+            name: '重置数据',
             prefixIcon: 'el-icon-close'
           },
           {
-            code: 'row_clear',
-            name: '清除当前行内容',
+            code: 'ROW_RESET',
+            name: '重置当前行数据',
             prefixIcon: 'el-icon-close'
           },
           {
-            code: 'all_clear',
-            name: '清除所有内容',
-            prefixIcon: 'el-icon-close'
+            code: 'CELL_REVERT',
+            name: '还原数据'
           },
           {
-            code: 'cell_revert',
-            name: '还原内容'
-          },
-          {
-            code: 'row_revert',
-            name: '还原当前行内容',
-            prefixIcon: 'el-icon-close'
-          },
-          {
-            code: 'all_revert',
-            name: '还原所有内容'
+            code: 'ROW_REVERT',
+            name: '还原当前行数据'
           }
         ],
         [
           {
-            code: 'all_export',
+            code: 'ROW_EXPORT',
+            name: '导出当前行数据',
+            prefixIcon: 'el-icon-download'
+          },
+          {
+            code: 'ALL_EXPORT',
             name: '导出全部数据',
             prefixIcon: 'el-icon-download'
           },
           {
-            code: 'custom_printer',
+            code: 'printer',
             name: '打印',
             prefixIcon: 'el-icon-printer',
             disabled: true
           },
           {
-            code: 'custom_refresh',
-            name: '自定义菜单2',
-            prefixIcon: 'el-icon-refresh'
+            code: 'refresh',
+            name: '刷新',
+            prefixIcon: 'el-icon-edit'
           }
         ]
       ]

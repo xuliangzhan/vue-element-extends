@@ -121,30 +121,32 @@ context-menu-config 表格右键菜单参数
 
 | 属性 | 描述 | 类型 | 参数 |
 |------|------|-----|-----|
+| disabledHeader | 是否禁用表格头部右键 | Boolean | — |
 | headerMenus | 表格头部菜单配置 | Array | { code, name, prefixIcon, suffixIcon, visible, disabled } |
+| disabledBody | 是否禁用表格内容右键 | Boolean | — |
 | bodyMenus | 表格内容菜单配置 | Array | { code, name, prefixIcon, suffixIcon, visible, disabled } |
 | headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示头部右键菜单 | Function | — |
 | bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 
 内置的 code 可选值:
 
-| 属性 | 描述 |
+| 编码 | 描述 |
 |------|------|
-| cell_reset | 重置单元格数据 |
-| cell_revert  | 还原单元格数据 |
-| select_remove  | 删除选中的行 |
-| select_reset  | 重置选中的数据 |
-| select_revert  | 还原选中的数据 |
-| select_export  | 导出选中的数据 |
-| row_insert  | 在当前位置插入新行 |
-| row_remove | 删除当前行 |
-| row_reset | 重置当前行数据 |
-| row_revert | 还原当前行数据 |
-| row_export  | 导出当前行数据 |
-| all_remove | 删除表格所有行 |
-| all_reset | 重置表格所有数据 |
-| all_revert | 还原表格所有数据 |
-| all_export  | 导出表格所有数据 |
+| CELL_RESET | 重置单元格数据 |
+| CELL_REVERT  | 还原单元格数据 |
+| SELECT_REMOVE  | 删除选中的行 |
+| SELECT_RESET  | 重置选中的数据 |
+| SELECT_REVERT  | 还原选中的数据 |
+| SELECT_EXPORT  | 导出选中的数据 |
+| ROW_INSERT  | 在当前位置插入新行 |
+| ROW_REMOVE | 删除当前行 |
+| ROW_RESET | 重置当前行数据 |
+| ROW_REVERT | 还原当前行数据 |
+| ROW_EXPORT  | 导出当前行数据 |
+| ALL_REMOVE | 删除表格所有行 |
+| ALL_RESET | 重置表格所有数据 |
+| ALL_REVERT | 还原表格所有数据 |
+| ALL_EXPORT  | 导出表格所有数据 |
 
 ### Editable Events
 

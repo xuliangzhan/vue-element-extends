@@ -128,7 +128,7 @@ context-menu-config 表格右键菜单参数（v1.1.3+）
 | headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示头部右键菜单 | Function | — |
 | bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 
-内置的 code 可选值:
+内置的菜单 code 可选值:
 
 | 编码 | 描述 |
 |------|------|

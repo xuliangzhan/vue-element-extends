@@ -1370,7 +1370,7 @@ export default {
               })
               break
             case 'ROW_INSERT':
-              this.insertAt(null, row.data)
+              this.insertAt(null, row.data).then(({ _row }) => this._setChecked(_row, column))
               break
             case 'ROW_REMOVE':
               this.remove(row.data)
@@ -1517,26 +1517,26 @@ export default {
      * 如果是 -1 则使用 push 到表格最后
      */
     insertAt (newRecord, record) {
-      let recordItem = this._toDatas([newRecord], 'insert')[0]
-      let rest = { row: recordItem.data }
+      let rowItem = this._toDatas([newRecord], 'insert')[0]
+      let rest = { row: rowItem.data, _row: rowItem }
       if (record) {
         if (record === -1) {
-          this.datas.push(recordItem)
+          this.datas.push(rowItem)
         } else {
           let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
           if (matchObj) {
             if (matchObj.parent) {
               rest.parent = matchObj.parent.data
             }
-            matchObj.items.splice(matchObj.index, 0, recordItem)
+            matchObj.items.splice(matchObj.index, 0, rowItem)
           } else {
-            this.datas.push(recordItem)
+            this.datas.push(rowItem)
           }
         }
       } else {
-        this.datas.unshift(recordItem)
+        this.datas.unshift(rowItem)
       }
-      this.currentRow = recordItem.data
+      this.currentRow = rowItem.data
       this._saveOperStatus()
       this._updateData()
       return this.$nextTick().then(() => rest)

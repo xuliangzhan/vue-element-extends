@@ -9,7 +9,7 @@ const UtilHandle = {
     cell.className = classList.join(' ')
   },
   hasClass (cell, cls) {
-    return cell.className.split(' ').includes(cls)
+    return cell && cell.className && cell.className.split(' ').includes(cls)
   },
   removeClass (cell, clss) {
     let classList = []

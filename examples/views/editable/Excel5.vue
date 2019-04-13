@@ -354,9 +354,20 @@ export default {
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_active {
   border: 2px solid #217346;
 }
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked.to-copy {
+  border: 1px solid #217346;
+}
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_active.to-copy {
+  border: 0;
+}
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell {
   width: 100% !important;
   padding: 0 4px;
+}
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.to-copy .cell .content {
+  padding: 0 1px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_active .cell {
   padding: 0;
@@ -365,21 +376,37 @@ export default {
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell .el-input__inner {
   padding: 0 2px;
 }
-.excel-table5.el-table--customSize .elx-editable-column,
-.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell,
-.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell .el-input,
-.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell .el-input__inner {
-  height: 30px;
-  line-height: 30px;
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked.to-copy .cell{
+  padding: 0 1px;
 }
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked .cell,
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_active .cell,
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked .cell .el-input,
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_active .cell .el-input,
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked .cell .el-input__inner,
-.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_active .cell .el-input__inner {
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_active .cell .el-input__inner,
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.to-copy .cell .content {
   height: 26px;
   line-height: 26px;
+}
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked.to-copy .cell .content {
+  line-height: 24px;
+}
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked.to-copy .cell,
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked.to-copy .cell .el-input,
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked.to-copy .cell .el-input__inner {
+  height: 29px;
+  line-height: 26px;
+}
+.excel-table5.el-table--customSize .elx-editable-column,
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell,
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.to-copy .cell,
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell .el-input,
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.to-copy .cell .el-input,
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell .el-input__inner,
+.excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.to-copy .cell .el-input__inner {
+  height: 30px;
+  line-height: 30px;
 }
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell .el-input__inner {
   border-radius: 0;
@@ -395,10 +422,10 @@ export default {
   content: '';
   background-color: #fff;
   position: absolute;
-  top: 1px;
-  left: 1px;
-  width: calc(100% - 2px);
-  height: calc(100% - 2px);
+  top: 2px;
+  left: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
 }
 .custom-wrapper {
   height: 200px;

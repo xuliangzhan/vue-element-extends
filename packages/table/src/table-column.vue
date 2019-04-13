@@ -1,13 +1,10 @@
 <template>
-  <el-table-column v-if="isVisible && (type === 'selection' || group)" v-bind="attrs">
+  <el-table-column v-if="isVisible && type === 'selection'" v-bind="attrs">
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="isVisible && type === 'index'" v-bind="attrs">
     <template v-slot:header="scope">
       <slot name="header" v-bind="scope">#</slot>
-    </template>
-    <template v-slot="scope">
-      <slot v-bind="scope"></slot>
     </template>
   </el-table-column>
   <el-table-column v-else-if="isVisible" v-bind="attrs">
@@ -26,10 +23,9 @@ import XEUtils from 'xe-utils'
 export default {
   name: 'ElxTableColumn',
   props: {
-    group: Boolean,
     /**
-       * 还原 ElTableColumn 所有属性
-       */
+     * 还原 ElTableColumn 所有属性
+     */
     index: [Number, Function],
     type: String,
     label: String,

@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import TableBase1 from './views/table/Base1'
+import TableCustom1 from './views/table/Custom1'
+
 import EditableManual1 from './views/editable/Manual1'
 import EditableManual2 from './views/editable/Manual2'
 import EditableManual3 from './views/editable/Manual3'
@@ -46,6 +49,16 @@ export default new Router({
       redirect: {
         name: 'EditableClick1'
       }
+    },
+    {
+      path: '/table/base1',
+      name: 'TableBase1',
+      component: TableBase1
+    },
+    {
+      path: '/table/custom1',
+      name: 'TableCustom1',
+      component: TableCustom1
     },
     {
       path: '/editable/manual1',

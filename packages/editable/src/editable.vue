@@ -38,6 +38,7 @@ export default {
     editConfig: Object,
     editRules: Object,
     contextMenuConfig: Object,
+    customColumns: Array,
 
     /**
      * 还原 ElTable 所有属性
@@ -104,7 +105,9 @@ export default {
           top: 0,
           left: 0
         }
-      }
+      },
+      isUpdateColumns: false,
+      columnList: []
     }
   },
   computed: {
@@ -229,12 +232,20 @@ export default {
       } else {
         this.isUpdateData = false
       }
+    },
+    customColumns (value) {
+      if (!this.isUpdateColumns) {
+        this._handleColumns()
+      } else {
+        this.isUpdateColumns = false
+      }
     }
   },
   created () {
     this._bindEvents()
     this._initial(this.data, true)
     this._setDefaultChecked()
+    this._handleColumns()
     this._updateData()
   },
   mounted () {
@@ -1429,6 +1440,25 @@ export default {
           }
         }
         this.closeContextMenu()
+      }
+    },
+    _handleColumns () {
+      this.columnList = []
+      if (this.customColumns) {
+        this.$nextTick(() => {
+          let customColumns = this.customColumns && this.customColumns.length ? this.customColumns : null
+          this.columnList = this.getColumns().map(column => {
+            let customItem = customColumns ? customColumns.find(item => column.property && item.prop === column.property) : null
+            return {
+              id: column.id,
+              prop: column.property,
+              label: column.label,
+              visible: customItem ? !!customItem.visible : true
+            }
+          })
+          this.isUpdateColumns = true
+          this.$emit('update:customColumns', this.columnList)
+        })
       }
     },
     /****************************/

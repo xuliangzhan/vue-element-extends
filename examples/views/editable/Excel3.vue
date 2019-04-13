@@ -19,6 +19,7 @@
       border
       size="customSize"
       :data.sync="list"
+      :customColumns.sync="customColumns"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, checkedEditMethod}"
       style="width: 100%" >
@@ -28,16 +29,14 @@
         </template>
       </elx-editable-column>
       <template v-for="(item, index) in columnConfigs">
-        <template v-if="item.customShow">
-          <elx-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip></elx-editable-column>
-        </template>
+        <elx-editable-column :key="index" v-bind="item" header-align="center" min-width="60" sortable show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       </template>
     </elx-editable>
 
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="300px" @open="openCustomEvent">
       <ul class="custom-wrapper">
-        <li v-for="(item, index) in columnConfigs" :key="index">
-          <el-checkbox v-model="item.customChecked">{{ item.label }}</el-checkbox>
+        <li v-for="(item, index) in dialogCustomColumnList" :key="index">
+          <el-checkbox v-model="item.visible">{{ item.label }}</el-checkbox>
         </li>
       </ul>
       <span slot="footer" class="dialog-footer">
@@ -100,17 +99,12 @@ export default {
         })
         return rest
       }),
+      customColumns: [],
+      dialogCustomColumnList: [],
       columnConfigs: columns.map((name, index) => {
-        let defaultShow = index < 20
         let column = {
-          customDefault: defaultShow,
-          customChecked: defaultShow,
-          customShow: defaultShow,
           prop: name.toLowerCase(),
-          label: name,
-          minWidth: '80',
-          sortable: true,
-          editRender: { name: 'ElInput' }
+          label: name
         }
         switch (name) {
           case 'A':
@@ -151,6 +145,11 @@ export default {
       }
     }
   },
+  computed: {
+    allCustomColumnList () {
+      return this.customColumns.filter(item => item.prop)
+    }
+  },
   methods: {
     // 该函数会重写默认的值覆盖行为，可以通过重写该函数自行实现更多自定义功能
     checkedEditMethod ({ row, column, cell }) {
@@ -184,19 +183,24 @@ export default {
       MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` }).catch(e => e)
     },
     openCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.customChecked = column.customShow
+      this.dialogCustomColumnList = this.allCustomColumnList.map(({ label, prop, visible }) => {
+        return {
+          prop,
+          label,
+          visible
+        }
       })
     },
     resetCustomEvent () {
-      this.columnConfigs.forEach(column => {
-        column.customChecked = column.customDefault
+      this.dialogCustomColumnList.forEach(column => {
+        column.visible = false
       })
     },
     saveCustomEvent () {
       this.dialogVisible = false
-      this.columnConfigs.forEach(column => {
-        column.customShow = column.customChecked
+      this.allCustomColumnList.forEach(column => {
+        let customItem = this.dialogCustomColumnList.find(item => item.prop === column.prop)
+        column.visible = customItem.visible
       })
     }
   }

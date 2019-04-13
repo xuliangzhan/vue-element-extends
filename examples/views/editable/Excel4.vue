@@ -19,6 +19,7 @@
       border
       size="customSize"
       :data.sync="list"
+      :customColumns.sync="customColumns"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
       style="width: 100%" >
@@ -28,16 +29,14 @@
         </template>
       </elx-editable-column>
       <template v-for="(item, index) in columnConfigs">
-        <template v-if="item.customShow">
-          <elx-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip></elx-editable-column>
-        </template>
+        <elx-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       </template>
     </elx-editable>
 
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
       <el-transfer
         v-model="selectColumns"
-        :data="columnConfigs"
+        :data="allCustomColumnList"
         :titles="['隐藏列', '显示列']"
         :props="{key: 'prop', label: 'label'}"></el-transfer>
         <span slot="footer" class="dialog-footer">
@@ -72,7 +71,6 @@ export default {
     }
     return {
       dialogVisible: false,
-      selectColumns: [],
       list: Array.from(new Array(20), (v, i) => {
         let rest = {}
         columns.forEach((name, index) => {
@@ -98,16 +96,12 @@ export default {
         })
         return rest
       }),
+      customColumns: [],
+      selectColumns: [],
       columnConfigs: columns.map((name, index) => {
-        let defaultShow = index < 20
         let column = {
-          customDefault: defaultShow,
-          customShow: defaultShow,
           prop: name.toLowerCase(),
-          label: name,
-          minWidth: '80',
-          sortable: true,
-          editRender: { name: 'ElInput' }
+          label: name
         }
         switch (name) {
           case 'A':
@@ -148,6 +142,11 @@ export default {
       }
     }
   },
+  computed: {
+    allCustomColumnList () {
+      return this.customColumns.filter(item => item.prop)
+    }
+  },
   methods: {
     exportCsvEvent () {
       this.$refs.editable.exportCsv({
@@ -168,10 +167,10 @@ export default {
       MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` }).catch(e => e)
     },
     openCustomEvent () {
-      this.selectColumns = this.columnConfigs.filter(column => column.customShow).map(column => column.prop)
+      this.selectColumns = this.allCustomColumnList.filter(item => item.visible).map(column => column.prop)
     },
     resetCustomEvent () {
-      this.selectColumns = this.columnConfigs.filter(column => column.customDefault).map(column => column.prop)
+      this.selectColumns = this.allCustomColumnList.map(column => column.prop)
     },
     saveCustomEvent () {
       if (!this.selectColumns.length) {
@@ -181,8 +180,8 @@ export default {
         })
       }
       this.dialogVisible = false
-      this.columnConfigs.forEach(column => {
-        column.customShow = this.selectColumns.includes(column.prop)
+      this.allCustomColumnList.forEach(column => {
+        column.visible = this.selectColumns.includes(column.prop)
       })
     }
   }

@@ -20,6 +20,7 @@
       :summary-method="getSummaries"
       :row-class-name="tableRowClassName"
       :data.sync="list"
+      :customColumns.sync="customColumns"
       :edit-config="{trigger: 'click', mode: 'row'}"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
@@ -28,17 +29,16 @@
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
       </elx-editable-column>
-      <template v-for="(item, index) in columnConfigs">
-        <template v-if="item._show">
-          <!-- 给列渲染做特殊处理，也可以写成全动态的数据参数 -->
-          <elx-editable-column v-if="item.prop === 'sex'" :key="index" v-bind="item" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'age'" :key="index" v-bind="item" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'region'" :key="index" v-bind="item" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'date'" :key="index" v-bind="item" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'rate'" :key="index" v-bind="item" :edit-render="{name: 'ElRate', type: 'visible'}"></elx-editable-column>
-          <elx-editable-column v-else :key="index" v-bind="item" :edit-render="{name: 'ElInput'}"></elx-editable-column>
-        </template>
-      </template>
+      <elx-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
+      <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
+      <elx-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
+      <elx-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+      <elx-editable-column prop="rate" label="评分" :edit-render="{name: 'ElRate', type: 'visible'}"></elx-editable-column>
+      <elx-editable-column prop="attr1" label="属性1" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="attr2" label="属性2" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="attr3" label="属性3" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="attr4" label="属性4" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="attr5" label="属性5" :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column label="操作" width="100">
         <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
@@ -60,7 +60,7 @@
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
       <el-transfer
         v-model="selectColumns"
-        :data="columnConfigs"
+        :data="allCustomColumnList"
         :titles="['隐藏列', '显示列']"
         :props="{key: 'prop', label: 'label'}"></el-transfer>
         <span slot="footer" class="dialog-footer">
@@ -91,8 +91,13 @@ export default {
       },
       pendingRemoveList: [],
       dialogVisible: false,
-      selectColumns: [],
-      columnConfigs: []
+      customColumns: [],
+      selectColumns: []
+    }
+  },
+  computed: {
+    allCustomColumnList () {
+      return this.customColumns.filter(item => item.prop)
     }
   },
   created () {
@@ -134,12 +139,7 @@ export default {
     },
     findConfColumnsList () {
       return XEAjax.doGet('/api/conf/columns/list').then(({ data }) => {
-        this.columnConfigs = data.map(column => {
-          let defaultShow = ['name', 'sex', 'age', 'rate'].includes(column.prop)
-          column._default = defaultShow // 默认是否显示
-          column._show = defaultShow // 是否显示
-          return column
-        })
+        this.customColumns = data
         return data
       })
     },
@@ -306,10 +306,10 @@ export default {
       this.$refs.editable.exportCsv()
     },
     openCustomEvent () {
-      this.selectColumns = this.columnConfigs.filter(column => column._show).map(column => column.prop)
+      this.selectColumns = this.allCustomColumnList.filter(item => item.visible).map(column => column.prop)
     },
     resetCustomEvent () {
-      this.selectColumns = this.columnConfigs.filter(column => column._default).map(column => column.prop)
+      this.selectColumns = this.allCustomColumnList.map(column => column.prop)
     },
     saveCustomEvent () {
       if (!this.selectColumns.length) {
@@ -319,8 +319,8 @@ export default {
         })
       }
       this.dialogVisible = false
-      this.columnConfigs.forEach(column => {
-        column._show = this.selectColumns.includes(column.prop)
+      this.allCustomColumnList.forEach(column => {
+        column.visible = this.selectColumns.includes(column.prop)
       })
     }
   }

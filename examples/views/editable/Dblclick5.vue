@@ -35,6 +35,7 @@
       height="466"
       size="mini"
       :data.sync="list"
+      :customColumns.sync="customColumns"
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', mode: 'row'}"
@@ -45,35 +46,32 @@
           <i class="el-icon-setting" @click="dialogVisible = true"></i>
         </template>
       </elx-editable-column>
-      <template v-for="(item, index) in columnConfigs">
-        <template v-if="item._show">
-          <!-- 给列渲染做特殊处理，也可以写成全动态的数据参数 -->
-          <elx-editable-column v-if="item.prop === 'sex'" :key="index" v-bind="item" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'age'" :key="index" v-bind="item" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'region'" :key="index" v-bind="item" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'date'" :key="index" v-bind="item" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'rate'" :key="index" v-bind="item" :edit-render="{name: 'ElRate', type: 'visible'}"></elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'attr1'" :key="index" v-bind="item" :edit-render="{name: 'ElInput'}">
-            <template v-slot:header="scope">
-              <i class="editable-required-icon"></i>
-              -- slot header -- {{ scope.column.label }}
-              <el-tooltip class="item" placement="top">
-                <div slot="content">说明：<br>attr1字段为自定义列头<br>校验必填字段</div>
-                <i class="el-icon-question"></i>
-              </el-tooltip>
-            </template>
-          </elx-editable-column>
-          <elx-editable-column v-else-if="item.prop === 'attr2'" :key="index" v-bind="item" :edit-render="{name: 'ElInput'}">
-            <template v-slot:header="scope">
-              -- slot header --
-              <el-tooltip class="item" content="说明：attr2字段为自定义列头" placement="left" effect="light">
-                <i class="el-icon-warning"></i>
-              </el-tooltip>
-            </template>
-          </elx-editable-column>
-          <elx-editable-column v-else :key="index" v-bind="item" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
+      <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
+      <elx-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
+      <elx-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+      <elx-editable-column prop="rate" label="评分" :edit-render="{name: 'ElRate', type: 'visible'}"></elx-editable-column>
+      <elx-editable-column prop="attr1" label="属性1" :edit-render="{name: 'ElInput'}">
+        <template v-slot:header="scope">
+          <i class="editable-required-icon"></i>
+          -- slot header -- {{ scope.column.label }}
+          <el-tooltip class="item" placement="top">
+            <div slot="content">说明：<br>attr1字段为自定义列头<br>校验必填字段</div>
+            <i class="el-icon-question"></i>
+          </el-tooltip>
         </template>
-      </template>
+      </elx-editable-column>
+      <elx-editable-column prop="attr2" label="属性2" :edit-render="{name: 'ElInput'}">
+        <template v-slot:header="scope">
+          -- slot header --
+          <el-tooltip class="item" content="说明：attr2字段为自定义列头" placement="left" effect="light">
+            <i class="el-icon-warning"></i>
+          </el-tooltip>
+        </template>
+      </elx-editable-column>
+      <elx-editable-column prop="attr3" label="属性3" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="attr4" label="属性4" :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="attr5" label="属性5" :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column label="操作" width="100">
         <template v-slot="scope">
           <el-button size="mini" type="danger" @click="removeEvent(scope.row)">删除</el-button>
@@ -98,7 +96,7 @@
         :filter-method="filterColumnMethod"
         filter-placeholder="请输入列名"
         v-model="selectColumns"
-        :data="columnConfigs"
+        :data="allCustomColumnList"
         :titles="['隐藏列', '显示列']"
         :props="{key: 'prop', label: 'label'}"></el-transfer>
         <span slot="footer" class="dialog-footer">
@@ -139,8 +137,13 @@ export default {
         ]
       },
       dialogVisible: false,
-      selectColumns: [],
-      columnConfigs: []
+      customColumns: [],
+      selectColumns: []
+    }
+  },
+  computed: {
+    allCustomColumnList () {
+      return this.customColumns.filter(item => item.prop)
     }
   },
   created () {
@@ -182,12 +185,7 @@ export default {
     },
     findConfColumnsList () {
       return XEAjax.doGet('/api/conf/columns/list').then(({ data }) => {
-        this.columnConfigs = data.map(column => {
-          let defaultShow = ['name', 'sex', 'age', 'rate', 'attr1', 'attr2'].includes(column.prop)
-          column._default = defaultShow // 默认是否显示
-          column._show = defaultShow // 是否显示
-          return column
-        })
+        this.customColumns = data
         return data
       })
     },
@@ -332,10 +330,10 @@ export default {
       this.$refs.editable.exportCsv()
     },
     openCustomEvent () {
-      this.selectColumns = this.columnConfigs.filter(column => column._show).map(column => column.prop)
+      this.selectColumns = this.allCustomColumnList.filter(item => item.visible).map(column => column.prop)
     },
     resetCustomEvent () {
-      this.selectColumns = this.columnConfigs.filter(column => column._default).map(column => column.prop)
+      this.selectColumns = this.allCustomColumnList.map(column => column.prop)
     },
     saveCustomEvent () {
       if (!this.selectColumns.length) {
@@ -345,8 +343,8 @@ export default {
         })
       }
       this.dialogVisible = false
-      this.columnConfigs.forEach(column => {
-        column._show = this.selectColumns.includes(column.prop)
+      this.allCustomColumnList.forEach(column => {
+        column.visible = this.selectColumns.includes(column.prop)
       })
     }
   }

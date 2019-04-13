@@ -1,22 +1,22 @@
 <template>
-  <el-table-column v-if="type === 'selection' || group" v-bind="attrs">
+  <el-table-column v-if="isVisible && (type === 'selection' || group)" v-bind="attrs">
     <slot></slot>
   </el-table-column>
-  <el-table-column v-else-if="type === 'index'" v-bind="attrs">
+  <el-table-column v-else-if="isVisible && type === 'index'" v-bind="attrs">
     <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">#</slot>
     </template>
     <slot></slot>
   </el-table-column>
-  <el-table-column v-else-if="type === 'expand'" v-bind="attrs">
+  <el-table-column v-else-if="isVisible && type === 'expand'" v-bind="attrs">
     <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)"></slot>
     </template>
-    <template slot-scope="scope">
+    <template v-slot="scope">
       <slot v-bind="getRowScope(scope)"></slot>
     </template>
   </el-table-column>
-  <el-table-column v-else-if="editRender" v-bind="attrs">
+  <el-table-column v-else-if="isVisible && editRender" v-bind="attrs">
     <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">
         <i v-if="checkRequired(scope)" class="editable-required-icon"></i>
@@ -24,7 +24,7 @@
         {{ scope.column.label }}
       </slot>
     </template>
-    <template slot-scope="scope">
+    <template v-slot="scope">
       <template v-if="isEditRender(scope)">
         <slot name="edit" v-bind="getRowScope(scope)">
           <template v-if="compName === 'ElSelect'">
@@ -71,11 +71,11 @@
       </template>
     </template>
   </el-table-column>
-  <el-table-column v-else v-bind="attrs">
+  <el-table-column v-else-if="isVisible" v-bind="attrs">
     <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">{{ scope.column.label }}</slot>
     </template>
-    <template slot-scope="scope">
+    <template v-slot="scope">
       <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
     </template>
   </el-table-column>
@@ -166,6 +166,16 @@ export default {
     },
     compName () {
       return this.renderOpts.name
+    },
+    customColumnList () {
+      return this.$editable.columnList
+    },
+    isVisible () {
+      if (this.prop && this.customColumnList && this.customColumnList.length) {
+        let column = this.customColumnList.find(item => item.prop === this.prop)
+        return column ? column.visible : true
+      }
+      return true
     },
     attrs () {
       let sortBy

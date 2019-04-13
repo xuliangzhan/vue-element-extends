@@ -18,7 +18,6 @@
 export default {
   name: 'ElxTable',
   props: {
-    customKey: String,
     customColumns: Array,
     /**
      * 还原 ElTable 所有属性
@@ -230,20 +229,22 @@ export default {
     },
     _handleColumns () {
       this.columnList = []
-      this.$nextTick(() => {
-        let customColumns = this.customColumns && this.customColumns.length ? this.customColumns : null
-        this.columnList = this.getColumns().map(column => {
-          let customItem = customColumns ? customColumns.find(item => column.property && item.prop === column.property) : null
-          return {
-            id: column.id,
-            prop: column.property,
-            label: column.label,
-            visible: customItem ? !!customItem.visible : true
-          }
+      if (this.customColumns) {
+        this.$nextTick(() => {
+          let customColumns = this.customColumns && this.customColumns.length ? this.customColumns : null
+          this.columnList = this.getColumns().map(column => {
+            let customItem = customColumns ? customColumns.find(item => column.property && item.prop === column.property) : null
+            return {
+              id: column.id,
+              prop: column.property,
+              label: column.label,
+              visible: customItem ? !!customItem.visible : true
+            }
+          })
+          this.isUpdateColumns = true
+          this.$emit('update:customColumns', this.columnList)
         })
-        this.isUpdateColumns = true
-        this.$emit('update:customColumns', this.columnList)
-      })
+      }
     },
     /****************************/
     /* Attribute methods end    */

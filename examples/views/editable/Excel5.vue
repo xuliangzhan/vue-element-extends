@@ -15,6 +15,7 @@
       border
       size="customSize"
       :data.sync="list"
+      :customColumns.sync="customColumns"
       :cell-class-name="cellClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
@@ -28,20 +29,18 @@
         </template>
       </elx-editable-column>
       <template v-for="(item, index) in columnConfigs">
-        <template v-if="item.customShow">
-          <elx-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip>
-            <template v-slot="scope">
-              <span class="content">{{ scope.row[scope.column.property] }}</span>
-            </template>
-          </elx-editable-column>
-        </template>
+        <elx-editable-column :key="index" v-bind="item" header-align="center" min-width="60" show-overflow-tooltip :edit-render="{name: 'ElInput'}">
+          <template v-slot="scope">
+            <span class="content">{{ scope.row[scope.column.property] }}</span>
+          </template>
+        </elx-editable-column>
       </template>
     </elx-editable>
 
     <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
       <el-transfer
         v-model="selectColumns"
-        :data="columnConfigs"
+        :data="allCustomColumnList"
         :titles="['隐藏列', '显示列']"
         :props="{key: 'prop', label: 'label'}"></el-transfer>
         <span slot="footer" class="dialog-footer">
@@ -79,7 +78,6 @@ export default {
     }
     return {
       dialogVisible: false,
-      selectColumns: [],
       list: Array.from(new Array(20), (v, i) => {
         let rest = {}
         columns.forEach((name, index) => {
@@ -105,16 +103,12 @@ export default {
         })
         return rest
       }),
+      customColumns: [],
+      selectColumns: [],
       columnConfigs: columns.map((name, index) => {
-        let defaultShow = index < 20
         let column = {
-          customDefault: defaultShow,
-          customShow: defaultShow,
           prop: name.toLowerCase(),
-          label: name,
-          minWidth: '80',
-          sortable: true,
-          editRender: { name: 'ElInput' }
+          label: name
         }
         switch (name) {
           case 'A':
@@ -245,6 +239,11 @@ export default {
       ]
     }
   },
+  computed: {
+    allCustomColumnList () {
+      return this.customColumns.filter(item => item.prop)
+    }
+  },
   methods: {
     cellClassName ({ row, column }) {
       if (this.lastCopy) {
@@ -302,22 +301,21 @@ export default {
       MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` }).catch(e => e)
     },
     openCustomEvent () {
-      this.selectColumns = this.columnConfigs.filter(column => column.customShow).map(column => column.prop)
+      this.selectColumns = this.allCustomColumnList.filter(item => item.visible).map(column => column.prop)
     },
     resetCustomEvent () {
-      this.selectColumns = this.columnConfigs.filter(column => column.customDefault).map(column => column.prop)
+      this.selectColumns = this.allCustomColumnList.map(column => column.prop)
     },
     saveCustomEvent () {
       if (!this.selectColumns.length) {
-        Message({
+        return Message({
           type: 'error',
           message: '请至少选择一列！'
         })
-        return
       }
       this.dialogVisible = false
-      this.columnConfigs.forEach(column => {
-        column.customShow = this.selectColumns.includes(column.prop)
+      this.allCustomColumnList.forEach(column => {
+        column.visible = this.selectColumns.includes(column.prop)
       })
     }
   }
@@ -415,7 +413,7 @@ export default {
   height: 29px;
   line-height: 26px;
 }
-.excel-table5.el-table--customSize .elx-editable-column,
+.excel-table5.el-table--customSize .el-table__body .elx-editable-column,
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell,
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.to-copy .cell,
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell .el-input,
@@ -424,6 +422,11 @@ export default {
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.to-copy .cell .el-input__inner {
   height: 30px;
   line-height: 30px;
+}
+.excel-table5.el-table--customSize .el-table__header .elx-editable-column,
+.excel-table5.el-table--customSize .el-table__header .elx-editable-column .cell {
+  height: 35px;
+  line-height: 35px;
 }
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column .cell .el-input__inner {
   border-radius: 0;

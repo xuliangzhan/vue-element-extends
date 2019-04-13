@@ -56,8 +56,7 @@ export default {
   },
   provide () {
     return {
-      $editable: this,
-      columnList: this.columnList
+      $editable: this
     }
   },
   data () {

@@ -52,7 +52,7 @@ export default {
     summaryMethod: Function,
     selectOnIndeterminate: { type: Boolean, default: true },
     spanMethod: Function,
-    load: this.load
+    load: Function
   },
   provide () {
     return {
@@ -98,7 +98,8 @@ export default {
         sumText: this.sumText,
         summaryMethod: this.summaryMethod,
         selectOnIndeterminate: this.selectOnIndeterminate,
-        spanMethod: this.spanMethod
+        spanMethod: this.spanMethod,
+        load: this.load
       }
     },
     events () {

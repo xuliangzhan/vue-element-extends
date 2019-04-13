@@ -22,6 +22,8 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 export default {
   install,
+  Table,
+  TableColumn,
   Editable,
   EditableColumn
 }

@@ -7,7 +7,7 @@
       <slot name="header" v-bind="scope">#</slot>
     </template>
     <template v-slot="scope">
-      <slot v-bind="getRowScope(scope)"></slot>
+      <slot v-bind="scope"></slot>
     </template>
   </el-table-column>
   <el-table-column v-else-if="isVisible" v-bind="attrs">

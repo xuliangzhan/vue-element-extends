@@ -95,7 +95,7 @@ export default {
         [
           {
             code: 'ALL_EXPORT',
-            name: '导出全部数据',
+            name: '导出全部.cvs',
             prefixIcon: 'el-icon-download'
           }
         ]

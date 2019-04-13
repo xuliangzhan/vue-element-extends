@@ -56,6 +56,8 @@
 <script>
 import XEUtils from 'xe-utils'
 import XEClipboard from 'xe-clipboard'
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 import { Message, MessageBox } from 'element-ui'
 
 export default {
@@ -167,7 +169,7 @@ export default {
           },
           {
             code: 'ALL_EXPORT',
-            name: '导出全部数据',
+            name: '导出全部.cvs',
             prefixIcon: 'el-icon-download'
           }
         ]
@@ -216,13 +218,17 @@ export default {
         ],
         [
           {
-            code: 'ALL_EXPORT',
-            name: '导出全部数据',
+            code: 'ROW_EXPORT',
+            name: '导出行.cvs',
             prefixIcon: 'el-icon-download'
           },
           {
-            code: 'ROW_EXPORT',
-            name: '导出行数据'
+            code: 'ALL_EXPORT',
+            name: '导出全部.cvs'
+          },
+          {
+            code: 'xlsx',
+            name: '导出全部.xlsx'
           },
           {
             code: 'printer',
@@ -269,6 +275,17 @@ export default {
           break
         case 'printer':
           print()
+          break
+        case 'xlsx':
+          var sheetName = 'Sheet1'
+          var book = {
+            SheetNames: [sheetName],
+            Sheets: {
+              [sheetName]: XLSX.utils.json_to_sheet(this.$refs.editable.getRecords().map(item => Object.values(item)), { skipHeader: true })
+            }
+          }
+          var blob = new Blob([XLSX.write(book, { bookType: 'xlsx', bookSST: true, type: 'array' }, { type: 'application/octet-stream' })])
+          FileSaver.saveAs(blob, 'table.xlsx')
           break
       }
     },

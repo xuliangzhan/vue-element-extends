@@ -36,6 +36,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^5.0.0",
+    "file-saver": "^2.0.1",
     "font-awesome": "^4.7.0",
     "iview": "^3.3.0",
     "sortablejs": "^1.8.4",
@@ -44,7 +45,8 @@
     "vue-template-compiler": "^2.5.22",
     "xe-ajax": "^3.5.3",
     "xe-ajax-mock": "^1.7.10",
-    "xe-clipboard": "^1.0.2"
+    "xe-clipboard": "^1.0.2",
+    "xlsx": "^0.14.2"
   },
   "repository": {
     "type": "git",

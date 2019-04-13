@@ -743,7 +743,7 @@ export default {
       cell.className = classList.join(' ')
     },
     _hasClass (cell, cls) {
-      return cell.className.split(' ').includes(cls)
+      return cell && cell.className && cell.className.split(' ').includes(cls)
     },
     _removeClass (cell, clss) {
       let classList = []

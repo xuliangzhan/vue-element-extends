@@ -1438,7 +1438,7 @@ export default {
         original: false,
         data: null,
         columns: null,
-        columnFilterMethod: column => column.type === 'index' || (['selection', 'expand'].indexOf(column.type) === -1 && column.property),
+        columnFilterMethod: column => ['selection', 'expand'].indexOf(column.type) === -1 && column.property,
         dataFilterMethod: null
       }, options)
       if (opts.filename.indexOf('.csv') === -1) {

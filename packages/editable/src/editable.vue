@@ -19,7 +19,7 @@ import XEUtils from 'xe-utils'
 import GlobalEvents from './globalEvents.js'
 
 export default {
-  name: 'ElEditable',
+  name: 'ElxEditable',
   props: {
     editConfig: Object,
     editRules: Object,

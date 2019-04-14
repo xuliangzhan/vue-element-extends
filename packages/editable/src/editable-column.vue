@@ -85,7 +85,7 @@
 import XEUtils from 'xe-utils'
 
 export default {
-  name: 'ElEditableColumn',
+  name: 'ElxEditableColumn',
   props: {
     group: Boolean,
     editRender: Object,

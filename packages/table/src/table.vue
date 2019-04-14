@@ -66,6 +66,7 @@ export default {
   name: 'ElxTable',
   props: {
     customColumns: Array,
+
     /**
      * 还原 ElTable 所有属性
      */

@@ -1,5 +1,5 @@
 <template>
-  <el-table-column v-if="isVisible && (type === 'selection' || isGroup)" v-bind="attrs">
+  <el-table-column v-if="isVisible && (type === 'selection' || group || isGroup)" v-bind="attrs">
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="isVisible && type === 'index'" v-bind="attrs">
@@ -87,6 +87,7 @@ import XEUtils from 'xe-utils'
 export default {
   name: 'ElxEditableColumn',
   props: {
+    group: Boolean,
     editRender: Object,
 
     /**

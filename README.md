@@ -52,9 +52,16 @@ Case 1:
 
 ```javascript
 import Vue from 'vue'
-import { Editable, EditableColumn } from 'vue-element-extends'
+import {
+  Table,
+  TableColumn,
+  Editable,
+  EditableColumn
+} from 'vue-element-extends'
 import 'vue-element-extends/lib/index.css'
 
+Vue.use(Table)
+Vue.use(TableColumn)
 Vue.use(Editable)
 Vue.use(EditableColumn)
 ```

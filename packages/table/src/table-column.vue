@@ -1,5 +1,5 @@
 <template>
-  <el-table-column v-if="isVisible && type === 'selection'" v-bind="attrs">
+  <el-table-column v-if="isVisible && (type === 'selection' || isGroup)" v-bind="attrs">
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="isVisible && type === 'index'" v-bind="attrs">
@@ -8,11 +8,21 @@
     </template>
     <slot></slot>
   </el-table-column>
+  <el-table-column v-else-if="isVisible && type === 'expand'" v-bind="attrs">
+    <template v-slot:header="scope">
+      <slot name="header" v-bind="scope">{{ scope.column.label }}</slot>
+    </template>
+    <template v-slot="scope">
+      <slot v-bind="scope"></slot>
+    </template>
+  </el-table-column>
   <el-table-column v-else-if="isVisible" v-bind="attrs">
     <template v-slot:header="scope">
       <slot name="header" v-bind="scope">{{ scope.column.label }}</slot>
     </template>
-    <slot></slot>
+    <template v-slot="scope">
+      <slot v-bind="scope">{{ formatColumnLabel(scope) }}</slot>
+    </template>
   </el-table-column>
 </template>
 
@@ -58,6 +68,9 @@ export default {
   computed: {
     customColumnList () {
       return this.$editable.columnList
+    },
+    isGroup () {
+      return this.$slots.default && this.$slots.default.some(item => item.componentOptions.tag === 'elx-table-column')
     },
     isVisible () {
       if (this.prop && this.customColumnList && this.customColumnList.length) {

@@ -27,7 +27,11 @@
           <i class="el-icon-question"></i>名字
         </template>
       </elx-table-column>
-      <elx-table-column prop="age" label="年龄" width="160"></elx-table-column>
+      <elx-table-column prop="age" label="年龄" width="160">
+        <template v-slot="scope">
+          <span>{{ scope.row.age }}</span>
+        </template>
+      </elx-table-column>
       <elx-table-column prop="role" label="角色" width="200" show-overflow-tooltip></elx-table-column>
       <elx-table-column prop="describe" label="文本域" width="220" show-overflow-tooltip></elx-table-column>
       <elx-table-column prop="date" label="日期" width="220" :formatter="formatterDate"></elx-table-column>
@@ -35,7 +39,7 @@
       <elx-table-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-table-column>
       <elx-table-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-table-column>
       <elx-table-column prop="attr3" label="链接">
-        <template>
+        <template v-slot="scope">
           <a href="https://github.com/xuliangzhan/vue-element-extends" target="_blank">打开链接</a>
         </template>
       </elx-table-column>

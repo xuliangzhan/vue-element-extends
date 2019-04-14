@@ -119,8 +119,8 @@ edit-config 编辑参数配置：
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
 | activeMethod | 只对 type=default 的列有效，该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
-| autoClearActive | 当点击其它地方后，是否自动清除最后活动行或列 | Boolean | — | true |
-| clearActiveMethod | 该函数 Function({type, row, rowIndex, column?, columnIndex?}, event) 的返回值用来决定是否允许清除当前活动行或单元格 | Function | — | — |
+| autoClearActive | 当点击其它地方后，是否自动清除最后激活的行或单元格 | Boolean | — | true |
+| clearActiveMethod | 该函数 Function({type, row, rowIndex, column?, columnIndex?}, event) 的返回值用来决定是否允许清除当前激活的行或单元格 | Function | — | — |
 | useDefaultValidTip | 如果同时使用了数据校验和 fixed 列，请设置为 true 使用默认提示  | Boolean | — | false |
 | validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
 | disabledValidTip | 关闭校验提示 | Boolean | — | false |
@@ -194,9 +194,9 @@ custom-columns 自定义列的配置：
 | removeSelecteds | 删除选中行数据 | — |
 | clear | 清空表格，删除表格所有行 | — |
 | reset | 重置数据，清除指定行 row 或者 [row, ...] 或者整个表格的值 | row?rows? |
-| clearActive | 清除所有已激活的行或列为不可编辑状态 | — |
+| clearActive | 清除所有已激活的行或单元格为不可编辑状态 | — |
 | hasActiveRow | 判断当前是否已激活为编辑状态的行 | row |
-| getActiveRow | 获取当前已激活为编辑行或列的信息 | — |
+| getActiveRow | 获取当前已激活为编辑行或单元格的信息 | — |
 | setActiveRow | 只对 mode=row 有效，激活指定行为可编辑状态 | row |
 | setActiveCell | 激活指定某一行的某个单元格为可编辑状态 | row,prop? |
 | hasRowInsert | 检查是否为新增的行数据 | row |

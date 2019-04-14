@@ -17,7 +17,7 @@
 
     <elx-table
       border
-      :data="list"
+      :data.sync="list"
       style="width: 100%">
       <el-table-column type="expand">
         <template slot-scope="props">

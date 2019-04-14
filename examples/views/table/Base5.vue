@@ -18,7 +18,7 @@
     <elx-table
       border
       height="466"
-      :data="list"
+      :data.sync="list"
       :span-method="objectSpanMethod"
       style="width: 100%">
       <elx-table-column type="selection" width="55"></elx-table-column>

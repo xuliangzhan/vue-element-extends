@@ -3,7 +3,7 @@
     <elx-table
       border
       size="mini"
-      :data="list"
+      :data.sync="list"
       style="width: 100%">
       <elx-table-column type="index" width="55"></elx-table-column>
       <elx-table-column prop="id" label="ID" width="80"></elx-table-column>

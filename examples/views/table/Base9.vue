@@ -5,7 +5,7 @@
     <elx-table
       border
       row-key="id"
-      :data="list"
+      :data.sync="list"
       style="width: 100%">
       <elx-table-column prop="id" label="ID" width="180"></elx-table-column>
       <elx-table-column prop="name" label="名称" min-width="220" show-overflow-tooltip></elx-table-column>

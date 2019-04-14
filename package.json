@@ -18,8 +18,6 @@
   "unpkg": "lib/index.umd.js",
   "jsdelivr": "lib/index.umd.js",
   "dependencies": {
-    "element-ui": "^2.7.2",
-    "vue": "^2.6.6",
     "xe-utils": "^1.8.19"
   },
   "devDependencies": {
@@ -27,6 +25,7 @@
     "@vue/cli-plugin-eslint": "^3.4.0",
     "@vue/cli-service": "^3.4.0",
     "babel-eslint": "^10.0.1",
+    "element-ui": "^2.7.2",
     "eslint": "^5.8.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-friendly-formatter": "^4.0.1",
@@ -40,6 +39,7 @@
     "font-awesome": "^4.7.0",
     "iview": "^3.3.0",
     "sortablejs": "^1.8.4",
+    "vue": "^2.6.6",
     "vue-cli-plugin-element": "^1.0.1",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.22",

@@ -22,7 +22,7 @@ import 'vue-element-extends/lib/index.css'
 Vue.use(VueElementExtends)
 ```
 
-向后兼容方式（ --> 1.1.x ）：
+向后兼容方式（ --> v1.1+ ）：
 
 ```javascript
 import Vue from 'vue'
@@ -32,6 +32,10 @@ import 'vue-element-extends/lib/index.css'
 Vue.component('ElxEditable', Editable)
 Vue.component('ElxEditableColumn', EditableColumn)
 ```
+
+## Example
+
+Run v1.0+ demo on [jsfiddle.net](https://jsfiddle.net/3vo8qhtk/) or [runjs](https://jsrun.net/HFXKp/edit)
 
 ## API
 

@@ -102,7 +102,7 @@ edit-config 编辑参数配置
 |------|------|-----|
 | reload | 初始化完整表格数据 | datas |
 | reloadRow | 初始化指定行数据 | row |
-| revert | 放弃更改，还原指定行 row 或者整个表格的数据 | row? |
+| revert | 还原更改，还原指定行 row 或者整个表格的数据 | row? |
 | insert | 从第一行新增一行新数据 | data |
 | insertAt | 第二个参数 row 从指定位置新增一条数据； null 从第一行新增一行新数据；-1 从最后新增一条数据 | data,row |
 | remove | 根据数据删除 | row |

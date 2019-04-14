@@ -29,6 +29,48 @@ const UtilHandle = {
     }
     return `data:attachment/csv;charset=utf-8,${encodeURIComponent(content)}`
   },
+  getCsvLabelData (columns, oData, tableElem) {
+    let trElemList = tableElem.querySelectorAll('.el-table__body-wrapper .el-table__row')
+    return Array.from(trElemList).map((trElem, rowIndex) => {
+      let item = {}
+      let row = oData[rowIndex]
+      columns.forEach(column => {
+        let cell = trElem.querySelector(`.${column.id}`)
+        item[column.id] = cell ? cell.innerText.trim() : (row ? XEUtils.get(row, column.property) : '')
+      })
+      return item
+    })
+  },
+  getCsvData (opts, oData, oColumns, tableElem) {
+    let isOriginal = opts.original
+    let columns = opts.columns ? opts.columns : oColumns
+    if (opts.columnFilterMethod) {
+      columns = columns.filter(opts.columnFilterMethod)
+    }
+    let datas = opts.data ? opts.data : (isOriginal ? oData : UtilHandle.getCsvLabelData(columns, oData, tableElem))
+    if (opts.dataFilterMethod) {
+      datas = datas.filter(opts.dataFilterMethod)
+    }
+    return { columns, datas }
+  },
+  getCsvContent (opts, oData, oColumns, tableElem) {
+    let isOriginal = opts.original
+    let { columns, datas } = UtilHandle.getCsvData(opts, oData, oColumns, tableElem)
+    let content = '\ufeff'
+    datas.forEach((record, rowIndex) => {
+      if (isOriginal) {
+        content += columns.map(column => {
+          if (column.type === 'index') {
+            return column.index ? column.index(rowIndex) : rowIndex + 1
+          }
+          return XEUtils.get(record, column.property) || ''
+        }).join(',') + '\n'
+      } else {
+        content += columns.map(column => record[column.id]).join(',') + '\n'
+      }
+    })
+    return content
+  },
   downloadCsc (opts, content) {
     if (navigator.msSaveBlob && window.Blob) {
       navigator.msSaveBlob(new Blob([content], { type: 'text/csv' }), opts.filename)
@@ -48,24 +90,6 @@ const UtilHandle = {
       linkElem.click()
       document.body.removeChild(linkElem)
     }
-  },
-  getCsvContent (opts, csvData) {
-    let isOriginal = opts.original
-    let { columns, datas } = csvData
-    let content = '\ufeff'
-    datas.forEach((record, rowIndex) => {
-      if (isOriginal) {
-        content += columns.map(column => {
-          if (column.type === 'index') {
-            return column.index ? column.index(rowIndex) : rowIndex + 1
-          }
-          return XEUtils.get(record, column.property) || ''
-        }).join(',') + '\n'
-      } else {
-        content += columns.map(column => record[column.id]).join(',') + '\n'
-      }
-    })
-    return content
   }
 }
 

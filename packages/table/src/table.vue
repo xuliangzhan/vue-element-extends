@@ -62,7 +62,6 @@
 </template>
 
 <script>
-import XEUtils from 'xe-utils'
 import UtilHandle from '../../editable/src/util'
 
 export default {
@@ -250,31 +249,6 @@ export default {
         })
       }
     },
-    _getTableLabelData (columns) {
-      let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
-      let oData = this._getTDatas()
-      return Array.from(trElemList).map((trElem, rowIndex) => {
-        let item = {}
-        let row = oData[rowIndex]
-        columns.forEach(column => {
-          let cell = trElem.querySelector(`.${column.id}`)
-          item[column.id] = cell ? cell.innerText.trim() : (row ? XEUtils.get(row, column.property) : '')
-        })
-        return item
-      })
-    },
-    _getCsvData (opts) {
-      let isOriginal = opts.original
-      let columns = opts.columns ? opts.columns : this.getColumns()
-      if (opts.columnFilterMethod) {
-        columns = columns.filter(opts.columnFilterMethod)
-      }
-      let datas = opts.data ? opts.data : (isOriginal ? this.data : this._getTableLabelData(columns))
-      if (opts.dataFilterMethod) {
-        datas = datas.filter(opts.dataFilterMethod)
-      }
-      return { columns, datas }
-    },
     /******************************/
     /* Interior methods end       */
     /******************************/
@@ -303,7 +277,9 @@ export default {
       if (opts.filename.indexOf('.csv') === -1) {
         opts.filename += '.csv'
       }
-      UtilHandle.downloadCsc(opts, UtilHandle.getCsvContent(opts, this._getCsvData(opts)))
+      let columns = this.getColumns()
+      let oData = this._getTDatas()
+      UtilHandle.downloadCsc(opts, UtilHandle.getCsvContent(opts, oData, columns, this.$el))
     }
     /******************************/
     /* Public methods end         */

@@ -12,6 +12,7 @@ import TableBase8 from './views/table/Base8'
 import TableBase9 from './views/table/Base9'
 import TableCustom1 from './views/table/Custom1'
 import TableCustom2 from './views/table/Custom2'
+import TableCustom3 from './views/table/Custom3'
 
 import EditableManual1 from './views/editable/Manual1'
 import EditableManual2 from './views/editable/Manual2'
@@ -113,6 +114,11 @@ export default new Router({
       path: '/table/custom2',
       name: 'TableCustom2',
       component: TableCustom2
+    },
+    {
+      path: '/table/custom3',
+      name: 'TableCustom3',
+      component: TableCustom3
     },
     {
       path: '/editable/manual1',

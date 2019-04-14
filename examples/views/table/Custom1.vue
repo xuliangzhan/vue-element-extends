@@ -33,7 +33,17 @@
       <elx-table-column prop="age" label="年龄"></elx-table-column>
       <elx-table-column prop="role" label="角色"></elx-table-column>
       <elx-table-column prop="date" label="日期" :formatter="formatterDate"></elx-table-column>
-      <elx-table-column prop="rate" label="评分"></elx-table-column>
+      <elx-table-column prop="rate" label="评分">
+        <template v-slot="scope">
+          <el-rate
+            v-model="scope.row.rate"
+            disabled
+            show-score
+            text-color="#ff9900"
+            score-template="{value}">
+          </el-rate>
+        </template>
+      </elx-table-column>
       <elx-table-column prop="attr1" label="属性1"></elx-table-column>
       <elx-table-column prop="attr2" label="属性2"></elx-table-column>
       <elx-table-column prop="attr3" label="属性3"></elx-table-column>

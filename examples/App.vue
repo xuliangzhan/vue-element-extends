@@ -18,8 +18,9 @@
           </div>
           <div class="apimenu-row">
             <a class="apimenu-title">更多功能</a>
-            <router-link class="apimenu-link" :to="{name: 'TableCustom1'}" replace>显示/隐藏列1</router-link>
-            <router-link class="apimenu-link" :to="{name: 'TableCustom2'}" replace>显示/隐藏列2</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableCustom1'}" replace>显示/隐藏列</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableCustom2'}" replace>显示/隐藏列+服务保存</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableCustom3'}" replace>显示/隐藏列+本地保存</router-link>
           </div>
         </div>
       </el-tab-pane>

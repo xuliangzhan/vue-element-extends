@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">动态显示、隐藏列</p>
-    <p style="color: red;font-size: 12px;">通过配置 custom-columns 参数初始化列，设置 visible 可以设置显示隐藏</p>
+    <p style="color: red;font-size: 12px;">使用 localStorage 保存自定义列</p>
 
     <el-form ref="tableform" class="click-table6-form" size="mini" :inline="true" :model="formData">
       <el-form-item label="名字" prop="name">
@@ -108,13 +108,12 @@ export default {
     }
   },
   created () {
-    this.loading = true
-    Promise.all([
-      this.findConfColumnsList(),
-      this.findList()
-    ]).catch(e => e).then(() => {
-      this.loading = false
-    })
+    // 从本地存储取出已经自定义的数据
+    let locat = localStorage.getItem('TableCustom3')
+    if (locat) {
+      this.customColumns = JSON.parse(locat)
+    }
+    this.findList()
   },
   methods: {
     findList () {
@@ -127,11 +126,6 @@ export default {
         return result
       }).catch(e => {
         this.loading = false
-      })
-    },
-    findConfColumnsList () {
-      return XEAjax.doGet('/api/conf/columns/list').then(({ data }) => {
-        this.customColumns = data
       })
     },
     searchEvent () {
@@ -166,7 +160,8 @@ export default {
       this.allCustomColumnList.forEach(column => {
         column.visible = this.selectColumns.includes(column.prop)
       })
-      // 调用服务保存自定义数据
+      let hideList = this.allCustomColumnList.filter(item => !item.visible).map(({ prop, visible }) => ({ prop, visible }))
+      localStorage.setItem('TableCustom3', JSON.stringify(hideList))
     }
   }
 }

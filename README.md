@@ -23,10 +23,6 @@ Vue.component('ElEditable', Editable)
 Vue.component('ElEditableColumn', EditableColumn)
 ```
 
-## Example
-
-Run v1.0+ demo on [jsfiddle.net](https://jsfiddle.net/3vo8qhtk/) or [runjs](https://jsrun.net/HFXKp/edit)
-
 ## API
 
 ### Editable Attributes

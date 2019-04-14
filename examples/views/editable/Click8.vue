@@ -28,7 +28,7 @@
     </div>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="click-table8"
       border
       height="466"
@@ -154,12 +154,12 @@ export default {
       }
     },
     insertEvent () {
-      this.$refs.editable.insert().then(({ row }) => {
-        this.$refs.editable.setActiveCell(row, 'key')
+      this.$refs.elxEditable.insert().then(({ row }) => {
+        this.$refs.elxEditable.setActiveCell(row, 'key')
       })
     },
     pendingRemoveEvent () {
-      let selection = this.$refs.editable.getSelecteds()
+      let selection = this.$refs.elxEditable.getSelecteds()
       if (selection.length) {
         let plus = []
         let minus = []
@@ -175,7 +175,7 @@ export default {
         } else if (plus) {
           this.pendingRemoveList = this.pendingRemoveList.concat(plus)
         }
-        this.$refs.editable.clearSelection()
+        this.$refs.elxEditable.clearSelection()
       } else {
         Message({
           type: 'info',
@@ -184,10 +184,10 @@ export default {
       }
     },
     submitEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
           let removeRecords = this.pendingRemoveList
-          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          let { insertRecords, updateRecords } = this.$refs.elxEditable.getAllRecords()
           if (insertRecords.length || updateRecords.length || removeRecords.length) {
             insertRecords.forEach(item => {
               if (XEUtils.isDate(item.date)) {
@@ -219,7 +219,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

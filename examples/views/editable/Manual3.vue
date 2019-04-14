@@ -12,7 +12,7 @@
     </div>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="manual-table3"
       border
       height="500"
@@ -41,9 +41,9 @@
       <elx-editable-column prop="describe3" label="备注" width="200" fixed="right" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
-          <template v-if="$refs.editable.hasActiveRow(scope.row)">
+          <template v-if="$refs.elxEditable.hasActiveRow(scope.row)">
             <el-button size="mini" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
-            <el-button size="mini" type="info" @click="$refs.editable.revert(scope.row)">还原</el-button>
+            <el-button size="mini" type="info" @click="$refs.elxEditable.revert(scope.row)">还原</el-button>
           </template>
           <template v-else>
             <el-button size="mini" type="primary" @click="openActiveRowEvent(scope.row)">编辑</el-button>
@@ -154,27 +154,27 @@ export default {
       console.log('触发 clear-active 事件')
     },
     insertEvent () {
-      let activeInfo = this.$refs.editable.getActiveRow()
-      let { insertRecords } = this.$refs.editable.getAllRecords()
+      let activeInfo = this.$refs.elxEditable.getActiveRow()
+      let { insertRecords } = this.$refs.elxEditable.getAllRecords()
       if (!activeInfo && !insertRecords.length) {
-        this.$refs.editable.insert({
+        this.$refs.elxEditable.insert({
           name: `New ${Date.now()}`,
           age: 26,
           flag: false
         }).then(({ row }) => {
-          this.$refs.editable.setActiveRow(row)
+          this.$refs.elxEditable.setActiveRow(row)
         })
       }
     },
     // 编辑处理
     openActiveRowEvent (row) {
-      if (!this.$refs.editable.checkValid().error) {
-        this.$refs.editable.setActiveRow(row)
+      if (!this.$refs.elxEditable.checkValid().error) {
+        this.$refs.elxEditable.setActiveRow(row)
       }
     },
     // 取消处理
     cancelRowEvent (row) {
-      this.$refs.editable.clearActive()
+      this.$refs.elxEditable.clearActive()
     },
     removeEvent (row) {
       if (row.id) {
@@ -184,14 +184,14 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$refs.editable.remove(row)
+          this.$refs.elxEditable.remove(row)
         })
       } else {
-        this.$refs.editable.remove(row)
+        this.$refs.elxEditable.remove(row)
       }
     },
     deleteSelectedEvent () {
-      let removeRecords = this.$refs.editable.getSelecteds()
+      let removeRecords = this.$refs.elxEditable.getSelecteds()
       if (removeRecords.length) {
         MessageBox.confirm('确定删除所选数据?', '温馨提示', {
           distinguishCancelAndClose: true,
@@ -199,7 +199,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$refs.editable.removeSelecteds()
+          this.$refs.elxEditable.removeSelecteds()
         })
       } else {
         Message({
@@ -209,9 +209,9 @@ export default {
       }
     },
     submitEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
-          let { insertRecords, updateRecords, removeRecords } = this.$refs.editable.getAllRecords()
+          let { insertRecords, updateRecords, removeRecords } = this.$refs.elxEditable.getAllRecords()
           if (insertRecords.length || updateRecords.length || removeRecords.length) {
             insertRecords.forEach(item => {
               if (XEUtils.isDate(item.date)) {
@@ -243,7 +243,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

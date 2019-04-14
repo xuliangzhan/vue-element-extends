@@ -4,14 +4,14 @@
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent">新增一行</el-button>
-      <el-button type="danger" size="mini" @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空表格</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clearSelection()">清空用户的选择</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.toggleAllSelection()">选中所有</el-button>
+      <el-button type="danger" size="mini" @click="$refs.elxEditable.removeSelecteds()">删除选中</el-button>
+      <el-button type="info" size="mini" @click="$refs.elxEditable.clear()">清空表格</el-button>
+      <el-button type="info" size="mini" @click="$refs.elxEditable.clearSelection()">清空用户的选择</el-button>
+      <el-button type="info" size="mini" @click="$refs.elxEditable.toggleAllSelection()">选中所有</el-button>
     </p>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="manual-table4"
       size="mini"
       border
@@ -132,17 +132,17 @@ export default {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd')
     },
     insertEvent () {
-      this.$refs.editable.insert({
+      this.$refs.elxEditable.insert({
         cascader1: [],
         cascader2: [],
         flag1: false,
         flag2: false
       }).then(({ row }) => {
-        this.$refs.editable.setActiveRow(row)
+        this.$refs.elxEditable.setActiveRow(row)
       })
     },
     isRowOperate (row) {
-      let activeInfo = this.$refs.editable.getActiveRow()
+      let activeInfo = this.$refs.elxEditable.getActiveRow()
       return activeInfo ? activeInfo.row === row : true
     },
     removeEvent (row) {
@@ -152,19 +152,19 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$refs.editable.remove(row)
+          this.$refs.elxEditable.remove(row)
         }).catch(e => e)
       }
     },
     revertEvent (row) {
       if (this.isRowOperate(row)) {
-        if (this.$refs.editable.hasRowChange(row)) {
+        if (this.$refs.elxEditable.hasRowChange(row)) {
           MessageBox.confirm('确定还原该行数据?', '温馨提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            this.$refs.editable.revert(row)
+            this.$refs.elxEditable.revert(row)
             Message({ message: '数据还原成功！', type: 'success' })
           }).catch(e => e)
         } else {
@@ -173,14 +173,14 @@ export default {
       }
     },
     updateRowEvent (row) {
-      this.$refs.editable.reloadRow(row)
+      this.$refs.elxEditable.reloadRow(row)
       Message({ message: '保存成功', type: 'success' })
     },
     saveRowEvent (row) {
-      this.$refs.editable.validateRow(row, valid => {
+      this.$refs.elxEditable.validateRow(row, valid => {
         if (valid) {
-          this.$refs.editable.clearActive()
-          this.$refs.editable.reloadRow(row)
+          this.$refs.elxEditable.clearActive()
+          this.$refs.elxEditable.reloadRow(row)
           Message({ message: '保存成功', type: 'success' })
         } else {
           console.log('error row submit!!')

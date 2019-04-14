@@ -11,7 +11,7 @@
     </div>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="dblclick-table3"
       border
       height="466"
@@ -133,18 +133,18 @@ export default {
     // 失焦后检查其他列，实现单元格连续编辑效果
     blurActiveEvent (row, column) {
       console.log('触发 blur-active 事件')
-      this.$refs.editable.validateRow(row)
+      this.$refs.elxEditable.validateRow(row)
     },
     clearActiveEvent (row, column) {
       console.log('触发 clear-active 事件')
     },
     insertEvent () {
-      this.$refs.editable.insert({
+      this.$refs.elxEditable.insert({
         name: `New ${Date.now()}`,
         age: 0,
         flag: false
       }).then(({ row }) => {
-        this.$refs.editable.setActiveCell(row, 'name')
+        this.$refs.elxEditable.setActiveCell(row, 'name')
       })
     },
     removeEvent (row) {
@@ -154,21 +154,21 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$refs.editable.remove(row)
+          this.$refs.elxEditable.remove(row)
         }).catch(e => e)
       } else {
-        this.$refs.editable.remove(row)
+        this.$refs.elxEditable.remove(row)
       }
     },
     deleteSelectedEvent () {
-      let removeRecords = this.$refs.editable.getSelecteds()
+      let removeRecords = this.$refs.elxEditable.getSelecteds()
       if (removeRecords.length) {
         MessageBox.confirm('确定删除所选数据?', '温馨提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$refs.editable.removeSelecteds()
+          this.$refs.elxEditable.removeSelecteds()
         }).catch(e => e)
       } else {
         Message({
@@ -178,7 +178,7 @@ export default {
       }
     },
     validEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
           Message({
             type: 'success',
@@ -193,9 +193,9 @@ export default {
       })
     },
     submitEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
-          let { insertRecords, updateRecords, removeRecords } = this.$refs.editable.getAllRecords()
+          let { insertRecords, updateRecords, removeRecords } = this.$refs.elxEditable.getAllRecords()
           if (insertRecords.length || updateRecords.length || removeRecords.length) {
             insertRecords.forEach(item => {
               if (XEUtils.isDate(item.date)) {
@@ -227,7 +227,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

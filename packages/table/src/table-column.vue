@@ -72,7 +72,7 @@ export default {
       return this.$editable.columnList
     },
     isGroup () {
-      return this.$slots.default && this.$slots.default.some(item => item.componentOptions.tag === 'elx-table-column')
+      return this.$slots.default && this.$slots.default.some(item => item && item.componentOptions && item.componentOptions.tag === 'elx-table-column')
     },
     isVisible () {
       if (this.prop && this.customColumnList && this.customColumnList.length) {

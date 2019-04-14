@@ -320,7 +320,7 @@ export default {
       } else if (XEUtils.isString(rowClassName)) {
         clsName += `${rowClassName}`
       }
-      return XEUtils.trimRight(clsName)
+      return clsName
     },
     _rowStyle ({ row, rowIndex }) {
       return this.rowStyle({ row: row.data, rowIndex })
@@ -348,7 +348,7 @@ export default {
       } else if (XEUtils.isString(cellClassName)) {
         clsName += `${cellClassName}`
       }
-      return XEUtils.trimRight(clsName)
+      return clsName
     },
     _cellStyle ({ row, column, rowIndex, columnIndex }) {
       return this.cellStyle({ row: row.data, column, rowIndex, columnIndex })
@@ -1205,7 +1205,7 @@ export default {
       let rowIndex = XEUtils.findIndexOf(tableData, row => row.data === record)
       let row = tableData[rowIndex]
       if (column) {
-        let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .elx-editable-row')
+        let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
         let trElem = trElemList[rowIndex]
         let cell = trElem.querySelector(`.${column.id}`)
         return { row, rowIndex, column, columnIndex, cell }
@@ -1288,15 +1288,8 @@ export default {
         expandeKeys
       }
     },
-    _getCsvUrl (opts, content) {
-      let browse = XEUtils.browse()
-      if (window.Blob && window.URL && window.URL.createObjectURL && !browse.safari) {
-        return URL.createObjectURL(new Blob([content], { type: 'text/csv' }))
-      }
-      return `data:attachment/csv;charset=utf-8,${encodeURIComponent(content)}`
-    },
-    _getCsvLabelData (columns) {
-      let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .elx-editable-row')
+    _getTableLabelData (columns) {
+      let trElemList = this.$el.querySelectorAll('.el-table__body-wrapper .el-table__row')
       let oData = this._getData(this._getTDatas())
       return Array.from(trElemList).map((trElem, rowIndex) => {
         let item = {}
@@ -1314,50 +1307,11 @@ export default {
       if (opts.columnFilterMethod) {
         columns = columns.filter(opts.columnFilterMethod)
       }
-      let datas = opts.data ? opts.data : (isOriginal ? this._getData(this._getTDatas()) : this._getCsvLabelData(columns))
+      let datas = opts.data ? opts.data : (isOriginal ? this._getData(this._getTDatas()) : this._getTableLabelData(columns))
       if (opts.dataFilterMethod) {
         datas = datas.filter(opts.dataFilterMethod)
       }
       return { columns, datas }
-    },
-    _getCsvContent (opts) {
-      let isOriginal = opts.original
-      let { columns, datas } = this._getCsvData(opts)
-      let content = '\ufeff'
-      datas.forEach((record, rowIndex) => {
-        if (isOriginal) {
-          content += columns.map((column, columnIndex) => {
-            if (column.type === 'index') {
-              return column.index ? column.index(rowIndex) : rowIndex + 1
-            }
-            return XEUtils.get(record, column.property) || ''
-          }).join(',') + '\n'
-        } else {
-          content += columns.map((column, columnIndex) => record[column.id]).join(',') + '\n'
-        }
-      })
-      return content
-    },
-    _downloadCsc (opts, content) {
-      let browse = XEUtils.browse()
-      if (navigator.msSaveBlob && window.Blob) {
-        navigator.msSaveBlob(new Blob([content], { type: 'text/csv' }), opts.filename)
-      } else if (browse['-ms']) {
-        var win = window.top.open('about:blank', '_blank')
-        win.document.charset = 'utf-8'
-        win.document.write(content)
-        win.document.close()
-        win.document.execCommand('SaveAs', opts.filename)
-        win.close()
-      } else {
-        var linkElem = document.createElement('a')
-        linkElem.target = '_blank'
-        linkElem.download = opts.filename
-        linkElem.href = this._getCsvUrl(opts, content)
-        document.body.appendChild(linkElem)
-        linkElem.click()
-        document.body.removeChild(linkElem)
-      }
     },
     _ctxMenuMouseoverEvent (item, evnt) {
       evnt.preventDefault()
@@ -1843,7 +1797,7 @@ export default {
       if (opts.filename.indexOf('.csv') === -1) {
         opts.filename += '.csv'
       }
-      this._downloadCsc(opts, this._getCsvContent(opts))
+      UtilHandle.downloadCsc(opts, UtilHandle.getCsvContent(opts, this._getCsvData(opts)))
     },
     closeContextMenu () {
       this.ctxMenuStore.info = null

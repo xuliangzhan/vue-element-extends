@@ -11,7 +11,7 @@
     </div>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="click-table5"
       border
       height="564"
@@ -163,17 +163,17 @@ export default {
     },
     // 单元格失焦后实时保存数据
     blurActiveEvent (row, column) {
-      if (this.$refs.editable.hasRowChange(row)) {
+      if (this.$refs.elxEditable.hasRowChange(row)) {
         this.saveRowEvent(row)
       }
     },
     insertEvent () {
-      this.$refs.editable.insert({
+      this.$refs.elxEditable.insert({
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
       }).then(({ row }) => {
-        this.$refs.editable.setActiveCell(row, 'name')
+        this.$refs.elxEditable.setActiveCell(row, 'name')
       })
     },
     removeEvent (row) {
@@ -191,13 +191,13 @@ export default {
           })
         }).catch(e => e)
       } else {
-        this.$refs.editable.remove(row)
+        this.$refs.elxEditable.remove(row)
       }
     },
     revertEvent (row) {
-      if (this.$refs.editable.hasRowChange(row)) {
-        this.$refs.editable.clearActive()
-        this.$refs.editable.revert(row)
+      if (this.$refs.elxEditable.hasRowChange(row)) {
+        this.$refs.elxEditable.clearActive()
+        this.$refs.elxEditable.revert(row)
         Message({
           type: 'success',
           message: '数据已还原！'
@@ -210,7 +210,7 @@ export default {
       }
     },
     deleteSelectedEvent () {
-      let removeRecords = this.$refs.editable.getSelecteds()
+      let removeRecords = this.$refs.elxEditable.getSelecteds()
       if (removeRecords.length) {
         MessageBox.confirm('确定删除所选数据?', '温馨提示', {
           confirmButtonText: '确定',
@@ -236,7 +236,7 @@ export default {
       }
     },
     saveRowEvent (row) {
-      this.$refs.editable.validateRow(row, valid => {
+      this.$refs.elxEditable.validateRow(row, valid => {
         if (valid) {
           let url = '/api/user/add'
           if (row.id) {
@@ -246,7 +246,7 @@ export default {
             row.date = row.date.getTime()
           }
           this.loading = true
-          this.$refs.editable.clearActive()
+          this.$refs.elxEditable.clearActive()
           XEAjax.doPost(url, row).then(({ data }) => {
             this.findList()
             Message({ message: '保存成功', type: 'success' })
@@ -255,7 +255,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

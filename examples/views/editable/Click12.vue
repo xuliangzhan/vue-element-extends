@@ -8,10 +8,10 @@
       <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
       <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.revert()">放弃更改</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clear()">清空表格</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
-      <el-button type="info" size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
+      <el-button type="info" size="mini" @click="$refs.elxEditable.revert()">放弃更改</el-button>
+      <el-button type="info" size="mini" @click="$refs.elxEditable.clear()">清空表格</el-button>
+      <el-button type="info" size="mini" @click="$refs.elxEditable.clearFilter()">清空筛选条件</el-button>
+      <el-button type="info" size="mini" @click="$refs.elxEditable.clearSort()">清空排序条件</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
       <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
       <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>
@@ -21,7 +21,7 @@
     </p>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="click-table12"
       stripe
       border
@@ -56,7 +56,7 @@
         width="160"
         :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
-          <el-select v-model="scope.row.userInfo.sex1" placeholder="请选择性别" clearable @change="$refs.editable.updateStatus(scope)">
+          <el-select v-model="scope.row.userInfo.sex1" placeholder="请选择性别" clearable @change="$refs.elxEditable.updateStatus(scope)">
             <el-option
               v-for="(item, index) in sexList"
               :key="index"
@@ -72,7 +72,7 @@
         width="160"
         :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value2', label: 'spell'}, attrs: {clearable: true, placeholder: '请选择性别'}}">
         <template v-slot:edit="scope">
-          <el-select v-model="scope.row.userInfo.base.other.sex2" v-bind="scope.$render.attrs" @change="$refs.editable.updateStatus(scope)">
+          <el-select v-model="scope.row.userInfo.base.other.sex2" v-bind="scope.$render.attrs" @change="$refs.elxEditable.updateStatus(scope)">
             <el-option
               v-for="(item, index) in sexList"
               :key="index"
@@ -90,7 +90,7 @@
           <el-input-number
             v-model="scope.row.userInfo.base.age"
             v-bind="scope.$render.attrs"
-            @input="$refs.editable.updateStatus(scope)"></el-input-number>
+            @input="$refs.elxEditable.updateStatus(scope)"></el-input-number>
         </template>
       </elx-editable-column>
       <elx-editable-column
@@ -102,7 +102,7 @@
           <el-cascader
             v-model="scope.row.userInfo.region"
             v-bind="scope.$render.attrs"
-            @change="$refs.editable.updateStatus(scope)"></el-cascader>
+            @change="$refs.elxEditable.updateStatus(scope)"></el-cascader>
         </template>
       </elx-editable-column>
       <elx-editable-column
@@ -115,7 +115,7 @@
           <el-date-picker
             v-model="scope.row.dateObj.date1"
             v-bind="scope.$render.attrs"
-            @change="$refs.editable.updateStatus(scope)"></el-date-picker>
+            @change="$refs.elxEditable.updateStatus(scope)"></el-date-picker>
         </template>
       </elx-editable-column>
       <elx-editable-column
@@ -251,7 +251,7 @@ export default {
       return item ? item[labelProp] : null
     },
     insertEvent (index) {
-      this.$refs.editable.insert({
+      this.$refs.elxEditable.insert({
         name: '默认名字2',
         userInfo: {
           base: {
@@ -260,7 +260,7 @@ export default {
         },
         slider: 20
       }).then(({ row }) => {
-        this.$refs.editable.setActiveCell(row, 'name')
+        this.$refs.elxEditable.setActiveCell(row, 'name')
       })
     },
     removeEvent (scope) {
@@ -269,7 +269,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$refs.editable.remove(scope.row)
+        this.$refs.elxEditable.remove(scope.row)
       }).catch(e => e)
     },
     revertEvent (row) {
@@ -278,7 +278,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$refs.editable.revert(row)
+        this.$refs.elxEditable.revert(row)
         Message({ message: '数据还原成功！', type: 'success' })
       }).catch(e => e)
     },
@@ -289,9 +289,9 @@ export default {
       console.log(currentRow)
     },
     deleteSelectedEvent () {
-      let selection = this.$refs.editable.getSelecteds()
+      let selection = this.$refs.elxEditable.getSelecteds()
       if (selection.length) {
-        this.$refs.editable.removeSelecteds()
+        this.$refs.elxEditable.removeSelecteds()
         Message({ message: '删除成功', type: 'success' })
       } else {
         Message({
@@ -301,7 +301,7 @@ export default {
       }
     },
     submitEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
           alert('成功')
         } else {
@@ -310,23 +310,23 @@ export default {
       })
     },
     getInsertEvent () {
-      let rest = this.$refs.editable.getInsertRecords()
+      let rest = this.$refs.elxEditable.getInsertRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` }).catch(e => e)
     },
     getUpdateEvent () {
-      let rest = this.$refs.editable.getUpdateRecords()
+      let rest = this.$refs.elxEditable.getUpdateRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` }).catch(e => e)
     },
     getRemoveEvent () {
-      let rest = this.$refs.editable.getRemoveRecords()
+      let rest = this.$refs.elxEditable.getRemoveRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取已删除数据(${rest.length}条)` }).catch(e => e)
     },
     getSelectedEvent () {
-      let rest = this.$refs.editable.getSelecteds()
+      let rest = this.$refs.elxEditable.getSelecteds()
       MessageBox({ message: JSON.stringify(rest), title: `获取已选中数据(${rest.length}条)` }).catch(e => e)
     },
     getAllEvent () {
-      let rest = this.$refs.editable.getRecords()
+      let rest = this.$refs.elxEditable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
     },
     postJSON (data) {

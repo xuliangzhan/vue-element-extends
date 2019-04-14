@@ -1,8 +1,14 @@
 <template>
   <div v-loading="loading">
+
+    <div class="base-table1-oper">
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
+    </div>
+
     <elx-table
+      ref="elxTable"
       border
-      size="mini"
+      size="small"
       :data.sync="list"
       style="width: 100%">
       <elx-table-column type="index" width="55"></elx-table-column>
@@ -45,7 +51,16 @@ export default {
     },
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
+    },
+    exportCsvEvent () {
+      this.$refs.elxTable.exportCsv()
     }
   }
 }
 </script>
+
+<style>
+.base-table1-oper {
+  margin-bottom: 18px;
+}
+</style>

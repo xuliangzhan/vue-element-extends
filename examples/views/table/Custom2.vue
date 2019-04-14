@@ -16,7 +16,12 @@
       </el-form-item>
     </el-form>
 
+    <div class="custom-table2-oper">
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
+    </div>
+
     <elx-table
+      ref="elxTable"
       border
       height="466"
       :data.sync="list"
@@ -149,6 +154,9 @@ export default {
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
+    exportCsvEvent () {
+      this.$refs.elxTable.exportCsv()
+    },
     openCustomEvent () {
       this.selectColumns = this.allCustomColumnList.filter(item => item.visible).map(column => column.prop)
     },
@@ -171,3 +179,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.custom-table2-oper {
+  margin-bottom: 18px;
+}
+</style>

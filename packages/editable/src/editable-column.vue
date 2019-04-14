@@ -168,7 +168,7 @@ export default {
       return this.renderOpts.name
     },
     isGroup () {
-      return this.$slots.default && this.$slots.default.some(item => item.componentOptions.tag === 'elx-editable-column')
+      return this.$slots.default && this.$slots.default.some(item => item && item.componentOptions && item.componentOptions.tag === 'elx-editable-column')
     },
     customColumnList () {
       return this.$editable.columnList

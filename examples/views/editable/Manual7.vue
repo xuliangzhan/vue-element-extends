@@ -4,12 +4,12 @@
 
     <div v-loading="columnLoading">
       <div class="manual-table7-oper">
-        <el-button type="success" size="mini" @click="insertEvent('editable1')">新增</el-button>
-        <el-button type="danger" size="mini" @click="deleteSelectedEvent('editable1')">删除选中</el-button>
+        <el-button type="success" size="mini" @click="insertEvent('elxEditable1')">新增</el-button>
+        <el-button type="danger" size="mini" @click="deleteSelectedEvent('elxEditable1')">删除选中</el-button>
       </div>
 
       <elx-editable
-        ref="editable1"
+        ref="elxEditable1"
         class="manual-table7"
         size="mini"
         border
@@ -34,13 +34,13 @@
         <elx-editable-column prop="createTime" label="创建时间" width="150" :formatter="formatterDate"></elx-editable-column>
         <elx-editable-column label="操作" width="160">
           <template v-slot="scope">
-            <template v-if="$refs.editable1.hasActiveRow(scope.row)">
-              <el-button size="mini" type="success" @click="saveRowEvent('editable1', scope.row)">保存</el-button>
-              <el-button size="mini" type="warning" @click="cancelRowEvent('editable1', scope.row)">取消</el-button>
+            <template v-if="$refs.elxEditable1.hasActiveRow(scope.row)">
+              <el-button size="mini" type="success" @click="saveRowEvent('elxEditable1', scope.row)">保存</el-button>
+              <el-button size="mini" type="warning" @click="cancelRowEvent('elxEditable1', scope.row)">取消</el-button>
             </template>
             <template v-else>
-              <el-button size="mini" type="primary" @click="openActiveRowEvent('editable1', scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="removeEvent('editable1', scope.row)">删除</el-button>
+              <el-button size="mini" type="primary" @click="openActiveRowEvent('elxEditable1', scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="removeEvent('elxEditable1', scope.row)">删除</el-button>
             </template>
           </template>
         </elx-editable-column>
@@ -49,13 +49,13 @@
 
     <div v-loading="userLoading">
       <div class="manual-table7-oper">
-        <el-button type="success" size="mini" @click="insertEvent('editable2')">新增</el-button>
-        <el-button type="danger" size="mini" @click="deleteSelectedEvent('editable2')">删除选中</el-button>
+        <el-button type="success" size="mini" @click="insertEvent('elxEditable2')">新增</el-button>
+        <el-button type="danger" size="mini" @click="deleteSelectedEvent('elxEditable2')">删除选中</el-button>
         <el-button type="primary" size="mini" @click="reloadConf">刷新配置</el-button>
       </div>
 
       <elx-editable
-        ref="editable2"
+        ref="elxEditable2"
         size="mini"
         border
         height="260"
@@ -76,13 +76,13 @@
         </template>
         <elx-editable-column label="操作" width="150">
           <template v-slot="scope">
-            <template v-if="$refs.editable2.hasActiveRow(scope.row)">
-              <el-button size="mini" type="success" @click="saveRowEvent('editable2', scope.row)">保存</el-button>
-              <el-button size="mini" type="warning" @click="cancelRowEvent('editable2', scope.row)">取消</el-button>
+            <template v-if="$refs.elxEditable2.hasActiveRow(scope.row)">
+              <el-button size="mini" type="success" @click="saveRowEvent('elxEditable2', scope.row)">保存</el-button>
+              <el-button size="mini" type="warning" @click="cancelRowEvent('elxEditable2', scope.row)">取消</el-button>
             </template>
             <template v-else>
-              <el-button size="mini" type="primary" @click="openActiveRowEvent('editable2', scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="removeEvent('editable2', scope.row)">删除</el-button>
+              <el-button size="mini" type="primary" @click="openActiveRowEvent('elxEditable2', scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="removeEvent('elxEditable2', scope.row)">删除</el-button>
             </template>
           </template>
         </elx-editable-column>
@@ -279,7 +279,7 @@ export default {
         item.attrs.disabled = list.some(row => row.key === item.value)
       })
       if (scope) {
-        this.$refs.editable1.updateStatus(scope)
+        this.$refs.elxEditable1.updateStatus(scope)
       }
     },
     insertEvent (name) {
@@ -287,7 +287,7 @@ export default {
       let { insertRecords } = this.$refs[name].getAllRecords()
       if (!activeInfo && !insertRecords.length) {
         switch (name) {
-          case 'editable1':
+          case 'elxEditable1':
             let nextItem = this.keyList.find(item => !item.attrs.disabled)
             this.$refs[name].insert({
               key: nextItem.value,
@@ -300,7 +300,7 @@ export default {
               this.$refs[name].setActiveRow(row)
             })
             break
-          case 'editable2':
+          case 'elxEditable2':
             this.$refs[name].insert().then(({ row }) => {
               this.$refs[name].setActiveRow(row)
             })
@@ -315,10 +315,10 @@ export default {
       }
     },
     clearActiveMethod1 ({ type, row, rowIndex }) {
-      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('editable1', row) : this.isClearActiveFlag
+      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('elxEditable1', row) : this.isClearActiveFlag
     },
     clearActiveMethod2 ({ type, row, rowIndex }) {
-      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('editable2', row) : this.isClearActiveFlag
+      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('elxEditable2', row) : this.isClearActiveFlag
     },
     // 判断多表格切换时是否有数据没有保存
     checkSaveData (name, row) {
@@ -406,7 +406,7 @@ export default {
           type: 'warning'
         }).then(() => {
           switch (name) {
-            case 'editable1':
+            case 'elxEditable1':
               this.columnLoading = true
               XEAjax.doDelete(`/api/column/delete/${row.id}`).then(({ data }) => {
                 this.findColumnList()
@@ -414,7 +414,7 @@ export default {
                 this.columnLoading = false
               })
               break
-            case 'editable2':
+            case 'elxEditable2':
               this.userLoading = true
               XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
                 this.findUserList()
@@ -441,7 +441,7 @@ export default {
           type: 'warning'
         }).then(() => {
           switch (name) {
-            case 'editable1':
+            case 'elxEditable1':
               this.columnLoading = true
               XEAjax.doPost('/api/column/save', { removeRecords }).then(({ data }) => {
                 Message({
@@ -453,7 +453,7 @@ export default {
                 this.columnLoading = false
               })
               break
-            case 'editable2':
+            case 'elxEditable2':
               this.userLoading = true
               XEAjax.doPost('/api/user/save', { removeRecords }).then(({ data }) => {
                 Message({
@@ -481,7 +481,7 @@ export default {
         if (valid) {
           let url
           switch (name) {
-            case 'editable1':
+            case 'elxEditable1':
               url = '/api/column/add'
               if (row.id) {
                 url = '/api/column/update'
@@ -495,7 +495,7 @@ export default {
                 this.columnLoading = false
               })
               break
-            case 'editable2':
+            case 'elxEditable2':
               url = '/api/user/add'
               if (row.id) {
                 url = '/api/user/update'

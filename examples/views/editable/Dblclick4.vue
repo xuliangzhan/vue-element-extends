@@ -29,7 +29,7 @@
     </div>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="dblclick-table4"
       border
       height="466"
@@ -234,11 +234,11 @@ export default {
       return ''
     },
     insertEvent () {
-      this.$refs.editable.insert({
+      this.$refs.elxEditable.insert({
         age: 26,
         flag: false
       }).then(({ row }) => {
-        this.$refs.editable.setActiveRow(row)
+        this.$refs.elxEditable.setActiveRow(row)
       })
     },
     removeEvent (row) {
@@ -256,11 +256,11 @@ export default {
           })
         }).catch(e => e)
       } else {
-        this.$refs.editable.remove(row)
+        this.$refs.elxEditable.remove(row)
       }
     },
     pendingRemoveEvent () {
-      let selection = this.$refs.editable.getSelecteds()
+      let selection = this.$refs.elxEditable.getSelecteds()
       if (selection.length) {
         let plus = []
         let minus = []
@@ -276,7 +276,7 @@ export default {
         } else if (plus) {
           this.pendingRemoveList = this.pendingRemoveList.concat(plus)
         }
-        this.$refs.editable.clearSelection()
+        this.$refs.elxEditable.clearSelection()
       } else {
         Message({
           type: 'info',
@@ -285,7 +285,7 @@ export default {
       }
     },
     deleteSelectedEvent () {
-      let removeRecords = this.$refs.editable.getSelecteds()
+      let removeRecords = this.$refs.elxEditable.getSelecteds()
       if (removeRecords.length) {
         MessageBox.confirm('确定删除所选数据?', '温馨提示', {
           confirmButtonText: '确定',
@@ -312,7 +312,7 @@ export default {
     },
     submitEvent () {
       let removeRecords = this.pendingRemoveList
-      let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+      let { insertRecords, updateRecords } = this.$refs.elxEditable.getAllRecords()
       if (insertRecords.length || updateRecords.length || removeRecords.length) {
         insertRecords.forEach(item => {
           if (XEUtils.isDate(item.date)) {
@@ -342,7 +342,7 @@ export default {
       }
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

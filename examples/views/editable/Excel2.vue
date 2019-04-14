@@ -3,16 +3,16 @@
     <p style="color: red;font-size: 12px;">A字段（校验数值）B字段（校验汉字）C字段（校验字母）D字段（校验整数）E字段（校验小数）</p>
 
     <p>
-      <el-button size="mini" @click="$refs.editable.insertAt(null, -1)">新增</el-button>
-      <el-button size="mini" @click="$refs.editable.clearFilter()">清空筛选条件</el-button>
-      <el-button size="mini" @click="$refs.editable.clearSort()">清空排序条件</el-button>
+      <el-button size="mini" @click="$refs.elxEditable.insertAt(null, -1)">新增</el-button>
+      <el-button size="mini" @click="$refs.elxEditable.clearFilter()">清空筛选条件</el-button>
+      <el-button size="mini" @click="$refs.elxEditable.clearSort()">清空排序条件</el-button>
       <el-button size="mini" @click="getAllEvent">获取所有</el-button>
       <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
       <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
     </p>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="excel-table2"
       border
       tooltip-effect="light"
@@ -128,15 +128,15 @@ export default {
   },
   methods: {
     getAllEvent () {
-      let rest = this.$refs.editable.getRecords()
+      let rest = this.$refs.elxEditable.getRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取所有数据(${rest.length}条)` }).catch(e => e)
     },
     getUpdateEvent () {
-      let rest = this.$refs.editable.getUpdateRecords()
+      let rest = this.$refs.elxEditable.getUpdateRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` }).catch(e => e)
     },
     getResultEvent () {
-      let rest = this.$refs.editable.getRecords().filter(item => Object.keys(item).some(key => item[key]))
+      let rest = this.$refs.elxEditable.getRecords().filter(item => Object.keys(item).some(key => item[key]))
       MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` }).catch(e => e)
     }
   }

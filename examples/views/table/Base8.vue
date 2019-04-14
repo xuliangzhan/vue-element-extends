@@ -2,7 +2,7 @@
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">展开行</p>
 
-    <el-form ref="tableform" class="click-table2-form" size="mini" :inline="true" :model="formData">
+    <el-form ref="tableform" class="base-table8-form" size="mini" :inline="true" :model="formData">
       <el-form-item label="名字" prop="name">
         <el-input v-model="formData.name" placeholder="名字"></el-input>
       </el-form-item>
@@ -15,7 +15,12 @@
       </el-form-item>
     </el-form>
 
+    <div class="base-table8-oper">
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
+    </div>
+
     <elx-table
+      ref="elxTable"
       border
       :data.sync="list"
       style="width: 100%">
@@ -111,7 +116,16 @@ export default {
     },
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
+    },
+    exportCsvEvent () {
+      this.$refs.elxTable.exportCsv()
     }
   }
 }
 </script>
+
+<style>
+.base-table8-oper {
+  margin-bottom: 18px;
+}
+</style>

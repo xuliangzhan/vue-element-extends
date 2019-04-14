@@ -3,14 +3,14 @@
     <p style="color: red;font-size: 12px;">渲染成 Excel 表格</p>
 
     <p>
-      <el-button size="mini" @click="$refs.editable.insert()">新增</el-button>
+      <el-button size="mini" @click="$refs.elxEditable.insert()">新增</el-button>
       <el-button size="mini" @click="getInsertEvent">获取新增</el-button>
       <el-button size="mini" @click="getUpdateEvent">获取改动</el-button>
       <el-button size="mini" @click="getResultEvent">获取有值数据</el-button>
     </p>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="excel-table1"
       border
       size="customSize"
@@ -67,15 +67,15 @@ export default {
   },
   methods: {
     getInsertEvent () {
-      let rest = this.$refs.editable.getInsertRecords()
+      let rest = this.$refs.elxEditable.getInsertRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取新增数据(${rest.length}条)` }).catch(e => e)
     },
     getUpdateEvent () {
-      let rest = this.$refs.editable.getUpdateRecords()
+      let rest = this.$refs.elxEditable.getUpdateRecords()
       MessageBox({ message: JSON.stringify(rest), title: `获取已修改数据(${rest.length}条)` }).catch(e => e)
     },
     getResultEvent () {
-      let rest = this.$refs.editable.getRecords().filter(item => Object.keys(item).some(key => item[key]))
+      let rest = this.$refs.elxEditable.getRecords().filter(item => Object.keys(item).some(key => item[key]))
       MessageBox({ message: JSON.stringify(rest), title: `获取有值数据(${rest.length}条)` }).catch(e => e)
     }
   }

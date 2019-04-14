@@ -62,12 +62,12 @@ export default {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     insertEvent () {
-      this.$refs.editable.insert({
+      this.$refs.elxEditable.insert({
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
       }).then(({ row }) => {
-        this.$refs.editable.setActiveCell(row, 'name')
+        this.$refs.elxEditable.setActiveCell(row, 'name')
       })
     },
     removeEvent (row) {
@@ -85,13 +85,13 @@ export default {
           })
         }).catch(e => e)
       } else {
-        this.$refs.editable.remove(row)
+        this.$refs.elxEditable.remove(row)
       }
     },
     submitEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
-          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          let { insertRecords, updateRecords } = this.$refs.elxEditable.getAllRecords()
           if (insertRecords.length || updateRecords.length) {
             insertRecords.forEach(item => {
               if (XEUtils.isDate(item.date)) {
@@ -123,7 +123,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

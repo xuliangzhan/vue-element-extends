@@ -16,11 +16,16 @@
       </el-form-item>
     </el-form>
 
+    <div class="custom-table1-oper">
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
+    </div>
+
     <div class="checkbox-group">
       <el-checkbox v-model="item.visible" v-for="item in allCustomColumnList" :key="item.prpo">{{ item.label }}</el-checkbox>
     </div>
 
     <elx-table
+      ref="elxTable"
       border
       height="466"
       :data.sync="list"
@@ -132,12 +137,18 @@ export default {
     },
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
+    },
+    exportCsvEvent () {
+      this.$refs.elxTable.exportCsv()
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
+.custom-table1-oper {
+  margin-bottom: 18px;
+}
 .checkbox-group {
   margin-bottom: 15px;
 }

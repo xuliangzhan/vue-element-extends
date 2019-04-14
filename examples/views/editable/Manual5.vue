@@ -4,14 +4,14 @@
 
     <div v-loading="roleLoading">
       <div class="manual-table5-oper">
-        <el-button type="success" size="mini" @click="insertEvent('editable1')">新增</el-button>
-        <el-button type="danger" size="mini" @click="deleteSelectedEvent('editable1')">删除选中</el-button>
-        <el-button type="success" size="mini" @click="customExportCsvEvent('editable1', {filename: '显示数据.csv'})">导出显示数据</el-button>
-        <el-button type="success" size="mini" @click="customExportCsvEvent('editable1', {filename: '实际数据.csv', original: true})">导出实际数据</el-button>
+        <el-button type="success" size="mini" @click="insertEvent('elxEditable1')">新增</el-button>
+        <el-button type="danger" size="mini" @click="deleteSelectedEvent('elxEditable1')">删除选中</el-button>
+        <el-button type="success" size="mini" @click="customExportCsvEvent('elxEditable1', {filename: '显示数据.csv'})">导出显示数据</el-button>
+        <el-button type="success" size="mini" @click="customExportCsvEvent('elxEditable1', {filename: '实际数据.csv', original: true})">导出实际数据</el-button>
       </div>
 
       <elx-editable
-        ref="editable1"
+        ref="elxEditable1"
         size="mini"
         border
         height="260"
@@ -28,13 +28,13 @@
         <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
         <elx-editable-column label="操作" width="160">
           <template v-slot="scope">
-            <template v-if="$refs.editable1.hasActiveRow(scope.row)">
-              <el-button size="mini" type="success" @click="saveRowEvent('editable1', scope.row)">保存</el-button>
-              <el-button size="mini" type="warning" @click="cancelRowEvent('editable1', scope.row)">取消</el-button>
+            <template v-if="$refs.elxEditable1.hasActiveRow(scope.row)">
+              <el-button size="mini" type="success" @click="saveRowEvent('elxEditable1', scope.row)">保存</el-button>
+              <el-button size="mini" type="warning" @click="cancelRowEvent('elxEditable1', scope.row)">取消</el-button>
             </template>
             <template v-else>
-              <el-button size="mini" type="primary" @click="openActiveRowEvent('editable1', scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="removeEvent('editable1', scope.row)">删除</el-button>
+              <el-button size="mini" type="primary" @click="openActiveRowEvent('elxEditable1', scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="removeEvent('elxEditable1', scope.row)">删除</el-button>
             </template>
           </template>
         </elx-editable-column>
@@ -54,14 +54,14 @@
 
     <div v-loading="userLoading">
       <div class="manual-table5-oper">
-        <el-button type="success" size="mini" @click="insertEvent('editable2')">新增</el-button>
-        <el-button type="danger" size="mini" @click="deleteSelectedEvent('editable2')">删除选中</el-button>
-        <el-button type="success" size="mini" @click="customExportCsvEvent('editable2', {filename: '显示数据.csv'})">导出显示数据</el-button>
-        <el-button type="success" size="mini" @click="customExportCsvEvent('editable2', {filename: '实际数据.csv', original: true})">导出实际数据</el-button>
+        <el-button type="success" size="mini" @click="insertEvent('elxEditable2')">新增</el-button>
+        <el-button type="danger" size="mini" @click="deleteSelectedEvent('elxEditable2')">删除选中</el-button>
+        <el-button type="success" size="mini" @click="customExportCsvEvent('elxEditable2', {filename: '显示数据.csv'})">导出显示数据</el-button>
+        <el-button type="success" size="mini" @click="customExportCsvEvent('elxEditable2', {filename: '实际数据.csv', original: true})">导出实际数据</el-button>
       </div>
 
       <elx-editable
-        ref="editable2"
+        ref="elxEditable2"
         size="mini"
         border
         height="260"
@@ -84,13 +84,13 @@
         <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
         <elx-editable-column label="操作" width="150">
           <template v-slot="scope">
-            <template v-if="$refs.editable2.hasActiveRow(scope.row)">
-              <el-button size="mini" type="success" @click="saveRowEvent('editable2', scope.row)">保存</el-button>
-              <el-button size="mini" type="warning" @click="cancelRowEvent('editable2', scope.row)">取消</el-button>
+            <template v-if="$refs.elxEditable2.hasActiveRow(scope.row)">
+              <el-button size="mini" type="success" @click="saveRowEvent('elxEditable2', scope.row)">保存</el-button>
+              <el-button size="mini" type="warning" @click="cancelRowEvent('elxEditable2', scope.row)">取消</el-button>
             </template>
             <template v-else>
-              <el-button size="mini" type="primary" @click="openActiveRowEvent('editable2', scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="removeEvent('editable2', scope.row)">删除</el-button>
+              <el-button size="mini" type="primary" @click="openActiveRowEvent('elxEditable2', scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="removeEvent('elxEditable2', scope.row)">删除</el-button>
             </template>
           </template>
         </elx-editable-column>
@@ -110,14 +110,14 @@
 
     <div v-loading="fileLoading">
       <div class="manual-table5-oper">
-        <el-button type="success" size="mini" @click="insertEvent('editable3')">新增</el-button>
-        <el-button type="danger" size="mini" @click="deleteSelectedEvent('editable3')">删除选中</el-button>
-        <el-button type="success" size="mini" @click="customExportCsvEvent('editable3', {filename: '显示数据.csv'})">导出显示数据</el-button>
-        <el-button type="success" size="mini" @click="customExportCsvEvent('editable3', {filename: '实际数据.csv', original: true})">导出实际数据</el-button>
+        <el-button type="success" size="mini" @click="insertEvent('elxEditable3')">新增</el-button>
+        <el-button type="danger" size="mini" @click="deleteSelectedEvent('elxEditable3')">删除选中</el-button>
+        <el-button type="success" size="mini" @click="customExportCsvEvent('elxEditable3', {filename: '显示数据.csv'})">导出显示数据</el-button>
+        <el-button type="success" size="mini" @click="customExportCsvEvent('elxEditable3', {filename: '实际数据.csv', original: true})">导出实际数据</el-button>
       </div>
 
       <elx-editable
-        ref="editable3"
+        ref="elxEditable3"
         size="mini"
         border
         height="260"
@@ -134,13 +134,13 @@
         <elx-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatterDate"></elx-editable-column>
         <elx-editable-column label="操作" width="160">
           <template v-slot="scope">
-            <template v-if="$refs.editable3.hasActiveRow(scope.row)">
-              <el-button size="mini" type="success" @click="saveRowEvent('editable3', scope.row)">保存</el-button>
-              <el-button size="mini" type="warning" @click="cancelRowEvent('editable3', scope.row)">取消</el-button>
+            <template v-if="$refs.elxEditable3.hasActiveRow(scope.row)">
+              <el-button size="mini" type="success" @click="saveRowEvent('elxEditable3', scope.row)">保存</el-button>
+              <el-button size="mini" type="warning" @click="cancelRowEvent('elxEditable3', scope.row)">取消</el-button>
             </template>
             <template v-else>
-              <el-button size="mini" type="primary" @click="openActiveRowEvent('editable3', scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="removeEvent('editable3', scope.row)">删除</el-button>
+              <el-button size="mini" type="primary" @click="openActiveRowEvent('elxEditable3', scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="removeEvent('elxEditable3', scope.row)">删除</el-button>
             </template>
           </template>
         </elx-editable-column>
@@ -322,13 +322,13 @@ export default {
       return ''
     },
     customMenuLinkEvent1 (code, row, column, cell) {
-      this.handleMenuLink('editable1', code, row, column, cell)
+      this.handleMenuLink('elxEditable1', code, row, column, cell)
     },
     customMenuLinkEvent2 (code, row, column, cell) {
-      this.handleMenuLink('editable2', code, row, column, cell)
+      this.handleMenuLink('elxEditable2', code, row, column, cell)
     },
     customMenuLinkEvent3 (code, row, column, cell) {
-      this.handleMenuLink('editable3', code, row, column, cell)
+      this.handleMenuLink('elxEditable3', code, row, column, cell)
     },
     // 自定义菜单事件
     handleMenuLink (name, code, row, column, cell) {
@@ -366,13 +366,13 @@ export default {
       this.$refs[name].exportCsv(opts)
     },
     clearActiveMethod1 ({ type, row, rowIndex }) {
-      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('editable1', row) : this.isClearActiveFlag
+      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('elxEditable1', row) : this.isClearActiveFlag
     },
     clearActiveMethod2 ({ type, row, rowIndex }) {
-      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('editable2', row) : this.isClearActiveFlag
+      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('elxEditable2', row) : this.isClearActiveFlag
     },
     clearActiveMethod3 ({ type, row, rowIndex }) {
-      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('editable3', row) : this.isClearActiveFlag
+      return this.isClearActiveFlag && type === 'out' ? this.checkSaveData('elxEditable3', row) : this.isClearActiveFlag
     },
     // 判断多表格切换时是否有数据没有保存
     checkSaveData (name, row) {
@@ -450,7 +450,7 @@ export default {
           type: 'warning'
         }).then(() => {
           switch (name) {
-            case 'editable1':
+            case 'elxEditable1':
               this.roleLoading = true
               XEAjax.doDelete(`/api/role/delete/${row.id}`).then(({ data }) => {
                 this.findRoleList()
@@ -458,7 +458,7 @@ export default {
                 this.roleLoading = false
               })
               break
-            case 'editable2':
+            case 'elxEditable2':
               this.userLoading = true
               XEAjax.doDelete(`/api/user/delete/${row.id}`).then(({ data }) => {
                 this.findUserList()
@@ -466,7 +466,7 @@ export default {
                 this.userLoading = false
               })
               break
-            case 'editable3':
+            case 'elxEditable3':
               this.fileLoading = true
               XEAjax.doDelete(`/api/file/delete/${row.id}`).then(({ data }) => {
                 this.findFileList()
@@ -493,7 +493,7 @@ export default {
           type: 'warning'
         }).then(() => {
           switch (name) {
-            case 'editable1':
+            case 'elxEditable1':
               this.roleLoading = true
               XEAjax.doPost('/api/role/save', { removeRecords }).then(({ data }) => {
                 Message({
@@ -505,7 +505,7 @@ export default {
                 this.roleLoading = false
               })
               break
-            case 'editable2':
+            case 'elxEditable2':
               this.userLoading = true
               XEAjax.doPost('/api/user/save', { removeRecords }).then(({ data }) => {
                 Message({
@@ -517,7 +517,7 @@ export default {
                 this.userLoading = false
               })
               break
-            case 'editable3':
+            case 'elxEditable3':
               this.fileLoading = true
               XEAjax.doPost('/api/file/save', { removeRecords }).then(({ data }) => {
                 Message({
@@ -545,7 +545,7 @@ export default {
         if (valid) {
           let url
           switch (name) {
-            case 'editable1':
+            case 'elxEditable1':
               url = '/api/role/add'
               if (row.id) {
                 url = '/api/role/update'
@@ -559,7 +559,7 @@ export default {
                 this.roleLoading = false
               })
               break
-            case 'editable2':
+            case 'elxEditable2':
               url = '/api/user/add'
               if (row.id) {
                 url = '/api/user/update'
@@ -576,7 +576,7 @@ export default {
                 this.userLoading = false
               })
               break
-            case 'editable3':
+            case 'elxEditable3':
               url = '/api/file/add'
               if (row.id) {
                 url = '/api/file/update'

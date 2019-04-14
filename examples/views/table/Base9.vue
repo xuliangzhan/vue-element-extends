@@ -2,7 +2,12 @@
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">树形</p>
 
+    <div class="base-table9-oper">
+      <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
+    </div>
+
     <elx-table
+      ref="elxTable"
       border
       row-key="id"
       :data.sync="list"
@@ -59,7 +64,16 @@ export default {
         return `${size} ${unit}`
       }
       return ''
+    },
+    exportCsvEvent () {
+      this.$refs.elxTable.exportCsv()
     }
   }
 }
 </script>
+
+<style>
+.base-table9-oper {
+  margin-bottom: 18px;
+}
+</style>

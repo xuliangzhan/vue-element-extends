@@ -11,7 +11,7 @@
     </div>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="click-table3"
       border
       height="466"
@@ -27,13 +27,13 @@
       <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{type: 'default', autofocus: true}">
         <template v-slot:edit="scope">
-          <el-input v-model="scope.row.name" size="mini" @input="$refs.editable.updateStatus(scope)"></el-input>
+          <el-input v-model="scope.row.name" size="mini" @input="$refs.elxEditable.updateStatus(scope)"></el-input>
         </template>
         <template v-slot="scope">{{ scope.row.name }}</template>
       </elx-editable-column>
       <elx-editable-column prop="sex" label="性别" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
-          <el-select v-model="scope.row.sex" size="mini" clearable @change="$refs.editable.updateStatus(scope)">
+          <el-select v-model="scope.row.sex" size="mini" clearable @change="$refs.elxEditable.updateStatus(scope)">
             <el-option v-for="item in sexList" :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
         </template>
@@ -41,25 +41,25 @@
       </elx-editable-column>
       <elx-editable-column prop="age" label="年龄" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
-          <el-input-number v-model="scope.row.age" size="mini" :min="1" :max="200" @input="$refs.editable.updateStatus(scope)"></el-input-number>
+          <el-input-number v-model="scope.row.age" size="mini" :min="1" :max="200" @input="$refs.elxEditable.updateStatus(scope)"></el-input-number>
         </template>
         <template v-slot="scope">{{ scope.row.age }}</template>
       </elx-editable-column>
       <elx-editable-column prop="region" label="地区" width="200" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
-          <el-cascader v-model="scope.row.region" size="mini" clearable :options="regionList" @change="$refs.editable.updateStatus(scope)"></el-cascader>
+          <el-cascader v-model="scope.row.region" size="mini" clearable :options="regionList" @change="$refs.elxEditable.updateStatus(scope)"></el-cascader>
         </template>
         <template v-slot="scope">{{ getCascaderLabel(scope.row.region, regionList) }}</template>
       </elx-editable-column>
       <elx-editable-column prop="date" label="日期" :edit-render="{type: 'default'}">
         <template v-slot:edit="scope">
-          <el-date-picker v-model="scope.row.date" type="datetime" format="yyyy/MM/dd" size="mini" @change="$refs.editable.updateStatus(scope)"></el-date-picker>
+          <el-date-picker v-model="scope.row.date" type="datetime" format="yyyy/MM/dd" size="mini" @change="$refs.elxEditable.updateStatus(scope)"></el-date-picker>
         </template>
         <template v-slot="scope">{{ getDatePicker(scope.row.date) }}</template>
       </elx-editable-column>
       <elx-editable-column prop="flag" label="是否启用" :edit-render="{type: 'visible'}">
         <template v-slot:edit="scope">
-          <el-switch v-model="scope.row.flag" size="mini" @change="$refs.editable.updateStatus(scope)"></el-switch>
+          <el-switch v-model="scope.row.flag" size="mini" @change="$refs.elxEditable.updateStatus(scope)"></el-switch>
         </template>
       </elx-editable-column>
       <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
@@ -193,12 +193,12 @@ export default {
       console.log('触发 clear-active 事件')
     },
     insertEvent () {
-      this.$refs.editable.insert({
+      this.$refs.elxEditable.insert({
         name: `New ${Date.now()}`,
         age: 26,
         flag: false
       }).then(({ row }) => {
-        this.$refs.editable.setActiveCell(row, 'name')
+        this.$refs.elxEditable.setActiveCell(row, 'name')
       })
     },
     removeEvent (row) {
@@ -216,13 +216,13 @@ export default {
           })
         }).catch(e => e)
       } else {
-        this.$refs.editable.remove(row)
+        this.$refs.elxEditable.remove(row)
       }
     },
     revertEvent (row) {
-      if (this.$refs.editable.hasRowChange(row)) {
-        this.$refs.editable.clearActive()
-        this.$refs.editable.revert(row)
+      if (this.$refs.elxEditable.hasRowChange(row)) {
+        this.$refs.elxEditable.clearActive()
+        this.$refs.elxEditable.revert(row)
         Message({
           type: 'success',
           message: '数据已还原！'
@@ -235,7 +235,7 @@ export default {
       }
     },
     pendingRemoveEvent () {
-      let selection = this.$refs.editable.getSelecteds()
+      let selection = this.$refs.elxEditable.getSelecteds()
       if (selection.length) {
         let plus = []
         let minus = []
@@ -251,7 +251,7 @@ export default {
         } else if (plus) {
           this.pendingRemoveList = this.pendingRemoveList.concat(plus)
         }
-        this.$refs.editable.clearSelection()
+        this.$refs.elxEditable.clearSelection()
       } else {
         Message({
           type: 'info',
@@ -260,7 +260,7 @@ export default {
       }
     },
     deleteSelectedEvent () {
-      let removeRecords = this.$refs.editable.getSelecteds()
+      let removeRecords = this.$refs.elxEditable.getSelecteds()
       if (removeRecords.length) {
         MessageBox.confirm('确定删除所选数据?', '温馨提示', {
           confirmButtonText: '确定',
@@ -286,10 +286,10 @@ export default {
       }
     },
     submitEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
           let removeRecords = this.pendingRemoveList
-          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          let { insertRecords, updateRecords } = this.$refs.elxEditable.getAllRecords()
           if (insertRecords.length || updateRecords.length || removeRecords.length) {
             insertRecords.forEach(item => {
               if (XEUtils.isDate(item.date)) {
@@ -321,7 +321,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

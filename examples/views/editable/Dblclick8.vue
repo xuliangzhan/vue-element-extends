@@ -10,7 +10,7 @@
     </div>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="dblclick-table7"
       border
       highlight-current-row
@@ -70,7 +70,7 @@ export default {
       })
     },
     formatterId (row, column, cellValue, index) {
-      return this.$refs.editable.hasRowInsert(row) ? '' : cellValue
+      return this.$refs.elxEditable.hasRowInsert(row) ? '' : cellValue
     },
     formatColumnSize (row, column, cellValue, index) {
       if (XEUtils.isNumber(cellValue)) {
@@ -103,7 +103,7 @@ export default {
     },
     // 失焦后检查其他列，实现单元格连续编辑效果
     blurActiveEvent (row, column) {
-      this.$refs.editable.validateRow(row)
+      this.$refs.elxEditable.validateRow(row)
     },
     // 懒加载子节点
     loadMethod (tree, treeNode, resolve) {
@@ -116,7 +116,7 @@ export default {
       })
     },
     pendingRemoveEvent () {
-      let selection = this.$refs.editable.getSelecteds()
+      let selection = this.$refs.elxEditable.getSelecteds()
       if (selection.length) {
         let plus = []
         let minus = []
@@ -132,7 +132,7 @@ export default {
         } else if (plus) {
           this.pendingRemoveList = this.pendingRemoveList.concat(plus)
         }
-        this.$refs.editable.clearSelection()
+        this.$refs.elxEditable.clearSelection()
       } else {
         Message({
           type: 'info',
@@ -141,7 +141,7 @@ export default {
       }
     },
     deleteSelectedEvent () {
-      let removeRecords = this.$refs.editable.getSelecteds()
+      let removeRecords = this.$refs.elxEditable.getSelecteds()
       if (removeRecords.length) {
         MessageBox.confirm('确定删除所选数据?', '温馨提示', {
           confirmButtonText: '确定',
@@ -167,10 +167,10 @@ export default {
       }
     },
     submitEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
           let removeRecords = this.pendingRemoveList
-          let { updateRecords } = this.$refs.editable.getAllRecords()
+          let { updateRecords } = this.$refs.elxEditable.getAllRecords()
           if (updateRecords.length || removeRecords.length) {
             updateRecords.forEach(item => {
               if (XEUtils.isDate(item.date)) {
@@ -197,7 +197,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

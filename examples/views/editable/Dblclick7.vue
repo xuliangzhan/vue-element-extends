@@ -15,7 +15,7 @@
     </div>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="dblclick-table7"
       border
       highlight-current-row
@@ -117,7 +117,7 @@ export default {
       })
     },
     formatterId (row, column, cellValue, index) {
-      return this.$refs.editable.hasRowInsert(row) ? '' : cellValue
+      return this.$refs.elxEditable.hasRowInsert(row) ? '' : cellValue
     },
     formatColumnSize (row, column, cellValue, index) {
       if (XEUtils.isNumber(cellValue)) {
@@ -150,7 +150,7 @@ export default {
     },
     // 失焦后检查其他列，实现单元格连续编辑效果
     blurActiveEvent (row, column) {
-      this.$refs.editable.validateRow(row)
+      this.$refs.elxEditable.validateRow(row)
     },
     customMenuLinkEvent (code, row, column, cell) {
       switch (code) {
@@ -183,15 +183,15 @@ export default {
           flag: false
         }]
       }
-      this.$refs.editable.insertAt(data, currentRow).then(({ row, parent }) => {
+      this.$refs.elxEditable.insertAt(data, currentRow).then(({ row, parent }) => {
         // 组装层级关系
         if (parent) {
           row.parentId = parent.id
         }
         // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 刷新表格
-        this.$refs.editable.refresh().then(() => {
+        this.$refs.elxEditable.refresh().then(() => {
           // 默认 name 字段为编辑状态
-          this.$refs.editable.setActiveCell(row, 'name')
+          this.$refs.elxEditable.setActiveCell(row, 'name')
         })
       })
     },
@@ -201,13 +201,13 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$refs.editable.remove(row)
+        this.$refs.elxEditable.remove(row)
         // 由于 ElementUI 树表格不支持双向数据导致 remove 后界面无法响应，可以通过调用 refresh 刷新表格
-        this.$refs.editable.refresh()
+        this.$refs.elxEditable.refresh()
       }).catch(e => e)
     },
     pendingRemoveEvent () {
-      let selection = this.$refs.editable.getSelecteds()
+      let selection = this.$refs.elxEditable.getSelecteds()
       if (selection.length) {
         let plus = []
         let minus = []
@@ -223,7 +223,7 @@ export default {
         } else if (plus) {
           this.pendingRemoveList = this.pendingRemoveList.concat(plus)
         }
-        this.$refs.editable.clearSelection()
+        this.$refs.elxEditable.clearSelection()
       } else {
         Message({
           type: 'info',
@@ -232,7 +232,7 @@ export default {
       }
     },
     deleteSelectedEvent () {
-      let removeRecords = this.$refs.editable.getSelecteds()
+      let removeRecords = this.$refs.elxEditable.getSelecteds()
       if (removeRecords.length) {
         MessageBox.confirm('确定删除所选数据?', '温馨提示', {
           confirmButtonText: '确定',
@@ -258,7 +258,7 @@ export default {
       }
     },
     validEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
           Message({
             type: 'success',
@@ -273,10 +273,10 @@ export default {
       })
     },
     submitEvent () {
-      this.$refs.editable.validate(valid => {
+      this.$refs.elxEditable.validate(valid => {
         if (valid) {
           let removeRecords = this.pendingRemoveList
-          let { insertRecords, updateRecords } = this.$refs.editable.getAllRecords()
+          let { insertRecords, updateRecords } = this.$refs.elxEditable.getAllRecords()
           if (insertRecords.length || updateRecords.length || removeRecords.length) {
             insertRecords.forEach(item => {
               if (XEUtils.isDate(item.date)) {
@@ -308,7 +308,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

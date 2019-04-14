@@ -8,7 +8,7 @@
     </div>
 
     <elx-editable
-      ref="editable"
+      ref="elxEditable"
       class="manual-table1"
       border
       size="small"
@@ -22,7 +22,7 @@
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column label="操作" width="160">
         <template v-slot="scope">
-          <template v-if="$refs.editable.hasActiveRow(scope.row)">
+          <template v-if="$refs.elxEditable.hasActiveRow(scope.row)">
             <el-button size="small" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
             <el-button size="small" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
           </template>
@@ -72,15 +72,15 @@ export default {
       return this.isClearActiveFlag && type === 'out' ? this.checkOutSave(row) : this.isClearActiveFlag
     },
     insertEvent () {
-      let activeInfo = this.$refs.editable.getActiveRow()
-      let { insertRecords } = this.$refs.editable.getAllRecords()
+      let activeInfo = this.$refs.elxEditable.getActiveRow()
+      let { insertRecords } = this.$refs.elxEditable.getAllRecords()
       if (!activeInfo && !insertRecords.length) {
-        this.$refs.editable.insert({
+        this.$refs.elxEditable.insert({
           name: `New ${Date.now()}`,
           age: 26,
           flag: false
         }).then(({ row }) => {
-          this.$refs.editable.setActiveRow(row)
+          this.$refs.elxEditable.setActiveRow(row)
         })
       }
     },
@@ -94,16 +94,16 @@ export default {
           cancelButtonText: '移除数据',
           type: 'warning'
         }).then(action => {
-          this.$refs.editable.clearActive()
+          this.$refs.elxEditable.clearActive()
           this.saveRowEvent(row)
         }).catch(action => {
           if (action === 'cancel') {
-            this.$refs.editable.remove(row)
+            this.$refs.elxEditable.remove(row)
           }
         }).then(() => {
           this.isClearActiveFlag = true
         })
-      } else if (this.$refs.editable.hasRowChange(row)) {
+      } else if (this.$refs.elxEditable.hasRowChange(row)) {
         this.isClearActiveFlag = false
         MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
           distinguishCancelAndClose: true,
@@ -111,12 +111,12 @@ export default {
           cancelButtonText: '取消修改',
           type: 'warning'
         }).then(() => {
-          this.$refs.editable.clearActive()
+          this.$refs.elxEditable.clearActive()
           this.saveRowEvent(row)
         }).catch(action => {
           if (action === 'cancel') {
-            this.$refs.editable.revert(row)
-            this.$refs.editable.clearActive()
+            this.$refs.elxEditable.revert(row)
+            this.$refs.elxEditable.clearActive()
           }
         }).then(() => {
           this.isClearActiveFlag = true
@@ -128,7 +128,7 @@ export default {
     // 编辑处理
     openActiveRowEvent (row) {
       this.$nextTick(() => {
-        let activeInfo = this.$refs.editable.getActiveRow()
+        let activeInfo = this.$refs.elxEditable.getActiveRow()
         if (activeInfo && activeInfo.isUpdate) {
           this.isClearActiveFlag = false
           MessageBox.confirm('检测到未保存的内容，请确认操作?', '温馨提示', {
@@ -137,18 +137,18 @@ export default {
             cancelButtonText: '取消修改',
             type: 'warning'
           }).then(() => {
-            this.$refs.editable.setActiveRow(row)
+            this.$refs.elxEditable.setActiveRow(row)
             this.saveRowEvent(activeInfo.row)
           }).catch(action => {
             if (action === 'cancel') {
-              this.$refs.editable.revert(activeInfo.row)
-              this.$refs.editable.setActiveRow(row)
+              this.$refs.elxEditable.revert(activeInfo.row)
+              this.$refs.elxEditable.setActiveRow(row)
             }
           }).then(() => {
             this.isClearActiveFlag = true
           })
         } else {
-          this.$refs.editable.setActiveRow(row)
+          this.$refs.elxEditable.setActiveRow(row)
         }
       })
     },
@@ -163,12 +163,12 @@ export default {
           type: 'warning'
         }).then(action => {
           if (action === 'confirm') {
-            this.$refs.editable.remove(row)
+            this.$refs.elxEditable.remove(row)
           }
         }).catch(action => action).then(() => {
           this.isClearActiveFlag = true
         })
-      } else if (this.$refs.editable.hasRowChange(row)) {
+      } else if (this.$refs.elxEditable.hasRowChange(row)) {
         this.isClearActiveFlag = false
         MessageBox.confirm('检测到未保存的内容，是否取消修改?', '温馨提示', {
           distinguishCancelAndClose: true,
@@ -176,17 +176,17 @@ export default {
           cancelButtonText: '返回继续',
           type: 'warning'
         }).then(action => {
-          this.$refs.editable.clearActive()
-          this.$refs.editable.revert(row)
+          this.$refs.elxEditable.clearActive()
+          this.$refs.elxEditable.revert(row)
         }).catch(action => {
           if (action === 'cancel') {
-            this.$refs.editable.setActiveRow(row)
+            this.$refs.elxEditable.setActiveRow(row)
           }
         }).then(() => {
           this.isClearActiveFlag = true
         })
       } else {
-        this.$refs.editable.clearActive()
+        this.$refs.elxEditable.clearActive()
       }
     },
     removeEvent (row) {
@@ -207,18 +207,18 @@ export default {
           this.isClearActiveFlag = true
         })
       } else {
-        this.$refs.editable.remove(row)
+        this.$refs.elxEditable.remove(row)
       }
     },
     saveRowEvent (row) {
-      this.$refs.editable.validateRow(row, valid => {
+      this.$refs.elxEditable.validateRow(row, valid => {
         if (valid) {
           let url = '/api/role/add'
           if (row.id) {
             url = '/api/role/update'
           }
           this.loading = true
-          this.$refs.editable.clearActive()
+          this.$refs.elxEditable.clearActive()
           XEAjax.doPost(url, row).then(({ data }) => {
             this.findList()
             Message({ message: '保存成功', type: 'success' })
@@ -229,7 +229,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.editable.exportCsv()
+      this.$refs.elxEditable.exportCsv()
     }
   }
 }

@@ -153,7 +153,7 @@ export default {
       headerMenus: [
         [
           {
-            code: 'all_clear',
+            code: 'ALL_RESET',
             name: '重置所有数据',
             prefixIcon: 'el-icon-close'
           },

@@ -20,7 +20,7 @@
   * 支持导出 .csv 文件
   * 支持方向键和 Tab 键切换单元格
   * 支持表格右键菜单
-  * 支持自定义列
+  * 支持自定义显示、隐藏列
   * 支持原 ElTable 的所有功能、参数、方法、插槽
 
 ## Docs
@@ -129,7 +129,7 @@ context-menu-config 表格右键菜单配置：
 | headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 的返回值用来决定是否显示头部右键菜单 | Function | — |
 | bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 
-内置的菜单 code 可选值:
+内置的菜单 code 列表：
 
 | 编码 | 描述 |
 |------|------|
@@ -148,6 +148,13 @@ context-menu-config 表格右键菜单配置：
 | ALL_RESET | 清除表格所有数据的值 |
 | ALL_REVERT | 还原表格所有数据 |
 | ALL_EXPORT  | 导出表格所有数据 |
+
+custom-columns 自定义列的配置：
+
+| 属性 | 描述 | 类型 | 可选值 | 默认值 |
+|------|------|-----|-----|-----|
+| prop | 对应列内容的字段名 | String | — | — |
+| visible  | 默认是否显示 | Boolean | — | true |
 
 ### Editable Events
 

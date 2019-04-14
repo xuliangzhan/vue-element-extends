@@ -35,7 +35,7 @@
       height="466"
       size="mini"
       :data.sync="list"
-      :customColumns.sync="customColumns"
+      :custom-columns.sync="customColumns"
       :row-class-name="tableRowClassName"
       :edit-config="{trigger: 'click', mode: 'row'}"
       style="width: 100%">

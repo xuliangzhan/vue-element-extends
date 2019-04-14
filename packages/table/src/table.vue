@@ -2,8 +2,55 @@
   <el-table
     ref="refElTable"
     class="elx-table"
-    v-bind="attrs"
-    v-on="events">
+    :data="data"
+    :height="height"
+    :maxHeight="maxHeight"
+    :stripe="stripe"
+    :border="border"
+    :size="size"
+    :fit="fit"
+    :showHeader="showHeader"
+    :highlightCurrentRow="highlightCurrentRow"
+    :currentRowKey="currentRowKey"
+    :lazy="lazy"
+    :indent="indent"
+    :rowClassName="rowClassName"
+    :rowStyle="rowStyle"
+    :cellClassName="cellClassName"
+    :cellStyle="cellStyle"
+    :headerRowClassName="headerRowClassName"
+    :headerRowStyle="headerRowStyle"
+    :headerCellClassName="headerCellClassName"
+    :headerCellStyle="headerCellStyle"
+    :rowKey="rowKey"
+    :emptyText="emptyText"
+    :defaultExpandAll="defaultExpandAll"
+    :expandRowKeys="expandRowKeys"
+    :defaultSort="defaultSort"
+    :tooltipEffect="tooltipEffect"
+    :showSummary="showSummary"
+    :sumText="sumText"
+    :summaryMethod="summaryMethod"
+    :selectOnIndeterminate="selectOnIndeterminate"
+    :spanMethod="spanMethod"
+    :load="load"
+    @select="_select"
+    @select-all="_selectAll"
+    @selection-change="_selectionChange"
+    @cell-mouse-enter="_cellMouseEnter"
+    @cell-mouse-leave="_cellMouseLeave"
+    @cell-click="_cellClick"
+    @cell-dblclick="_cellDBLclick"
+    @row-click="_rowClick"
+    @row-contextmenu="_rowContextmenu"
+    @row-dblclick="_rowDBLclick"
+    @header-click="_headerClick"
+    @header-contextmenu="_headerContextmenu"
+    @sort-change="_sortChange"
+    @filter-change="_filterChange"
+    @current-change="_currentChange"
+    @header-dragend="_headerDragend"
+    @expand-change="_expandChange">
     <slot></slot>
     <template slot="empty">
       <slot name="empty"></slot>
@@ -32,6 +79,8 @@ export default {
     showHeader: { type: Boolean, default: true },
     highlightCurrentRow: Boolean,
     currentRowKey: [String, Number],
+    lazy: Boolean,
+    indent: Number,
     rowClassName: [Function, String],
     rowStyle: [Function, Object],
     cellClassName: [Function, String],
@@ -62,65 +111,6 @@ export default {
     return {
       isUpdateColumns: false,
       columnList: []
-    }
-  },
-  computed: {
-    attrs () {
-      return {
-        data: this.data,
-        height: this.height,
-        maxHeight: this.maxHeight,
-        stripe: this.stripe,
-        border: this.border,
-        size: this.size,
-        fit: this.fit,
-        showHeader: this.showHeader,
-        highlightCurrentRow: this.highlightCurrentRow,
-        currentRowKey: this.currentRowKey,
-        lazy: this.lazy,
-        indent: this.indent,
-        rowClassName: this.rowClassName,
-        rowStyle: this.rowStyle,
-        cellClassName: this.cellClassName,
-        cellStyle: this.cellStyle,
-        headerRowClassName: this.headerRowClassName,
-        headerRowStyle: this.headerRowStyle,
-        headerCellClassName: this.headerCellClassName,
-        headerCellStyle: this.headerCellStyle,
-        rowKey: this.rowKey,
-        emptyText: this.emptyText,
-        defaultExpandAll: this.defaultExpandAll,
-        expandRowKeys: this.expandRowKeys,
-        defaultSort: this.defaultSort,
-        tooltipEffect: this.tooltipEffect,
-        showSummary: this.showSummary,
-        sumText: this.sumText,
-        summaryMethod: this.summaryMethod,
-        selectOnIndeterminate: this.selectOnIndeterminate,
-        spanMethod: this.spanMethod,
-        load: this.load
-      }
-    },
-    events () {
-      return {
-        'select': this._select,
-        'select-all': this._selectAll,
-        'selection-change': this._selectionChange,
-        'cell-mouse-enter': this._cellMouseEnter,
-        'cell-mouse-leave': this._cellMouseLeave,
-        'cell-click': this._cellClick,
-        'cell-dblclick': this._cellDBLclick,
-        'row-click': this._rowClick,
-        'row-contextmenu': this._rowContextmenu,
-        'row-dblclick': this._rowDBLclick,
-        'header-click': this._headerClick,
-        'header-contextmenu': this._headerContextmenu,
-        'sort-change': this._sortChange,
-        'filter-change': this._filterChange,
-        'current-change': this._currentChange,
-        'header-dragend': this._headerDragend,
-        'expand-change': this._expandChange
-      }
     }
   },
   watch: {
@@ -166,6 +156,13 @@ export default {
     sort (prop, order) {
       return this.$refs.refElTable.sort(prop, order)
     },
+    /****************************/
+    /* Original methods end     */
+    /****************************/
+
+    /****************************/
+    /* Original methods start   */
+    /****************************/
     _select (selection, row) {
       this.$emit('select', selection, row)
     },
@@ -217,13 +214,13 @@ export default {
     _expandChange (row, expandedRows) {
       this.$emit('expand-change', row, expandedRows)
     },
-    /****************************/
-    /* Original methods end     */
-    /****************************/
+    /******************************/
+    /* Original Attribute statrt  */
+    /******************************/
 
-    /****************************/
-    /* Attribute methods statrt */
-    /****************************/
+    /******************************/
+    /* Interior methods statrt    */
+    /******************************/
     _initial () {
       this._handleColumns()
     },
@@ -246,19 +243,19 @@ export default {
         })
       }
     },
-    /****************************/
-    /* Attribute methods end    */
-    /****************************/
+    /******************************/
+    /* Interior methods end       */
+    /******************************/
 
-    /****************************/
-    /* Public methods start     */
-    /****************************/
+    /******************************/
+    /* Public methods start       */
+    /******************************/
     getColumns () {
       return this.$refs.refElTable ? this.$refs.refElTable.columns : []
     }
-    /****************************/
-    /* Public methods end       */
-    /****************************/
+    /******************************/
+    /* Public methods end         */
+    /******************************/
   }
 }
 </script>

@@ -6,14 +6,13 @@
     <template v-slot:header="scope">
       <slot name="header" v-bind="scope">#</slot>
     </template>
+    <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="isVisible" v-bind="attrs">
     <template v-slot:header="scope">
       <slot name="header" v-bind="scope">{{ scope.column.label }}</slot>
     </template>
-    <template v-slot="scope">
-      <slot v-bind="scope">{{ formatColumnLabel(scope) }}</slot>
-    </template>
+    <slot></slot>
   </el-table-column>
 </template>
 

@@ -19,7 +19,7 @@
       border
       size="customSize"
       :data.sync="list"
-      :customColumns.sync="customColumns"
+      :custom-columns.sync="customColumns"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, checkedEditMethod}"
       style="width: 100%" >

@@ -1,9 +1,8 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">动态显示、隐藏列</p>
-    <p style="color: red;font-size: 12px;">通过配置 custom-columns 参数初始化列，设置 visible 可以设置显示隐藏</p>
+    <p style="color: red;font-size: 12px;">展开行</p>
 
-    <el-form ref="tableform" class="click-table6-form" size="mini" :inline="true" :model="formData">
+    <el-form ref="tableform" class="click-table2-form" size="mini" :inline="true" :model="formData">
       <el-form-item label="名字" prop="name">
         <el-input v-model="formData.name" placeholder="名字"></el-input>
       </el-form-item>
@@ -16,33 +15,41 @@
       </el-form-item>
     </el-form>
 
-    <div class="checkbox-group">
-      <el-checkbox v-model="item.visible" v-for="item in allCustomColumnList" :key="item.prpo">{{ item.label }}</el-checkbox>
-    </div>
-
     <elx-table
       border
-      height="466"
-      :data.sync="list"
-      :custom-columns.sync="customColumns"
+      :data="list"
       style="width: 100%">
-      <elx-table-column type="selection" width="55"></elx-table-column>
-      <elx-table-column type="index" width="55"></elx-table-column>
-      <elx-table-column prop="name" label="名字"></elx-table-column>
-      <elx-table-column prop="nickname" label="昵称"></elx-table-column>
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="名字">
+              <span>{{ props.row.name }}</span>
+            </el-form-item>
+            <el-form-item label="年龄">
+              <span>{{ props.row.age }}</span>
+            </el-form-item>
+            <el-form-item label="角色">
+              <span>{{ props.row.role }}</span>
+            </el-form-item>
+            <el-form-item label="描述">
+              <span>{{ props.row.describe }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+      <elx-table-column prop="id" label="ID" width="80"></elx-table-column>
+      <elx-table-column prop="name" label="名字" show-overflow-tooltip></elx-table-column>
       <elx-table-column prop="age" label="年龄"></elx-table-column>
-      <elx-table-column prop="role" label="角色"></elx-table-column>
+      <elx-table-column prop="role" label="角色" show-overflow-tooltip></elx-table-column>
+      <elx-table-column prop="describe" label="文本域" show-overflow-tooltip></elx-table-column>
       <elx-table-column prop="date" label="日期" :formatter="formatterDate"></elx-table-column>
-      <elx-table-column prop="rate" label="评分"></elx-table-column>
-      <elx-table-column prop="attr1" label="属性1"></elx-table-column>
-      <elx-table-column prop="attr2" label="属性2"></elx-table-column>
-      <elx-table-column prop="attr3" label="属性3"></elx-table-column>
-      <elx-table-column prop="attr4" label="属性4"></elx-table-column>
-      <elx-table-column prop="attr5" label="属性5"></elx-table-column>
+      <elx-table-column prop="flag" label="是否启用"></elx-table-column>
+      <elx-table-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-table-column>
+      <elx-table-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-table-column>
     </elx-table>
 
     <el-pagination
-      class="click-table6-pagination"
+      class="click-table2-pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
@@ -72,40 +79,22 @@ export default {
         currentPage: 1,
         pageSize: 10,
         totalResult: 0
-      },
-      customColumns: []
-    }
-  },
-  computed: {
-    allCustomColumnList () {
-      return this.customColumns.filter(item => item.prop)
+      }
     }
   },
   created () {
-    this.loading = true
-    Promise.all([
-      this.findConfColumnsList(),
-      this.findList()
-    ]).catch(e => e).then(() => {
-      this.loading = false
-    })
+    this.findList()
   },
   methods: {
     findList () {
       this.loading = true
-      return XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`, this.formData).then(response => {
+      XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`, this.formData).then(response => {
         let { page, result } = response.data
         this.list = result
         this.pageVO.totalResult = page.totalResult
         this.loading = false
-        return result
       }).catch(e => {
         this.loading = false
-      })
-    },
-    findConfColumnsList () {
-      return XEAjax.doGet('/api/conf/columns/list').then(({ data }) => {
-        this.customColumns = data
       })
     },
     searchEvent () {
@@ -126,9 +115,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.checkbox-group {
-  margin-bottom: 15px;
-}
-</style>

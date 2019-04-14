@@ -267,39 +267,39 @@ export default {
     /* Original methods statrt  */
     /****************************/
     clearSelection () {
-      this.$nextTick(() => this.$refs.refElTable.clearSelection())
+      return this.$refs.refElTable.clearSelection()
     },
     toggleRowSelection (record, selected) {
-      this.$nextTick(() => this.$refs.refElTable.toggleRowSelection(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts), selected))
+      return this.$refs.refElTable.toggleRowSelection(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts), selected)
     },
     toggleAllSelection () {
-      this.$nextTick(() => this.$refs.refElTable.toggleAllSelection())
+      return this.$refs.refElTable.toggleAllSelection()
     },
     toggleRowExpansion (record, expanded) {
-      this.$nextTick(() => this.$refs.refElTable.toggleRowExpansion(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts), expanded))
+      return this.$refs.refElTable.toggleRowExpansion(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts), expanded)
     },
     setCurrentRow (record) {
-      this.$nextTick(() => this.$refs.refElTable.setCurrentRow(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)))
+      return this.$refs.refElTable.setCurrentRow(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts))
     },
     clearSort () {
-      this.$nextTick(() => this.$refs.refElTable.clearSort())
+      return this.$refs.refElTable.clearSort()
     },
     clearFilter () {
-      this.$nextTick(() => this.$refs.refElTable.clearFilter())
+      return this.$refs.refElTable.clearFilter()
     },
     doLayout () {
-      this.$nextTick(() => this.$refs.refElTable.doLayout())
+      return this.$refs.refElTable.doLayout()
     },
     sort (prop, order) {
-      this.$nextTick(() => this.$refs.refElTable.sort(prop, order))
+      return this.$refs.refElTable.sort(prop, order)
     },
     /****************************/
     /* Original methods end     */
     /****************************/
 
-    /****************************/
-    /* Attribute methods statrt */
-    /****************************/
+    /******************************/
+    /* Original Attribute statrt  */
+    /******************************/
     _rowClassName ({ row, rowIndex }) {
       let clsName = 'elx-editable-row '
       let rowClassName = this.rowClassName
@@ -482,9 +482,9 @@ export default {
         })
       }
     },
-    /****************************/
-    /* Attribute methods end    */
-    /****************************/
+    /******************************/
+    /* Original Attribute end     */
+    /******************************/
 
     /****************************/
     /* Interior methods statrt  */

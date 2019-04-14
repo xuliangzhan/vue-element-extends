@@ -2,7 +2,16 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import TableBase1 from './views/table/Base1'
+import TableBase2 from './views/table/Base2'
+import TableBase3 from './views/table/Base3'
+import TableBase4 from './views/table/Base4'
+import TableBase5 from './views/table/Base5'
+import TableBase6 from './views/table/Base6'
+import TableBase7 from './views/table/Base7'
+import TableBase8 from './views/table/Base8'
+import TableBase9 from './views/table/Base9'
 import TableCustom1 from './views/table/Custom1'
+import TableCustom2 from './views/table/Custom2'
 
 import EditableManual1 from './views/editable/Manual1'
 import EditableManual2 from './views/editable/Manual2'
@@ -56,9 +65,54 @@ export default new Router({
       component: TableBase1
     },
     {
+      path: '/table/base2',
+      name: 'TableBase2',
+      component: TableBase2
+    },
+    {
+      path: '/table/base3',
+      name: 'TableBase3',
+      component: TableBase3
+    },
+    {
+      path: '/table/base4',
+      name: 'TableBase4',
+      component: TableBase4
+    },
+    {
+      path: '/table/base5',
+      name: 'TableBase5',
+      component: TableBase5
+    },
+    {
+      path: '/table/base6',
+      name: 'TableBase6',
+      component: TableBase6
+    },
+    {
+      path: '/table/base7',
+      name: 'TableBase7',
+      component: TableBase7
+    },
+    {
+      path: '/table/base8',
+      name: 'TableBase8',
+      component: TableBase8
+    },
+    {
+      path: '/table/base9',
+      name: 'TableBase9',
+      component: TableBase9
+    },
+    {
       path: '/table/custom1',
       name: 'TableCustom1',
       component: TableCustom1
+    },
+    {
+      path: '/table/custom2',
+      name: 'TableCustom2',
+      component: TableCustom2
     },
     {
       path: '/editable/manual1',

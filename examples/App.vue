@@ -3,14 +3,23 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="Elx-Table" name="table">
         <div class="apimenu-header">
-          <a href="https://github.com/xuliangzhan/vue-element-extends/tree/master/examples/views/editable">查看代码</a>
+          <a href="https://github.com/xuliangzhan/vue-element-extends/tree/master/examples/views/table">查看代码</a>
           <div class="apimenu-row">
-            <a class="apimenu-title">基本功能</a>
-            <router-link class="apimenu-link" :to="{name: 'TableBase1'}" replace>基本列表</router-link>
+            <a class="apimenu-title">基础功能</a>
+            <router-link class="apimenu-link" :to="{name: 'TableBase1'}" replace>基础</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableBase2'}" replace>浮动列</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableBase3'}" replace>多级表头</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableBase4'}" replace>表尾合计行</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableBase5'}" replace>合并行或列</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableBase6'}" replace>排序</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableBase7'}" replace>筛选</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableBase8'}" replace>展开行</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableBase9'}" replace>树形</router-link>
           </div>
           <div class="apimenu-row">
-            <a class="apimenu-title">扩展功能</a>
-            <router-link class="apimenu-link" :to="{name: 'TableCustom1'}" replace>自定义列</router-link>
+            <a class="apimenu-title">更多功能</a>
+            <router-link class="apimenu-link" :to="{name: 'TableCustom1'}" replace>显示/隐藏列1</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableCustom2'}" replace>显示/隐藏列2</router-link>
           </div>
         </div>
       </el-tab-pane>
@@ -34,7 +43,7 @@
             <router-link class="apimenu-link" :to="{name: 'EditableClick3'}" replace>列编辑+自定义渲染+禁止勾选</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableClick4'}" replace>行编辑+浮动列</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableClick5'}" replace>列编辑+多级表头+实时同步</router-link>
-            <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>行编辑+动态列</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableClick6'}" replace>行编辑+显示/隐藏列</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableClick7'}" replace>行编辑+表尾合计行</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableClick8'}" replace>列编辑+合并行或列</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableClick9'}" replace>列编辑+校验</router-link>
@@ -48,8 +57,8 @@
             <router-link class="apimenu-link" :to="{name: 'EditableDblclick2'}" replace>行编辑+基本操作</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableDblclick3'}" replace>列编辑+校验+修改校验提示</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>行编辑+校验</router-link>
-            <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>行编辑+动态列+自定义列头</router-link>
-            <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>列编辑+动态列+方向键&amp;Tab键切换</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>行编辑+显示/隐藏列+自定义列头</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>列编辑+方向键&amp;Tab键切换</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableDblclick7'}" replace>列编辑+树形表格+右键菜单</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableDblclick8'}" replace>列编辑+懒加载树形表格</router-link>
           </div>
@@ -57,7 +66,7 @@
             <a class="apimenu-title">Excel表格</a>
             <router-link class="apimenu-link" :to="{name: 'EditableExcel1'}" replace>列编辑</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableExcel2'}" replace>列编辑+校验</router-link>
-            <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>列编辑+动态列</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableExcel3'}" replace>列编辑+显示/隐藏列</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableExcel4'}" replace>列编辑+方向键&amp;Tab键切换</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableExcel5'}" replace>列编辑+右键菜单</router-link>
           </div>

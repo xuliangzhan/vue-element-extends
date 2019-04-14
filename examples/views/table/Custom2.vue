@@ -16,10 +16,6 @@
       </el-form-item>
     </el-form>
 
-    <div class="checkbox-group">
-      <el-checkbox v-model="item.visible" v-for="item in allCustomColumnList" :key="item.prpo">{{ item.label }}</el-checkbox>
-    </div>
-
     <elx-table
       border
       height="466"
@@ -27,7 +23,11 @@
       :custom-columns.sync="customColumns"
       style="width: 100%">
       <elx-table-column type="selection" width="55"></elx-table-column>
-      <elx-table-column type="index" width="55"></elx-table-column>
+      <elx-table-column type="index" width="55">
+        <template v-slot:header>
+          <i class="el-icon-setting" @click="dialogVisible = true"></i>
+        </template>
+      </elx-table-column>
       <elx-table-column prop="name" label="名字"></elx-table-column>
       <elx-table-column prop="nickname" label="昵称"></elx-table-column>
       <elx-table-column prop="age" label="年龄"></elx-table-column>
@@ -51,12 +51,26 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="pageVO.totalResult">
     </el-pagination>
+
+    <el-dialog title="自定义列" :visible.sync="dialogVisible" width="540px" append-to-body @open="openCustomEvent">
+      <el-transfer
+        v-model="selectColumns"
+        :data="allCustomColumnList"
+        :titles="['隐藏列', '显示列']"
+        :props="{key: 'prop', label: 'label'}"></el-transfer>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="resetCustomEvent">重 置</el-button>
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveCustomEvent">保 存</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import XEUtils from 'xe-utils'
 import XEAjax from 'xe-ajax'
+import { Message } from 'element-ui'
 
 export default {
   data () {
@@ -73,7 +87,9 @@ export default {
         pageSize: 10,
         totalResult: 0
       },
-      customColumns: []
+      dialogVisible: false,
+      customColumns: [],
+      selectColumns: []
     }
   },
   computed: {
@@ -122,13 +138,25 @@ export default {
     },
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
+    },
+    openCustomEvent () {
+      this.selectColumns = this.allCustomColumnList.filter(item => item.visible).map(column => column.prop)
+    },
+    resetCustomEvent () {
+      this.selectColumns = this.allCustomColumnList.map(column => column.prop)
+    },
+    saveCustomEvent () {
+      if (!this.selectColumns.length) {
+        return Message({
+          type: 'error',
+          message: '请至少选择一列！'
+        })
+      }
+      this.dialogVisible = false
+      this.allCustomColumnList.forEach(column => {
+        column.visible = this.selectColumns.includes(column.prop)
+      })
     }
   }
 }
 </script>
-
-<style scoped>
-.checkbox-group {
-  margin-bottom: 15px;
-}
-</style>

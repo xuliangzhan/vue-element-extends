@@ -20,7 +20,7 @@
       :summary-method="getSummaries"
       :row-class-name="tableRowClassName"
       :data.sync="list"
-      :customColumns.sync="customColumns"
+      :custom-columns.sync="customColumns"
       :edit-config="{trigger: 'click', mode: 'row'}"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>

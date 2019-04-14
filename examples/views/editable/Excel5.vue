@@ -15,7 +15,7 @@
       border
       size="customSize"
       :data.sync="list"
-      :customColumns.sync="customColumns"
+      :custom-columns.sync="customColumns"
       :cell-class-name="cellClassName"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"

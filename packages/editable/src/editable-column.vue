@@ -1,5 +1,5 @@
 <template>
-  <el-table-column v-if="type === 'selection' || group" v-bind="attrs">
+  <el-table-column v-if="type === 'selection' || group || isGroup" v-bind="attrs">
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="type === 'index'" v-bind="attrs">
@@ -161,6 +161,9 @@ export default {
     },
     isReadonly () {
       return !this.editRender
+    },
+    isGroup () {
+      return this.$slots.default && this.$slots.default.some(item => item && item.componentOptions && item.componentOptions.tag === 'elx-editable-column')
     },
     compName () {
       return this.renderOpts.name

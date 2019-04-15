@@ -101,7 +101,7 @@ export default {
   data () {
     let name = location.hash.split('/')[1]
     return {
-      activeName: ['table', 'editable'].includes(name) ? 'name' : 'editable'
+      activeName: ['table', 'editable'].includes(name) ? name : 'editable'
     }
   }
 }

@@ -80,39 +80,16 @@ export default {
       let size = Number(this.$route.params.number)
       setTimeout(() => {
         if (window[`CACHE_LIST_${size}`]) {
-          this.list = window[`CACHE_LIST_${size}`].slice(0, size)
+          this.list = window[`CACHE_LIST_${size}`]
           this.loading = false
         } else {
-          // 生成大量数据
-          let currTime = Date.now()
-          let list = []
-          let fullIndex = 0
-          let setData = () => {
-            for (let index = 0; index < 1000; index++) {
-              currTime += 5000
-              fullIndex++
-              list.push({
-                _index: fullIndex,
-                id: `${10000 + fullIndex}`,
-                name: `name_${fullIndex}`,
-                date: currTime,
-                sex: index % 3 ? '0' : '1',
-                age: index % 4 === 0 ? 30 : index % 3 === 0 ? 28 : index % 2 === 0 ? 26 : 24,
-                region: index % 4 === 0 ? [19, 199, 1773] : index % 3 === 0 ? [9, 73, 719] : [1, 1, 5],
-                rate: index % 4 === 0 ? 4 : index % 3 === 0 ? 3 : index % 2 === 0 ? 2 : 1,
-                updateTime: currTime,
-                createTime: currTime
-              })
-            }
-            if (fullIndex >= size) {
-              window[`CACHE_LIST_${size}`] = list
-              this.list = list.slice(0, size)
-              this.loading = false
-            } else {
-              setTimeout(setData, 50)
-            }
+          let worker = new Worker('/static/js/mock.js')
+          worker.postMessage({ size })
+          worker.onmessage = evnt => {
+            window[`CACHE_LIST_${size}`] = evnt.data.list
+            this.list = evnt.data.list
+            this.loading = false
           }
-          setData()
         }
       }, 500)
     },

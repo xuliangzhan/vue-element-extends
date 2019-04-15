@@ -98,18 +98,9 @@
 <script>
 export default {
   name: 'App',
-  computed: {
-    activeName: {
-      get () {
-        return this.$route.path.split('/')[1]
-      },
-      set (value) {
-        if (value === 'table') {
-          this.$router.push({ name: 'TableCustom1' })
-        } else if (value === 'editable') {
-          this.$router.push({ name: 'EditableClick1' })
-        }
-      }
+  data () {
+    return {
+      activeName: location.hash.split('/')[1]
     }
   }
 }

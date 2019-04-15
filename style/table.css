@@ -1,0 +1,14 @@
+/* elx-scroll */
+.elx-table .el-table__body-wrapper {
+  overflow: hidden;
+}
+.elx-table .elx-scroll_wrapper {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 18px;
+  overflow: auto;
+}
+.elx-table .elx-scroll_wrapper .elx-scroll_body {
+  width: 1px;
+}

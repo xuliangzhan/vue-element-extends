@@ -65,11 +65,11 @@ export default {
     filteredValue: Array
   },
   inject: [
-    '$editable'
+    '$table'
   ],
   computed: {
     customColumnList () {
-      return this.$editable.columnList
+      return this.$table.columnList
     },
     isGroup () {
       return this.$slots.default && this.$slots.default.some(item => item && item.componentOptions && item.componentOptions.tag === 'elx-table-column')

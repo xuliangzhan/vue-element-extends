@@ -87,6 +87,7 @@ export default {
     return {
       editProto: {},
       datas: [],
+      fullData: [],
       initialStore: [],
       deleteRecords: [],
       lastActive: null,
@@ -107,7 +108,9 @@ export default {
         }
       },
       isUpdateColumns: false,
-      columnList: []
+      columnList: [],
+      visibleIndex: 0,
+      rowHeight: 0
     }
   },
   computed: {
@@ -184,12 +187,16 @@ export default {
       let conf = Object.assign({
         // 触发方式
         trigger: 'click',
+        // 编辑模式
+        mode: 'cell',
+        // 渲染方式，可以设置为 scroll 启用滚动渲染，支持海量数据
+        render: 'default',
+        // 只对 render=scroll 有效，滚动实时渲染条数
+        size: 10,
         // 是否显示列头编辑图标
         showIcon: true,
         // 是否实时显示单元格值的修改状态
         showStatus: true,
-        // 编辑模式
-        mode: 'cell',
         // 配置项
         props: this.elTreeOpts,
         // 是否使用默认的 tip 校验提示框，如果同时使用了数据校验和 fixed 列，建议设置为 true，否则会出现多个 tip 提示（因为隐藏的 fixed 列部分也会被渲染，所以会导致同时出现多个校验提示）
@@ -208,6 +215,9 @@ export default {
         isCheckedEdit: !!(editConfig.isTabKey || editConfig.isArrowKey)
       }, editConfig, { validTooltip })
       return conf
+    },
+    scrollLoad () {
+      return this.configs.render === 'scroll'
     },
     isCtxMenu () {
       return this.ctxMenuConfig.bodyMenus || this.ctxMenuConfig.headerMenus
@@ -247,6 +257,10 @@ export default {
     this._setDefaultChecked()
     this._handleColumns()
     this._updateData()
+    if (this.scrollLoad) {
+      this.fullData = this.datas
+      this._bindScrollEvent().then(() => this._reloadScrollData())
+    }
   },
   mounted () {
     if (this.isCtxMenu && this.$refs.contextMenu) {
@@ -261,6 +275,9 @@ export default {
       ctxMenuStore.el = null
     }
     this._unbindEvents()
+    if (this.scrollLoad) {
+      this._unbindScrollEvent()
+    }
   },
   methods: {
     /****************************/
@@ -375,7 +392,7 @@ export default {
       } else if (XEUtils.isString(headerCellClassName)) {
         clsName += `${headerCellClassName}`
       }
-      return XEUtils.trimRight(clsName)
+      return clsName
     },
     _headerCellStyle ({ row, column, rowIndex, columnIndex }) {
       return this.headerCellStyle({ row: row.data, column, rowIndex, columnIndex })
@@ -562,6 +579,64 @@ export default {
       GlobalEvent.off(this, 'contextmenu')
       GlobalEvent.off(this, 'mousewheel')
       GlobalEvent.off(this, 'keydown')
+    },
+    _reloadScrollData () {
+      this.visibleIndex = 0
+      this.datas = this.fullData.slice(this.visibleIndex, this.visibleIndex + this.configs.size)
+      return this.$nextTick().then(() => {
+        this._updateStyle()
+        this.scrollWrapperElem.scrollTop = 0
+      })
+    },
+    _bindScrollEvent () {
+      return this.$nextTick().then(() => {
+        this.headerWrapperElem = this.$refs.refElTable.$el.querySelector('.el-table__header-wrapper')
+        this.bodyWrapperElem = this.$refs.refElTable.$el.querySelector('.el-table__body-wrapper')
+        this.tableElem = this.bodyWrapperElem.querySelector('.el-table__body')
+        this.scrollBodyElem = document.createElement('div')
+        this.scrollWrapperElem = document.createElement('div')
+        this.scrollBodyElem.className = 'elx-scroll_body'
+        this.scrollWrapperElem.className = 'elx-scroll_wrapper'
+        this.scrollWrapperElem.appendChild(this.scrollBodyElem)
+        this.bodyWrapperElem.appendChild(this.scrollWrapperElem)
+        this.scrollWrapperElem.addEventListener('scroll', this._scrollEvent, false)
+        this.bodyWrapperElem.addEventListener(UtilHandle.getWheelName(), this._mousewheelEvent, false)
+      })
+    },
+    _unbindScrollEvent () {
+      this.scrollWrapperElem.removeChild(this.scrollBodyElem)
+      this.bodyWrapperElem.removeChild(this.scrollWrapperElem)
+      this.scrollWrapperElem.removeEventListener('scroll', this._scrollEvent)
+      this.bodyWrapperElem.removeEventListener(UtilHandle.getWheelName(), this._mousewheelEvent)
+    },
+    // 滚动条拖动处理
+    _scrollEvent: XEUtils.throttle(function (evnt) {
+      let toVisibleIndex = Math.ceil(this.scrollWrapperElem.scrollTop / this.rowHeight)
+      this.datas.splice.apply(this.datas, [0, this.configs.size].concat(this.fullData.slice(toVisibleIndex, toVisibleIndex + this.configs.size)))
+      this.visibleIndex = toVisibleIndex
+    }, 100, { leading: false, trailing: true }),
+    // 滚轮事件处理
+    _mousewheelEvent (evnt) {
+      let delta = evnt.detail ? evnt.detail * -120 : evnt.wheelDelta
+      let scrollTop = this.scrollWrapperElem.scrollTop
+      let scrollOffsetTop = scrollTop - delta
+      if (scrollOffsetTop > scrollTop ? this.visibleIndex + this.configs.size < this.data.length : scrollTop > 0) {
+        evnt.preventDefault()
+        this.scrollWrapperElem.scrollTop = scrollOffsetTop
+      }
+    },
+    _updateStyle () {
+      if (this.scrollLoad) {
+        let firstTrElem = this.tableElem.querySelector('tbody>tr')
+        if (!firstTrElem) {
+          firstTrElem = this.headerWrapperElem.querySelector('thead>tr')
+        }
+        if (firstTrElem) {
+          this.rowHeight = firstTrElem.clientHeight
+        }
+        this.scrollBodyElem.style.height = `${this.data.length * this.rowHeight + (this.bodyWrapperElem.clientHeight - this.configs.size * this.rowHeight)}px`
+        this.scrollWrapperElem.style.height = `${this.bodyWrapperElem.clientHeight}px`
+      }
     },
     // 定义列属性
     _defineProp (record) {
@@ -1406,6 +1481,10 @@ export default {
       this._initial(datas, true)
       this._setDefaultChecked()
       this._updateData()
+      if (this.scrollLoad) {
+        this.fullData = this.datas
+        return this._reloadScrollData()
+      }
       return this.$nextTick()
     },
     reloadRow (record) {

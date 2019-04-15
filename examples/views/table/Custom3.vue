@@ -3,7 +3,7 @@
     <p style="color: red;font-size: 12px;">动态显示、隐藏列</p>
     <p style="color: red;font-size: 12px;">使用 localStorage 保存自定义列</p>
 
-    <el-form ref="tableform" class="click-table6-form" size="mini" :inline="true" :model="formData">
+    <el-form ref="tableform" class="custom-table3-form" size="mini" :inline="true" :model="formData">
       <el-form-item label="名字" prop="name">
         <el-input v-model="formData.name" placeholder="名字"></el-input>
       </el-form-item>
@@ -44,8 +44,7 @@
             v-model="scope.row.rate"
             disabled
             show-score
-            text-color="#ff9900"
-            score-template="{value}">
+            text-color="#ff9900">
           </el-rate>
         </template>
       </elx-table-column>
@@ -57,7 +56,7 @@
     </elx-table>
 
     <el-pagination
-      class="click-table6-pagination"
+      class="custom-table3-pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
@@ -178,5 +177,9 @@ export default {
 <style>
 .custom-table3-oper {
   margin-bottom: 18px;
+}
+.custom-table3-pagination {
+  margin-top: 18px;
+  text-align: right;
 }
 </style>

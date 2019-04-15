@@ -39,14 +39,14 @@ class UserVO {
     this.describe = data.describe
     this.describe2 = data.describe2
     this.describe3 = data.describe3
-    this.createTime = data.createTime
-    this.updateTime = data.updateTime
     this.attr1 = data.attr1
     this.attr2 = data.attr2
     this.attr3 = data.attr3
     this.attr4 = data.attr4
     this.attr5 = data.attr5
     this.attr6 = data.attr6
+    this.createTime = data.createTime
+    this.updateTime = data.updateTime
   }
 }
 const userHelper = new Helper(require('./user/list.json'), UserVO)

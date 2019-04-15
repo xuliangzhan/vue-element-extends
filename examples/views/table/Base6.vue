@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">排序</p>
+    <p style="color: red;font-size: 12px;">排序；服务端排序</p>
 
     <el-form ref="tableform" class="base-table6-form" size="mini" :inline="true" :model="formData">
       <el-form-item label="名字" prop="name">
@@ -24,7 +24,7 @@
       border
       height="466"
       :data.sync="list"
-      :default-sort = "{prop: 'date', order: 'descending'}"
+      @sort-change="sortChangeEvent"
       style="width: 100%">
       <elx-table-column type="selection" width="55"></elx-table-column>
       <elx-table-column prop="id" label="ID" width="80"></elx-table-column>
@@ -39,7 +39,7 @@
     </elx-table>
 
     <el-pagination
-      class="click-table2-pagination"
+      class="base-table6-pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
@@ -99,6 +99,11 @@ export default {
       this.pageVO.currentPage = currentPage
       this.findList()
     },
+    sortChangeEvent ({ column, prop, order }) {
+      this.formData.order = order === 'ascending' ? 'asc' : 'desc'
+      this.formData.sort = column.property
+      this.searchEvent()
+    },
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
@@ -112,5 +117,9 @@ export default {
 <style>
 .base-table6-oper {
   margin-bottom: 18px;
+}
+.base-table6-pagination {
+  margin-top: 18px;
+  text-align: right;
 }
 </style>

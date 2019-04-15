@@ -10,6 +10,7 @@
 
 * elx-table 功能点：
   * 支持自定义显示、隐藏列
+  * 支持滚动渲染、海量数据
   * 支持导出 .csv 文件
   * 支持原 ElTable 的所有功能、参数、方法、插槽
 
@@ -25,6 +26,7 @@
   * 支持方向键和 Tab 键切换单元格
   * 支持表格右键菜单
   * 支持自定义显示、隐藏列
+  * 支持滚动渲染、海量数据
   * 支持导出 .csv 文件
   * 支持原 ElTable 的所有功能、参数、方法、插槽
 
@@ -115,6 +117,8 @@ edit-config 编辑参数配置：
 |------|------|-----|-----|-----|
 | trigger | 触发方式 | String | manual（手动触发方式，只能用于 mode=row） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑模式 | String | cell（单元格编辑模式） / row（行编辑模式） | cell |
+| render | 渲染方式，可以设置为 scroll 启用滚动渲染，支持海量数据 | String | default / scroll | — |
+| size | 只对 render=scroll 有效，滚动实时渲染条数 | Number | — | 10 |
 | props | 配置节点对应属性值 | Object | — | {children: 'children'} |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
@@ -248,16 +252,16 @@ edit-render 渲染参数配置
 
 Run demo on [jsfiddle.net](https://jsfiddle.net/0u86zwbv/) or [runjs](https://jsrun.net/zTXKp/edit)  
 
-😱**编辑表格渲染开销较大，不适用于一页显示海量数据的表格；适用于使用分页加载的数据表格**😱  
+😱**注：正常模式不适用于一页显示海量数据的表格；适用于使用分页加载的数据表格**😱
+😏**注：启用滚动渲染可以非常流畅的支撑百万数据**😏
 也可以把 packages 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，再根据项目需求去做修改  
 如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
 
 ```html
 <template>
   <div>
-    <el-button @click="$refs.editable.insert({name: 'new1'})">新增</el-button>
+    <el-button @click="$refs.editable.insert()">新增</el-button>
     <el-button @click="$refs.editable.removeSelecteds()">删除选中</el-button>
-    <el-button @click="$refs.editable.clear()">清空表格</el-button>
 
     <elx-editable
       ref="editable"

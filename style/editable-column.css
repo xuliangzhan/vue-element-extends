@@ -40,7 +40,7 @@
 .elx-editable .elx-editable-column.elx_edit.elx_disabled {
   cursor: not-allowed;
 }
-.elx-editable .elx-editable-column.elx_edit.elx_active .cell {
+.elx-editable .elx-editable-column.elx_edit .cell {
   line-height: inherit;
   overflow: inherit;
   position: relative;

@@ -2,7 +2,7 @@
   <el-table
     ref="refElTable"
     class="elx-table"
-    :data="data"
+    :data="datas"
     :height="height"
     :maxHeight="maxHeight"
     :stripe="stripe"
@@ -62,11 +62,13 @@
 </template>
 
 <script>
+import XEUtils from 'xe-utils'
 import UtilHandle from '../../editable/src/util'
 
 export default {
   name: 'ElxTable',
   props: {
+    config: Object,
     customColumns: Array,
 
     /**
@@ -107,16 +109,36 @@ export default {
   },
   provide () {
     return {
-      $editable: this
+      $table: this
     }
   },
   data () {
     return {
+      datas: [],
+      fullData: [],
+      columnList: [],
       isUpdateColumns: false,
-      columnList: []
+      visibleIndex: 0,
+      rowHeight: 0
+    }
+  },
+  computed: {
+    configs () {
+      return Object.assign({
+        // 渲染方式，可以设置为 scroll 启用滚动渲染，支持海量数据
+        render: 'default',
+        // 只对 render=scroll 有效，滚动实时渲染条数
+        size: 10
+      }, this.config)
+    },
+    scrollLoad () {
+      return this.configs.render === 'scroll'
     }
   },
   watch: {
+    data (value) {
+      this.reload(value || [])
+    },
     customColumns (value) {
       if (!this.isUpdateColumns) {
         this._handleColumns()
@@ -126,7 +148,16 @@ export default {
     }
   },
   created () {
-    this._initial()
+    this._handleColumns()
+    if (this.scrollLoad) {
+      this.fullData = this.data
+      this._bindScrollEvent().then(() => this._reloadScrollData())
+    }
+  },
+  destroyed () {
+    if (this.scrollLoad) {
+      this._unbindScrollEvent()
+    }
   },
   methods: {
     /****************************/
@@ -224,8 +255,64 @@ export default {
     /******************************/
     /* Interior methods statrt    */
     /******************************/
-    _initial () {
-      this._handleColumns()
+    _reloadScrollData () {
+      this.visibleIndex = 0
+      this.datas = this.fullData.slice(this.visibleIndex, this.visibleIndex + this.configs.size)
+      return this.$nextTick().then(() => {
+        this._updateStyle()
+        this.scrollWrapperElem.scrollTop = 0
+      })
+    },
+    _bindScrollEvent () {
+      return this.$nextTick().then(() => {
+        this.headerWrapperElem = this.$refs.refElTable.$el.querySelector('.el-table__header-wrapper')
+        this.bodyWrapperElem = this.$refs.refElTable.$el.querySelector('.el-table__body-wrapper')
+        this.tableElem = this.bodyWrapperElem.querySelector('.el-table__body')
+        this.scrollBodyElem = document.createElement('div')
+        this.scrollWrapperElem = document.createElement('div')
+        this.scrollBodyElem.className = 'elx-scroll_body'
+        this.scrollWrapperElem.className = 'elx-scroll_wrapper'
+        this.scrollWrapperElem.appendChild(this.scrollBodyElem)
+        this.bodyWrapperElem.appendChild(this.scrollWrapperElem)
+        this.scrollWrapperElem.addEventListener('scroll', this._scrollEvent, false)
+        this.bodyWrapperElem.addEventListener(UtilHandle.getWheelName(), this._mousewheelEvent, false)
+        this._updateStyle()
+      })
+    },
+    _unbindScrollEvent () {
+      this.scrollWrapperElem.removeChild(this.scrollBodyElem)
+      this.bodyWrapperElem.removeChild(this.scrollWrapperElem)
+      this.scrollWrapperElem.removeEventListener('scroll', this._scrollEvent)
+      this.bodyWrapperElem.removeEventListener(UtilHandle.getWheelName(), this._mousewheelEvent)
+    },
+    // 滚动条拖动处理
+    _scrollEvent: XEUtils.throttle(function (evnt) {
+      let toVisibleIndex = Math.ceil(this.scrollWrapperElem.scrollTop / this.rowHeight)
+      this.datas.splice.apply(this.datas, [0, this.configs.size].concat(this.fullData.slice(toVisibleIndex, toVisibleIndex + this.configs.size)))
+      this.visibleIndex = toVisibleIndex
+    }, 100, { leading: false, trailing: true }),
+    // 滚轮事件处理
+    _mousewheelEvent (evnt) {
+      let delta = evnt.detail ? evnt.detail * -120 : evnt.wheelDelta
+      let scrollTop = this.scrollWrapperElem.scrollTop
+      let scrollOffsetTop = scrollTop - delta
+      if (scrollOffsetTop > scrollTop ? this.visibleIndex + this.configs.size < this.data.length : scrollTop > 0) {
+        evnt.preventDefault()
+        this.scrollWrapperElem.scrollTop = scrollOffsetTop
+      }
+    },
+    _updateStyle () {
+      if (this.scrollLoad) {
+        let firstTrElem = this.tableElem.querySelector('tbody>tr')
+        if (!firstTrElem) {
+          firstTrElem = this.headerWrapperElem.querySelector('thead>tr')
+        }
+        if (firstTrElem) {
+          this.rowHeight = firstTrElem.clientHeight
+        }
+        this.scrollBodyElem.style.height = `${this.data.length * this.rowHeight + (this.bodyWrapperElem.clientHeight - this.configs.size * this.rowHeight)}px`
+        this.scrollWrapperElem.style.height = `${this.bodyWrapperElem.clientHeight}px`
+      }
     },
     _getTDatas () {
       return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.data
@@ -256,6 +343,15 @@ export default {
     /******************************/
     /* Public methods start       */
     /******************************/
+    reload (data) {
+      if (this.scrollLoad) {
+        this.fullData = data
+        this._reloadScrollData()
+      } else {
+        this.datas = data
+      }
+      return this.$nextTick()
+    },
     getColumns () {
       return this.$refs.refElTable ? this.$refs.refElTable.columns : []
     },

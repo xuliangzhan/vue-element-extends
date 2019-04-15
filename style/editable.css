@@ -83,3 +83,17 @@
 .elx-contextmenu > .ctx-menu_wrapper .ctx-suffix-icon {
   right: 5px;
 }
+/* elx-scroll */
+.elx-editable .el-table__body-wrapper {
+  overflow: hidden;
+}
+.elx-editable .elx-scroll_wrapper {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 18px;
+  overflow: auto;
+}
+.elx-editable .elx-scroll_wrapper .elx-scroll_body {
+  width: 1px;
+}

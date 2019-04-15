@@ -44,7 +44,7 @@
     </elx-table>
 
     <el-pagination
-      class="click-table2-pagination"
+      class="base-table3-pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageVO.currentPage"
@@ -117,5 +117,9 @@ export default {
 <style>
 .base-table3-oper {
   margin-bottom: 18px;
+}
+.base-table3-pagination {
+  margin-top: 18px;
+  text-align: right;
 }
 </style>

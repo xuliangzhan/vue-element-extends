@@ -2,6 +2,9 @@ import XEUtils from 'xe-utils'
 
 const browse = XEUtils.browse()
 const UtilHandle = {
+  getWheelName () {
+    return /Firefox/i.test(navigator.userAgent) ? 'DOMMouseScroll' : 'mousewheel'
+  },
   addClass (cell, clss) {
     let classList = cell.className.split(' ')
     clss.forEach(name => {

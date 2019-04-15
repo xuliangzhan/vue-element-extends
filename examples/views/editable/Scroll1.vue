@@ -37,6 +37,18 @@
       </elx-editable-column>
       <elx-editable-column prop="updateTime" label="更新时间" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" :formatter="formatterDate"></elx-editable-column>
+      <elx-editable-column label="操作" width="160">
+        <template v-slot="scope">
+          <template v-if="$refs.elxEditable.hasActiveRow(scope.row)">
+            <el-button size="small" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
+            <el-button size="small" type="warning" @click="cancelRowEvent(scope.row)">取消</el-button>
+          </template>
+          <template v-else>
+            <el-button size="small" type="primary" @click="openActiveRowEvent(scope.row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="removeEvent(scope.row)">删除</el-button>
+          </template>
+        </template>
+      </elx-editable-column>
     </elx-editable>
   </div>
 </template>

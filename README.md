@@ -254,7 +254,6 @@ Run demo on [jsfiddle.net](https://jsfiddle.net/0u86zwbv/) or [runjs](https://js
 
 😱**注：正常模式不适用于一页显示海量数据的表格；适用于使用分页加载的数据表格**😱  
 😏**注：启用滚动渲染可以非常流畅的支撑百万数据**😏  
-也可以把 packages 中的 editable.vue 和 editable-column.vue 组件复制到自己项目中注册，再根据项目需求去做修改  
 如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
 
 ```html

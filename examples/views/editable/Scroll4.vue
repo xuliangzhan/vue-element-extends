@@ -77,7 +77,7 @@ export default {
           let list = []
           let fullIndex = 0
           let setData = () => {
-            for (let index = 0; index < 4000; index++) {
+            for (let index = 0; index < 1000; index++) {
               currTime += 5000
               fullIndex++
               list.push({

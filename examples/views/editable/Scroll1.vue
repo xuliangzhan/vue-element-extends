@@ -83,7 +83,7 @@ export default {
           this.list = window[`CACHE_LIST_${size}`]
           this.loading = false
         } else {
-          let worker = new Worker('/static/js/mock.js')
+          let worker = new Worker(`${location.origin + location.pathname}static/js/mock.js`)
           worker.postMessage({ size })
           worker.onmessage = evnt => {
             window[`CACHE_LIST_${size}`] = evnt.data.list

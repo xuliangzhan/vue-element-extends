@@ -7,10 +7,10 @@
     <p style="color: red;font-size: 12px;">启用滚动渲染，可以非常流畅的支撑百万数据</p>
     <p style="color: red;font-size: 12px;">出于性能考虑：不支持滚动动画；不支持显示默认的索引列；只支持固定行高的表格</p>
 
-    <div class="scroll-table4-oper">
+    <!-- <div class="scroll-table4-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>
       <el-button type="success" size="small" @click="exportCsvEvent">导出</el-button>
-    </div>
+    </div> -->
 
     <elx-editable
       ref="elxEditable"

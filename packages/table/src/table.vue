@@ -115,7 +115,6 @@ export default {
   data () {
     return {
       datas: [],
-      fullData: [],
       columnList: [],
       isUpdateColumns: false,
       visibleIndex: 0,
@@ -148,9 +147,9 @@ export default {
     }
   },
   created () {
+    this._fullData = this.data || []
     this._handleColumns()
     if (this.scrollLoad) {
-      this.fullData = this.data
       this._bindScrollEvent().then(() => this._reloadScrollData())
     }
   },
@@ -257,7 +256,7 @@ export default {
     /******************************/
     _reloadScrollData () {
       this.visibleIndex = 0
-      this.datas = this.fullData.slice(this.visibleIndex, this.visibleIndex + this.configs.size)
+      this.datas = this._fullData.slice(this.visibleIndex, this.visibleIndex + this.configs.size)
       return this.$nextTick().then(() => {
         this._updateStyle()
         this.scrollWrapperElem.scrollTop = 0
@@ -288,7 +287,7 @@ export default {
     // 滚动条拖动处理
     _scrollEvent: XEUtils.throttle(function (evnt) {
       let toVisibleIndex = Math.ceil(this.scrollWrapperElem.scrollTop / this.rowHeight)
-      this.datas.splice.apply(this.datas, [0, this.configs.size].concat(this.fullData.slice(toVisibleIndex, toVisibleIndex + this.configs.size)))
+      this.datas.splice.apply(this.datas, [0, this.configs.size].concat(this._fullData.slice(toVisibleIndex, toVisibleIndex + this.configs.size)))
       this.visibleIndex = toVisibleIndex
     }, 100, { leading: false, trailing: true }),
     // 滚轮事件处理
@@ -296,7 +295,7 @@ export default {
       let delta = evnt.detail ? evnt.detail * -120 : evnt.wheelDelta
       let scrollTop = this.scrollWrapperElem.scrollTop
       let scrollOffsetTop = scrollTop - delta
-      if (scrollOffsetTop > scrollTop ? this.visibleIndex + this.configs.size < this.data.length : scrollTop > 0) {
+      if (scrollOffsetTop > scrollTop ? this.visibleIndex + this.configs.size < this._fullData.length : scrollTop > 0) {
         evnt.preventDefault()
         this.scrollWrapperElem.scrollTop = scrollOffsetTop
       }
@@ -310,12 +309,12 @@ export default {
         if (firstTrElem) {
           this.rowHeight = firstTrElem.clientHeight
         }
-        this.scrollBodyElem.style.height = `${this.data.length * this.rowHeight + (this.bodyWrapperElem.clientHeight - this.configs.size * this.rowHeight)}px`
+        this.scrollBodyElem.style.height = `${this._fullData.length * this.rowHeight + (this.bodyWrapperElem.clientHeight - this.configs.size * this.rowHeight)}px`
         this.scrollWrapperElem.style.height = `${this.bodyWrapperElem.clientHeight}px`
       }
     },
     _getTDatas () {
-      return this.$refs.refElTable ? this.$refs.refElTable.tableData : this.data
+      return this.$refs.refElTable ? this.$refs.refElTable.tableData : this._fullData
     },
     _handleColumns () {
       this.columnList = []
@@ -344,8 +343,8 @@ export default {
     /* Public methods start       */
     /******************************/
     reload (data) {
+      this._fullData = data || []
       if (this.scrollLoad) {
-        this.fullData = data
         this._reloadScrollData()
       } else {
         this.datas = data
@@ -356,7 +355,7 @@ export default {
       return this.$refs.refElTable ? this.$refs.refElTable.columns : []
     },
     getRecords (rowIndex) {
-      return arguments.length ? this.data[rowIndex] : this.data
+      return arguments.length ? this._fullData[rowIndex] : this._fullData
     },
     /**
      * 导出 csv 文件

@@ -21,9 +21,10 @@
             <router-link class="apimenu-link" :to="{name: 'TableCustom1'}" replace>显示/隐藏列</router-link>
             <router-link class="apimenu-link" :to="{name: 'TableCustom2'}" replace>显示/隐藏列+服务保存</router-link>
             <router-link class="apimenu-link" :to="{name: 'TableCustom3'}" replace>显示/隐藏列+本地保存</router-link>
-            <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 50000}}" replace>滚动加载+5万数据</router-link>
             <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 100000}}" replace>滚动加载+10万数据</router-link>
-            <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 200000}}" replace>滚动加载+20万数据</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 300000}}" replace>滚动加载+30万数据</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 500000}}" replace>滚动加载+50万数据</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 700000}}" replace>滚动加载+70万数据</router-link>
           </div>
         </div>
       </el-tab-pane>

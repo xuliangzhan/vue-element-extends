@@ -18,7 +18,7 @@ new Vue({
 var list = window.CACHE_DATA_LIST = []
 var currTime = Date.now()
 var fullIndex = 0
-var size = 200000
+var size = 700000
 function mockData () {
   for (var index = 0; index < 1000; index++) {
     currTime += 5000
@@ -37,7 +37,7 @@ function mockData () {
     })
   }
   if (fullIndex < size) {
-    setTimeout(mockData, 100)
+    setTimeout(mockData, 50)
   }
 }
 

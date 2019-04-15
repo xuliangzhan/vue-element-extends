@@ -16,7 +16,6 @@
       ref="elxEditable"
       class="scroll-table1"
       border
-      :data.sync="list"
       :edit-config="{trigger: 'manual', mode: 'row', render: 'scroll'}"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
@@ -62,7 +61,6 @@ export default {
   data () {
     return {
       loading: false,
-      list: [],
       sexList: [],
       regionList: [],
       isClearActiveFlag: true
@@ -79,9 +77,9 @@ export default {
       this.list = []
       let size = Number(this.$route.params.number)
       setTimeout(() => {
-        this.list = window.CACHE_DATA_LIST.slice(0, size)
+        this.$refs.elxEditable.reload(window.CACHE_DATA_LIST.slice(0, size))
         this.loading = false
-      }, 500)
+      }, 300)
     },
     findSexList () {
       XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {

@@ -87,7 +87,6 @@ export default {
     return {
       editProto: {},
       datas: [],
-      fullData: [],
       initialStore: [],
       deleteRecords: [],
       lastActive: null,
@@ -253,14 +252,13 @@ export default {
   },
   created () {
     this._bindEvents()
+    if (this.scrollLoad) {
+      this._bindScrollEvent().then(() => this._reloadScrollData())
+    }
     this._initial(this.data, true)
     this._setDefaultChecked()
     this._handleColumns()
     this._updateData()
-    if (this.scrollLoad) {
-      this.fullData = this.datas
-      this._bindScrollEvent().then(() => this._reloadScrollData())
-    }
   },
   mounted () {
     if (this.isCtxMenu && this.$refs.contextMenu) {
@@ -506,11 +504,17 @@ export default {
     /****************************/
     /* Interior methods statrt  */
     /****************************/
-    _initial (datas, isReload) {
+    _initial (data, isReload) {
       if (isReload) {
-        this.initialStore = XEUtils.clone(datas, true)
+        this.initialStore = XEUtils.clone(data, true)
       }
-      this.datas = this._toDatas(datas)
+      let datas = this._toDatas(data)
+      this._fullData = datas
+      if (this.scrollLoad) {
+        this._reloadScrollData()
+      } else {
+        this.datas = datas
+      }
       this.$nextTick(() => {
         if (this.highlightCurrentRow) {
           let matchObj = this.currentRow ? XEUtils.findTree(this.datas, row => row.data === this.currentRow, this.elTreeOpts) : null
@@ -582,7 +586,7 @@ export default {
     },
     _reloadScrollData () {
       this.visibleIndex = 0
-      this.datas = this.fullData.slice(this.visibleIndex, this.visibleIndex + this.configs.size)
+      this.datas = this._fullData.slice(this.visibleIndex, this.visibleIndex + this.configs.size)
       return this.$nextTick().then(() => {
         this._updateStyle()
         this.scrollWrapperElem.scrollTop = 0
@@ -612,7 +616,7 @@ export default {
     // 滚动条拖动处理
     _scrollEvent: XEUtils.throttle(function (evnt) {
       let toVisibleIndex = Math.ceil(this.scrollWrapperElem.scrollTop / this.rowHeight)
-      this.datas.splice.apply(this.datas, [0, this.configs.size].concat(this.fullData.slice(toVisibleIndex, toVisibleIndex + this.configs.size)))
+      this.datas.splice.apply(this.datas, [0, this.configs.size].concat(this._fullData.slice(toVisibleIndex, toVisibleIndex + this.configs.size)))
       this.visibleIndex = toVisibleIndex
     }, 100, { leading: false, trailing: true }),
     // 滚轮事件处理
@@ -620,7 +624,7 @@ export default {
       let delta = evnt.detail ? evnt.detail * -120 : evnt.wheelDelta
       let scrollTop = this.scrollWrapperElem.scrollTop
       let scrollOffsetTop = scrollTop - delta
-      if (scrollOffsetTop > scrollTop ? this.visibleIndex + this.configs.size < this.data.length : scrollTop > 0) {
+      if (scrollOffsetTop > scrollTop ? this.visibleIndex + this.configs.size < this._fullData.length : scrollTop > 0) {
         evnt.preventDefault()
         this.scrollWrapperElem.scrollTop = scrollOffsetTop
       }
@@ -634,7 +638,7 @@ export default {
         if (firstTrElem) {
           this.rowHeight = firstTrElem.clientHeight
         }
-        this.scrollBodyElem.style.height = `${this.data.length * this.rowHeight + (this.bodyWrapperElem.clientHeight - this.configs.size * this.rowHeight)}px`
+        this.scrollBodyElem.style.height = `${this._fullData.length * this.rowHeight + (this.bodyWrapperElem.clientHeight - this.configs.size * this.rowHeight)}px`
         this.scrollWrapperElem.style.height = `${this.bodyWrapperElem.clientHeight}px`
       }
     },
@@ -1481,10 +1485,6 @@ export default {
       this._initial(datas, true)
       this._setDefaultChecked()
       this._updateData()
-      if (this.scrollLoad) {
-        this.fullData = this.datas
-        return this._reloadScrollData()
-      }
       return this.$nextTick()
     },
     reloadRow (record) {

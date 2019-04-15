@@ -21,9 +21,9 @@
             <router-link class="apimenu-link" :to="{name: 'TableCustom1'}" replace>显示/隐藏列</router-link>
             <router-link class="apimenu-link" :to="{name: 'TableCustom2'}" replace>显示/隐藏列+服务保存</router-link>
             <router-link class="apimenu-link" :to="{name: 'TableCustom3'}" replace>显示/隐藏列+本地保存</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 50000}}" replace>滚动加载+5万数据</router-link>
             <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 100000}}" replace>滚动加载+10万数据</router-link>
-            <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 300000}}" replace>滚动加载+30万数据</router-link>
-            <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 500000}}" replace>滚动加载+50万数据</router-link>
+            <router-link class="apimenu-link" :to="{name: 'TableScroll', params: {number: 200000}}" replace>滚动加载+20万数据</router-link>
           </div>
         </div>
       </el-tab-pane>
@@ -69,10 +69,10 @@
           <div class="apimenu-row">
             <a class="apimenu-title">滚动渲染</a>
             <router-link class="apimenu-link" :to="{name: 'EditableScroll1', params: {number: 10000}}" replace>手动模式+1万数据</router-link>
-            <router-link class="apimenu-link" :to="{name: 'EditableScroll2', params: {number: 30000}}" replace>单击模式+列编辑+3万数据</router-link>
-            <router-link class="apimenu-link" :to="{name: 'EditableScroll3', params: {number: 30000}}" replace>单击模式+行编辑+3万数据</router-link>
-            <router-link class="apimenu-link" :to="{name: 'EditableScroll4', params: {number: 50000}}" replace>双击模式+列编辑+5万数据</router-link>
-            <router-link class="apimenu-link" :to="{name: 'EditableScroll5', params: {number: 50000}}" replace>双击模式+行编辑+5万数据</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableScroll2', params: {number: 10000}}" replace>单击模式+列编辑+1万数据</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableScroll3', params: {number: 10000}}" replace>单击模式+行编辑+1万数据</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableScroll4', params: {number: 30000}}" replace>双击模式+列编辑+3万数据</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableScroll5', params: {number: 30000}}" replace>双击模式+行编辑+3万数据</router-link>
           </div>
           <div class="apimenu-row">
             <a class="apimenu-title">Excel表格</a>

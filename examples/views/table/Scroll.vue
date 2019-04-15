@@ -65,18 +65,8 @@ export default {
       this.list = []
       let size = Number(this.$route.params.number)
       setTimeout(() => {
-        if (window[`CACHE_LIST_${size}`]) {
-          this.list = window[`CACHE_LIST_${size}`]
-          this.loading = false
-        } else {
-          let worker = new Worker(`${location.origin + location.pathname}static/js/mock.js`)
-          worker.postMessage({ size })
-          worker.onmessage = evnt => {
-            window[`CACHE_LIST_${size}`] = evnt.data.list
-            this.list = evnt.data.list
-            this.loading = false
-          }
-        }
+        this.list = window.CACHE_DATA_LIST.slice(0, size)
+        this.loading = false
       }, 500)
     },
     formatterDate (row, column, cellValue, index) {

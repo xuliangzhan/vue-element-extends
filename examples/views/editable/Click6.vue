@@ -32,8 +32,8 @@
       ref="elxEditable"
       class="click-table6"
       border
-      height="466"
-      size="mini"
+      height="686"
+      size="medium"
       :data.sync="list"
       :custom-columns.sync="customColumns"
       :row-class-name="tableRowClassName"

@@ -23,6 +23,7 @@
       ref="elxTable"
       border
       height="466"
+      size="medium"
       :data.sync="list"
       @sort-change="sortChangeEvent"
       style="width: 100%">

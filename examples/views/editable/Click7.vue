@@ -15,7 +15,6 @@
       class="click-table7"
       border
       height="510"
-      size="mini"
       show-summary
       :summary-method="getSummaries"
       :row-class-name="tableRowClassName"

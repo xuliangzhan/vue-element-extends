@@ -4,7 +4,7 @@
     element-loading-text="生成数据中，请稍后..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
-    <p style="color: red;font-size: 12px;">启用滚动渲染，可以非常流畅的支撑百万数据</p>
+    <p style="color: red;font-size: 12px;">启用滚动渲染，可以非常流畅的支撑大量数据</p>
     <p style="color: red;font-size: 12px;">出于性能考虑：不支持滚动动画；不支持显示默认的索引列；只支持固定行高的表格</p>
 
     <!-- <div class="scroll-table3-oper">
@@ -21,7 +21,7 @@
       :edit-config="{trigger: 'dblclick', mode: 'row', render: 'scroll'}"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
-      <elx-editable-column prop="_index" label="#" align="center" width="55"></elx-editable-column>
+      <elx-editable-column prop="_index" label="#" align="center" width="100"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
       <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
@@ -72,16 +72,18 @@ export default {
           this.list = window[`CACHE_LIST_${size}`].slice(0, size)
           this.loading = false
         } else {
-        // 生成大量数据
+          // 生成大量数据
           let currTime = Date.now()
           let list = []
+          let fullIndex = 0
           let setData = () => {
             for (let index = 0; index < 4000; index++) {
               currTime += 5000
+              fullIndex++
               list.push({
-                _index: index + 1,
-                id: `${10000 + index}`,
-                name: `name_${index}`,
+                _index: fullIndex,
+                id: `${10000 + fullIndex}`,
+                name: `name_${fullIndex}`,
                 date: currTime,
                 sex: index % 3 ? '0' : '1',
                 age: index % 4 === 0 ? 30 : index % 3 === 0 ? 28 : index % 2 === 0 ? 26 : 24,
@@ -91,7 +93,7 @@ export default {
                 createTime: currTime
               })
             }
-            if (list.length >= size) {
+            if (fullIndex >= size) {
               window[`CACHE_LIST_${size}`] = list
               this.list = list.slice(0, size)
               this.loading = false

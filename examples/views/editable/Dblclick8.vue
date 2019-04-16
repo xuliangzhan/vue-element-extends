@@ -14,7 +14,6 @@
       class="dblclick-table7"
       border
       highlight-current-row
-      size="mini"
       row-key="id"
       lazy
       :load="loadMethod"

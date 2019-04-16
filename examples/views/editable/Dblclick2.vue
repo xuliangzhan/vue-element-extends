@@ -33,7 +33,6 @@
       class="dblclick-table2"
       border
       height="466"
-      size="mini"
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-config="{trigger: 'dblclick', mode: 'row'}"

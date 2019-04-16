@@ -18,7 +18,7 @@
       class="click-table4"
       border
       height="466"
-      size="mini"
+      size="large"
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"

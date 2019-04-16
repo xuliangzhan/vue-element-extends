@@ -11,7 +11,6 @@
       ref="elxEditable"
       class="manual-table1"
       border
-      size="small"
       :data.sync="list"
       :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
       style="width: 100%">

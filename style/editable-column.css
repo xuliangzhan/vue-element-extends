@@ -3,14 +3,17 @@
   color: #f56c6c;
 }
 .elx-editable.el-table--mini .elx-editable-column {
-  height: 42px;
+  height: 36px;
 }
 .elx-editable.el-table--small .elx-editable-column {
-  height: 48px;
+  height: 40px;
+}
+.elx-editable.el-table--medium .elx-editable-column {
+  height: 44px;
 }
 .elx-editable .elx-editable-column,
-.elx-editable.el-table--medium .elx-editable-column {
-  height: 62px;
+.elx-editable.el-table--large .elx-editable-column {
+  height: 48px;
   padding: 0;
 }
 .elx-editable .elx-editable-column.elx_dirty {

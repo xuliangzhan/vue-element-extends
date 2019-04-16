@@ -31,7 +31,6 @@
       class="manual-table2"
       border
       height="466"
-      size="mini"
       :data.sync="list"
       :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
       style="width: 100%">

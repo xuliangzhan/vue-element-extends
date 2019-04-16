@@ -16,7 +16,6 @@
       class="manual-table3"
       border
       height="500"
-      size="mini"
       row-key="id"
       :data.sync="list"
       :edit-rules="validRules"

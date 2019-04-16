@@ -26,7 +26,6 @@
       stripe
       border
       height="480"
-      size="medium"
       :data.sync="list"
       @select="selectEvent"
       @current-change="currentChangeEvent"

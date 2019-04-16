@@ -13,7 +13,6 @@
       class="manual-table4"
       border
       height="466"
-      size="mini"
       :data.sync="list"
       :edit-config="{trigger: 'manual', mode: 'row', autoClearActive: false}"
       style="width: 100%">

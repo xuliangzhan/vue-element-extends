@@ -276,8 +276,7 @@ export default {
       return XEUtils.get(row.data, column.property)
     },
     getRendAttrs (scope) {
-      let size = this.$editable.size
-      return Object.assign({ size }, this.renderOpts.attrs)
+      return this.renderOpts.attrs
     },
     getRendEvents ({ $index, row, column, store }) {
       let type = 'change'

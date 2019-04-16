@@ -15,7 +15,7 @@
       class="dblclick-table6"
       border
       height="466"
-      size="mini"
+      size="small"
       :data.sync="list"
       :custom-columns.sync="customColumns"
       :row-class-name="tableRowClassName"

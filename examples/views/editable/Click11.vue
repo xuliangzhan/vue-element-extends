@@ -12,7 +12,7 @@
       class="click-table11"
       border
       height="466"
-      size="mini"
+      size="small"
       row-key="id"
       :data.sync="list"
       :edit-config="{trigger: 'click', mode: 'cell'}"

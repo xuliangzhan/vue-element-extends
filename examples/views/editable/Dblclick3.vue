@@ -15,7 +15,6 @@
       class="dblclick-table3"
       border
       height="466"
-      size="mini"
       :data.sync="list"
       :edit-rules="validRules"
       :edit-config="{trigger: 'dblclick', mode: 'cell', validTooltip: { placement: 'right', popperClass: 'dblclick-table3-validtip' }}"

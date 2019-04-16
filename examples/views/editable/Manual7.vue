@@ -11,7 +11,7 @@
       <elx-editable
         ref="elxEditable1"
         class="manual-table7"
-        size="mini"
+        size="small"
         border
         height="260"
         :data.sync="columnList"
@@ -56,7 +56,7 @@
 
       <elx-editable
         ref="elxEditable2"
-        size="mini"
+        size="small"
         border
         height="260"
         :data.sync="userList"

@@ -79,7 +79,7 @@ export default {
     maxHeight: [String, Number],
     stripe: Boolean,
     border: Boolean,
-    size: { type: String, default: 'small' },
+    size: String,
     fit: { type: Boolean, default: true },
     showHeader: { type: Boolean, default: true },
     highlightCurrentRow: Boolean,

@@ -15,7 +15,6 @@
       ref="elxEditable"
       class="scroll-table5"
       border
-      size="medium"
       :edit-config="{trigger: 'dblclick', mode: 'row', render: 'scroll'}"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>

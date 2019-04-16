@@ -12,7 +12,6 @@
       ref="elxEditable"
       class="click-table1"
       border
-      size="small"
       :data.sync="list"
       style="width: 100%">
       <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>

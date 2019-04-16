@@ -33,7 +33,6 @@
       class="dblclick-table4"
       border
       height="466"
-      size="mini"
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"

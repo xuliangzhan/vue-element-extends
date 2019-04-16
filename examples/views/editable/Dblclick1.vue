@@ -12,7 +12,6 @@
       ref="editable"
       class="dblclick-table1"
       border
-      size="small"
       :data.sync="list"
       :edit-config="{trigger: 'dblclick'}"
       style="width: 100%">

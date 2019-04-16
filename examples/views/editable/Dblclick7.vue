@@ -19,7 +19,7 @@
       class="dblclick-table7"
       border
       highlight-current-row
-      size="mini"
+      size="small"
       row-key="id"
       :data.sync="list"
       :row-class-name="tableRowClassName"

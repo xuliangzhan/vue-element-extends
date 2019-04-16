@@ -16,7 +16,7 @@
       class="click-table10"
       border
       height="466"
-      size="mini"
+      size="small"
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-config="{trigger: 'click', mode: 'cell', activeMethod}"

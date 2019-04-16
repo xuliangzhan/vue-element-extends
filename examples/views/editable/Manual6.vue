@@ -12,7 +12,6 @@
       ref="elxEditable"
       class="manual-table6"
       border
-      size="mini"
       row-key="id"
       highlight-current-row
       :data.sync="list"

@@ -118,7 +118,6 @@
 
       <elx-editable
         ref="elxEditable3"
-        size="mini"
         border
         height="260"
         :data.sync="fileList"

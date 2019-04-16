@@ -21,7 +21,7 @@ var currTime = Date.now()
 var fullIndex = 0
 var size = 700000
 function mockData () {
-  for (var index = 0; index < 1000; index++) {
+  for (var index = 0; index < 1500; index++) {
     currTime += 5000
     fullIndex++
     list.push({

@@ -341,7 +341,7 @@ export default {
       if (this.configs.mode === 'cell' && row.editActive && row.editActive === column.property) {
         clsName += 'elx_active editable-col_active '
       }
-      if (this.configs.showStatus && !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))) {
+      if (this.configs.showStatus && row.editStatus === 'initial' && !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))) {
         clsName += 'elx_dirty editable-col_dirty '
       }
       if (row.checked && row.checked === column.property) {

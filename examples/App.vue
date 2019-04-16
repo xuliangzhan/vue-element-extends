@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="Elx-Table" name="table">
         <div class="apimenu-header">
           <a href="https://github.com/xuliangzhan/vue-element-extends/tree/master/examples/views/table">查看代码</a>
@@ -103,6 +103,15 @@ export default {
     let name = location.hash.split('/')[1]
     return {
       activeName: ['table', 'editable'].includes(name) ? name : 'editable'
+    }
+  },
+  methods: {
+    handleClick (tab, event) {
+      if (tab.name === 'table') {
+        this.$router.replace({ name: 'TableBase1' })
+      } else if (tab.name === 'editable') {
+        this.$router.replace({ name: 'EditableClick1' })
+      }
     }
   }
 }

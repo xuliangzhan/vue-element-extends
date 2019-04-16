@@ -18,7 +18,6 @@
       size="small"
       :edit-config="{trigger: 'click', mode: 'row', render: 'scroll', size: 10}"
       style="width: 100%">
-      <elx-editable-column type="selection" width="55"></elx-editable-column>
       <elx-editable-column type="index" width="100"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" min-width="140" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="sex" label="性别" min-width="140" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>

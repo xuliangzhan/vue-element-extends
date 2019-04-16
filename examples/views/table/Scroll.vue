@@ -5,7 +5,7 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <p style="color: red;font-size: 12px;">启用滚动渲染，可以流畅的支撑海量数据</p>
-    <p style="color: red;font-size: 12px;">出于性能考虑：避免使用 data 双向绑定大数据，vue 监听会消耗大量性能，应该使用 reload 函数加载；不支持滚动效果；不支持动态行高；不支持树结构</p>
+    <p style="color: red;font-size: 12px;">出于性能考虑：避免使用 data 双向绑定大数据，vue 监听会消耗大量性能，应该使用 reload 函数加载；不支持滚动效果；不支持动态行高；不支持树结构；不支持多选</p>
 
     <div class="scroll0w-table-oper">
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
@@ -16,7 +16,6 @@
       border
       :config="{render: 'scroll', size: 10}"
       style="width: 100%">
-      <elx-table-column type="selection" width="55"></elx-table-column>
       <elx-table-column type="index" width="100" fixed="left"></elx-table-column>
       <elx-table-column prop="name" label="名字" min-width="100" show-overflow-tooltip>
         <template v-slot:header="scope">

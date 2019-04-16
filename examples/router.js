@@ -1,58 +1,58 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-const TableBase1 = () => import(/* webpackChunkName: "table-base" */ './views/table/Base1')
-const TableBase2 = () => import(/* webpackChunkName: "table-base" */ './views/table/Base2')
-const TableBase3 = () => import(/* webpackChunkName: "table-base" */ './views/table/Base3')
-const TableBase4 = () => import(/* webpackChunkName: "table-base" */ './views/table/Base4')
-const TableBase5 = () => import(/* webpackChunkName: "table-base" */ './views/table/Base5')
-const TableBase6 = () => import(/* webpackChunkName: "table-base" */ './views/table/Base6')
-const TableBase7 = () => import(/* webpackChunkName: "table-base" */ './views/table/Base7')
-const TableBase8 = () => import(/* webpackChunkName: "table-base" */ './views/table/Base8')
-const TableBase9 = () => import(/* webpackChunkName: "table-base" */ './views/table/Base9')
-const TableCustom1 = () => import(/* webpackChunkName: "table-custom" */ './views/table/Custom1')
-const TableCustom2 = () => import(/* webpackChunkName: "table-custom" */ './views/table/Custom2')
-const TableCustom3 = () => import(/* webpackChunkName: "table-custom" */ './views/table/Custom3')
-const TableScroll = () => import(/* webpackChunkName: "table-scroll" */ './views/table/Scroll')
+import TableBase1 from './views/table/Base1'
+import TableBase2 from './views/table/Base2'
+import TableBase3 from './views/table/Base3'
+import TableBase4 from './views/table/Base4'
+import TableBase5 from './views/table/Base5'
+import TableBase6 from './views/table/Base6'
+import TableBase7 from './views/table/Base7'
+import TableBase8 from './views/table/Base8'
+import TableBase9 from './views/table/Base9'
+import TableCustom1 from './views/table/Custom1'
+import TableCustom2 from './views/table/Custom2'
+import TableCustom3 from './views/table/Custom3'
+import TableScroll from './views/table/Scroll'
 
-const EditableManual1 = () => import(/* webpackChunkName: "editable-manual" */ './views/editable/Manual1')
-const EditableManual2 = () => import(/* webpackChunkName: "editable-anual" */ './views/editable/Manual2')
-const EditableManual3 = () => import(/* webpackChunkName: "editable-manual" */ './views/editable/Manual3')
-const EditableManual4 = () => import(/* webpackChunkName: "editable-manual" */ './views/editable/Manual4')
-const EditableManual5 = () => import(/* webpackChunkName: "editable-manual" */ './views/editable/Manual5')
-const EditableManual6 = () => import(/* webpackChunkName: "editable-manual" */ './views/editable/Manual6')
-const EditableManual7 = () => import(/* webpackChunkName: "editable-manual" */ './views/editable/Manual7')
-const EditableClick1 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click1')
-const EditableClick2 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click2')
-const EditableClick3 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click3')
-const EditableClick4 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click4')
-const EditableClick5 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click5')
-const EditableClick6 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click6')
-const EditableClick7 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click7')
-const EditableClick8 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click8')
-const EditableClick9 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click9')
-const EditableClick10 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click10')
-const EditableClick11 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click11')
-const EditableClick12 = () => import(/* webpackChunkName: "editable-click" */ './views/editable/Click12')
-const EditableDblclick1 = () => import(/* webpackChunkName: "editable-dblclick" */ './views/editable/Dblclick1')
-const EditableDblclick2 = () => import(/* webpackChunkName: "editable-dblclick" */ './views/editable/Dblclick2')
-const EditableDblclick3 = () => import(/* webpackChunkName: "editable-dblclick" */ './views/editable/Dblclick3')
-const EditableDblclick4 = () => import(/* webpackChunkName: "editable-dblclick" */ './views/editable/Dblclick4')
-const EditableDblclick5 = () => import(/* webpackChunkName: "editable-dblclick" */ './views/editable/Dblclick5')
-const EditableDblclick6 = () => import(/* webpackChunkName: "editable-dblclick" */ './views/editable/Dblclick6')
-const EditableDblclick7 = () => import(/* webpackChunkName: "editable-dblclick" */ './views/editable/Dblclick7')
-const EditableDblclick8 = () => import(/* webpackChunkName: "editable-dblclick" */ './views/editable/Dblclick8')
-const EditableMultiComp1 = () => import(/* webpackChunkName: "editable-dblclick" */ './views/editable/MultiComp1')
-const EditableExcel1 = () => import(/* webpackChunkName: "editable-excel" */ './views/editable/Excel1')
-const EditableExcel2 = () => import(/* webpackChunkName: "editable-excel" */ './views/editable/Excel2')
-const EditableExcel3 = () => import(/* webpackChunkName: "editable-excel" */ './views/editable/Excel3')
-const EditableExcel4 = () => import(/* webpackChunkName: "editable-excel" */ './views/editable/Excel4')
-const EditableExcel5 = () => import(/* webpackChunkName: "editable-excel5" */ './views/editable/Excel5')
-const EditableScroll1 = () => import(/* webpackChunkName: "editable-scroll" */ './views/editable/Scroll1')
-const EditableScroll2 = () => import(/* webpackChunkName: "editable-scroll" */ './views/editable/Scroll2')
-const EditableScroll3 = () => import(/* webpackChunkName: "editable-scroll" */ './views/editable/Scroll3')
-const EditableScroll4 = () => import(/* webpackChunkName: "editable-scroll" */ './views/editable/Scroll4')
-const EditableScroll5 = () => import(/* webpackChunkName: "editable-scroll" */ './views/editable/Scroll5')
+import EditableManual1 from './views/editable/Manual1'
+import EditableManual2 from './views/editable/Manual2'
+import EditableManual3 from './views/editable/Manual3'
+import EditableManual4 from './views/editable/Manual4'
+import EditableManual5 from './views/editable/Manual5'
+import EditableManual6 from './views/editable/Manual6'
+import EditableManual7 from './views/editable/Manual7'
+import EditableClick1 from './views/editable/Click1'
+import EditableClick2 from './views/editable/Click2'
+import EditableClick3 from './views/editable/Click3'
+import EditableClick4 from './views/editable/Click4'
+import EditableClick5 from './views/editable/Click5'
+import EditableClick6 from './views/editable/Click6'
+import EditableClick7 from './views/editable/Click7'
+import EditableClick8 from './views/editable/Click8'
+import EditableClick9 from './views/editable/Click9'
+import EditableClick10 from './views/editable/Click10'
+import EditableClick11 from './views/editable/Click11'
+import EditableClick12 from './views/editable/Click12'
+import EditableDblclick1 from './views/editable/Dblclick1'
+import EditableDblclick2 from './views/editable/Dblclick2'
+import EditableDblclick3 from './views/editable/Dblclick3'
+import EditableDblclick4 from './views/editable/Dblclick4'
+import EditableDblclick5 from './views/editable/Dblclick5'
+import EditableDblclick6 from './views/editable/Dblclick6'
+import EditableDblclick7 from './views/editable/Dblclick7'
+import EditableDblclick8 from './views/editable/Dblclick8'
+import EditableMultiComp1 from './views/editable/MultiComp1'
+import EditableExcel1 from './views/editable/Excel1'
+import EditableExcel2 from './views/editable/Excel2'
+import EditableExcel3 from './views/editable/Excel3'
+import EditableExcel4 from './views/editable/Excel4'
+import EditableExcel5 from './views/editable/Excel5'
+import EditableScroll1 from './views/editable/Scroll1'
+import EditableScroll2 from './views/editable/Scroll2'
+import EditableScroll3 from './views/editable/Scroll3'
+import EditableScroll4 from './views/editable/Scroll4'
+import EditableScroll5 from './views/editable/Scroll5'
 
 Vue.use(Router)
 

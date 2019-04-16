@@ -24,7 +24,6 @@ function mockData () {
     currTime += 5000
     fullIndex++
     list.push({
-      _index: fullIndex,
       id: 10000 + fullIndex,
       name: 'name_' + fullIndex,
       date: currTime,

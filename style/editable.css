@@ -84,9 +84,6 @@
   right: 5px;
 }
 /* elx-scroll */
-.elx-editable .el-table__body-wrapper {
-  overflow: hidden;
-}
 .elx-editable .elx-scroll_wrapper {
   position: absolute;
   right: 0;

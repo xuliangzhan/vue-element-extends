@@ -6,7 +6,9 @@
     <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">#</slot>
     </template>
-    <slot></slot>
+    <template v-slot="scope">
+      <slot v-bind="getIndexScope(scope)">{{ formatRowIndex(scope) }}</slot>
+    </template>
   </el-table-column>
   <el-table-column v-else-if="isVisible && type === 'expand'" v-bind="attrs">
     <template v-slot:header="scope">
@@ -199,7 +201,6 @@ export default {
         sortBy = `data.${this.prop}`
       }
       return {
-        index: this.index,
         type: this.type,
         label: this.label,
         columnKey: this.columnKey,
@@ -235,6 +236,17 @@ export default {
         $index: scope.$index,
         $render: this.renderOpts,
         _self: scope._self
+      }
+    },
+    getIndexScope (scope) {
+      return {
+        row: scope.row.data,
+        column: scope.column,
+        store: scope.store,
+        $index: this.getRowIndex(scope),
+        $render: this.renderOpts,
+        _self: scope._self,
+        _row: scope.row
       }
     },
     getRowScope (scope) {
@@ -286,6 +298,13 @@ export default {
         }))
       }
       return defEvent
+    },
+    getRowIndex (scope) {
+      return this.$editable.visibleIndex + scope.$index
+    },
+    formatRowIndex (scope) {
+      let $index = this.getRowIndex(scope)
+      return this.index ? this.index($index) : $index + 1
     },
     formatColumnLabel (scope) {
       if (this.formatter) {

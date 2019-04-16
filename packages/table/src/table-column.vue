@@ -6,7 +6,9 @@
     <template v-slot:header="scope">
       <slot name="header" v-bind="scope">#</slot>
     </template>
-    <slot></slot>
+    <template v-slot="scope">
+      <slot v-bind="getIndexScope(scope)">{{ formatRowIndex(scope) }}</slot>
+    </template>
   </el-table-column>
   <el-table-column v-else-if="isVisible && type === 'expand'" v-bind="attrs">
     <template v-slot:header="scope">
@@ -112,8 +114,24 @@ export default {
     }
   },
   methods: {
+    getIndexScope (scope) {
+      return {
+        row: scope.row,
+        column: scope.column,
+        store: scope.store,
+        $index: this.getRowIndex(scope),
+        _self: scope._self
+      }
+    },
     getRowIdentity (row, column) {
       return XEUtils.get(row, column.property)
+    },
+    getRowIndex (scope) {
+      return this.$table.visibleIndex + scope.$index
+    },
+    formatRowIndex (scope) {
+      let $index = this.getRowIndex(scope)
+      return this.index ? this.index($index) : $index + 1
     },
     formatColumnLabel (scope) {
       if (this.formatter) {

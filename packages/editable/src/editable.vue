@@ -603,22 +603,32 @@ export default {
         this.scrollWrapperElem.className = 'elx-scroll_wrapper'
         this.scrollWrapperElem.appendChild(this.scrollBodyElem)
         this.bodyWrapperElem.appendChild(this.scrollWrapperElem)
-        this.scrollWrapperElem.addEventListener('scroll', this._scrollEvent, false)
+        this.scrollWrapperElem.addEventListener('scroll', this._scrollYEvent, false)
+        this.bodyWrapperElem.addEventListener('scroll', this._scrollXEvent, false)
         this.bodyWrapperElem.addEventListener(UtilHandle.getWheelName(), this._mousewheelEvent, false)
       })
     },
     _unbindScrollEvent () {
       this.scrollWrapperElem.removeChild(this.scrollBodyElem)
       this.bodyWrapperElem.removeChild(this.scrollWrapperElem)
-      this.scrollWrapperElem.removeEventListener('scroll', this._scrollEvent)
+      this.scrollWrapperElem.removeEventListener('scroll', this._scrollYEvent)
+      this.bodyWrapperElem.removeEventListener('scroll', this._scrollXEvent)
       this.bodyWrapperElem.removeEventListener(UtilHandle.getWheelName(), this._mousewheelEvent)
     },
-    // 滚动条拖动处理
-    _scrollEvent: XEUtils.throttle(function (evnt) {
+    // 滚动渲染
+    _handleScroll: XEUtils.throttle(function (evnt) {
       let toVisibleIndex = Math.ceil(this.scrollWrapperElem.scrollTop / this.rowHeight)
       this.datas.splice.apply(this.datas, [0, this.configs.size].concat(this._fullData.slice(toVisibleIndex, toVisibleIndex + this.configs.size)))
       this.visibleIndex = toVisibleIndex
     }, 100, { leading: false, trailing: true }),
+    // Y 滚动条事件
+    _scrollYEvent (evnt) {
+      this._handleScroll(evnt)
+    },
+    // X 滚动条事件
+    _scrollXEvent (evnt) {
+      this.scrollWrapperElem.style.right = `${-this.bodyWrapperElem.scrollLeft}px`
+    },
     // 滚轮事件处理
     _mousewheelEvent (evnt) {
       let delta = evnt.detail ? evnt.detail * -120 : evnt.wheelDelta

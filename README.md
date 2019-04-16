@@ -160,6 +160,7 @@ context-menu-config 表格右键菜单配置：
 | SELECT_REVERT  | 还原选中的数据 |
 | SELECT_EXPORT  | 导出选中的数据 |
 | ROW_INSERT  | 在当前位置插入新行 |
+| ROW_INSERT_ACTIVE  | 在当前位置插入新行并激活编辑状态 |
 | ROW_REMOVE | 删除当前行 |
 | ROW_RESET | 清除当前行数据的值 |
 | ROW_REVERT | 还原当前行数据 |

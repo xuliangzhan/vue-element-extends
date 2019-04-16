@@ -203,7 +203,7 @@ export default {
             prefixIcon: 'el-icon-delete'
           },
           {
-            code: 'ROW_INSERT',
+            code: 'ROW_INSERT_ACTIVE',
             name: '插入新行',
             prefixIcon: 'el-icon-plus'
           },

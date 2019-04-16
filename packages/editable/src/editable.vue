@@ -1428,6 +1428,9 @@ export default {
             case 'ROW_INSERT':
               this.insertAt(null, row.data).then(({ _row }) => this._setChecked(_row, column))
               break
+            case 'ROW_INSERT_ACTIVE':
+              this.insertAt(null, row.data).then(({ row }) => this._toActiveRow(row, column.property))
+              break
             case 'ROW_REMOVE':
               this.remove(row.data)
               break

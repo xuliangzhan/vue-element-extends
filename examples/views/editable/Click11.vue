@@ -26,7 +26,7 @@
           </el-tooltip>
         </template>
         <template>
-          <i class="fa fa-arrows drag-btn"></i>
+          <i class="el-icon-rank drag-btn"></i>
         </template>
       </elx-editable-column>
       <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>

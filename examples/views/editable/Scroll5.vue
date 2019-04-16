@@ -54,6 +54,7 @@ export default {
     }
   },
   created () {
+    Message.closeAll()
     this.findList()
     this.findSexList()
     this.findRegionList()
@@ -65,8 +66,12 @@ export default {
       this.$nextTick(() => {
         this.$refs.elxEditable.reload([])
         setTimeout(() => {
+          let startTime = Date.now()
           this.$refs.elxEditable.reload(window.CACHE_DATA_LIST.slice(0, size))
           this.loading = false
+          this.$nextTick(() => {
+            Message({ message: `渲染 ${size} 条耗时 ${Date.now() - startTime} ms`, type: 'info', duration: 8000, showClose: true })
+          })
         }, 300)
       })
     },

@@ -46,6 +46,7 @@
 <script>
 import XEUtils from 'xe-utils'
 import XEAjax from 'xe-ajax'
+import { Message } from 'element-ui'
 
 export default {
   data () {
@@ -72,8 +73,12 @@ export default {
       this.$nextTick(() => {
         this.$refs.elxTable.reload([])
         setTimeout(() => {
+          let startTime = Date.now()
           this.$refs.elxTable.reload(window.CACHE_DATA_LIST.slice(0, size))
           this.loading = false
+          this.$nextTick(() => {
+            Message({ message: `渲染 ${size} 条耗时 ${Date.now() - startTime} ms`, type: 'info', duration: 8000, showClose: true })
+          })
         }, 300)
       })
     },
@@ -116,6 +121,7 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
+    Message.closeAll()
     next()
     this.findList()
   }

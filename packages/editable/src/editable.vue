@@ -1741,7 +1741,7 @@ export default {
     /**
      * 更新列状态
      * 如果组件值 v-model 发生 change 时，调用改函数用于更新某一列编辑状态
-     * 由于缓存策略，但行数据发生增加或删除时，需要更新所有行
+     * 如果单元格配置了校验规则，则会进行校验
      */
     updateStatus (scope) {
       return this.$nextTick().then(() => {
@@ -1750,7 +1750,7 @@ export default {
           let record = scope.row
           let { row, cell } = this._getColumnByRowIndex(record, column.property)
           if (cell) {
-            return this._validCellRules(row.validActive ? 'all' : 'change', row, column)
+            return this._validCellRules('change', row, column)
               .then(rule => {
                 if (this.configs.mode === 'row' ? row.validActive && row.validActive === column.property : true) {
                   this._clearValidError(row)

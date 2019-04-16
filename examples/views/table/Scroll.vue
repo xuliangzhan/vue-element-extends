@@ -18,7 +18,7 @@
       style="width: 100%">
       <elx-table-column type="selection" width="55"></elx-table-column>
       <elx-table-column type="index" width="100"></elx-table-column>
-      <elx-table-column prop="name" label="名字" show-overflow-tooltip>
+      <elx-table-column prop="name" label="名字" min-width="100" show-overflow-tooltip>
         <template v-slot:header="scope">
           <i class="el-icon-question"></i>名字
         </template>
@@ -34,8 +34,8 @@
           </el-rate>
         </template>
       </elx-table-column>
-      <elx-table-column prop="updateTime" label="更新时间" :formatter="formatterDate"></elx-table-column>
-      <elx-table-column prop="createTime" label="创建时间" :formatter="formatterDate"></elx-table-column>
+      <elx-table-column prop="updateTime" label="更新时间" width="200" :formatter="formatterDate"></elx-table-column>
+      <elx-table-column prop="createTime" label="创建时间" width="200" :formatter="formatterDate"></elx-table-column>
     </elx-table>
   </div>
 </template>

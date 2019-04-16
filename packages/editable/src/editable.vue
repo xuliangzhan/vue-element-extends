@@ -380,9 +380,9 @@ export default {
       let matchObj = XEUtils.findTree(this.datas, row => row.checked || row.editActive, this.elTreeOpts)
       if (matchObj) {
         if (matchObj.item.checked === column.property) {
-          clsName += 'elx_checked '
+          clsName += 'elx-header_checked '
         } else if (matchObj.item.editActive === column.property) {
-          clsName += 'elx_active '
+          clsName += 'elx-header_active '
         }
       }
       if (XEUtils.isFunction(headerCellClassName)) {

@@ -6,7 +6,7 @@
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <p style="color: red;font-size: 12px;">手动模式、行编辑</p>
     <p style="color: red;font-size: 12px;">启用滚动渲染，可以流畅的支撑海量数据</p>
-    <p style="color: red;font-size: 12px;">出于性能考虑：避免使用 data 双向绑定大数据，vue 监听会消耗大量性能，应该使用 reload 函数加载；不支持滚动动画；不支持动态行高；不支持树结构</p>
+    <p style="color: red;font-size: 12px;">出于性能考虑：避免使用 data 双向绑定大数据，vue 监听会消耗大量性能，应该使用 reload 函数加载；不支持滚动效果；不支持动态行高；不支持树结构</p>
 
     <div class="scroll-table1-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>

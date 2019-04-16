@@ -320,8 +320,8 @@ export default {
 .excel-table5 .el-table__body .elx-editable-row:hover>.elx-editable-column {
   background-color: inherit;
 }
-.excel-table5 .el-table__header .elx-editable-column.elx_checked .cell:after,
-  .excel-table5 .el-table__header .elx-editable-column.elx_active .cell:after{
+.excel-table5 .el-table__header .elx-editable-column.elx-header_checked .cell:after,
+  .excel-table5 .el-table__header .elx-editable-column.elx-header_active .cell:after{
   content: '';
   position: absolute;
   width: 100%;
@@ -330,8 +330,8 @@ export default {
   left: 0;
   background-color: #217346;
 }
-.excel-table5 .el-table__header .elx-editable-column.elx_checked,
-.excel-table5 .el-table__header .elx-editable-column.elx_active,
+.excel-table5 .el-table__header .elx-editable-column.elx-header_checked,
+.excel-table5 .el-table__header .elx-editable-column.elx-header_active,
 .excel-table5 .el-table__body .elx-editable-row.elx_checked>.elx-editable-column:first-child,
 .excel-table5 .el-table__body .elx-editable-row.elx_active>.elx-editable-column:first-child{
   background-color: #D2D2D2;

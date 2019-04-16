@@ -346,7 +346,7 @@ export default {
       if (this.configs.mode === 'cell' && row.editActive && row.editActive === column.property) {
         clsName += 'elx_active editable-col_active '
       }
-      if (this.configs.showStatus && !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))) {
+      if (this.configs.showStatus && row.editStatus === 'initial' && !XEUtils.isEqual(XEUtils.get(row.data, column.property), XEUtils.get(row.store, column.property))) {
         clsName += 'elx_dirty '
       }
       if (row.checked && row.checked === column.property) {
@@ -584,12 +584,16 @@ export default {
       GlobalEvent.off(this, 'mousewheel')
       GlobalEvent.off(this, 'keydown')
     },
-    _reloadScrollData () {
-      this.visibleIndex = 0
+    _reloadScrollData (isReload) {
+      if (!isReload) {
+        this.visibleIndex = 0
+      }
       this.datas = this._fullData.slice(this.visibleIndex, this.visibleIndex + this.configs.size)
       return this.$nextTick().then(() => {
         this._updateStyle()
-        this.scrollWrapperElem.scrollTop = 0
+        if (!isReload) {
+          this.scrollWrapperElem.scrollTop = 0
+        }
       })
     },
     _bindScrollEvent () {
@@ -1592,28 +1596,31 @@ export default {
       let rest = { row: rowItem.data, _row: rowItem }
       if (record) {
         if (record === -1) {
-          this.datas.push(rowItem)
+          this._fullData.push(rowItem)
         } else {
-          let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
+          let matchObj = XEUtils.findTree(this._fullData, row => row.data === record, this.elTreeOpts)
           if (matchObj) {
             if (matchObj.parent) {
               rest.parent = matchObj.parent.data
             }
             matchObj.items.splice(matchObj.index, 0, rowItem)
           } else {
-            this.datas.push(rowItem)
+            this._fullData.push(rowItem)
           }
         }
       } else {
-        this.datas.unshift(rowItem)
+        this._fullData.unshift(rowItem)
       }
       this.currentRow = rowItem.data
       this._saveOperStatus()
       this._updateData()
+      if (this.scrollLoad) {
+        this._reloadScrollData()
+      }
       return this.$nextTick().then(() => rest)
     },
     hasRowInsert (record) {
-      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
+      let matchObj = XEUtils.findTree(this._fullData, row => row.data === record, this.elTreeOpts)
       return matchObj && matchObj.item.editStatus === 'insert'
     },
     /**
@@ -1630,7 +1637,7 @@ export default {
       if (records.length) {
         this._saveOperStatus()
         records.forEach(record => {
-          let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
+          let matchObj = XEUtils.findTree(this._fullData, row => row.data === record, this.elTreeOpts)
           if (matchObj) {
             let { index, items } = matchObj
             let removeRow = items.splice(index, 1)[0]
@@ -1642,6 +1649,9 @@ export default {
         })
         this._clearActiveData()
         this._updateData()
+        if (this.scrollLoad) {
+          this._reloadScrollData(true)
+        }
       }
       return this.$nextTick().then(() => rest)
     },

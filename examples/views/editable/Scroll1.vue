@@ -6,12 +6,12 @@
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <p style="color: red;font-size: 12px;">手动模式、行编辑</p>
     <p style="color: red;font-size: 12px;">启用滚动渲染，可以流畅的支撑海量数据</p>
-    <p style="color: red;font-size: 12px;">出于性能考虑：避免使用 data 双向绑定大数据，vue 监听会消耗大量性能，应该使用 reload 函数加载；不支持滚动动画；只支持固定行高的表格</p>
+    <p style="color: red;font-size: 12px;">出于性能考虑：避免使用 data 双向绑定大数据，vue 监听会消耗大量性能，应该使用 reload 函数加载；不支持滚动动画；不支持动态行高；不支持树结构</p>
 
-    <!-- <div class="scroll-table1-oper">
+    <div class="scroll-table1-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>
       <el-button type="success" size="small" @click="exportCsvEvent">导出</el-button>
-    </div> -->
+    </div>
 
     <elx-editable
       ref="elxEditable"
@@ -102,7 +102,7 @@ export default {
         this.$refs.elxEditable.insert({
           name: `New ${Date.now()}`,
           age: 26,
-          flag: false
+          rate: 2
         }).then(({ row }) => {
           this.$refs.elxEditable.setActiveRow(row)
         })
@@ -175,17 +175,13 @@ export default {
     removeEvent (row) {
       if (row.id) {
         this.isClearActiveFlag = false
-        MessageBox.confirm('确定永久删除该数据?', '温馨提示', {
+        MessageBox.confirm('确定删除该数据?', '温馨提示', {
           distinguishCancelAndClose: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          XEAjax.doDelete(`/api/role/delete/${row.id}`).then(({ data }) => {
-            this.findList()
-          }).catch(e => {
-            this.loading = false
-          })
+          this.$refs.elxEditable.remove(row)
         }).catch(action => action).then(() => {
           this.isClearActiveFlag = true
         })
@@ -196,18 +192,8 @@ export default {
     saveRowEvent (row) {
       this.$refs.elxEditable.validateRow(row, valid => {
         if (valid) {
-          let url = '/api/role/add'
-          if (row.id) {
-            url = '/api/role/update'
-          }
-          this.loading = true
+          Message({ message: '保存', type: 'success' })
           this.$refs.elxEditable.clearActive()
-          XEAjax.doPost(url, row).then(({ data }) => {
-            this.findList()
-            Message({ message: '保存成功', type: 'success' })
-          }).catch(e => {
-            this.loading = false
-          })
         }
       })
     },

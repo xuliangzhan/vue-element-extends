@@ -14,7 +14,7 @@
     <elx-table
       ref="elxTable"
       border
-      :config="{render: 'scroll'}"
+      :config="{render: 'scroll', size: 10}"
       style="width: 100%">
       <elx-table-column type="selection" width="55"></elx-table-column>
       <elx-table-column type="index" width="100" fixed="left"></elx-table-column>

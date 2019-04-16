@@ -16,7 +16,7 @@
       class="scroll-table2"
       border
       size="mini"
-      :edit-config="{trigger: 'click', mode: 'cell', render: 'scroll'}"
+      :edit-config="{trigger: 'click', mode: 'cell', render: 'scroll', size: 10}"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
       <elx-editable-column type="index" width="100" :index="indexMethod"></elx-editable-column>
@@ -32,6 +32,11 @@
       </elx-editable-column>
       <elx-editable-column prop="updateTime" label="更新时间" width="200" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="200" :formatter="formatterDate"></elx-editable-column>
+      <elx-editable-column label="操作" width="100" fixed="right">
+        <template v-slot="scope">
+          <el-button type="danger" @click="removeEvent(scope.row)">删除</el-button>
+        </template>
+      </elx-editable-column>
     </elx-editable>
   </div>
 </template>

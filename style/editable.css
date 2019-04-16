@@ -90,6 +90,7 @@
   top: 0;
   width: 18px;
   overflow: auto;
+  z-index: 5;
 }
 .elx-editable .elx-scroll_wrapper .elx-scroll_body {
   width: 1px;

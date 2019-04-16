@@ -15,6 +15,7 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
+// 后台异步生成70万数据
 var list = window.CACHE_DATA_LIST = []
 var currTime = Date.now()
 var fullIndex = 0
@@ -24,7 +25,7 @@ function mockData () {
     currTime += 5000
     fullIndex++
     list.push({
-      id: 10000 + fullIndex,
+      id: fullIndex,
       name: 'name_' + fullIndex,
       date: currTime,
       sex: index % 3 ? '0' : '1',

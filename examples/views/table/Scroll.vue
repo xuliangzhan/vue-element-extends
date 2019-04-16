@@ -4,7 +4,7 @@
     element-loading-text="生成数据中，请稍后..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
-    <p style="color: red;font-size: 12px;">启用滚动渲染，可以流畅的支撑百万数据</p>
+    <p style="color: red;font-size: 12px;">启用滚动渲染，可以流畅的支撑海量数据</p>
     <p style="color: red;font-size: 12px;">出于性能考虑：避免使用 data 双向绑定大数据，vue 监听会消耗大量性能，应该使用 reload 函数加载；不支持滚动动画；只支持固定行高的表格</p>
 
     <!-- <div class="scroll0w-table-oper">

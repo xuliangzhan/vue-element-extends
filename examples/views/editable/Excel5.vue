@@ -55,8 +55,6 @@
 <script>
 import XEUtils from 'xe-utils'
 import XEClipboard from 'xe-clipboard'
-import FileSaver from 'file-saver'
-import XLSX from 'xlsx'
 import { Message, MessageBox } from 'element-ui'
 
 export default {
@@ -221,10 +219,6 @@ export default {
             name: '导出全部.cvs'
           },
           {
-            code: 'xlsx',
-            name: '导出全部.xlsx'
-          },
-          {
             code: 'printer',
             name: '打印',
             prefixIcon: 'el-icon-printer'
@@ -274,17 +268,6 @@ export default {
           break
         case 'printer':
           print()
-          break
-        case 'xlsx':
-          var sheetName = 'Sheet1'
-          var book = {
-            SheetNames: [sheetName],
-            Sheets: {
-              [sheetName]: XLSX.utils.json_to_sheet(this.$refs.elxEditable.getRecords().map(item => Object.values(item)), { skipHeader: true })
-            }
-          }
-          var blob = new Blob([XLSX.write(book, { bookType: 'xlsx', bookSST: true, type: 'array' }, { type: 'application/octet-stream' })])
-          FileSaver.saveAs(blob, 'table.xlsx')
           break
       }
     },

@@ -59,10 +59,13 @@ export default {
     findList () {
       this.loading = true
       let size = Number(this.$route.params.number)
-      setTimeout(() => {
-        this.$refs.elxEditable.reload(window.CACHE_DATA_LIST.slice(0, size))
-        this.loading = false
-      }, 300)
+      this.$nextTick(() => {
+        this.$refs.elxEditable.reload([])
+        setTimeout(() => {
+          this.$refs.elxEditable.reload(window.CACHE_DATA_LIST.slice(0, size))
+          this.loading = false
+        }, 300)
+      })
     },
     findSexList () {
       XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {

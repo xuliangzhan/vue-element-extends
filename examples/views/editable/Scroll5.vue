@@ -115,7 +115,7 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.elxEditable.exportCsv()
+      this.$refs.elxEditable.exportCsv({ original: true })
     }
   },
   beforeRouteUpdate (to, from, next) {

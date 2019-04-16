@@ -379,7 +379,7 @@ export default {
         opts.filename += '.csv'
       }
       let columns = this.getColumns()
-      let oData = this._getTDatas()
+      let oData = this.scrollLoad ? this._fullData : this._getTDatas()
       UtilHandle.downloadCsc(opts, UtilHandle.getCsvContent(opts, oData, columns, this.$el))
     }
     /******************************/

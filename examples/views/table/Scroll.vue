@@ -7,9 +7,9 @@
     <p style="color: red;font-size: 12px;">启用滚动渲染，可以流畅的支撑海量数据</p>
     <p style="color: red;font-size: 12px;">出于性能考虑：避免使用 data 双向绑定大数据，vue 监听会消耗大量性能，应该使用 reload 函数加载；不支持滚动动画；不支持动态行高；不支持树结构</p>
 
-    <!-- <div class="scroll0w-table-oper">
+    <div class="scroll0w-table-oper">
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
-    </div> -->
+    </div>
 
     <elx-table
       ref="elxTable"
@@ -112,7 +112,7 @@ export default {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     exportCsvEvent () {
-      this.$refs.elxTable.exportCsv()
+      this.$refs.elxTable.exportCsv({ original: true })
     }
   },
   beforeRouteUpdate (to, from, next) {

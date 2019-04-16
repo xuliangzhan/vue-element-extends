@@ -252,8 +252,8 @@ edit-render 渲染参数配置
 
 Run demo on [jsfiddle.net](https://jsfiddle.net/0u86zwbv/) or [runjs](https://jsrun.net/zTXKp/edit)  
 
-😱**注：正常渲染不适用于一页显示海量数据的表格；适用于使用分页加载的数据表格**😱  
-😏**注：启用滚动渲染可以流畅的支撑百万数据**😏  
+😱**注：正常渲染不适用于海量数据的表格；适用于使用分页加载的数据表格**😱  
+😏**注：启用滚动渲染可以流畅的支撑百万数据的表格**😏  
 如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
 
 ```html

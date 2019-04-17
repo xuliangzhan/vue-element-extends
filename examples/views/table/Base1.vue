@@ -21,6 +21,9 @@
       <elx-table-column prop="flag" label="是否启用"></elx-table-column>
       <elx-table-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-table-column>
       <elx-table-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-table-column>
+      <template v-slot:append>
+        <div>-- slot append --</div>
+      </template>
     </elx-table>
   </div>
 </template>

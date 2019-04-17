@@ -127,7 +127,7 @@ export default {
       return XEUtils.get(row, column.property)
     },
     getRowIndex (scope) {
-      return this.$table.visibleIndex + scope.$index
+      return this.$table.visibleStart + scope.$index
     },
     formatRowIndex (scope) {
       let $index = this.getRowIndex(scope)

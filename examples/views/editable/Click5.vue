@@ -248,8 +248,10 @@ export default {
           this.loading = true
           this.$refs.elxEditable.clearActive()
           XEAjax.doPost(url, row).then(({ data }) => {
-            this.findList()
+            // this.findList() // 全部刷新
+            this.$refs.elxEditable.reloadRow(row) // 局部更新
             Message({ message: '保存成功', type: 'success' })
+            this.loading = false
           })
         }
       })

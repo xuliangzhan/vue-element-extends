@@ -92,7 +92,6 @@ export default {
       lastActive: null,
       lastOperation: null,
       callEvent: null,
-      isUpdateData: false,
       currentRow: null,
       elTreeOpts: {
         children: 'children'
@@ -106,10 +105,9 @@ export default {
           left: 0
         }
       },
-      isUpdateColumns: false,
       columnList: [],
       visibleIndex: 0,
-      rowHeight: 0
+      visibleStart: 0
     }
   },
   computed: {
@@ -191,7 +189,7 @@ export default {
         // 渲染方式，可以设置为 scroll 启用滚动渲染，支持海量数据
         render: 'default',
         // 只对 render=scroll 有效，滚动实时渲染条数
-        size: 10,
+        size: null,
         // 是否显示列头编辑图标
         showIcon: true,
         // 是否实时显示单元格值的修改状态
@@ -285,16 +283,19 @@ export default {
       return this.$refs.refElTable.clearSelection()
     },
     toggleRowSelection (record, selected) {
-      return this.$refs.refElTable.toggleRowSelection(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts), selected)
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
+      return this.$refs.refElTable.toggleRowSelection(matchObj.item, selected)
     },
     toggleAllSelection () {
       return this.$refs.refElTable.toggleAllSelection()
     },
     toggleRowExpansion (record, expanded) {
-      return this.$refs.refElTable.toggleRowExpansion(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts), expanded)
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
+      return this.$refs.refElTable.toggleRowExpansion(matchObj.item, expanded)
     },
     setCurrentRow (record) {
-      return this.$refs.refElTable.setCurrentRow(XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts))
+      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
+      return this.$refs.refElTable.setCurrentRow(matchObj.item)
     },
     clearSort () {
       return this.$refs.refElTable.clearSort()
@@ -584,16 +585,14 @@ export default {
       GlobalEvent.off(this, 'mousewheel')
       GlobalEvent.off(this, 'keydown')
     },
-    _reloadScrollData (isReload) {
-      if (!isReload) {
-        this.visibleIndex = 0
-      }
-      this.datas = this._fullData.slice(this.visibleIndex, this.visibleIndex + this.configs.size)
+    _reloadScrollData () {
+      this.visibleIndex = 0
+      this.visibleStart = 0
+      this.datas = this._fullData.slice(this.visibleStart, this.visibleStart + this.renderSize)
       return this.$nextTick().then(() => {
-        this._updateStyle()
-        if (!isReload) {
-          this.scrollWrapperElem.scrollTop = 0
-        }
+        this._computeScroll()
+        this.bodyWrapperElem.scrollTop = 0
+        this.bodyWrapperElem.scrollLeft = 0
       })
     },
     _bindScrollEvent () {
@@ -601,49 +600,75 @@ export default {
         this.headerWrapperElem = this.$refs.refElTable.$el.querySelector('.el-table__header-wrapper')
         this.bodyWrapperElem = this.$refs.refElTable.$el.querySelector('.el-table__body-wrapper')
         this.tableElem = this.bodyWrapperElem.querySelector('.el-table__body')
-        this.scrollBodyElem = document.createElement('div')
-        this.scrollWrapperElem = document.createElement('div')
-        this.scrollBodyElem.className = 'elx-scroll_body'
-        this.scrollWrapperElem.className = 'elx-scroll_wrapper'
-        this.scrollWrapperElem.appendChild(this.scrollBodyElem)
-        this.bodyWrapperElem.appendChild(this.scrollWrapperElem)
-        this.scrollWrapperElem.addEventListener('scroll', this._scrollYEvent, false)
-        this.bodyWrapperElem.addEventListener('scroll', this._scrollXEvent, false)
-        this.bodyWrapperElem.addEventListener(UtilHandle.getWheelName(), this._mousewheelEvent, false)
+        this.scrollTopSpaceElem = document.createElement('div')
+        this.scrollTopSpaceElem.className = 'elx-scroll_top-pace'
+        this.scrollBottomSpaceElem = document.createElement('div')
+        this.scrollBottomSpaceElem.className = 'elx-scroll_bottom-pace'
+        this.bodyWrapperElem.insertBefore(this.scrollTopSpaceElem, this.tableElem)
+        this.bodyWrapperElem.insertBefore(this.scrollBottomSpaceElem, this.tableElem.nextSibling)
+        this.bodyWrapperElem.addEventListener('scroll', this._scrollEvent, false)
+        this._computeScroll()
       })
     },
     _unbindScrollEvent () {
-      this.scrollWrapperElem.removeChild(this.scrollBodyElem)
-      this.bodyWrapperElem.removeChild(this.scrollWrapperElem)
-      this.scrollWrapperElem.removeEventListener('scroll', this._scrollYEvent)
-      this.bodyWrapperElem.removeEventListener('scroll', this._scrollXEvent)
-      this.bodyWrapperElem.removeEventListener(UtilHandle.getWheelName(), this._mousewheelEvent)
+      this.bodyWrapperElem.removeChild(this.scrollTopSpaceElem)
+      this.bodyWrapperElem.removeChild(this.scrollBottomSpaceElem)
+      this.bodyWrapperElem.removeEventListener('scroll', this._scrollEvent)
     },
-    // 滚动渲染
-    _handleScroll: XEUtils.throttle(function (evnt) {
-      let toVisibleIndex = Math.ceil(this.scrollWrapperElem.scrollTop / this.rowHeight)
-      this.datas.splice.apply(this.datas, [0, this.configs.size].concat(this._fullData.slice(toVisibleIndex, toVisibleIndex + this.configs.size)))
-      this.visibleIndex = toVisibleIndex
-    }, 100, { leading: false, trailing: true }),
-    // Y 滚动条事件
-    _scrollYEvent (evnt) {
-      this._handleScroll(evnt)
-    },
-    // X 滚动条事件
-    _scrollXEvent (evnt) {
-      this.scrollWrapperElem.style.right = `${-this.bodyWrapperElem.scrollLeft}px`
-    },
-    // 滚轮事件处理
-    _mousewheelEvent (evnt) {
-      let delta = evnt.detail ? evnt.detail * -120 : evnt.wheelDelta
-      let scrollTop = this.scrollWrapperElem.scrollTop
-      let scrollOffsetTop = scrollTop - delta
-      if (scrollOffsetTop > scrollTop ? this.visibleIndex + this.configs.size < this._fullData.length : scrollTop > 0) {
-        evnt.preventDefault()
-        this.scrollWrapperElem.scrollTop = scrollOffsetTop
+    /**
+     * 滚动渲染，以优化的方式渲染表格
+     * 只渲染可视部分，其余收起
+     * top
+     *   --> 占位
+     *   --> offsetSize
+     * table
+     *   --> renderSize
+     *     --> visibleStart
+     *     --> visibleIndex
+     * bottom
+     *   --> offsetSize
+     *   --> 占位
+     */
+    _scrollEvent (evnt) {
+      let isRender
+      let fullData = this._fullData
+      let renderSize = this.renderSize
+      let scrollTop = this.bodyWrapperElem.scrollTop
+      let isTop = scrollTop < this.scrollTop
+      let visibleStart = this.visibleStart
+      let offsetSize = this.offsetSize
+      let rowHeight = this.rowHeight
+      let toVisibleIndex = Math.ceil(scrollTop / rowHeight)
+      if (isTop) {
+        if (visibleStart > 0 && (toVisibleIndex - offsetSize < visibleStart)) {
+          isRender = true
+        }
+      } else {
+        if (visibleStart < fullData.length - renderSize && (toVisibleIndex + offsetSize >= visibleStart + renderSize)) {
+          isRender = true
+        }
       }
+      if (isRender) {
+        let toVisibleStart = toVisibleIndex - (renderSize / 2)
+        if (toVisibleStart < 0) {
+          toVisibleStart = 0
+        } else if (toVisibleStart + renderSize >= fullData.length) {
+          toVisibleStart = fullData.length - renderSize
+        }
+        if (toVisibleStart !== visibleStart) {
+          this.visibleStart = toVisibleStart
+          this.datas = fullData.slice(toVisibleStart, toVisibleStart + renderSize)
+          this.scrollTopSpaceElem.style.height = `${toVisibleStart * rowHeight}px`
+          this.scrollBottomSpaceElem.style.height = `${(fullData.length - renderSize - toVisibleStart) * rowHeight}px`
+          this.$nextTick().then(() => {
+            this.bodyWrapperElem.scrollTop = scrollTop
+          })
+        }
+      }
+      this.scrollTop = scrollTop
+      this.visibleIndex = toVisibleIndex
     },
-    _updateStyle () {
+    _computeScroll () {
       if (this.scrollLoad) {
         let firstTrElem = this.tableElem.querySelector('tbody>tr')
         if (!firstTrElem) {
@@ -652,8 +677,14 @@ export default {
         if (firstTrElem) {
           this.rowHeight = firstTrElem.clientHeight
         }
-        this.scrollBodyElem.style.height = `${this._fullData.length * this.rowHeight + (this.bodyWrapperElem.clientHeight - this.configs.size * this.rowHeight)}px`
-        this.scrollWrapperElem.style.height = `${this.bodyWrapperElem.clientHeight}px`
+        let visibleSize = Math.ceil(this.bodyWrapperElem.clientHeight / this.rowHeight)
+        if (this.configs.size) {
+          this.renderSize = this.configs.size
+        } else {
+          this.renderSize = visibleSize * (UtilHandle.browse.msie ? 3 : 5)
+        }
+        this.offsetSize = visibleSize * 2
+        this.scrollBottomSpaceElem.style.height = `${(this._fullData.length - this.renderSize) * this.rowHeight}px`
       }
     },
     // 定义列属性
@@ -1767,8 +1798,9 @@ export default {
     },
     checkValid () {
       // 查找是否存在校验不通过的列
-      let row = XEUtils.findTree(this.datas, row => row.validActive, this.elTreeOpts)
-      if (row) {
+      let matchObj = XEUtils.findTree(this.datas, row => row.validActive, this.elTreeOpts)
+      if (matchObj) {
+        let row = matchObj.item
         let column = XEUtils.findIndexOf(this.getColumns(), column => column.property === row.validActive)
         return {
           error: true,

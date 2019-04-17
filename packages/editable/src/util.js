@@ -2,6 +2,7 @@ import XEUtils from 'xe-utils'
 
 const browse = XEUtils.browse()
 const UtilHandle = {
+  browse,
   getWheelName () {
     return /Firefox/i.test(navigator.userAgent) ? 'DOMMouseScroll' : 'mousewheel'
   },

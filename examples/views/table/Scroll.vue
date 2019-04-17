@@ -4,8 +4,9 @@
     element-loading-text="生成数据中，请稍后..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
-    <p style="color: red;font-size: 12px;">启用滚动渲染，可以流畅的支撑海量数据</p>
-    <p style="color: red;font-size: 12px;">出于性能考虑：避免使用 data 双向绑定大数据，vue 监听会消耗大量性能，应该使用 reload 函数加载；不支持滚动效果；不支持动态行高；不支持树结构；不支持多选</p>
+    <p style="color: red;font-size: 12px;">启用滚动渲染，设置 render='scroll' 可以流畅的支撑海量数据</p>
+    <p style="color: red;font-size: 12px;">影响性能的参数：data、rowKey</p>
+    <p style="color: red;font-size: 12px;">兼容性：不支持动态行高；不支持树结构；不支持多选；必须指定高度</p>
 
     <div class="scroll0w-table-oper">
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
@@ -14,9 +15,10 @@
     <elx-table
       ref="elxTable"
       border
-      :config="{render: 'scroll', size: 10}"
+      height="460"
+      :config="{render: 'scroll'}"
       style="width: 100%">
-      <elx-table-column type="index" width="100" fixed="left"></elx-table-column>
+      <elx-table-column type="index" width="100"></elx-table-column>
       <elx-table-column prop="name" label="名字" min-width="100" show-overflow-tooltip>
         <template v-slot:header="scope">
           <i class="el-icon-question"></i>名字

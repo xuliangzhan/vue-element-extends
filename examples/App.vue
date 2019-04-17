@@ -69,7 +69,7 @@
           </div>
           <div class="apimenu-row">
             <a class="apimenu-title">滚动渲染</a>
-            <router-link class="apimenu-link" :to="{name: 'EditableScroll1', params: {number: 10000}}" replace>手动模式+1万数据</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableScroll1', params: {number: 5000}}" replace>手动模式+5千数据</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableScroll2', params: {number: 10000}}" replace>单击模式+列编辑+1万数据</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableScroll3', params: {number: 10000}}" replace>单击模式+行编辑+1万数据</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableScroll4', params: {number: 30000}}" replace>双击模式+列编辑+3万数据</router-link>

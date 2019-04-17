@@ -15,8 +15,9 @@
       ref="elxEditable"
       class="scroll-table3"
       border
+      height="500"
       size="small"
-      :edit-config="{trigger: 'click', mode: 'row', render: 'scroll', size: 10}"
+      :edit-config="{trigger: 'click', mode: 'row', render: 'scroll'}"
       style="width: 100%">
       <elx-editable-column type="index" width="100"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" min-width="140" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>

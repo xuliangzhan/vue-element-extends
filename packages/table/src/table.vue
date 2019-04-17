@@ -252,7 +252,7 @@ export default {
     _bindScrollEvent: ScrollHandle.bind(),
     _unbindScrollEvent: ScrollHandle.unbind(),
     _scrollEvent: ScrollHandle.scroll(),
-    _computeScroll: ScrollHandle.compute(8),
+    _computeScroll: ScrollHandle.compute(10),
     /****************************/
     /* Scroll methods end       */
     /****************************/

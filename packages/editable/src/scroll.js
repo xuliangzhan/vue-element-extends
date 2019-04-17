@@ -16,14 +16,18 @@ import UtilHandle from './util'
    */
 const ScrollHandle = {
   reload () {
-    return function () {
-      this.visibleIndex = 0
-      this.visibleStart = 0
+    return function (isReload) {
+      if (!isReload) {
+        this.visibleIndex = 0
+        this.visibleStart = 0
+      }
       this.datas = this._fullData.slice(this.visibleStart, this.visibleStart + this.renderSize)
       return this.$nextTick().then(() => {
         this._computeScroll()
-        this.bodyWrapperElem.scrollTop = 0
-        this.bodyWrapperElem.scrollLeft = 0
+        if (!isReload) {
+          this.bodyWrapperElem.scrollTop = 0
+          this.bodyWrapperElem.scrollLeft = 0
+        }
       })
     }
   },

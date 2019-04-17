@@ -681,7 +681,7 @@ export default {
         if (this.configs.size) {
           this.renderSize = this.configs.size
         } else {
-          this.renderSize = visibleSize * (UtilHandle.browse.msie ? 3 : 5)
+          this.renderSize = visibleSize * (UtilHandle.browse.msie ? 4 : 6)
         }
         this.offsetSize = visibleSize * 2
         this.scrollBottomSpaceElem.style.height = `${(this._fullData.length - this.renderSize) * this.rowHeight}px`

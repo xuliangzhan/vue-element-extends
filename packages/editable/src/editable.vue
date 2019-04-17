@@ -684,6 +684,7 @@ export default {
           this.renderSize = visibleSize * (UtilHandle.browse.msie ? 4 : 6)
         }
         this.offsetSize = visibleSize * 2
+        this.scrollTopSpaceElem.style.height = '0px'
         this.scrollBottomSpaceElem.style.height = `${(this._fullData.length - this.renderSize) * this.rowHeight}px`
       }
     },

@@ -299,7 +299,7 @@ export default {
       return defEvent
     },
     getRowIndex (scope) {
-      return this.$editable.visibleIndex + scope.$index
+      return this.$editable.visibleStart + scope.$index
     },
     formatRowIndex (scope) {
       let $index = this.getRowIndex(scope)

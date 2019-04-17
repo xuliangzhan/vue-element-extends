@@ -12,6 +12,7 @@
       <el-button type="info" size="mini" @click="$refs.elxEditable.clear()">清空表格</el-button>
       <el-button type="info" size="mini" @click="$refs.elxEditable.clearFilter()">清空筛选条件</el-button>
       <el-button type="info" size="mini" @click="$refs.elxEditable.clearSort()">清空排序条件</el-button>
+      <el-button type="success" size="mini" @click="$refs.elxEditable.toggleRowSelection(list[1])">选中第2个</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">校验&保存</el-button>
       <el-button type="primary" size="mini" @click="getInsertEvent">获取新增数据</el-button>
       <el-button type="primary" size="mini" @click="getUpdateEvent">获取已修改数据</el-button>

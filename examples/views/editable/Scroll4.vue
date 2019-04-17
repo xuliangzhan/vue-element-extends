@@ -17,7 +17,8 @@
       border
       height="500"
       size="small"
-      :edit-config="{trigger: 'dblclick', mode: 'cell', render: 'scroll'}"
+      :edit-config="{trigger: 'dblclick', mode: 'cell', render: 'scroll', useDefaultValidTip: true}"
+      :edit-rules="validRules"
       style="width: 100%">
       <elx-editable-column type="index" width="100"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" min-width="140" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
@@ -56,7 +57,15 @@ export default {
       loading: false,
       sexList: [],
       regionList: [],
-      isClearActiveFlag: true
+      isClearActiveFlag: true,
+      validRules: {
+        name: [
+          { required: true, message: '请输入名字', trigger: 'change' }
+        ],
+        age: [
+          { required: true, message: '请输入年龄', trigger: 'change' }
+        ]
+      }
     }
   },
   created () {

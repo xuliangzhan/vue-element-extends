@@ -4,7 +4,7 @@
     element-loading-text="生成数据中，请稍后..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
-    <p style="color: red;font-size: 12px;">双击模式、行编辑</p>
+    <p style="color: red;font-size: 12px;">双击模式、行编辑、校验</p>
 
     <div class="scroll-table5-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>
@@ -16,7 +16,8 @@
       class="scroll-table5"
       border
       height="500"
-      :edit-config="{trigger: 'dblclick', mode: 'row', render: 'scroll'}"
+      :edit-config="{trigger: 'dblclick', mode: 'row', render: 'scroll', useDefaultValidTip: true}"
+      :edit-rules="validRules"
       style="width: 100%">
       <elx-editable-column type="index" width="100"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" min-width="140" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
@@ -54,7 +55,15 @@ export default {
     return {
       loading: false,
       sexList: [],
-      regionList: []
+      regionList: [],
+      validRules: {
+        name: [
+          { required: true, message: '请输入名字', trigger: 'change' }
+        ],
+        age: [
+          { required: true, message: '请输入年龄', trigger: 'change' }
+        ]
+      }
     }
   },
   created () {

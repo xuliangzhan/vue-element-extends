@@ -32,6 +32,7 @@ import XEUtils from 'xe-utils'
 import GlobalEvent from './event.js'
 import UtilHandle from './util'
 import ScrollHandle from '../../editable/src/scroll'
+import DefineHandle from '../../editable/src/define'
 
 export default {
   name: 'ElxEditable',
@@ -40,42 +41,7 @@ export default {
     editRules: Object,
     contextMenuConfig: Object,
     customColumns: Array,
-
-    /**
-     * 还原 ElTable 所有属性
-     */
-    data: Array,
-    height: [String, Number],
-    maxHeight: [String, Number],
-    stripe: Boolean,
-    border: Boolean,
-    size: String,
-    fit: { type: Boolean, default: true },
-    showHeader: { type: Boolean, default: true },
-    highlightCurrentRow: Boolean,
-    currentRowKey: [String, Number],
-    lazy: Boolean,
-    indent: Number,
-    rowClassName: [Function, String],
-    rowStyle: [Function, Object],
-    cellClassName: [Function, String],
-    cellStyle: [Function, Object],
-    headerRowClassName: [Function, String],
-    headerRowStyle: [Function, Object],
-    headerCellClassName: [Function, String],
-    headerCellStyle: [Function, Object],
-    rowKey: [Function, String],
-    emptyText: String,
-    defaultExpandAll: Boolean,
-    expandRowKeys: Array,
-    defaultSort: Object,
-    tooltipEffect: { type: String, default: 'dark' },
-    showSummary: Boolean,
-    sumText: String,
-    summaryMethod: Function,
-    selectOnIndeterminate: { type: Boolean, default: true },
-    spanMethod: Function,
-    load: Function
+    ...DefineHandle.tableProps
   },
   provide () {
     return {

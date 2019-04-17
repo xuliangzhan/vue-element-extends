@@ -30,41 +30,13 @@
 
 <script>
 import XEUtils from 'xe-utils'
+import DefineHandle from '../../editable/src/define'
 
 export default {
   name: 'ElxTableColumn',
   props: {
     group: Boolean,
-
-    /**
-     * 还原 ElTableColumn 所有属性
-     */
-    index: [Number, Function],
-    type: String,
-    label: String,
-    columnKey: String,
-    prop: String,
-    width: String,
-    minWidth: String,
-    fixed: [Boolean, String],
-    sortable: [Boolean, String],
-    sortMethod: Function,
-    sortBy: [String, Array, Function],
-    sortOrders: Array,
-    resizable: { type: Boolean, default: true },
-    formatter: Function,
-    showOverflowTooltip: Boolean,
-    align: { type: String, default: 'left' },
-    headerAlign: String,
-    className: { type: String, default: '' },
-    labelClassName: String,
-    selectable: Function,
-    reserveSelection: Boolean,
-    filters: Array,
-    filterPlacement: String,
-    filterMultiple: { type: Boolean, default: true },
-    filterMethod: Function,
-    filteredValue: Array
+    ...DefineHandle.tableColumnProps
   },
   inject: [
     '$table'

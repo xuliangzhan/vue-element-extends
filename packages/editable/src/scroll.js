@@ -1,5 +1,19 @@
 import UtilHandle from './util'
 
+/**
+   * 滚动渲染，以优化的方式渲染表格
+   * 只渲染可视部分，其余收起
+   * top
+   *   --> 占位
+   *   --> offsetSize
+   * table
+   *   --> renderSize
+   *     --> visibleStart
+   *     --> visibleIndex
+   * bottom
+   *   --> offsetSize
+   *   --> 占位
+   */
 const ScrollHandle = {
   reload () {
     return function () {
@@ -37,20 +51,6 @@ const ScrollHandle = {
       this.bodyWrapperElem.removeEventListener('scroll', this._scrollEvent)
     }
   },
-  /**
-   * 滚动渲染，以优化的方式渲染表格
-   * 只渲染可视部分，其余收起
-   * top
-   *   --> 占位
-   *   --> offsetSize
-   * table
-   *   --> renderSize
-   *     --> visibleStart
-   *     --> visibleIndex
-   * bottom
-   *   --> offsetSize
-   *   --> 占位
-   */
   scroll () {
     return function (evnt) {
       let isRender

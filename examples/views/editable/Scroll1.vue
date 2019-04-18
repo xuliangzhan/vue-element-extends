@@ -6,7 +6,7 @@
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <p style="color: red;font-size: 12px;">启用滚动渲染，设置 render='scroll' 可以流畅的支撑海量数据</p>
     <p style="color: red;font-size: 12px;">影响性能的参数：data、rowKey</p>
-    <p style="color: red;font-size: 12px;">兼容性：不支持动态行高；不支持树结构；不支持多选；必须指定高度；不支持浮动列</p>
+    <p style="color: red;font-size: 12px;">兼容性：不支持动态行高；不支持树结构；不支持多选；不支持浮动列</p>
 
     <div class="scroll-table1-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>

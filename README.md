@@ -128,7 +128,7 @@ edit-config 编辑参数配置：
 | activeMethod | 只对 type=default 的列有效，该函数 Function({row, rowIndex, column?, columnIndex?}) 的返回值用来决定这一行或列是否允许编辑 | Function | — | — |
 | autoClearActive | 当点击其它地方后，是否自动清除最后激活的行或单元格 | Boolean | — | true |
 | clearActiveMethod | 该函数 Function({type, row, rowIndex, column?, columnIndex?}, event) 的返回值用来决定是否允许清除当前激活的行或单元格 | Function | — | — |
-| useDefaultValidTip | 如果同时使用了数据校验和 fixed 列，请设置为 true 使用默认提示  | Boolean | — | false |
+| useDefaultValidTip | 如果同时使用了数据校验和 fixed 列，请设置为 true 使用默认提示  | Boolean | — | true |
 | validTooltip | 只对 useDefaultValidTip=false 有效，设置校验 tooltip 提示消息的参数 | Object | — | { offset: 10, placement: 'bottom-start' } |
 | disabledValidTip | 关闭校验提示 | Boolean | — | false |
 | autoScrollIntoView | 当单元格被激活时，自动将单元格滚动到可视区域内 | Boolean | — | false |

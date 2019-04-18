@@ -13,7 +13,8 @@ import TableBase9 from './views/table/Base9'
 import TableCustom1 from './views/table/Custom1'
 import TableCustom2 from './views/table/Custom2'
 import TableCustom3 from './views/table/Custom3'
-import TableScroll from './views/table/Scroll'
+import TableScroll1 from './views/table/Scroll1'
+import TableScroll2 from './views/table/Scroll2'
 
 import EditableManual1 from './views/editable/Manual1'
 import EditableManual2 from './views/editable/Manual2'
@@ -48,11 +49,11 @@ import EditableExcel2 from './views/editable/Excel2'
 import EditableExcel3 from './views/editable/Excel3'
 import EditableExcel4 from './views/editable/Excel4'
 import EditableExcel5 from './views/editable/Excel5'
-import EditableScroll1 from './views/editable/Scroll1'
-import EditableScroll2 from './views/editable/Scroll2'
-import EditableScroll3 from './views/editable/Scroll3'
-import EditableScroll4 from './views/editable/Scroll4'
-import EditableScroll5 from './views/editable/Scroll5'
+import EditableBigScroll1 from './views/editable/BigScroll1'
+import EditableBigScroll2 from './views/editable/BigScroll2'
+import EditableBigScroll3 from './views/editable/BigScroll3'
+import EditableBigScroll4 from './views/editable/BigScroll4'
+import EditableBigScroll5 from './views/editable/BigScroll5'
 
 Vue.use(Router)
 
@@ -127,9 +128,14 @@ export default new Router({
       component: TableCustom3
     },
     {
-      path: '/table/scroll/:number',
-      name: 'TableScroll',
-      component: TableScroll
+      path: '/table/scroll1/:number',
+      name: 'TableScroll1',
+      component: TableScroll1
+    },
+    {
+      path: '/table/scroll2/:number',
+      name: 'TableScroll2',
+      component: TableScroll2
     },
     {
       path: '/editable/manual1',
@@ -168,28 +174,28 @@ export default new Router({
     },
     {
       path: '/editable/scroll1/:number',
-      name: 'EditableScroll1',
-      component: EditableScroll1
+      name: 'EditableBigScroll1',
+      component: EditableBigScroll1
     },
     {
       path: '/editable/scroll2/:number',
-      name: 'EditableScroll2',
-      component: EditableScroll2
+      name: 'EditableBigScroll2',
+      component: EditableBigScroll2
     },
     {
       path: '/editable/scroll3/:number',
-      name: 'EditableScroll3',
-      component: EditableScroll3
+      name: 'EditableBigScroll3',
+      component: EditableBigScroll3
     },
     {
       path: '/editable/scroll4/:number',
-      name: 'EditableScroll4',
-      component: EditableScroll4
+      name: 'EditableBigScroll4',
+      component: EditableBigScroll4
     },
     {
       path: '/editable/scroll5/:number',
-      name: 'EditableScroll5',
-      component: EditableScroll5
+      name: 'EditableBigScroll5',
+      component: EditableBigScroll5
     },
     {
       path: '/editable/click1',

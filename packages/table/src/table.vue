@@ -116,6 +116,8 @@ export default {
     this._handleColumns()
     if (this.scrollLoad) {
       this._bindScrollEvent().then(() => this._reloadScrollData())
+    } else {
+      this.datas = this._fullData
     }
   },
   destroyed () {

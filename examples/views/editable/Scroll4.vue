@@ -17,7 +17,7 @@
       border
       height="500"
       size="small"
-      :edit-config="{trigger: 'dblclick', mode: 'cell', render: 'scroll', useDefaultValidTip: true}"
+      :edit-config="{trigger: 'click', mode: 'cell', render: 'scroll', useDefaultValidTip: true}"
       :edit-rules="validRules"
       :context-menu-config="{headerMenus, bodyMenus}"
       style="width: 100%">

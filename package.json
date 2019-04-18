@@ -6,13 +6,14 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "lib": "vue-cli-service build --target lib --name index --dest lib packages/index.js"
+    "lib": "vue-cli-service build --target lib --name index --dest lib src/index.js"
   },
   "files": [
     "lib",
     "packages",
     "style",
-    "types"
+    "types",
+    "src"
   ],
   "main": "lib/index.common.js",
   "style": "lib/index.css",
@@ -20,34 +21,34 @@
   "jsdelivr": "lib/index.umd.js",
   "typings": "types/index.d.ts",
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.4.0",
-    "@vue/cli-plugin-eslint": "^3.4.0",
-    "@vue/cli-service": "^3.4.0",
+    "@vue/cli-plugin-babel": "^3.6.0",
+    "@vue/cli-plugin-eslint": "^3.6.0",
+    "@vue/cli-service": "^3.6.0",
+    "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "babel-plugin-component": "^1.1.1",
+    "core-js": "^2.6.5",
     "element-ui": "^2.7.2",
-    "eslint": "^5.8.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-friendly-formatter": "^4.0.1",
-    "eslint-loader": "^2.1.2",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
+    "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "file-saver": "^2.0.1",
     "font-awesome": "^4.7.0",
-    "iview": "^3.3.0",
+    "iview": "^3.4.0",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.1.0",
     "sortablejs": "^1.8.4",
     "vue": "^2.6.10",
-    "vue-cli-plugin-element": "^1.0.1",
-    "vue-router": "^3.0.1",
+    "vue-router": "^3.0.3",
     "vue-template-compiler": "^2.6.10",
     "xe-ajax": "^3.5.3",
     "xe-ajax-mock": "^1.7.10",
     "xe-clipboard": "^1.0.2",
     "xe-utils": "^1.8.19",
     "xlsx": "^0.14.2"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
   },
   "repository": {
     "type": "git",
@@ -67,5 +68,10 @@
   "bugs": {
     "url": "https://github.com/xuliangzhan/vue-element-extends/issues"
   },
-  "homepage": "https://github.com/xuliangzhan/vue-element-extends#readme"
+  "homepage": "https://github.com/xuliangzhan/vue-element-extends#readme",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }

@@ -173,6 +173,8 @@ export default {
         autoScrollIntoView: false,
         // 是否启用 Tab 键切换到下一个单元格
         isTabKey: false,
+        // 只对 isTabKey=true 有效，是否启用 Tab 键切换后直接激活为编辑状态
+        tabToActive: false,
         // 是否启用箭头键切换行和单元格
         isArrowKey: false,
         // 是否启用选中状态是否允许值覆盖式编辑，当 isTabKey 或 isArrowKey 为true 时启用时默认 true，否则 false
@@ -649,11 +651,10 @@ export default {
                         .then(() => {
                           this._restoreTooltip()
                           this._clearActiveData()
-                          row.editActive = null
-                          row.checked = offsetColumn.property
+                          this._tabActiveCell(row, offsetColumn)
                         }).catch(rule => this._toValidError(rule, row, column, cell))
                     } else {
-                      row.checked = offsetColumn.property
+                      this._tabActiveCell(row, offsetColumn)
                     }
                     evnt.preventDefault()
                   } else {
@@ -667,12 +668,12 @@ export default {
                           .then(() => {
                             row.editActive = null
                             row.checked = null
-                            offsetRow.checked = offsetColumn.property
+                            this._tabActiveCell(offsetRow, offsetColumn)
                             this._restoreTooltip()
                           }).catch(rule => this._toValidError(rule, row, column, cell))
                       } else {
                         row.checked = null
-                        offsetRow.checked = offsetColumn.property
+                        this._tabActiveCell(offsetRow, offsetColumn)
                       }
                       evnt.preventDefault()
                     }
@@ -722,6 +723,15 @@ export default {
         }
       }
       this.closeContextMenu()
+    },
+    _tabActiveCell (offsetRow, offsetColumn) {
+      if (this.configs.tabToActive) {
+        let { cell } = this._getColumnByRowIndex(offsetRow.data, offsetColumn.property)
+        this._triggerActive(offsetRow, offsetColumn, cell, { type: 'edit', trigger: 'call' })
+      } else {
+        offsetRow.editActive = null
+        offsetRow.checked = offsetColumn.property
+      }
     },
     /**
      * 显示右键菜单

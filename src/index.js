@@ -1,7 +1,7 @@
-import Table from './table'
-import TableColumn from './table-column'
-import Editable from './editable'
-import EditableColumn from './editable-column'
+import Table from '../packages/table'
+import TableColumn from '../packages/table-column'
+import Editable from '../packages/editable'
+import EditableColumn from '../packages/editable-column'
 
 const components = [
   Table,

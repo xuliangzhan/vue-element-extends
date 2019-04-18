@@ -133,6 +133,7 @@ edit-config 编辑参数配置：
 | disabledValidTip | 关闭校验提示 | Boolean | — | false |
 | autoScrollIntoView | 当单元格被激活时，自动将单元格滚动到可视区域内 | Boolean | — | false |
 | isTabKey | 只对 trigger!=manual 有效，是否启用 Tab 键切换到下一个单元格 | Boolean | — | false |
+| tabToActive | 只对 isTabKey=true 有效，是否在 Tab 键切换后直接激活为编辑状态 | Boolean | — | false |
 | isArrowKey | 只对 trigger!=manual 有效，是否启用箭头键切换行和单元格 | Boolean | — | false |
 | isCheckedEdit | 只对 trigger!=manual 有效，是否启用选中状态允许值覆盖式编辑 | Boolean | — | false |
 | checkedEditMethod | 只对 isCheckedEdit=true 有效，可以通过重写该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 返回 false 来阻止默认值的覆盖行为 | Function | — | — |

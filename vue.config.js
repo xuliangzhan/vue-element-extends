@@ -28,7 +28,7 @@ module.exports = {
     config.output
       .set('libraryExport', 'default')
       .set('library', 'VueElementExtends')
-    if (process.env.npm_lifecycle_event === 'lib') {
+    if (process.env.npm_lifecycle_event.indexOf('lib') === 0) {
       let XEUtils = {
         root: 'XEUtils',
         commonjs: 'xe-utils',

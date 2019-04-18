@@ -91,8 +91,10 @@ export default {
       return Object.assign({
         // 渲染方式，可以设置为 scroll 启用滚动渲染，支持海量数据
         render: 'default',
-        // 只对 render=scroll 有效，滚动实时渲染条数
-        size: null
+        // 只对 render=scroll 有效，自定义滚动实时渲染条数，不应该低于可视区域数量的两倍（高级参数）
+        renderSize: 0,
+        // 只对 render=scroll 有效，自定义滚动实时渲染阈值，不应该低于可视区域的数量（高级参数）
+        offsetSize: 0
       }, this.config)
     },
     scrollLoad () {
@@ -254,7 +256,7 @@ export default {
     _bindScrollEvent: ScrollHandle.bind(),
     _unbindScrollEvent: ScrollHandle.unbind(),
     _scrollEvent: ScrollHandle.scroll(),
-    _computeScroll: ScrollHandle.compute(10),
+    _computeScroll: ScrollHandle.compute(8),
     /****************************/
     /* Scroll methods end       */
     /****************************/

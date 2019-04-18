@@ -3,12 +3,13 @@ import UtilHandle from './util'
 /**
    * 滚动渲染，以优化的方式渲染表格
    * 只渲染可视部分，其余收起
+   * 计算规则：
    * top
    *   --> 占位
    *   --> offsetSize
    * table
-   *   --> renderSize
-   *     --> visibleStart
+   *   --> visibleStart
+   *     --> renderSize
    *     --> visibleIndex
    * bottom
    *   --> offsetSize
@@ -18,7 +19,7 @@ const ScrollHandle = {
   reload () {
     return function (isReload) {
       return this.$nextTick().then(() => {
-        this._computeScroll()
+        this._computeScroll(isReload)
         // 如果重新加载表格，索引重新初始化
         if (!isReload) {
           this.visibleIndex = 0
@@ -84,7 +85,7 @@ const ScrollHandle = {
       }
       if (isRender) {
         // 超过阈值重新渲染
-        let toVisibleStart = toVisibleIndex - (renderSize / 2)
+        let toVisibleStart = toVisibleIndex - 1
         if (toVisibleStart < 0) {
           toVisibleStart = 0
         } else if (toVisibleStart + renderSize >= fullData.length) {
@@ -109,7 +110,7 @@ const ScrollHandle = {
   },
   compute (size) {
     let defSize = UtilHandle.browse.msie ? size / 2 : size
-    return function () {
+    return function (isReload) {
       if (this.scrollLoad) {
         let firstTrElem = this.tableElem.querySelector('tbody>tr')
         if (!firstTrElem) {
@@ -119,14 +120,12 @@ const ScrollHandle = {
           this.rowHeight = firstTrElem.clientHeight
         }
         let visibleSize = Math.ceil(this.bodyWrapperElem.clientHeight / this.rowHeight)
-        if (this.configs.size) {
-          this.renderSize = this.configs.size
-        } else {
-          this.renderSize = visibleSize * defSize
+        this.renderSize = this.configs.renderSize || visibleSize * defSize
+        this.offsetSize = this.configs.offsetSize || visibleSize * 2
+        if (!isReload) {
+          this.scrollTopSpaceElem.style.height = '0px'
+          this.scrollBottomSpaceElem.style.height = `${(this._fullData.length - this.renderSize) * this.rowHeight}px`
         }
-        this.offsetSize = visibleSize * 2
-        this.scrollTopSpaceElem.style.height = '0px'
-        this.scrollBottomSpaceElem.style.height = `${(this._fullData.length - this.renderSize) * this.rowHeight}px`
       }
     }
   }

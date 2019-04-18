@@ -1,7 +1,8 @@
-import Table from '../table/src/table'
+import ElxTable from '../table/src/table'
 
-Table.install = function (Vue) {
-  Vue.component(Table.name, Table)
+ElxTable.install = function (Vue) {
+  Vue.component(ElxTable.name, ElxTable)
 }
 
-export default Table
+export const Table = ElxTable
+export default ElxTable

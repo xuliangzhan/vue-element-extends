@@ -1,7 +1,8 @@
-import Editable from './src/editable'
+import ElxEditable from './src/editable'
 
-Editable.install = function (Vue) {
-  Vue.component(Editable.name, Editable)
+ElxEditable.install = function (Vue) {
+  Vue.component(ElxEditable.name, ElxEditable)
 }
 
-export default Editable
+export const Editable = ElxEditable
+export default ElxEditable

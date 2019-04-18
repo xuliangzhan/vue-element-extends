@@ -20,6 +20,10 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 }
 
+export * from '../packages/table'
+export * from '../packages/table-column'
+export * from '../packages/editable'
+export * from '../packages/editable-column'
 export default {
   install,
   Table,

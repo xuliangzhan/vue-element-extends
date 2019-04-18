@@ -1,7 +1,8 @@
-import EditableColumn from '../editable/src/editable-column'
+import ElxEditableColumn from '../editable/src/editable-column'
 
-EditableColumn.install = function (Vue) {
-  Vue.component(EditableColumn.name, EditableColumn)
+ElxEditableColumn.install = function (Vue) {
+  Vue.component(ElxEditableColumn.name, ElxEditableColumn)
 }
 
-export default EditableColumn
+export const EditableColumn = ElxEditableColumn
+export default ElxEditableColumn

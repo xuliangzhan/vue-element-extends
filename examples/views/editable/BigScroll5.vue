@@ -4,10 +4,11 @@
     element-loading-text="生成数据中，请稍后..."
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
-    <p style="color: red;font-size: 12px;">双击模式、行编辑、校验</p>
+    <p style="color: red;font-size: 12px;">双击模式、行编辑、校验、多选</p>
 
     <div class="scroll-table5-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>
+      <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="success" size="small" @click="exportCsvEvent">导出</el-button>
     </div>
 
@@ -16,10 +17,13 @@
       class="scroll-table5"
       border
       height="500"
+      row-key="id"
       :edit-config="{trigger: 'dblclick', mode: 'row', render: 'scroll', useDefaultValidTip: true}"
       :edit-rules="validRules"
       :context-menu-config="{headerMenus, bodyMenus}"
+      @selection-change="handleSelectionChange"
       style="width: 100%">
+      <elx-editable-column type="selection" width="55"></elx-editable-column>
       <elx-editable-column type="index" width="100"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" min-width="140" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="sex" label="性别" min-width="140" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
@@ -55,6 +59,7 @@ export default {
   data () {
     return {
       loading: false,
+      multipleSelection: [],
       sexList: [],
       regionList: [],
       validRules: {
@@ -148,6 +153,9 @@ export default {
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
     insertEvent () {
       this.$refs.elxEditable.insert({
         name: `New ${Date.now()}`,
@@ -169,6 +177,23 @@ export default {
         })
       } else {
         this.$refs.elxEditable.remove(row)
+      }
+    },
+    deleteSelectedEvent () {
+      let removeRecords = this.$refs.elxEditable.getSelecteds()
+      if (removeRecords.length) {
+        MessageBox.confirm('确定删除所选数据?', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$refs.elxEditable.removeSelecteds()
+        }).catch(e => e)
+      } else {
+        Message({
+          type: 'info',
+          message: '请至少选择一条数据！'
+        })
       }
     },
     saveRowEvent (row) {

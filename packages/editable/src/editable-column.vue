@@ -1,5 +1,13 @@
 <template>
-  <el-table-column v-if="isVisible && (type === 'selection' || group || isGroup)" v-bind="attrs">
+  <el-table-column v-if="isVisible && (type === 'selection' && scrollLoad)" v-bind="attrs">
+    <template v-slot:header="scope">
+      <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="checkAllEvent"></el-checkbox>
+    </template>
+    <template v-slot="scope">
+      <el-checkbox v-model="scope.row.scrollChecked" @change="checkRowEvent(scope)"></el-checkbox>
+    </template>
+  </el-table-column>
+  <el-table-column v-else-if="isVisible && (type === 'selection' || group || isGroup)" v-bind="attrs">
     <slot></slot>
   </el-table-column>
   <el-table-column v-else-if="isVisible && type === 'index'" v-bind="attrs">
@@ -101,6 +109,8 @@ export default {
   ],
   data () {
     return {
+      checkAll: false,
+      isIndeterminate: false,
       // 支持内置组件
       comps: [
         'ElAutocomplete',
@@ -134,6 +144,9 @@ export default {
           label: 'label'
         }
       }, editRender)
+    },
+    scrollLoad () {
+      return this.$editable.scrollLoad
     },
     isReadonly () {
       return !this.editRender
@@ -173,7 +186,7 @@ export default {
         sortBy = `data.${this.prop}`
       }
       return {
-        type: this.type,
+        type: this.scrollLoad ? null : this.type,
         label: this.label,
         columnKey: this.columnKey,
         prop: this.prop,
@@ -389,6 +402,35 @@ export default {
     },
     filterMethodEvent (value, row, column) {
       return this.filterMethod(value, row.data, column)
+    },
+    checkAllEvent () {
+      let status = this.checkAll
+      let _fullData = this.$editable._fullData
+      _fullData.forEach(item => {
+        item.scrollChecked = status
+      })
+      this.isIndeterminate = false
+      this.$editable.$emit('select-all', status ? _fullData.map(item => item ? item.data : item) : [])
+      this.$editable._updateSelection(status ? _fullData : [])
+    },
+    checkRowEvent ({ row }) {
+      let selection = this.handleCheckRow()
+      this.$editable.$emit('select', selection.map(item => item ? item.data : item), row.data)
+      this.$editable._updateSelection(selection)
+    },
+    handleCheckRow () {
+      if (this.type === 'selection' && this.scrollLoad) {
+        let _fullData = this.$editable._fullData
+        let selection = _fullData.filter(item => item.scrollChecked)
+        this.isIndeterminate = selection.length > 0
+        if (this.isIndeterminate && _fullData.every(item => item.scrollChecked)) {
+          this.checkAll = true
+          this.isIndeterminate = false
+        } else {
+          this.checkAll = false
+        }
+        return selection
+      }
     }
   }
 }

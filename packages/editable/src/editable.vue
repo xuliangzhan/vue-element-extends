@@ -54,6 +54,7 @@ export default {
     return {
       editProto: {},
       datas: [],
+      selection: [],
       initialStore: [],
       deleteRecords: [],
       lastActive: null,
@@ -155,8 +156,10 @@ export default {
         mode: 'cell',
         // 渲染方式，可以设置为 scroll 启用滚动渲染，支持海量数据
         render: 'default',
-        // 只对 render=scroll 有效，滚动实时渲染条数
-        size: null,
+        // 只对 render=scroll 有效，自定义滚动实时渲染条数，不应该低于可视区域数量的两倍（高级参数）
+        renderSize: 0,
+        // 只对 render=scroll 有效，自定义滚动实时渲染阈值，不应该低于可视区域的数量（高级参数）
+        offsetSize: 0,
         // 是否显示列头编辑图标
         showIcon: true,
         // 是否实时显示单元格值的修改状态
@@ -215,9 +218,13 @@ export default {
       } else {
         this.isUpdateColumns = false
       }
+    },
+    selection (value) {
+      this.$emit('selection-change', this._getData(value))
     }
   },
   created () {
+    window.aa = this
     this._bindEvents()
     if (this.scrollLoad) {
       this._bindScrollEvent().then(() => this._reloadScrollData())
@@ -523,6 +530,8 @@ export default {
         showValidMsg: false,
         // 是否选中状态
         checked: null,
+        // 只对滚动渲染有效，是否选中
+        scrollChecked: false,
         // 激活编辑的字段
         editActive: null,
         // 编辑状态
@@ -537,6 +546,9 @@ export default {
       let data = this._getData()
       this.isUpdateData = true
       this.$emit('update:data', data)
+    },
+    _updateSelection (selection) {
+      this.selection = selection
     },
     _bindEvents () {
       GlobalEvent.on(this, 'click', evnt => this._triggerClear(evnt))
@@ -578,7 +590,7 @@ export default {
     },
     // 获取选中
     _getSelectRows () {
-      return this.$refs.refElTable ? this.$refs.refElTable.selection : []
+      return this.scrollLoad ? this.selection : (this.$refs.refElTable ? this.$refs.refElTable.selection : [])
     },
     // 设置默认勾选
     _setDefaultChecked () {
@@ -1015,6 +1027,19 @@ export default {
       })
     },
     /**
+     * 滚动渲染情况下
+     * 当进行 remove 操作时，更新多选框状态
+     */
+    _clearScrollChecked () {
+      if (this.$refs.refElTable) {
+        this.$refs.refElTable.$children.forEach(comp => {
+          if (comp && comp.handleCheckRow) {
+            comp.handleCheckRow()
+          }
+        })
+      }
+    },
+    /**
      * 禁用列 Tooltip
      * 如果行或列被激活编辑时，关闭 tooltip 提示并禁用
      */
@@ -1403,7 +1428,7 @@ export default {
     _bindScrollEvent: ScrollHandle.bind(),
     _unbindScrollEvent: ScrollHandle.unbind(),
     _scrollEvent: ScrollHandle.scroll(),
-    _computeScroll: ScrollHandle.compute(5),
+    _computeScroll: ScrollHandle.compute(3),
     /****************************/
     /* Scroll methods end       */
     /****************************/
@@ -1572,6 +1597,7 @@ export default {
         this._updateData()
         if (this.scrollLoad) {
           this._reloadScrollData(true)
+          this._clearScrollChecked()
         }
       }
       return this.$nextTick().then(() => rest)

@@ -1,7 +1,8 @@
-import TableColumn from '../table/src/table-column'
+import ElxTableColumn from '../table/src/table-column'
 
-TableColumn.install = function (Vue) {
-  Vue.component(TableColumn.name, TableColumn)
+ElxTableColumn.install = function (Vue) {
+  Vue.component(ElxTableColumn.name, ElxTableColumn)
 }
 
-export default TableColumn
+export const TableColumn = ElxTableColumn
+export default ElxTableColumn

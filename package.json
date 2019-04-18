@@ -11,12 +11,14 @@
   "files": [
     "lib",
     "packages",
-    "style"
+    "style",
+    "types"
   ],
   "main": "lib/index.common.js",
   "style": "lib/index.css",
   "unpkg": "lib/index.umd.js",
   "jsdelivr": "lib/index.umd.js",
+  "typings": "types/index.d.ts",
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
     "@vue/cli-plugin-eslint": "^3.4.0",

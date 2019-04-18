@@ -19,6 +19,7 @@
       size="small"
       :edit-config="{trigger: 'dblclick', mode: 'cell', render: 'scroll', useDefaultValidTip: true}"
       :edit-rules="validRules"
+      :context-menu-config="{headerMenus, bodyMenus}"
       style="width: 100%">
       <elx-editable-column type="index" width="100"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" min-width="140" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
@@ -65,7 +66,52 @@ export default {
         age: [
           { required: true, message: '请输入年龄', trigger: 'change' }
         ]
-      }
+      },
+      headerMenus: [
+        [
+          {
+            code: 'ALL_EXPORT',
+            name: '导出全部.cvs',
+            prefixIcon: 'el-icon-download'
+          }
+        ]
+      ],
+      bodyMenus: [
+        [
+          {
+            code: 'ROW_INSERT_ACTIVE',
+            name: '插入新行',
+            prefixIcon: 'el-icon-plus'
+          },
+          {
+            code: 'ROW_REMOVE',
+            name: '删除行',
+            prefixIcon: 'el-icon-minus'
+          }
+        ],
+        [
+          {
+            code: 'CELL_RESET',
+            name: '清除内容',
+            prefixIcon: 'el-icon-close'
+          },
+          {
+            code: 'CELL_REVERT',
+            name: '还原数据'
+          }
+        ],
+        [
+          {
+            code: 'ROW_EXPORT',
+            name: '导出行.cvs',
+            prefixIcon: 'el-icon-download'
+          },
+          {
+            code: 'ALL_EXPORT',
+            name: '导出全部.cvs'
+          }
+        ]
+      ]
     }
   },
   created () {

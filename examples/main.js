@@ -14,7 +14,7 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-// 后台异步生成70万数据
+// 后台异步生成70万数据，为了避免大量运算卡主页面，生成大约需要23秒左右
 var list = window.CACHE_DATA_LIST = []
 var currTime = Date.now()
 var fullIndex = 0

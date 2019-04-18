@@ -7,6 +7,7 @@
     <div class="manual-table3-oper">
       <el-button type="success" size="mini" @click="insertEvent">新增</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
+      <el-button type="info" size="mini" @click="$refs.elxEditable.toggleRowSelection(list[1])">第二个选中/取消</el-button>
       <el-button type="warning" size="mini" @click="submitEvent">保存</el-button>
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
     </div>

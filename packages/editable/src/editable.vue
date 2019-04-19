@@ -30,7 +30,7 @@
 <script>
 import XEUtils from 'xe-utils'
 import GlobalEvent from './event.js'
-import UtilHandle from './util'
+import UtilHandle from './tool'
 import ScrollHandle from '../../editable/src/scroll'
 import DefineHandle from '../../editable/src/define'
 

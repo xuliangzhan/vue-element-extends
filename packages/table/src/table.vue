@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import UtilHandle from '../../editable/src/util'
+import UtilHandle from '../../editable/src/tool'
 import ScrollHandle from '../../editable/src/scroll'
 import DefineHandle from '../../editable/src/define'
 

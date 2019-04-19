@@ -1,5 +1,5 @@
 import XEUtils from 'xe-utils'
-import UtilHandle from './util'
+import UtilHandle from './tool'
 
 // 监听全局事件
 const wheelName = UtilHandle.getWheelName()

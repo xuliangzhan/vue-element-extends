@@ -18,7 +18,7 @@
         :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod: clearActiveMethod1}"
         style="width: 100%">
         <elx-editable-column type="selection" width="55"></elx-editable-column>
-        <elx-editable-column prop="seq" label="序号" width="80" align="center" :edit-render="{name: 'ElInputNumber'}"></elx-editable-column>
+        <elx-editable-column prop="seq" label="序号" width="140" align="center" :edit-render="{name: 'ElInputNumber'}"></elx-editable-column>
         <elx-editable-column prop="key" label="字段名" width="120" :edit-render="{name: 'ElSelect', options: keyList, events: {change: uniqueKey}}"></elx-editable-column>
         <elx-editable-column prop="name" label="字段描述" width="120" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
         <elx-editable-column prop="readonly" label="是否只读" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>

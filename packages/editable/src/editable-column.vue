@@ -93,7 +93,7 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import DefineHandle from '../../editable/src/define'
+import DefineHandle from './define'
 
 export default {
   name: 'ElxEditableColumn',
@@ -261,7 +261,9 @@ export default {
       return XEUtils.get(row.data, column.property)
     },
     getRendAttrs (scope) {
-      return this.renderOpts.attrs
+      let size = this.$editable.size
+      let attrs = this.renderOpts.attrs
+      return size ? Object.assign({ size }, attrs) : attrs
     },
     getRendEvents ({ $index, row, column, store }) {
       let type = 'change'

@@ -43,16 +43,13 @@
 滚动渲染计算逻辑：
 
 ```html
-  top  
-    --> Element space  
-    --> offsetSize  
-  table  
+  top --> Space  
     --> visibleStart  
       --> renderSize  
-      --> visibleIndex  
-  bottom  
-    --> offsetSize  
-    --> Element space  
+        --> offsetSize  
+  table --> visibleIndex  
+        --> offsetSize  
+  bottom --> Space  
 ```
 
 ## Installing

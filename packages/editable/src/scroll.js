@@ -2,18 +2,14 @@ import UtilHandle from './tool'
 
 /**
    * 滚动渲染，以优化的方式渲染表格
-   * 只渲染可视部分，其余收起
    * 计算规则：
-   * top
-   *   --> Element space
-   *   --> offsetSize
-   * table
+   * top --> Space
    *   --> visibleStart
    *     --> renderSize
-   *     --> visibleIndex
-   * bottom
-   *   --> offsetSize
-   *   --> Element space
+   *       --> offsetSize
+   * table --> visibleIndex
+   *       --> offsetSize
+   * bottom --> Space
    */
 const ScrollHandle = {
   reload () {
@@ -86,7 +82,7 @@ const ScrollHandle = {
       }
       if (isRender) {
         // 超过阈值重新渲染
-        let toVisibleStart = toVisibleIndex - 1
+        let toVisibleStart = isTop ? toVisibleIndex - 1 : toVisibleIndex - offsetSize
         if (toVisibleStart < 0) {
           toVisibleStart = 0
         } else if (toVisibleStart + renderSize >= fullData.length) {
@@ -121,8 +117,9 @@ const ScrollHandle = {
           this.rowHeight = firstTrElem.clientHeight
         }
         let visibleSize = Math.ceil(this.bodyWrapperElem.clientHeight / this.rowHeight)
-        this.renderSize = this.configs.renderSize || visibleSize * defSize
-        this.offsetSize = this.configs.offsetSize || visibleSize * 2
+        let renderSize = this.configs.renderSize || visibleSize * defSize
+        this.offsetSize = this.configs.offsetSize || (renderSize > visibleSize * 4 ? visibleSize * 2 : (renderSize > visibleSize * 2 ? visibleSize : Math.floor(visibleSize / 2)))
+        this.renderSize = renderSize
         if (!isReload) {
           this.scrollTopSpaceElem.style.height = '0px'
           this.scrollBottomSpaceElem.style.height = this._fullData.length > this.renderSize ? `${(this._fullData.length - this.renderSize) * this.rowHeight}px` : '0px'

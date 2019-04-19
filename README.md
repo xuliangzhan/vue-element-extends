@@ -38,6 +38,20 @@
 
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)
 
+## Scroll render
+
+计算规则：
+top
+  --> 占位
+  --> offsetSize
+table
+  --> visibleStart
+  --> renderSize
+  --> visibleIndex
+bottom
+  --> offsetSize
+  --> 占位
+
 ## Installing
 
 ```shell

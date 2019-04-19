@@ -224,7 +224,6 @@ export default {
     }
   },
   created () {
-    window.aa = this
     this._bindEvents()
     if (this.scrollLoad) {
       this._bindScrollEvent().then(() => this._reloadScrollData())

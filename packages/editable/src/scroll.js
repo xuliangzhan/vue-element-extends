@@ -19,14 +19,15 @@ const ScrollHandle = {
   reload () {
     return function (isReload) {
       return this.$nextTick().then(() => {
-        this._computeScroll(isReload)
         // 如果重新加载表格，索引重新初始化
         if (!isReload) {
           this.visibleIndex = 0
           this.visibleStart = 0
+          this._computeScroll(isReload)
         }
         this.datas = this._fullData.slice(this.visibleStart, this.visibleStart + this.renderSize)
         return this.$nextTick().then(() => {
+          this._computeScroll(isReload)
           // 如果重新加载表格，滚动位置重新初始化
           if (!isReload) {
             this.bodyWrapperElem.scrollTop = 0
@@ -124,7 +125,7 @@ const ScrollHandle = {
         this.offsetSize = this.configs.offsetSize || visibleSize * 2
         if (!isReload) {
           this.scrollTopSpaceElem.style.height = '0px'
-          this.scrollBottomSpaceElem.style.height = `${(this._fullData.length - this.renderSize) * this.rowHeight}px`
+          this.scrollBottomSpaceElem.style.height = this._fullData.length > this.renderSize ? `${(this._fullData.length - this.renderSize) * this.rowHeight}px` : '0px'
         }
       }
     }

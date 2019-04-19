@@ -40,17 +40,17 @@
 
 ## Scroll render
 
-计算规则：  
-top  
-  --> 占位  
-  --> offsetSize  
-table  
-  --> visibleStart  
-  --> renderSize  
-  --> visibleIndex  
-bottom  
-  --> offsetSize  
-  --> 占位  
+滚动渲染计算逻辑：  
+  top  
+    --> 占位  
+    --> offsetSize  
+  table  
+    --> visibleStart  
+      --> renderSize  
+      --> visibleIndex  
+  bottom  
+    --> offsetSize  
+    --> 占位  
 
 ## Installing
 

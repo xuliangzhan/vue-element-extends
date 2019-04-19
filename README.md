@@ -44,7 +44,7 @@
 
 ```html
   top  
-    --> 占位  
+    --> Element space  
     --> offsetSize  
   table  
     --> visibleStart  
@@ -52,7 +52,7 @@
       --> visibleIndex  
   bottom  
     --> offsetSize  
-    --> 占位  
+    --> Element space  
 ```
 
 ## Installing

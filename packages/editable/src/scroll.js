@@ -5,7 +5,7 @@ import UtilHandle from './util'
    * 只渲染可视部分，其余收起
    * 计算规则：
    * top
-   *   --> 占位
+   *   --> Element space
    *   --> offsetSize
    * table
    *   --> visibleStart
@@ -13,7 +13,7 @@ import UtilHandle from './util'
    *     --> visibleIndex
    * bottom
    *   --> offsetSize
-   *   --> 占位
+   *   --> Element space
    */
 const ScrollHandle = {
   reload () {

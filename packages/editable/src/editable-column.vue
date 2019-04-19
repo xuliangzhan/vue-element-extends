@@ -58,8 +58,8 @@
       <template v-else>
         <slot v-bind="getRowScope(scope)">{{ formatColumnLabel(scope) }}</slot>
       </template>
-      <template v-if="scope.row.validActive && !elxConfig.disabledValidTip && scope.row.validActive === scope.column.property">
-        <template v-if="elxConfig.useDefaultValidTip">
+      <template v-if="scope.row.validActive && !editConfig.disabledValidTip && scope.row.validActive === scope.column.property">
+        <template v-if="editConfig.useDefaultValidTip">
           <template v-if="scope.row.showValidMsg">
             <slot name="valid" v-bind="getVaildScope(scope)">
               <div class="editable-valid_error">
@@ -69,7 +69,7 @@
           </template>
         </template>
         <template v-else>
-          <el-tooltip :value="scope.row.showValidMsg" v-bind="elxConfig.validTooltip">
+          <el-tooltip :value="scope.row.showValidMsg" v-bind="editConfig.validTooltip">
             <div class="editable-valid_wrapper"></div>
             <template v-slot:content>
               <slot name="valid" v-bind="getVaildScope(scope)">
@@ -93,19 +93,17 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import DefineHandle from './define'
+import PropsStatic from './props'
 
 export default {
   name: 'ElxEditableColumn',
   props: {
     group: Boolean,
     editRender: Object,
-    ...DefineHandle.tableColumnProps
+    ...PropsStatic.tableColumn
   },
   inject: [
-    '$editable',
-    'elxConfig',
-    'elxRules'
+    '$editable'
   ],
   data () {
     return {
@@ -144,6 +142,9 @@ export default {
           label: 'label'
         }
       }, editRender)
+    },
+    editConfig () {
+      return this.$editable.configs
     },
     scrollLoad () {
       return this.$editable.scrollLoad
@@ -376,8 +377,9 @@ export default {
     },
     checkRequired ({ column, store }) {
       let property = column.property
-      if (property && this.elxRules) {
-        let columnRules = XEUtils.get(this.elxRules, property)
+      let editRules = this.$editable.editRules
+      if (property && editRules) {
+        let columnRules = XEUtils.get(editRules, property)
         if (columnRules) {
           return columnRules.some(rule => rule.required === true)
         }
@@ -385,10 +387,10 @@ export default {
       return false
     },
     isEditRender ({ row, column }) {
-      return this.renderOpts.type === 'visible' || (row.editActive && (this.elxConfig.mode === 'row' ? row.editActive : row.editActive === column.property))
+      return this.renderOpts.type === 'visible' || (row.editActive && (this.editConfig.mode === 'row' ? row.editActive : row.editActive === column.property))
     },
     checkIcon ({ column, store }) {
-      return column.property && this.elxConfig.showIcon
+      return column.property && this.editConfig.showIcon
     },
     sortByEvent (row, index) {
       return this.sortBy(row.data, index)
@@ -424,8 +426,9 @@ export default {
       if (this.type === 'selection' && this.scrollLoad) {
         let _fullData = this.$editable._fullData
         let selection = _fullData.filter(item => item.scrollChecked)
-        this.isIndeterminate = selection.length > 0
-        if (this.isIndeterminate && _fullData.every(item => item.scrollChecked)) {
+        let isIndeterminate = selection.length > 0
+        this.isIndeterminate = isIndeterminate
+        if (isIndeterminate && _fullData.every(item => item.scrollChecked)) {
           this.checkAll = true
           this.isIndeterminate = false
         } else {

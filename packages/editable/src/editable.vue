@@ -39,8 +39,8 @@
 import XEUtils from 'xe-utils'
 import GlobalEvent from './event.js'
 import UtilHandle from './tool'
-import ScrollHandle from '../../editable/src/scroll'
-import DefineHandle from '../../editable/src/define'
+import ScrollHandle from './scroll'
+import PropsStatic from './props'
 
 export default {
   name: 'ElxEditable',
@@ -49,13 +49,11 @@ export default {
     editRules: Object,
     contextMenuConfig: Object,
     customColumns: Array,
-    ...DefineHandle.tableProps
+    ...PropsStatic.table
   },
   provide () {
     return {
-      $editable: this,
-      elxConfig: this.configs,
-      elxRules: this.editRules
+      $editable: this
     }
   },
   data () {
@@ -1875,11 +1873,12 @@ export default {
       UtilHandle.downloadCsc(opts, UtilHandle.getCsvContent(opts, oData, columns, this.$el))
     },
     closeContextMenu () {
-      this.ctxMenuStore.info = null
-      this.ctxMenuStore.visible = false
-      this.ctxMenuStore.selected = null
-      this.ctxMenuStore.selectChild = null
-      this.ctxMenuStore.showChild = false
+      let ctxMenuStore = this.ctxMenuStore
+      ctxMenuStore.info = null
+      ctxMenuStore.visible = false
+      ctxMenuStore.selected = null
+      ctxMenuStore.selectChild = null
+      ctxMenuStore.showChild = false
     }
     /****************************/
     /* Public methods end       */

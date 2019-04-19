@@ -30,13 +30,13 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import DefineHandle from '../../editable/src/define'
+import PropsStatic from '../../editable/src/props'
 
 export default {
   name: 'ElxTableColumn',
   props: {
     group: Boolean,
-    ...DefineHandle.tableColumnProps
+    ...PropsStatic.tableColumn
   },
   inject: [
     '$table'

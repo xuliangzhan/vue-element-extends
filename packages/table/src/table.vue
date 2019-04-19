@@ -64,14 +64,14 @@
 <script>
 import UtilHandle from '../../editable/src/tool'
 import ScrollHandle from '../../editable/src/scroll'
-import DefineHandle from '../../editable/src/define'
+import PropsStatic from '../../editable/src/props'
 
 export default {
   name: 'ElxTable',
   props: {
     config: Object,
     customColumns: Array,
-    ...DefineHandle.tableProps
+    ...PropsStatic.table
   },
   provide () {
     return {

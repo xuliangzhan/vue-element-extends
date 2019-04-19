@@ -1,5 +1,5 @@
-const DefineHandle = {
-  tableProps: {
+const PropsStatic = {
+  table: {
     data: Array,
     height: [String, Number],
     maxHeight: [String, Number],
@@ -33,7 +33,7 @@ const DefineHandle = {
     spanMethod: Function,
     load: Function
   },
-  tableColumnProps: {
+  tableColumn: {
     index: [Number, Function],
     type: String,
     label: String,
@@ -63,4 +63,4 @@ const DefineHandle = {
   }
 }
 
-export default DefineHandle
+export default PropsStatic

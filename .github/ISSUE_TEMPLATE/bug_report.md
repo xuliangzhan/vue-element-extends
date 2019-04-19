@@ -18,7 +18,7 @@ https://jsrun.net/zTXKp/edit
 
 **期望的结果 Expected behavior**
 
-**请填写以下版本信息 (please complete the following information):**
+**请填写以下版本信息 please complete the following information**
  - vue: v2.6.10
  - element-ui: v2.7.2
  - vue-element-extends: v1.2.3

@@ -18,11 +18,12 @@
 .el-tooltip__popper.elx-valid_tooltip[x-placement^=right] .popper__arrow::after {
   border-right-color: #f56c6c;
 }
-.elx-contextmenu {
+.elx-contextmenu,
+.elx-contextmenu .ctx-menu_child-wrapper {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 99;
+  z-index: 88;
   font-size: 12px;
   color: #000;
   background: #FFF;
@@ -37,38 +38,41 @@
   -ms-user-select: none;
   user-select: none;
 }
-.elx-contextmenu > .ctx-menu_wrapper {
+.elx-contextmenu > .ctx-menu_wrapper,
+.elx-contextmenu > .ctx-menu_wrapper .ctx-menu_child-wrapper {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
   border-bottom: 1px solid #E8EAED;
 }
-.elx-contextmenu > .ctx-menu_wrapper:last-child {
-  border: 0;
-}
-.elx-contextmenu > .ctx-menu_wrapper > .ctx-menu_link {
+.elx-contextmenu > .ctx-menu_wrapper li {
   position: relative;
-  display: block;
-  width: 100px;
-  line-height: 26px;
-  padding: 0 30px;
   margin: 1px 0;
   border: 1px solid transparent;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
-.elx-contextmenu > .ctx-menu_wrapper > .ctx-menu_link.active {
+.elx-contextmenu > .ctx-menu_wrapper li:last-child {
+  border: 0;
+}
+.elx-contextmenu > .ctx-menu_wrapper li.active {
   color: #2B2B2B;
   background-color: #C5C5C5;
   border-color:#C5C5C5;
 }
-.elx-contextmenu > .ctx-menu_wrapper > .ctx-menu_link.disabled {
+.elx-contextmenu > .ctx-menu_wrapper li.disabled {
   color: #B1B1B1;
 }
-.elx-contextmenu > .ctx-menu_wrapper > .ctx-menu_link.disabled.active {
+.elx-contextmenu > .ctx-menu_wrapper li.disabled.active {
   border-color:#C0C1C2;
   background-color: #EEEEEE;
 }
-.elx-contextmenu > .ctx-menu_wrapper > .ctx-menu_link.disabled.active:hover {
+.elx-contextmenu > .ctx-menu_wrapper li.disabled.active:hover {
   background-color: inherit;
+}
+.elx-contextmenu > .ctx-menu_wrapper .ctx-menu_link {
+  display: block;
+  padding: 0 30px;
+  width: 100px;
+  line-height: 26px;
 }
 .elx-contextmenu > .ctx-menu_wrapper .ctx-prefix-icon,
 .elx-contextmenu > .ctx-menu_wrapper .ctx-suffix-icon {
@@ -82,4 +86,19 @@
 }
 .elx-contextmenu > .ctx-menu_wrapper .ctx-suffix-icon {
   right: 5px;
+}
+.elx-contextmenu > .ctx-menu_wrapper .content {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.elx-contextmenu .ctx-menu_child-wrapper {
+  display: none;
+  z-index: 99;
+  top: 0;
+  left: 100%;
+}
+.elx-contextmenu .ctx-menu_child-wrapper.show {
+  display: block;
 }

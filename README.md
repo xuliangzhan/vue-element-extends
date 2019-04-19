@@ -183,6 +183,8 @@ context-menu-config 表格右键菜单配置：
 | ALL_RESET | 清除表格所有数据的值 |
 | ALL_REVERT | 还原表格所有数据 |
 | ALL_EXPORT  | 导出表格所有数据 |
+| ALL_COLUMN_VISIBLE | 显示所有列 |
+| COLUMN_HIDDEN | 隐藏列 |
 
 custom-columns 自定义列的配置：
 

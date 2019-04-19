@@ -196,16 +196,48 @@ export default {
             prefixIcon: 'el-icon-close'
           },
           {
-            code: 'ROW_RESET',
-            name: '清除行数据'
-          },
-          {
             code: 'CELL_REVERT',
             name: '还原数据'
-          },
+          }
+        ],
+        [
           {
-            code: 'ROW_REVERT',
-            name: '还原行数据'
+            code: 'test1',
+            name: '删除操作',
+            suffixIcon: 'el-icon-caret-right',
+            children: [
+              {
+                code: 'ROW_REMOVE',
+                name: '删除行'
+              },
+              {
+                code: 'ALL_REMOVE',
+                name: '删除所有行'
+              }
+            ]
+          }
+        ],
+        [
+          {
+            code: 'test2',
+            name: '更多功能',
+            suffixIcon: 'el-icon-caret-right',
+            children: [
+              {
+                code: 'COLUMN_HIDDEN',
+                name: '隐藏列'
+              },
+              {
+                code: 'ALL_COLUMN_VISIBLE',
+                name: '取消所有隐藏列',
+                prefixIcon: 'el-icon-view'
+              },
+              {
+                code: 'test22',
+                name: '开发中',
+                disabled: true
+              }
+            ]
           }
         ],
         [
@@ -222,12 +254,6 @@ export default {
             code: 'printer',
             name: '打印',
             prefixIcon: 'el-icon-printer'
-          },
-          {
-            code: 'test',
-            name: '更多功能',
-            prefixIcon: 'el-icon-view',
-            disabled: true
           }
         ]
       ]

@@ -10,15 +10,23 @@
     </template>
     <template v-slot:append>
       <div v-if="isCtxMenu" ref="contextMenu" class="elx-contextmenu" v-show="ctxMenuStore.visible" :style="ctxMenuStore.style">
-        <div class="ctx-menu_wrapper" v-for="(options, index) in ctxMenuStore.list" :key="index">
-          <template v-for="item in options">
-            <a v-if="item.visible !== false" class="ctx-menu_link" :key="item.code" :class="[item.code, {disabled: item.disabled, 'active': item === ctxMenuStore.selected}]" @click="_ctxMenuEvent(item, $event)" @mouseover="_ctxMenuMouseoverEvent(item, $event)" @mouseout="_ctxMenuMouseoutEvent(item, $event)">
+        <ul class="ctx-menu_wrapper" v-for="(options, index) in ctxMenuStore.list" :key="index">
+          <li v-for="item in options" :key="item.code" :class="[item.code, {disabled: item.disabled, 'active': item === ctxMenuStore.selected}]">
+            <a class="ctx-menu_link" @click="_ctxMenuEvent($event, item)" @mouseover="_ctxMenuMouseoverEvent($event, item)" @mouseout="_ctxMenuMouseoutEvent($event, item)">
               <i v-if="item.prefixIcon" class="ctx-prefix-icon" :class="item.prefixIcon"></i>
-              <span>{{ item.name }}</span>
+              <span class="content">{{ item.name }}</span>
               <i v-if="item.suffixIcon" class="ctx-suffix-icon" :class="item.suffixIcon"></i>
             </a>
-          </template>
-        </div>
+            <ul v-if="_hasCtxChilds(item)" class="ctx-menu_child-wrapper" :class="{show: item === ctxMenuStore.selected && ctxMenuStore.showChild}">
+              <li v-for="(child, cIndex) in item.children" :key="`${index}_${cIndex}`"  :class="[child.code, {disabled: child.disabled, 'active': child === ctxMenuStore.selectChild}]">
+                <a class="ctx-menu_link" @click="_ctxMenuEvent($event, child)" @mouseover="_ctxMenuMouseoverEvent($event, item, child)" @mouseout="_ctxMenuMouseoutEvent($event, item, child)">
+                  <i v-if="child.prefixIcon" class="ctx-prefix-icon" :class="child.prefixIcon"></i>
+                  <span class="content">{{ child.name }}</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
       <template v-if="$slots.append">
         <slot name="append"></slot>
@@ -67,6 +75,8 @@ export default {
       ctxMenuStore: {
         selected: null,
         visible: false,
+        showChild: false,
+        selectChild: null,
         list: [],
         style: {
           top: 0,
@@ -616,6 +626,29 @@ export default {
         offsetRow.checked = column.property
       }
     },
+    _hasCtxChilds (selected) {
+      return selected && selected.children && selected.children.length > 0
+    },
+    /**
+     * 键盘操作右键菜单
+     */
+    _handleCtxMenu (evnt, keyCode, ctxMenuStore, key, operKey, operRest, menuList) {
+      let selectIndex = XEUtils.findIndexOf(menuList, item => ctxMenuStore[key] === item)
+      if (keyCode === operKey) {
+        if (operRest && this._hasCtxChilds(ctxMenuStore.selected)) {
+          ctxMenuStore.showChild = true
+        } else {
+          ctxMenuStore.showChild = false
+          ctxMenuStore.selectChild = null
+        }
+      } else if (keyCode === 38) {
+        ctxMenuStore[key] = menuList[selectIndex - 1] || menuList[menuList.length - 1]
+      } else if (keyCode === 40) {
+        ctxMenuStore[key] = menuList[selectIndex + 1] || menuList[0]
+      } else if (keyCode === 13 && ctxMenuStore[key]) {
+        this._ctxMenuEvent(evnt, ctxMenuStore[key])
+      }
+    },
     /**
      * 监听方向键和 Tab 键切换行和单元格
      */
@@ -625,19 +658,13 @@ export default {
       let tableData = this._getTDatas()
       let ctxMenuStore = this.ctxMenuStore
       if (ctxMenuStore.visible && [13, 32, 37, 38, 39, 40].includes(keyCode)) {
-        // 如果配置了右键菜单并使用上下箭头移动
+        // 如果配置了右键菜单;支持方向键操作、回车
         evnt.preventDefault()
         evnt.stopPropagation()
-        if (![37, 39].includes(keyCode)) {
-          let ctxMenuList = this.ctxMenuList
-          let selectIndex = XEUtils.findIndexOf(ctxMenuList, item => ctxMenuStore.selected === item)
-          if (keyCode === 38) {
-            ctxMenuStore.selected = ctxMenuList[selectIndex - 1] || ctxMenuList[ctxMenuList.length - 1]
-          } else if (keyCode === 40) {
-            ctxMenuStore.selected = ctxMenuList[selectIndex + 1] || ctxMenuList[0]
-          } else if (ctxMenuStore.selected) {
-            this._ctxMenuEvent(ctxMenuStore.selected, evnt)
-          }
+        if (ctxMenuStore.showChild && this._hasCtxChilds(ctxMenuStore.selected)) {
+          this._handleCtxMenu(evnt, keyCode, ctxMenuStore, 'selectChild', 37, false, ctxMenuStore.selected.children)
+        } else {
+          this._handleCtxMenu(evnt, keyCode, ctxMenuStore, 'selected', 39, true, this.ctxMenuList)
         }
         return
       } else if (isTab || (keyCode >= 37 && keyCode <= 40)) {
@@ -1311,16 +1338,25 @@ export default {
         expandeKeys
       }
     },
-    _ctxMenuMouseoverEvent (item, evnt) {
+    _ctxMenuMouseoverEvent (evnt, item, child) {
+      let ctxMenuStore = this.ctxMenuStore
       evnt.preventDefault()
       evnt.stopPropagation()
-      this.ctxMenuStore.selected = item
+      ctxMenuStore.selected = item
+      ctxMenuStore.selectChild = child
+      if (!child) {
+        ctxMenuStore.showChild = this._hasCtxChilds(item)
+      }
     },
-    _ctxMenuMouseoutEvent (item, evnt) {
-      this.ctxMenuStore.selected = null
+    _ctxMenuMouseoutEvent (evnt, item, child) {
+      let ctxMenuStore = this.ctxMenuStore
+      if (!item.children) {
+        ctxMenuStore.selected = null
+      }
+      ctxMenuStore.selectChild = null
     },
     // 右菜单事件
-    _ctxMenuEvent ({ code, disabled }, evnt) {
+    _ctxMenuEvent (evnt, { code, disabled }) {
       if (!disabled) {
         let ctxMenuStore = this.ctxMenuStore
         if (ctxMenuStore.info) {
@@ -1389,11 +1425,27 @@ export default {
             case 'ALL_EXPORT':
               this.exportCsv()
               break
+            case 'ALL_COLUMN_VISIBLE':
+              if (this.customColumns) {
+                this.customColumns.forEach(item => {
+                  item.visible = true
+                })
+              }
+              break
+            case 'COLUMN_HIDDEN':
+              if (this.customColumns) {
+                let customItem = this.customColumns.find(item => item.prop === column.property)
+                if (customItem) {
+                  customItem.visible = false
+                }
+              }
+              break
             default:
               this.$emit('custom-menu-link', code, row.data, column, cell, evnt)
               break
           }
         }
+        ctxMenuStore.selected = null
         this.closeContextMenu()
       }
     },
@@ -1825,6 +1877,9 @@ export default {
     closeContextMenu () {
       this.ctxMenuStore.info = null
       this.ctxMenuStore.visible = false
+      this.ctxMenuStore.selected = null
+      this.ctxMenuStore.selectChild = null
+      this.ctxMenuStore.showChild = false
     }
     /****************************/
     /* Public methods end       */

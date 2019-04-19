@@ -40,7 +40,9 @@
 
 ## Scroll render
 
-滚动渲染计算逻辑：  
+滚动渲染计算逻辑：
+
+```html
   top  
     --> 占位  
     --> offsetSize  
@@ -51,6 +53,7 @@
   bottom  
     --> offsetSize  
     --> 占位  
+```
 
 ## Installing
 

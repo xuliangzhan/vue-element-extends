@@ -6,7 +6,7 @@
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <p style="color: red;font-size: 12px;">启用滚动渲染，设置 render='scroll' 可以流畅的支撑海量数据</p>
     <p style="color: red;font-size: 12px;">影响性能的参数：data、rowKey</p>
-    <p style="color: red;font-size: 12px;">兼容性：不支持动态行高；不支持树结构；不支持浮动列</p>
+    <p style="color: red;font-size: 12px;">兼容性：不兼容动态行高；不支持树结构；不支持浮动列</p>
 
     <div class="scroll-table1-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>
@@ -18,8 +18,12 @@
       class="scroll-table1"
       border
       height="400"
+      row-key="id"
+      :data.sync="list"
       :edit-config="{trigger: 'manual', mode: 'row', render: 'scroll'}"
+      @selection-change="handleSelectionChange"
       style="width: 100%">
+      <elx-editable-column type="selection" width="55"></elx-editable-column>
       <elx-editable-column type="index" width="100"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" min-width="140" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="sex" label="性别" min-width="140" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
@@ -62,6 +66,7 @@ export default {
   data () {
     return {
       loading: false,
+      multipleSelection: [],
       sexList: [],
       regionList: [],
       isClearActiveFlag: true
@@ -76,20 +81,17 @@ export default {
   methods: {
     findList () {
       this.loading = true
-      this.list = []
       let size = Number(this.$route.params.number)
-      this.$nextTick(() => {
-        this.$refs.elxEditable.reload([])
-        setTimeout(() => {
-          let list = window.CACHE_DATA_LIST.slice(0, size)
-          let startTime = Date.now()
-          this.$refs.elxEditable.reload(list)
-          this.loading = false
-          this.$nextTick(() => {
-            Message({ message: `渲染 ${list.length} 条耗时 ${Date.now() - startTime} ms`, type: 'info', duration: 8000, showClose: true })
-          })
-        }, 300)
-      })
+      this.list = []
+      setTimeout(() => {
+        let list = window.CACHE_DATA_LIST.slice(0, size)
+        let startTime = Date.now()
+        this.list = list
+        this.loading = false
+        this.$nextTick(() => {
+          Message({ message: `渲染 ${list.length} 条耗时 ${Date.now() - startTime} ms`, type: 'info', duration: 8000, showClose: true })
+        })
+      }, 300)
     },
     findSexList () {
       XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
@@ -103,6 +105,9 @@ export default {
     },
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
     },
     insertEvent () {
       let activeInfo = this.$refs.elxEditable.getActiveRow()

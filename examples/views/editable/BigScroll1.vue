@@ -5,8 +5,8 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <p style="color: red;font-size: 12px;">启用滚动渲染，设置 render='scroll' 可以流畅的支撑海量数据</p>
-    <p style="color: red;font-size: 12px;">影响性能的参数：data、rowKey</p>
-    <p style="color: red;font-size: 12px;">兼容性：不兼容动态行高；不支持树结构；不支持浮动列</p>
+    <p style="color: red;font-size: 12px;">影响性能的参数：data、rowKey、fixed</p>
+    <p style="color: red;font-size: 12px;">兼容性：不兼容动态行高；不支持树结构</p>
 
     <div class="scroll-table1-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>
@@ -18,19 +18,17 @@
       class="scroll-table1"
       border
       height="400"
-      row-key="id"
       :data.sync="list"
       :edit-config="{trigger: 'manual', mode: 'row', render: 'scroll'}"
       @selection-change="handleSelectionChange"
       style="width: 100%">
-      <elx-editable-column type="selection" width="55"></elx-editable-column>
-      <elx-editable-column type="index" width="100"></elx-editable-column>
-      <elx-editable-column prop="name" label="名字" min-width="140" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
-      <elx-editable-column prop="sex" label="性别" min-width="140" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
-      <elx-editable-column prop="age" label="年龄" min-width="140" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
+      <elx-editable-column type="index" width="100" fixed="left"></elx-editable-column>
+      <elx-editable-column prop="name" label="名字" min-width="300" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column prop="sex" label="性别" min-width="200" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
+      <elx-editable-column prop="age" label="年龄" min-width="200" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
       <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
       <elx-editable-column prop="date" label="日期" width="220" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy年MM月dd日 HH时ss分mm秒'}}"></elx-editable-column>
-      <elx-editable-column prop="rate" label="评分" width="180" :edit-render="{type: 'visible'}">
+      <elx-editable-column prop="rate" label="评分" width="200" :edit-render="{type: 'visible'}">
         <template v-slot:edit="scope">
           <el-rate
             v-model="scope.row.rate"
@@ -41,7 +39,8 @@
       </elx-editable-column>
       <elx-editable-column prop="updateTime" label="更新时间" width="200" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="200" :formatter="formatterDate"></elx-editable-column>
-      <elx-editable-column label="操作" width="160">
+      <elx-editable-column prop="name" label="名字" min-width="100" fixed="right" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
+      <elx-editable-column label="操作" width="160" fixed="right">
         <template v-slot="scope">
           <template v-if="$refs.elxEditable.hasActiveRow(scope.row)">
             <el-button size="small" type="success" @click="saveRowEvent(scope.row)">保存</el-button>
@@ -66,6 +65,7 @@ export default {
   data () {
     return {
       loading: false,
+      list: [],
       multipleSelection: [],
       sexList: [],
       regionList: [],

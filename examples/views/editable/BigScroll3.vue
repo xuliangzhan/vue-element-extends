@@ -5,6 +5,8 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <p style="color: red;font-size: 12px;">单击模式、行编辑</p>
+    <p style="color: red;font-size: 12px;">影响性能的参数：data、rowKey、fixed</p>
+    <p style="color: red;font-size: 12px;">兼容性：不兼容动态行高；不支持树结构</p>
 
     <div class="scroll-table3-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>

@@ -256,6 +256,7 @@ export default {
     _bindScrollEvent: ScrollHandle.bind(),
     _unbindScrollEvent: ScrollHandle.unbind(),
     _scrollEvent: ScrollHandle.scroll(),
+    _setScrollSpace: ScrollHandle.space(),
     _computeScroll: ScrollHandle.compute(8),
     /****************************/
     /* Scroll methods end       */

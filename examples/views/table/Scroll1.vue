@@ -5,8 +5,8 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)">
     <p style="color: red;font-size: 12px;">启用滚动渲染，设置 render='scroll' 可以流畅的支撑海量数据</p>
-    <p style="color: red;font-size: 12px;">影响性能的参数：data、rowKey</p>
-    <p style="color: red;font-size: 12px;">兼容性：不兼容动态行高；不支持树结构；不支持多选；不支持浮动列</p>
+    <p style="color: red;font-size: 12px;">影响性能的参数：data、rowKey、fixed</p>
+    <p style="color: red;font-size: 12px;">兼容性：不兼容动态行高；不支持树结构；不支持多选</p>
 
     <div class="scroll0w-table-oper">
       <el-button type="success" size="mini" @click="exportCsvEvent">导出</el-button>
@@ -19,14 +19,14 @@
       :data="list"
       :config="{render: 'scroll'}"
       style="width: 100%">
-      <elx-table-column type="index" width="100"></elx-table-column>
-      <elx-table-column prop="name" label="名字" min-width="100" show-overflow-tooltip>
+      <elx-table-column type="index" width="100" fixed="left"></elx-table-column>
+      <elx-table-column prop="name" label="名字" min-width="300" show-overflow-tooltip>
         <template v-slot:header="scope">
           <i class="el-icon-question"></i>名字
         </template>
       </elx-table-column>
-      <elx-table-column prop="sex" label="性别" min-width="140" :formatter="formatterSex"></elx-table-column>
-      <elx-table-column prop="age" label="年龄" min-width="140"></elx-table-column>
+      <elx-table-column prop="sex" label="性别" min-width="200" :formatter="formatterSex"></elx-table-column>
+      <elx-table-column prop="age" label="年龄" min-width="200"></elx-table-column>
       <elx-table-column prop="region" label="地区" width="200" :formatter="formatterRegion"></elx-table-column>
       <elx-table-column prop="date" width="220" label="日期" :formatter="formatterDate"></elx-table-column>
       <elx-table-column prop="rate" width="220" label="评分">
@@ -41,6 +41,12 @@
       </elx-table-column>
       <elx-table-column prop="updateTime" label="更新时间" width="200" :formatter="formatterDate"></elx-table-column>
       <elx-table-column prop="createTime" label="创建时间" width="200" :formatter="formatterDate"></elx-table-column>
+      <el-table-column label="浮动列1" width="120" fixed="right">
+        <template v-slot="scope">
+          <el-button type="text" size="small">{{ scope.row.name }}</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column prop="sex" label="浮动列2" width="120" fixed="right"> </el-table-column>
     </elx-table>
   </div>
 </template>

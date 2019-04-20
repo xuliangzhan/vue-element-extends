@@ -6,6 +6,7 @@
 
     <p>
       <el-button type="success" size="mini" @click="insertEvent(0)">新增一行</el-button>
+      <el-button type="success" size="mini" @click="insertEvent(list[1])">在第二行插入一行</el-button>
       <el-button type="success" size="mini" @click="insertEvent(-1)">在最后新增一行</el-button>
       <el-button type="danger" size="mini" @click="deleteSelectedEvent">删除选中</el-button>
       <el-button type="info" size="mini" @click="$refs.elxEditable.revert()">放弃更改</el-button>
@@ -251,7 +252,7 @@ export default {
       return item ? item[labelProp] : null
     },
     insertEvent (index) {
-      this.$refs.elxEditable.insert({
+      this.$refs.elxEditable.insertAt({
         name: '默认名字2',
         userInfo: {
           base: {
@@ -259,7 +260,7 @@ export default {
           }
         },
         slider: 20
-      }).then(({ row }) => {
+      }, index).then(({ row }) => {
         this.$refs.elxEditable.setActiveCell(row, 'name')
       })
     },

@@ -1,6 +1,3 @@
-import XEUtils from 'xe-utils'
-import UtilHandle from './tool'
-
 /**
    * 滚动渲染，以优化的方式渲染表格
    * 计算规则：
@@ -87,21 +84,20 @@ const ScrollHandle = {
       }
       if (isRender) {
         // 超过阈值重新渲染
-        let toVisibleStart = isTop ? toVisibleIndex - 1 : toVisibleIndex - Math.floor(visibleSize / 2)
+        let toVisibleStart = toVisibleIndex - Math.floor((renderSize - visibleSize) / 2)
         if (toVisibleStart < 0) {
           toVisibleStart = 0
         } else if (toVisibleStart + renderSize >= len) {
           toVisibleStart = len - renderSize
         }
         if (toVisibleStart !== visibleStart) {
-          console.log(`isTop=${isTop} toVisibleStart=${toVisibleStart}`)
           this.visibleStart = toVisibleStart
           // 渲染指定位置的数据
           this.datas = fullData.slice(toVisibleStart, toVisibleStart + renderSize)
           // 重新计算顶部空间和底部空间，支撑滚动条
           this._setScrollSpace(toVisibleStart * rowHeight, (len - renderSize - toVisibleStart) * rowHeight)
           // 渲染完成复原最后位置，保持滚动位置不变
-          this.$nextTick().then(() => {
+          this.$nextTick(() => {
             bodyWrapper.scrollTop = scrollTop
           })
         }
@@ -126,7 +122,6 @@ const ScrollHandle = {
     }
   },
   compute (size) {
-    let defSize = UtilHandle.browse.msie ? size / 2 : size
     return function (isReload) {
       if (this.scrollLoad) {
         let { headerWrapper, bodyWrapper, table } = this.elemStore
@@ -139,7 +134,7 @@ const ScrollHandle = {
           this.rowHeight = firstTrElem.clientHeight
         }
         let visibleSize = Math.ceil(bodyWrapper.clientHeight / this.rowHeight)
-        let renderSize = getRenderSize(this.configs, this.elemStore, visibleSize, defSize)
+        let renderSize = getRenderSize(this.configs, this.elemStore, visibleSize, size)
         this.offsetSize = getOffsetSize(this.configs, renderSize, visibleSize)
         this.visibleSize = visibleSize
         this.renderSize = renderSize
@@ -190,27 +185,33 @@ function createScrollElem (elTableElem, bodyWrapper, queryHeaderWrapper, queryTa
   }
 }
 
+/**
+ * renderSize 不应该低于 visibleSize 的3倍
+ */
 function getRenderSize (configs, elemStore, visibleSize, defSize) {
   if (configs.renderSize) {
     return configs.renderSize
   }
   if (elemStore.fixedLeft || elemStore.fixedRight) {
-    return visibleSize * Math.max(Math.ceil(defSize / 2), 2)
+    return visibleSize * Math.max(Math.floor(defSize / 2), 3)
   }
   return visibleSize * defSize
 }
 
+/**
+ * offsetSize 不应该低于 visibleSize 的一半
+ */
 function getOffsetSize (configs, renderSize, visibleSize) {
+  let offsetSize = 0
   if (configs.offsetSize) {
     return configs.offsetSize
   }
   if (renderSize > visibleSize * 4) {
-    return visibleSize * 2
+    offsetSize = visibleSize * 2
+  } else if (renderSize > visibleSize * 3) {
+    offsetSize = visibleSize
   }
-  if (renderSize > visibleSize * 3) {
-    return visibleSize
-  }
-  return Math.floor(visibleSize / 2)
+  return Math.max(offsetSize, Math.ceil(visibleSize / 2))
 }
 
 export default ScrollHandle

@@ -1672,13 +1672,13 @@ export default {
       }
     },
     getInsertRecords () {
-      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'insert', this.elTreeOpts))
+      return this._getData(XEUtils.filterTree(this._fullData, item => item.editStatus === 'insert', this.elTreeOpts))
     },
     getRemoveRecords () {
       return this._getData(this.deleteRecords)
     },
     getUpdateRecords () {
-      return this._getData(XEUtils.filterTree(this.datas, item => item.editStatus === 'initial' && !XEUtils.isEqualWith(Object.assign({}, item.data, { children: [] }), Object.assign({}, item.store, { children: [] }), (v1, v2, key) => {
+      return this._getData(XEUtils.filterTree(this._fullData, item => item.editStatus === 'initial' && !XEUtils.isEqualWith(Object.assign({}, item.data, { children: [] }), Object.assign({}, item.store, { children: [] }), (v1, v2, key) => {
         if (key === this.elTreeOpts.children) {
           return true
         }
@@ -1732,7 +1732,7 @@ export default {
       return null
     },
     hasRowChange (record, property) {
-      let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
+      let matchObj = XEUtils.findTree(this._fullData, row => row.data === record, this.elTreeOpts)
       return property ? this._isRowDataChange(matchObj.item, { property }) : this._isRowDataChange(matchObj.item)
     },
     /**

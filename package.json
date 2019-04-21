@@ -41,7 +41,7 @@
     "vue-template-compiler": "^2.6.10",
     "xe-ajax": "^3.5.3",
     "xe-ajax-mock": "^1.7.10",
-    "xe-clipboard": "^1.0.2",
+    "xe-clipboard": "^1.0.3",
     "xe-utils": "^1.8.19",
     "xlsx": "^0.14.2"
   },

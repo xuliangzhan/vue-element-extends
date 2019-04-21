@@ -18,7 +18,7 @@
       :custom-columns.sync="customColumns"
       :cell-class-name="cellClassName"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true}"
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true, keydownMethod}"
       :context-menu-config="{headerMenus, bodyMenus}"
       @edit-active="editActiveEvent"
       @custom-menu-link="customMenuLinkEvent"
@@ -276,6 +276,14 @@ export default {
         row: null,
         column: null,
         content: null
+      }
+    },
+    keydownMethod ({ active, checked }, event) {
+      if (event.keyCode === 27) {
+        if (active) {
+          this.$refs.elxEditable.revert(active.row, active.column.property)
+          this.$refs.elxEditable.clearActive()
+        }
       }
     },
     // 自定义菜单事件

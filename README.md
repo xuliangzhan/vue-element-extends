@@ -151,6 +151,7 @@ edit-config 编辑参数配置：
 | isArrowKey | 只对 trigger!=manual 有效，是否启用箭头键切换行和单元格 | Boolean | — | false |
 | isCheckedEdit | 只对 trigger!=manual 有效，是否启用选中状态允许值覆盖式编辑 | Boolean | — | false |
 | checkedEditMethod | 只对 isCheckedEdit=true 有效，可以通过重写该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 返回 false 来阻止默认值的覆盖行为 | Function | — | — |
+| keydownMethod | 键按下时调用该函数 Function({active, checked}, event) | Function | — | — |
 
 context-menu-config 表格右键菜单配置：
 
@@ -211,7 +212,7 @@ custom-columns 自定义列的配置：
 | refresh | 手动刷新表格，对于非双向同步的树形结构可能会用到 |  |
 | reload | 初始化完整表格数据 | datas |
 | reloadRow | 初始化指定行数据 | row |
-| revert | 还原更改，还原指定行 row 或者整个表格的数据 | row?rows? |
+| revert | 还原更改，还原指定行 row 或者整个表格的数据 | row?rows?,prop? |
 | insert | 从第一行新增一行新数据 | data |
 | insertAt | 第二个参数 row 从指定位置新增一条数据； null 从第一行新增一行新数据；-1 从最后新增一条数据 | data,row |
 | remove | 数据删除，指定 row 或 [row, ...] 删除多条数据 | row?rows? |
@@ -224,6 +225,7 @@ custom-columns 自定义列的配置：
 | getActiveRow | 获取当前已激活为编辑行或单元格的信息 | — |
 | setActiveRow | 只对 mode=row 有效，激活指定行为可编辑状态 | row |
 | setActiveCell | 激活指定某一行的某个单元格为可编辑状态 | row,prop? |
+| setChecked | 只对 target!==manual 有效，指定单元格为选中状态 | row,prop |
 | hasRowInsert | 检查是否为新增的行数据 | row |
 | hasRowChange | 检查行或列数据是否发生改变 | row, prop? |
 | updateStatus | 更新单元格编辑状态（只对 showStatus=true 并且使用自定义渲染时，当值发生改变时才需要调用） | scope |

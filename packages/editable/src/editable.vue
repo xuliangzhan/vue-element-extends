@@ -559,9 +559,7 @@ export default {
     },
     _bindEvents () {
       GlobalEvent.on(this, 'click', evnt => this._triggerClear(evnt))
-      if (this.isCtxMenu || this.configs.trigger !== 'manual') {
-        GlobalEvent.on(this, 'keydown', evnt => this._triggerKeydown(evnt))
-      }
+      GlobalEvent.on(this, 'keydown', evnt => this._triggerKeydown(evnt))
       if (this.isCtxMenu) {
         GlobalEvent.on(this, 'mousewheel', evnt => this._triggerMousewheel(evnt))
         GlobalEvent.on(this, 'contextmenu', evnt => this._triggerContextMenu(evnt))
@@ -652,113 +650,138 @@ export default {
      */
     _triggerKeydown (evnt) {
       let keyCode = evnt.keyCode
-      let isTab = keyCode === 9
       let tableData = this._getTDatas()
-      let ctxMenuStore = this.ctxMenuStore
-      if (ctxMenuStore.visible && [13, 32, 37, 38, 39, 40].includes(keyCode)) {
-        // 如果配置了右键菜单;支持方向键操作、回车
-        evnt.preventDefault()
-        evnt.stopPropagation()
-        if (ctxMenuStore.showChild && this._hasCtxChilds(ctxMenuStore.selected)) {
-          this._handleCtxMenu(evnt, keyCode, ctxMenuStore, 'selectChild', 37, false, ctxMenuStore.selected.children)
-        } else {
-          this._handleCtxMenu(evnt, keyCode, ctxMenuStore, 'selected', 39, true, this.ctxMenuList)
-        }
-        return
-      } else if (isTab || (keyCode >= 37 && keyCode <= 40)) {
-        // 方向键、Tab 键处理
-        if ((this.configs.isTabKey && isTab) || this.configs.isArrowKey) {
-          let rowIndex = XEUtils.findIndexOf(tableData, isTab ? row => row.editActive || row.checked : row => row.checked)
-          let row = tableData[rowIndex]
-          if (row) {
-            let columns = this.getColumns()
-            let columnIndex = XEUtils.findIndexOf(columns, isTab ? column => column.property === row.editActive || column.property === row.checked : column => column.property === row.checked)
-            let column = columns[columnIndex]
-            if (column) {
-              switch (keyCode) {
-                case 9:
-                  let offsetColumn = columns.find((column, index) => index > columnIndex && column.property)
-                  // 从当前行中查找下一个可编辑列
-                  // 如果找不到则从下一行开始找
-                  if (offsetColumn && offsetColumn.property) {
-                    if (this.configs.mode === 'cell' && row.editActive) {
-                      let { cell } = this._getColumnByRowIndex(row.data, column.property)
-                      this._validCellRules('blur', row, column)
-                        .then(() => {
-                          this._restoreTooltip()
-                          this._clearActiveData()
-                          this._tabActiveCell(row, offsetColumn)
-                        }).catch(rule => this._toValidError(rule, row, column, cell))
-                    } else {
-                      this._tabActiveCell(row, offsetColumn)
-                    }
-                    evnt.preventDefault()
-                  } else {
-                    let offsetRow = tableData[rowIndex + 1]
-                    if (offsetRow) {
-                      columnIndex = XEUtils.findIndexOf(columns, column => column.property)
-                      let offsetColumn = columns[columnIndex]
+      let columns = this.getColumns()
+      let keydownMethod = this.configs.keydownMethod
+      if (this.isCtxMenu || this.configs.trigger !== 'manual') {
+        let isTab = keyCode === 9
+        let ctxMenuStore = this.ctxMenuStore
+        if (ctxMenuStore.visible && [13, 32, 37, 38, 39, 40].includes(keyCode)) {
+          // 如果配置了右键菜单;支持方向键操作、回车
+          evnt.preventDefault()
+          evnt.stopPropagation()
+          if (ctxMenuStore.showChild && this._hasCtxChilds(ctxMenuStore.selected)) {
+            this._handleCtxMenu(evnt, keyCode, ctxMenuStore, 'selectChild', 37, false, ctxMenuStore.selected.children)
+          } else {
+            this._handleCtxMenu(evnt, keyCode, ctxMenuStore, 'selected', 39, true, this.ctxMenuList)
+          }
+          return
+        } else if (isTab || (keyCode >= 37 && keyCode <= 40)) {
+          // 方向键、Tab 键处理
+          if ((this.configs.isTabKey && isTab) || this.configs.isArrowKey) {
+            let rowIndex = XEUtils.findIndexOf(tableData, isTab ? row => row.editActive || row.checked : row => row.checked)
+            let row = tableData[rowIndex]
+            if (row) {
+              let columnIndex = XEUtils.findIndexOf(columns, isTab ? column => column.property === row.editActive || column.property === row.checked : column => column.property === row.checked)
+              let column = columns[columnIndex]
+              if (column) {
+                switch (keyCode) {
+                  case 9:
+                    let offsetColumn = columns.find((column, index) => index > columnIndex && column.property)
+                    // 从当前行中查找下一个可编辑列
+                    // 如果找不到则从下一行开始找
+                    if (offsetColumn && offsetColumn.property) {
                       if (this.configs.mode === 'cell' && row.editActive) {
                         let { cell } = this._getColumnByRowIndex(row.data, column.property)
                         this._validCellRules('blur', row, column)
                           .then(() => {
-                            row.editActive = null
-                            row.checked = null
-                            this._tabActiveCell(offsetRow, offsetColumn)
                             this._restoreTooltip()
+                            this._clearActiveData()
+                            this._tabActiveCell(row, offsetColumn)
                           }).catch(rule => this._toValidError(rule, row, column, cell))
                       } else {
-                        row.checked = null
-                        this._tabActiveCell(offsetRow, offsetColumn)
+                        this._tabActiveCell(row, offsetColumn)
                       }
                       evnt.preventDefault()
+                    } else {
+                      let offsetRow = tableData[rowIndex + 1]
+                      if (offsetRow) {
+                        columnIndex = XEUtils.findIndexOf(columns, column => column.property)
+                        let offsetColumn = columns[columnIndex]
+                        if (this.configs.mode === 'cell' && row.editActive) {
+                          let { cell } = this._getColumnByRowIndex(row.data, column.property)
+                          this._validCellRules('blur', row, column)
+                            .then(() => {
+                              row.editActive = null
+                              row.checked = null
+                              this._tabActiveCell(offsetRow, offsetColumn)
+                              this._restoreTooltip()
+                            }).catch(rule => this._toValidError(rule, row, column, cell))
+                        } else {
+                          row.checked = null
+                          this._tabActiveCell(offsetRow, offsetColumn)
+                        }
+                        evnt.preventDefault()
+                      }
                     }
-                  }
-                  break
-                case 37:
-                  if (columnIndex > 0) {
-                    this._moveLeftAndRight(row, columns, columnIndex - 1)
-                  }
-                  break
-                case 39:
-                  if (columnIndex < columns.length - 1) {
-                    this._moveLeftAndRight(row, columns, columnIndex + 1)
-                  }
-                  break
-                case 38:
-                  if (rowIndex > 0) {
-                    this._moveUpAndDown(tableData, row, column, rowIndex - 1)
-                  }
-                  break
-                case 40:
-                  if (rowIndex < tableData.length - 1) {
-                    this._moveUpAndDown(tableData, row, column, rowIndex + 1)
-                  }
-                  break
+                    break
+                  case 37:
+                    if (columnIndex > 0) {
+                      this._moveLeftAndRight(row, columns, columnIndex - 1)
+                    }
+                    break
+                  case 39:
+                    if (columnIndex < columns.length - 1) {
+                      this._moveLeftAndRight(row, columns, columnIndex + 1)
+                    }
+                    break
+                  case 38:
+                    if (rowIndex > 0) {
+                      this._moveUpAndDown(tableData, row, column, rowIndex - 1)
+                    }
+                    break
+                  case 40:
+                    if (rowIndex < tableData.length - 1) {
+                      this._moveUpAndDown(tableData, row, column, rowIndex + 1)
+                    }
+                    break
+                }
               }
             }
           }
-        }
-      } else if (this.configs.isCheckedEdit) {
-        // 如果是选中状态，按任意键进入编辑
-        let rowIndex = XEUtils.findIndexOf(tableData, row => !row.editActive && row.checked)
-        let row = tableData[rowIndex]
-        if (row) {
-          let columns = this.getColumns()
-          let columnIndex = XEUtils.findIndexOf(columns, column => column.property === row.checked)
-          let column = columns[columnIndex]
-          if (column) {
-            let { cell } = this._getColumnByRowIndex(row.data, column.property)
-            this._triggerActive(row, column, cell, event)
-              .then(() => {
-                if (this.configs.checkedEditMethod ? this.configs.checkedEditMethod({ row: row.data, rowIndex, column, columnIndex, cell }, evnt) !== false : true) {
-                  XEUtils.set(row.data, column.property, null)
-                }
-              })
+        } else if (this.configs.isCheckedEdit && keyCode !== 27) {
+          // 如果是选中状态，按任意键进入编辑
+          let rowIndex = XEUtils.findIndexOf(tableData, row => !row.editActive && row.checked)
+          let row = tableData[rowIndex]
+          if (row) {
+            let columnIndex = XEUtils.findIndexOf(columns, column => column.property === row.checked)
+            let column = columns[columnIndex]
+            if (column) {
+              let { cell } = this._getColumnByRowIndex(row.data, column.property)
+              this._triggerActive(row, column, cell, event)
+                .then(() => {
+                  if (this.configs.checkedEditMethod ? this.configs.checkedEditMethod({ row: row.data, rowIndex, column, columnIndex, cell }, evnt) !== false : true) {
+                    XEUtils.set(row.data, column.property, null)
+                  }
+                })
+            }
           }
         }
+        this.closeContextMenu()
       }
-      this.closeContextMenu()
+      if (keydownMethod) {
+        keydownMethod({
+          active: this._getActiveInfo(tableData, columns, 'editActive'),
+          checked: this._getActiveInfo(tableData, columns, 'checked')
+        }, evnt)
+      }
+    },
+    _getActiveInfo (tableData, columns, key) {
+      let rowIndex = XEUtils.findIndexOf(tableData, row => row[key])
+      let row = tableData[rowIndex]
+      let rest = null
+      if (row) {
+        rest = { row: row.data, rowIndex }
+        let columnIndex = XEUtils.findIndexOf(columns, column => column.property === row[key])
+        let column = columns[columnIndex]
+        if (column) {
+          let { cell } = this._getColumnByRowIndex(row.data, column.property)
+          rest.cell = cell
+          rest.column = column
+          rest.columnIndex = columnIndex
+        }
+      }
+      return rest
     },
     _tabActiveCell (offsetRow, offsetColumn) {
       if (this.configs.tabToActive) {
@@ -847,7 +870,7 @@ export default {
           let row = tableData[rowIndex]
           if (row.editActive !== column.property) {
             this._showContextMenu(0, { row, rowIndex, column, columnIndex, cell: cellElem }, evnt)
-            this._setChecked(row, column)
+            this.setChecked(row.data, column.property)
           }
         }
       } else {
@@ -983,7 +1006,7 @@ export default {
                   .catch(rule => this._toValidError(rule, row, column, cell))
               }
             } else {
-              this._setChecked(row, column)
+              this.setChecked(row.data, column.property)
             }
           }).catch(e => e).then(() => this.$emit(`cell-${type}`, row.data, column, cell, event))
         } else {
@@ -1031,11 +1054,6 @@ export default {
         row.editActive = null
         row.showValidMsg = false
       }, this.elTreeOpts)
-    },
-    _setChecked (row, column) {
-      this.datas.forEach(item => {
-        item.checked = item === row ? column.property : null
-      })
     },
     // 清除选中
     _clearAllChecked () {
@@ -1364,7 +1382,7 @@ export default {
               XEUtils.set(row.data, column.property, null)
               break
             case 'CELL_REVERT':
-              XEUtils.set(row.data, column.property, XEUtils.get(row.store, column.property))
+              this.revert(row.data, column.property)
               break
             case 'SELECT_REMOVE':
               this.removeSelecteds()
@@ -1390,7 +1408,7 @@ export default {
               })
               break
             case 'ROW_INSERT':
-              this.insertAt(null, row.data).then(({ _row }) => this._setChecked(_row, column))
+              this.insertAt(null, row.data).then(({ row }) => this.setChecked(row, column.property))
               break
             case 'ROW_INSERT_ACTIVE':
               this.insertAt(null, row.data).then(({ row }) => this._toActiveRow(row, column.property))
@@ -1516,11 +1534,12 @@ export default {
     },
     /**
      * 还原更改，以最后一次 reload 或 reloadRow 的数据为源数据或者初始值 data
+     * 还原单元格数据
      * 还原行数据
      * 还原指定行数据
      * 还原整个表格数据
      */
-    revert (records) {
+    revert (records, prop) {
       this.currentRow = null
       if (records) {
         if (!XEUtils.isArray(records)) {
@@ -1528,7 +1547,11 @@ export default {
         }
         XEUtils.eachTree(this.datas, row => {
           if (records.includes(row.data)) {
-            XEUtils.destructuring(row.data, XEUtils.clone(row.store, true))
+            if (prop) {
+              XEUtils.set(row.data, prop, XEUtils.get(row.store, prop))
+            } else {
+              XEUtils.destructuring(row.data, XEUtils.clone(row.store, true))
+            }
           }
         }, this.elTreeOpts)
       } else {
@@ -1690,6 +1713,16 @@ export default {
       this._clearActiveData()
       this._restoreTooltip()
       return this.$nextTick()
+    },
+    /**
+     * 指定某一列为选中状态
+     */
+    setChecked (record, prop) {
+      if (this.configs.target !== 'manual' && prop) {
+        this.datas.forEach(item => {
+          item.checked = item.data === record ? prop : null
+        })
+      }
     },
     /**
      * 激活指定某一行为可编辑状态

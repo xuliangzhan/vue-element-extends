@@ -18,7 +18,7 @@
       :custom-columns.sync="customColumns"
       :cell-class-name="cellClassName"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isCheckedEdit: true, keydownMethod}"
+      :edit-config="{trigger: 'dblclick', showIcon: false, showStatus: false, isTabKey: true, isArrowKey: true, isDelKey: true, isCheckedEdit: true, keydownMethod}"
       :context-menu-config="{headerMenus, bodyMenus}"
       @edit-active="editActiveEvent"
       @custom-menu-link="customMenuLinkEvent"
@@ -76,7 +76,7 @@ export default {
     }
     return {
       dialogVisible: false,
-      list: Array.from(new Array(20), (v, i) => {
+      list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach((name, index) => {
           switch (name) {
@@ -101,7 +101,33 @@ export default {
         })
         return rest
       }),
-      customColumns: [],
+      customColumns: [
+        // 默认不显示
+        {
+          prop: 'u',
+          visible: false
+        },
+        {
+          prop: 'v',
+          visible: false
+        },
+        {
+          prop: 'w',
+          visible: false
+        },
+        {
+          prop: 'x',
+          visible: false
+        },
+        {
+          prop: 'y',
+          visible: false
+        },
+        {
+          prop: 'z',
+          visible: false
+        }
+      ],
       selectColumns: [],
       columnConfigs: columns.map((name, index) => {
         let column = {
@@ -278,12 +304,30 @@ export default {
         content: null
       }
     },
+    // 监听按键事件
     keydownMethod ({ active, checked }, event) {
-      if (event.keyCode === 27) {
-        if (active) {
-          this.$refs.elxEditable.revert(active.row, active.column.property)
-          this.$refs.elxEditable.clearActive()
-        }
+      switch (event.keyCode) {
+        case 37:
+          if (active) {
+            this.$refs.elxEditable.revert(active.row, active.column.property)
+            this.$refs.elxEditable.clearActive()
+            this.$refs.elxEditable.setChecked(active.row, active.column.property)
+          }
+          break
+        case 13:
+          if (active) {
+            let nextRow = this.list[active.rowIndex + 1]
+            if (nextRow) {
+              this.$refs.elxEditable.clearActive()
+              this.$refs.elxEditable.setChecked(nextRow, active.column.property)
+            }
+          } else if (checked) {
+            let nextRow = this.list[checked.rowIndex + 1]
+            if (nextRow) {
+              this.$refs.elxEditable.setChecked(nextRow, checked.column.property)
+            }
+          }
+          break
       }
     },
     // 自定义菜单事件
@@ -354,15 +398,8 @@ export default {
 .excel-table5 .el-table__body .elx-editable-row:hover>.elx-editable-column {
   background-color: inherit;
 }
-.excel-table5 .el-table__header .elx-editable-column.elx-header_checked .cell:after,
-  .excel-table5 .el-table__header .elx-editable-column.elx-header_active .cell:after{
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: #217346;
+.excel-table5 .el-table__header .elx-editable-column .cell {
+  overflow: inherit;
 }
 .excel-table5 .el-table__header .elx-editable-column.elx-header_checked,
 .excel-table5 .el-table__header .elx-editable-column.elx-header_active,
@@ -370,17 +407,6 @@ export default {
 .excel-table5 .el-table__body .elx-editable-row.elx_active>.elx-editable-column:first-child{
   background-color: #D2D2D2;
   color: #1B5D39;
-}
-.excel-table5 .el-table__body .elx-editable-row.elx_checked>.elx-editable-column:first-child .cell:after,
-.excel-table5 .el-table__body .elx-editable-row.elx_active>.elx-editable-column:first-child .cell:after{
-  content: '';
-  position: absolute;
-  width: 2px;
-  height: 100%;
-  top: 0;
-  right: -3px;
-  z-index: 1;
-  background-color: #217346;
 }
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_checked,
 .excel-table5 .el-table__body .elx-editable-row>.elx-editable-column.elx_active {

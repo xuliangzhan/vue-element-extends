@@ -188,6 +188,8 @@ export default {
         tabToActive: false,
         // 是否启用箭头键切换行和单元格
         isArrowKey: false,
+        // 是否启用箭头键切换行和单元格
+        isDelKey: false,
         // 是否启用选中状态是否允许值覆盖式编辑，当 isTabKey 或 isArrowKey 为true 时启用时默认 true，否则 false
         isCheckedEdit: !!(editConfig.isTabKey || editConfig.isArrowKey)
       }, editConfig, { validTooltip })
@@ -739,7 +741,7 @@ export default {
               }
             }
           }
-        } else if (this.configs.isCheckedEdit && keyCode !== 27) {
+        } else if (this.configs.isCheckedEdit && ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 96 && keyCode <= 111) || (keyCode >= 186 && keyCode <= 192) || (keyCode >= 219 && keyCode <= 222) || keyCode === 32)) {
           // 如果是选中状态，按任意键进入编辑
           let rowIndex = XEUtils.findIndexOf(tableData, row => !row.editActive && row.checked)
           let row = tableData[rowIndex]
@@ -754,6 +756,28 @@ export default {
                     XEUtils.set(row.data, column.property, null)
                   }
                 })
+            }
+          }
+        } else if (this.configs.isDelKey && (keyCode === 8 || keyCode === 46)) {
+          // 如果是删除键
+          let rowIndex = XEUtils.findIndexOf(tableData, row => !row.editActive && row.checked)
+          let row = tableData[rowIndex]
+          if (row) {
+            let columnIndex = XEUtils.findIndexOf(columns, column => column.property === row.checked)
+            let column = columns[columnIndex]
+            if (column) {
+              let { cell } = this._getColumnByRowIndex(row.data, column.property)
+              if (keyCode === 8) {
+                this._triggerActive(row, column, cell, event)
+                  .then(() => {
+                    if (this.configs.checkedEditMethod ? this.configs.checkedEditMethod({ row: row.data, rowIndex, column, columnIndex, cell }, evnt) !== false : true) {
+                      XEUtils.set(row.data, column.property, null)
+                      XEUtils.set(row.data, column.property, null)
+                    }
+                  })
+              } else {
+                XEUtils.set(row.data, column.property, null)
+              }
             }
           }
         }

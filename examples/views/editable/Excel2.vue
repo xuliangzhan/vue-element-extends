@@ -51,7 +51,7 @@ export default {
       }
     }
     return {
-      list: Array.from(new Array(20), (v, i) => {
+      list: Array.from(new Array(15), (v, i) => {
         let rest = {}
         columns.forEach(name => {
           switch (name) {

@@ -11,7 +11,7 @@ assignees: ''
 
 
 **请提供能重现问题的链接（jsfiddle、jsrun） Expected behavior**
-https://jsrun.net/zTXKp/edit
+
 
 
 **请填写以下版本信息 please complete the following information**

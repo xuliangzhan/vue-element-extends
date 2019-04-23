@@ -46,7 +46,7 @@
     "xlsx": "^0.14.2"
   },
   "peerDependencies": {
-    "vue": "^2.6.6",
+    "vue": "^2.6.0",
     "element-ui": "^2.1.0",
     "xe-utils": "^1.8.19"
   },

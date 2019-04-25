@@ -166,7 +166,7 @@ context-menu-config 表格右键菜单配置：
 | headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 的返回值用来决定是否显示头部右键菜单 | Function | — |
 | bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 
-内置的菜单 code 列表：
+内置的菜单 code 列表（如果是自定义 code 可以配合 custom-menu-link 事件使用）：
 
 | 编码 | 描述 |
 |------|------|

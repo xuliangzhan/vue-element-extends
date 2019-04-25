@@ -287,6 +287,8 @@ export default {
       let opts = Object.assign({
         filename: 'table.csv',
         original: false,
+        isHeader: false,
+        download: true,
         data: null,
         columns: null,
         columnFilterMethod: column => ['index', 'selection', 'expand'].indexOf(column.type) === -1 && column.property,
@@ -297,7 +299,7 @@ export default {
       }
       let columns = this.getColumns()
       let oData = this.scrollLoad ? this._fullData : this._getTDatas()
-      UtilHandle.downloadCsc(opts, UtilHandle.getCsvContent(opts, oData, columns, this.$el))
+      return UtilHandle.downloadCsc(opts, UtilHandle.getCsvContent(opts, oData, columns, this.$el))
     }
     /******************************/
     /* Public methods end         */

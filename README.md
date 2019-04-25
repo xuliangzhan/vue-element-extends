@@ -241,13 +241,14 @@ custom-columns 自定义列的配置：
 | validate | 对整个表格进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | callback |
 | exportCsv| 将表格数据导出为 .csv 文件，说明：支持IE9+、Edge、Chrome、Firefox 等常用浏览器。IE11以下可能存在中文乱码问题，部分浏览器需要手动修改后缀名为 .csv | options |
 
-导出 options的配置：
+exportCsv options 的配置：
 
 | 属性 | 描述 | 类型 | 可选值 | 默认值 |
 |------|------|-----|-----|-----|
 | filename | 文件名 | String | — | table.csv |
 | original | 是否导出源数据 | Boolean | — | false |
 | isHeader | 不显示表头 | Boolean | — | false |
+| download | 是否马上下载，如果设置为 false 则通过返回结果为内容的 Promise | Boolean | — | true |
 | data | 自定义数据 | Array | — | — |
 | columns | 自定义列 | Array | — | — |
 | columnFilterMethod | 列过滤方法，该函数 Function(row,index,list) 的返回值用来决定该列是否导出 | Function | — | — |

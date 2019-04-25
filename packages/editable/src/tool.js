@@ -79,6 +79,9 @@ const UtilHandle = {
     return content
   },
   downloadCsc (opts, content) {
+    if (!opts.download) {
+      return Promise.resolve(content)
+    }
     if (navigator.msSaveBlob && window.Blob) {
       navigator.msSaveBlob(new Blob([content], { type: 'text/csv' }), opts.filename)
     } else if (browse['-ms']) {

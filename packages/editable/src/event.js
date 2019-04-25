@@ -1,8 +1,7 @@
 import XEUtils from 'xe-utils'
-import UtilHandle from './tool'
 
 // 监听全局事件
-const wheelName = UtilHandle.getWheelName()
+const wheelName = /Firefox/i.test(navigator.userAgent) ? 'DOMMouseScroll' : 'mousewheel'
 const eventStore = []
 const GlobalEvent = {
   on (comp, type, cb) {

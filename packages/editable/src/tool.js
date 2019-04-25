@@ -3,9 +3,6 @@ import XEUtils from 'xe-utils'
 const browse = XEUtils.browse()
 const UtilHandle = {
   browse,
-  getWheelName () {
-    return /Firefox/i.test(navigator.userAgent) ? 'DOMMouseScroll' : 'mousewheel'
-  },
   addClass (cell, clss) {
     let classList = cell.className.split(' ')
     clss.forEach(name => {
@@ -16,7 +13,7 @@ const UtilHandle = {
     cell.className = classList.join(' ')
   },
   hasClass (cell, cls) {
-    return cell && cell.className && cell.className.split(' ').includes(cls)
+    return cell && cell.className && cell.className.split && cell.className.split(' ').indexOf(cls) > -1
   },
   removeClass (cell, clss) {
     let classList = []

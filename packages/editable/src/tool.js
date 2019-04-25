@@ -61,6 +61,9 @@ const UtilHandle = {
     let isOriginal = opts.original
     let { columns, datas } = UtilHandle.getCsvData(opts, oData, oColumns, tableElem)
     let content = '\ufeff'
+    if (opts.isHeader) {
+      content += columns.map(column => column.label).join(',') + '\n'
+    }
     datas.forEach((record, rowIndex) => {
       if (isOriginal) {
         content += columns.map(column => {

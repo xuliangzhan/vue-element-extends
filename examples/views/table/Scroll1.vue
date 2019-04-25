@@ -20,40 +20,25 @@
       :config="{render: 'scroll'}"
       style="width: 100%">
       <elx-table-column type="index" width="100" fixed="left"></elx-table-column>
-      <elx-table-column prop="name" label="名字" min-width="300" show-overflow-tooltip>
+      <elx-table-column prop="name" label="名字" min-width="400" show-overflow-tooltip>
         <template v-slot:header="scope">
           <i class="el-icon-question"></i>名字
         </template>
       </elx-table-column>
-      <elx-table-column prop="sex" label="性别" min-width="200" :formatter="formatterSex"></elx-table-column>
-      <elx-table-column prop="age" label="年龄" min-width="200"></elx-table-column>
-      <elx-table-column prop="region" label="地区" width="200" :formatter="formatterRegion"></elx-table-column>
-      <elx-table-column prop="date" width="220" label="日期" :formatter="formatterDate"></elx-table-column>
-      <elx-table-column prop="rate" width="220" label="评分">
-        <template v-slot="scope">
-          <el-rate
-            v-model="scope.row.rate"
-            disabled
-            show-score
-            text-color="#ff9900">
-          </el-rate>
-        </template>
-      </elx-table-column>
-      <elx-table-column prop="updateTime" label="更新时间" width="200" :formatter="formatterDate"></elx-table-column>
-      <elx-table-column prop="createTime" label="创建时间" width="200" :formatter="formatterDate"></elx-table-column>
-      <el-table-column label="浮动列1" width="120" fixed="right">
+      <elx-table-column prop="age" label="年龄" min-width="400"></elx-table-column>
+      <elx-table-column prop="updateTime" label="更新时间" width="400" :formatter="formatterDate"></elx-table-column>
+      <elx-table-column prop="createTime" label="创建时间" width="400" :formatter="formatterDate"></elx-table-column>
+      <el-table-column label="浮动列" width="200" fixed="right">
         <template v-slot="scope">
           <el-button type="text" size="small">{{ scope.row.name }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="sex" label="浮动列2" width="120" fixed="right"> </el-table-column>
     </elx-table>
   </div>
 </template>
 
 <script>
 import XEUtils from 'xe-utils'
-import XEAjax from 'xe-ajax'
 import { Message } from 'element-ui'
 
 export default {
@@ -61,8 +46,6 @@ export default {
     return {
       loading: false,
       list: [], // 使用 data 方式双向绑定大数据，性能耗损大
-      sexList: [],
-      regionList: [],
       formData: {
         name: null,
         sex: null,
@@ -72,8 +55,6 @@ export default {
   },
   created () {
     this.findList()
-    this.findSexList()
-    this.findRegionList()
   },
   methods: {
     findList () {
@@ -86,37 +67,6 @@ export default {
       this.$nextTick(() => {
         Message({ message: `渲染 ${list.length} 条耗时 ${Date.now() - startTime} ms`, type: 'info', duration: 8000, showClose: true })
       })
-    },
-    findSexList () {
-      XEAjax.doGet('/api/conf/sex/list').then(({ data }) => {
-        this.sexList = data
-      })
-    },
-    findRegionList () {
-      XEAjax.doGet('/api/conf/region/list').then(({ data }) => {
-        this.regionList = data
-      })
-    },
-    formatterSex (row, column, cellValue, index) {
-      let item = this.sexList.find(item => item.value === cellValue)
-      return item ? item.label : null
-    },
-    formatterRegion (row, column, cellValue, index) {
-      let values = cellValue || []
-      let labels = []
-      let matchCascaderData = function (index, list) {
-        let val = values[index]
-        if (list && values.length > index) {
-          list.forEach(item => {
-            if (item.value === val) {
-              labels.push(item.label)
-              matchCascaderData(++index, item.children)
-            }
-          })
-        }
-      }
-      matchCascaderData(0, this.regionList || [])
-      return labels.join(' / ')
     },
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')

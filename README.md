@@ -136,6 +136,7 @@ edit-config 编辑参数配置：
 | trigger | 触发方式 | String | manual（手动触发方式，只能用于 mode=row） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑模式 | String | cell（单元格编辑模式） / row（行编辑模式） | cell |
 | render | 渲染方式，可以设置为 scroll 启用滚动渲染，支持海量数据 | String | default / scroll | — |
+| renderSize | 只对 render=scroll 有效，配置渲染条数 | Number | — | — |
 | props | 配置节点对应属性值 | Object | — | {children: 'children'} |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |
@@ -239,6 +240,18 @@ custom-columns 自定义列的配置：
 | validateRow | 对表格某一行进行校验的方法，参数为行数据和一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | row,callback |
 | validate | 对整个表格进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：（是否校验成功，最近一列未通过校验的字段）。若不传入回调函数，则会返回一个 promise | callback |
 | exportCsv| 将表格数据导出为 .csv 文件，说明：支持IE9+、Edge、Chrome、Firefox 等常用浏览器。IE11以下可能存在中文乱码问题，部分浏览器需要手动修改后缀名为 .csv | options |
+
+导出 options的配置：
+
+| 属性 | 描述 | 类型 | 可选值 | 默认值 |
+|------|------|-----|-----|-----|
+| filename | 文件名 | String | — | table.csv |
+| original | 是否导出源数据 | Boolean | — | false |
+| isHeader | 不显示表头 | Boolean | — | false |
+| data | 自定义数据 | Array | — | — |
+| columns | 自定义列 | Array | — | — |
+| columnFilterMethod | 列过滤方法，该函数 Function(row,index,list) 的返回值用来决定该列是否导出 | Function | — | — |
+| dataFilterMethod | 数据过滤方法，该函数 Function(row,index,list) 的返回值用来决定该数据是否导出 | Function | — | — |
 
 ### Editable-Column Attributes
 

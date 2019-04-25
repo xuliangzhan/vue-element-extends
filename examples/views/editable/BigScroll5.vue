@@ -45,7 +45,7 @@
       <elx-editable-column prop="createTime" label="创建时间" width="200" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column label="操作" width="100">
         <template v-slot="scope">
-          <el-button type="danger" @click="removeEvent(scope.row)">删除</el-button>
+          <el-button type="mini" @click="removeEvent(scope.row)">删除</el-button>
         </template>
       </elx-editable-column>
     </elx-editable>

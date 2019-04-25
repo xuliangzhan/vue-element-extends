@@ -155,7 +155,7 @@ edit-config 编辑参数配置：
 | checkedEditMethod | 只对 isCheckedEdit=true 有效，可以通过重写该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 返回 false 来阻止默认值的覆盖行为 | Function | — | — |
 | keydownMethod | 键按下时调用该函数 Function({active, checked}, event) | Function | — | — |
 
-context-menu-config 表格右键菜单配置：
+context-menu-config 表格右键菜单配置（如果是自定义 code 可以配合 custom-menu-link 事件使用）：
 
 | 属性 | 描述 | 类型 | 参数 |
 |------|------|-----|-----|
@@ -166,7 +166,7 @@ context-menu-config 表格右键菜单配置：
 | headerVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 的返回值用来决定是否显示头部右键菜单 | Function | — |
 | bodyVisibleMethod | 该函数 Function({row, rowIndex, column, columnIndex, cell}, event) 的返回值用来决定是否显示内容右键菜单 | Function | — |
 
-内置的菜单 code 列表（如果是自定义 code 可以配合 custom-menu-link 事件使用）：
+内置的菜单 code 列表：
 
 | 编码 | 描述 |
 |------|------|

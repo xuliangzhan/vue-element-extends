@@ -247,7 +247,7 @@ exportCsv options 的配置：
 |------|------|-----|-----|-----|
 | filename | 文件名 | String | — | table.csv |
 | original | 是否导出源数据 | Boolean | — | false |
-| isHeader | 不显示表头 | Boolean | — | false |
+| isHeader | 是否显示表头 | Boolean | — | false |
 | download | 是否马上下载，如果设置为 false 则通过返回结果为内容的 Promise | Boolean | — | true |
 | data | 自定义数据 | Array | — | — |
 | columns | 自定义列 | Array | — | — |

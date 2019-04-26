@@ -19,7 +19,7 @@
       border
       height="400"
       :data.sync="list"
-      :edit-config="{trigger: 'manual', mode: 'row', render: 'scroll'}"
+      :edit-config="{trigger: 'manual', mode: 'row', render: 'scroll', renderSize: 80}"
       @selection-change="handleSelectionChange"
       style="width: 100%">
       <elx-editable-column type="index" width="100" fixed="left"></elx-editable-column>

@@ -33,7 +33,7 @@
 ## Docs
 
 😱**注：正常渲染不适用于海量数据的表格；适用于使用分页加载的数据表格**😱  
-😏**注：启用滚动渲染可以流畅的支撑海量数据的表格（缺点是滚动体验略差）**😏  
+😏**注：启用滚动渲染可以流畅的支撑海量数据的表格（缺点是滚动效果略差）**😏  
 如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
 
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)

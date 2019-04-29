@@ -19,7 +19,7 @@
       border
       height="500"
       size="small"
-      :edit-config="{trigger: 'click', mode: 'cell', render: 'scroll', renderSize: 80, useDefaultValidTip: true}"
+      :edit-config="{trigger: 'click', mode: 'cell', render: 'scroll', renderSize: 60, useDefaultValidTip: true}"
       :edit-rules="validRules"
       :context-menu-config="{headerMenus, bodyMenus}"
       style="width: 100%">

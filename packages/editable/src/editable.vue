@@ -1929,7 +1929,7 @@ export default {
         opts.filename += '.csv'
       }
       let columns = this.getColumns()
-      let oData = this.scrollLoad ? this._fullData : this._getData(this._getTDatas())
+      let oData = this._getData(this.scrollLoad ? this._fullData : this._getTDatas())
       return UtilHandle.downloadCsc(opts, UtilHandle.getCsvContent(opts, oData, columns, this.$el))
     },
     closeContextMenu () {

@@ -17,10 +17,10 @@
       border
       height="460"
       :data="list"
-      :config="{render: 'scroll'}"
+      :config="{render: 'scroll', renderSize: 100}"
       style="width: 100%">
-      <elx-table-column type="index" width="100" fixed="left"></elx-table-column>
-      <elx-table-column prop="name" label="名字" min-width="400" show-overflow-tooltip>
+      <elx-table-column type="index" width="200" fixed="left"></elx-table-column>
+      <elx-table-column prop="name" label="名字" min-width="500" show-overflow-tooltip>
         <template v-slot:header="scope">
           <i class="el-icon-question"></i>名字
         </template>
@@ -28,7 +28,7 @@
       <elx-table-column prop="age" label="年龄" min-width="400"></elx-table-column>
       <elx-table-column prop="updateTime" label="更新时间" width="400" :formatter="formatterDate"></elx-table-column>
       <elx-table-column prop="createTime" label="创建时间" width="400" :formatter="formatterDate"></elx-table-column>
-      <el-table-column label="浮动列" width="200" fixed="right">
+      <el-table-column label="浮动列" width="300" fixed="right">
         <template v-slot="scope">
           <el-button type="text" size="small">{{ scope.row.name }}</el-button>
         </template>
@@ -72,7 +72,18 @@ export default {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
     exportCsvEvent () {
-      this.$refs.elxTable.exportCsv({ original: true })
+      this.$refs.elxTable.exportCsv({
+        original: true,
+        // 滚动渲染的方式导出，需要自行格式化数据
+        data: this.list.map(row => {
+          return {
+            name: row.name,
+            age: row.age,
+            updateTime: XEUtils.toDateString(row.updateTime, 'yyyy-MM-dd HH:mm:ss'),
+            createTime: XEUtils.toDateString(row.createTime, 'yyyy-MM-dd HH:mm:ss')
+          }
+        })
+      })
     }
   },
   beforeRouteUpdate (to, from, next) {

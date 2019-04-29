@@ -19,26 +19,15 @@
       :config="{render: 'scroll', renderSize: 100}"
       style="width: 100%">
       <elx-table-column type="index" width="100"></elx-table-column>
-      <elx-table-column prop="name" label="名字" min-width="100" show-overflow-tooltip>
+      <elx-table-column prop="name" label="名字" show-overflow-tooltip>
         <template v-slot:header="scope">
           <i class="el-icon-question"></i>名字
         </template>
       </elx-table-column>
-      <elx-table-column prop="sex" label="性别" min-width="140" :formatter="formatterSex"></elx-table-column>
-      <elx-table-column prop="age" label="年龄" min-width="140"></elx-table-column>
-      <elx-table-column prop="date" width="220" label="日期" :formatter="formatterDate"></elx-table-column>
-      <elx-table-column prop="rate" width="220" label="评分">
-        <template v-slot="scope">
-          <el-rate
-            v-model="scope.row.rate"
-            disabled
-            show-score
-            text-color="#ff9900">
-          </el-rate>
-        </template>
-      </elx-table-column>
-      <elx-table-column prop="updateTime" label="更新时间" width="200" :formatter="formatterDate"></elx-table-column>
-      <elx-table-column prop="createTime" label="创建时间" width="200" :formatter="formatterDate"></elx-table-column>
+      <elx-table-column prop="age" label="年龄"></elx-table-column>
+      <elx-table-column prop="date" label="日期" :formatter="formatterDate"></elx-table-column>
+      <elx-table-column prop="updateTime" label="更新时间" :formatter="formatterDate"></elx-table-column>
+      <elx-table-column prop="createTime" label="创建时间" :formatter="formatterDate"></elx-table-column>
     </elx-table>
   </div>
 </template>

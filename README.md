@@ -33,7 +33,7 @@
 ## Docs
 
 😱**注：正常渲染不适用于海量数据的表格；适用于使用分页加载的数据表格**😱  
-😏**注：启用滚动渲染可以流畅的支撑海量数据的表格**😏  
+😏**注：启用滚动渲染可以流畅的支撑海量数据的表格（缺点是滚动体验略差）**😏  
 如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
 
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)
@@ -136,7 +136,7 @@ edit-config 编辑参数配置：
 | trigger | 触发方式 | String | manual（手动触发方式，只能用于 mode=row） / click（点击触发编辑） / dblclick（双击触发编辑） | click |
 | mode  | 编辑模式 | String | cell（单元格编辑模式） / row（行编辑模式） | cell |
 | render | 渲染方式，可以设置为 scroll 启用滚动渲染，支持海量数据 | String | default / scroll | — |
-| renderSize | 只对 render=scroll 有效，配置渲染条数 | Number | — | — |
+| renderSize | 只对 render=scroll 有效，配置一次渲染的条数 | Number | — | — |
 | props | 配置节点对应属性值 | Object | — | {children: 'children'} |
 | showIcon | 是否显示列头编辑图标 | Boolean | — | true |
 | showStatus | 是否显示单元格值的修改状态 | Boolean | — | true |

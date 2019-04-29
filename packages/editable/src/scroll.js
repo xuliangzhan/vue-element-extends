@@ -84,7 +84,7 @@ const ScrollHandle = {
       }
       if (isRender) {
         // 超过阈值重新渲染
-        let toVisibleStart = toVisibleIndex - Math.floor((renderSize - visibleSize) / 2)
+        let toVisibleStart = toVisibleIndex - Math.floor(isTop ? renderSize / 2 : visibleSize)
         if (toVisibleStart < 0) {
           toVisibleStart = 0
         } else if (toVisibleStart + renderSize >= len) {

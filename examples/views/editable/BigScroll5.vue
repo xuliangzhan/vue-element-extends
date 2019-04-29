@@ -21,7 +21,7 @@
       border
       height="500"
       row-key="id"
-      :edit-config="{trigger: 'dblclick', mode: 'row', render: 'scroll', renderSize: 60, useDefaultValidTip: true}"
+      :edit-config="{trigger: 'dblclick', mode: 'row', render: 'scroll', renderSize: 80, useDefaultValidTip: true}"
       :edit-rules="validRules"
       :context-menu-config="{headerMenus, bodyMenus}"
       @selection-change="handleSelectionChange"

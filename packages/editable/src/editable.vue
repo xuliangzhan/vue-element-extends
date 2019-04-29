@@ -509,7 +509,7 @@ export default {
       })
     },
     _getData (datas) {
-      return XEUtils.mapTree(datas || this._fullData, row => row.data, {
+      return XEUtils.mapTree(datas || this.datas, row => row.data, {
         children: this.elTreeOpts.children,
         mapChildren: this.configs.props.children
       })
@@ -1706,12 +1706,12 @@ export default {
       this.remove(this.getSelecteds())
     },
     getRecords (rowIndex) {
-      let list = this._getData()
+      let list = this._getData(this._fullData)
       return arguments.length ? list[rowIndex] : list
     },
     getAllRecords () {
       return {
-        records: this._getData(),
+        records: this.getRecords(),
         selecteds: this.getSelecteds(),
         insertRecords: this.getInsertRecords(),
         removeRecords: this.getRemoveRecords(),

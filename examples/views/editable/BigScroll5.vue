@@ -7,6 +7,7 @@
     <p style="color: red;font-size: 12px;">双击模式、行编辑、校验、多选</p>
     <p style="color: red;font-size: 12px;">影响性能的参数：data、rowKey、fixed</p>
     <p style="color: red;font-size: 12px;">兼容性：不兼容动态行高；不支持树结构</p>
+    <p style="color: red;font-size: 12px;">滚动渲染如果需要导出完整数据，需要手动转换数据源</p>
 
     <div class="scroll-table5-oper">
       <el-button type="success" size="small" @click="insertEvent">新增</el-button>
@@ -24,6 +25,7 @@
       :edit-rules="validRules"
       :context-menu-config="{headerMenus, bodyMenus}"
       @selection-change="handleSelectionChange"
+      @custom-menu-link="customMenuLinkEvent"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
       <elx-editable-column type="index" width="100"></elx-editable-column>
@@ -75,7 +77,7 @@ export default {
       headerMenus: [
         [
           {
-            code: 'ALL_EXPORT',
+            code: 'exportAll',
             name: '导出全部.cvs',
             prefixIcon: 'el-icon-download'
           }
@@ -112,7 +114,7 @@ export default {
             prefixIcon: 'el-icon-download'
           },
           {
-            code: 'ALL_EXPORT',
+            code: 'exportAll',
             name: '导出全部.cvs'
           }
         ]
@@ -155,8 +157,37 @@ export default {
     formatterDate (row, column, cellValue, index) {
       return XEUtils.toDateString(cellValue, 'yyyy-MM-dd HH:mm:ss')
     },
+    getSelectLabel (value, valueProp, labelProp, list) {
+      let item = XEUtils.find(list, item => item[valueProp] === value)
+      return item ? item[labelProp] : null
+    },
+    getCascaderLabel (value, list) {
+      let values = value || []
+      let labels = []
+      let matchCascaderData = function (index, list) {
+        let val = values[index]
+        if (list && values.length > index) {
+          list.forEach(item => {
+            if (item.value === val) {
+              labels.push(item.label)
+              matchCascaderData(++index, item.children)
+            }
+          })
+        }
+      }
+      matchCascaderData(0, list)
+      return labels.join(' / ')
+    },
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    // 自定义菜单事件
+    customMenuLinkEvent (code, row, column, cell) {
+      switch (code) {
+        case 'exportAll':
+          this.exportCsvEvent()
+          break
+      }
     },
     insertEvent () {
       this.$refs.elxEditable.insert({
@@ -207,7 +238,22 @@ export default {
       })
     },
     exportCsvEvent () {
-      this.$refs.elxEditable.exportCsv({ original: true })
+      this.$refs.elxEditable.exportCsv({
+        original: true,
+        // 滚动渲染的方式导出，需要自行格式化数据
+        data: this.$refs.elxEditable.getRecords().map(({ name, sex, age, region, date, rate, updateTime, createTime }) => {
+          return {
+            name,
+            sex: this.getSelectLabel(sex, 'label', 'value', this.sexList),
+            age,
+            region: this.getCascaderLabel(region, this.regionList),
+            date: XEUtils.toDateString(updateTime, 'yyyy年MM月dd日 HH时ss分mm秒'),
+            rate,
+            updateTime: XEUtils.toDateString(updateTime, 'yyyy-MM-dd HH:mm:ss'),
+            createTime: XEUtils.toDateString(createTime, 'yyyy-MM-dd HH:mm:ss')
+          }
+        })
+      })
     }
   },
   beforeRouteUpdate (to, from, next) {

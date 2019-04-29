@@ -509,7 +509,7 @@ export default {
       })
     },
     _getData (datas) {
-      return XEUtils.mapTree(datas || this.datas, row => row.data, {
+      return XEUtils.mapTree(datas || this._fullData, row => row.data, {
         children: this.elTreeOpts.children,
         mapChildren: this.configs.props.children
       })

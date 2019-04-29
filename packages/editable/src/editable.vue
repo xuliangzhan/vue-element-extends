@@ -622,6 +622,7 @@ export default {
       if (offsetRow) {
         row.checked = null
         offsetRow.checked = column.property
+        this._currentChange(offsetRow, row)
       }
     },
     _hasCtxChilds (selected) {

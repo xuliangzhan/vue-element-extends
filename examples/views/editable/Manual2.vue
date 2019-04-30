@@ -38,7 +38,7 @@
       <elx-editable-column type="selection" width="55"></elx-editable-column>
       <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
-      <elx-editable-column prop="sex" label="性别" sortable :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
+      <elx-editable-column prop="sex" label="性别" sortable :filters="[{text: '男', value: '1'}, {text: '女', value: '0'}]" :filter-method="filterHandler" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
       <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
       <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
       <elx-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
@@ -151,6 +151,10 @@ export default {
     },
     clearActiveMethod ({ type, row }) {
       return this.isClearActiveFlag && type === 'out' ? this.checkOutSave(row) : this.isClearActiveFlag
+    },
+    filterHandler (value, row, column) {
+      const property = column['property']
+      return row[property] === value
     },
     insertEvent () {
       let activeInfo = this.$refs.elxEditable.getActiveRow()

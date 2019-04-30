@@ -622,7 +622,7 @@ export default {
       if (offsetRow) {
         row.checked = null
         offsetRow.checked = column.property
-        this._currentChange(offsetRow, row)
+        this.$refs.refElTable.setCurrentRow(offsetRow)
       }
     },
     _hasCtxChilds (selected) {
@@ -709,10 +709,12 @@ export default {
                               row.checked = null
                               this._tabActiveCell(offsetRow, offsetColumn)
                               this._restoreTooltip()
+                              this.$refs.refElTable.setCurrentRow(offsetRow)
                             }).catch(rule => this._toValidError(rule, row, column, cell))
                         } else {
                           row.checked = null
                           this._tabActiveCell(offsetRow, offsetColumn)
+                          this.$refs.refElTable.setCurrentRow(offsetRow)
                         }
                         evnt.preventDefault()
                       }

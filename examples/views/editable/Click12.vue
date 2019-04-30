@@ -28,6 +28,7 @@
       stripe
       border
       height="480"
+      highlight-current-row
       :data.sync="list"
       @select="selectEvent"
       @current-change="currentChangeEvent"

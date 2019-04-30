@@ -183,7 +183,7 @@ export default {
         sortBy = `data.${this.sortBy}`
       } else if (XEUtils.isArray(this.sortBy)) {
         sortBy = this.sortBy.map(name => `data.${name}`)
-      } else if (this.prop) {
+      } else if (this.sortable && this.prop) {
         sortBy = `data.${this.prop}`
       }
       return {

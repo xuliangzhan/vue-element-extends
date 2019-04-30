@@ -31,20 +31,21 @@
       class="manual-table2"
       border
       height="466"
+      :default-sort="{prop: 'updateTime', order: 'descending'}"
       :data.sync="list"
       :edit-config="{trigger: 'manual', mode: 'row', clearActiveMethod}"
       style="width: 100%">
       <elx-editable-column type="selection" width="55"></elx-editable-column>
       <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
-      <elx-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
+      <elx-editable-column prop="sex" label="性别" sortable :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
       <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
       <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
       <elx-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>
-      <elx-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+      <elx-editable-column prop="date" label="日期" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
       <elx-editable-column prop="flag" label="是否启用" :formatter="formatterFlag" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>
-      <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
+      <elx-editable-column prop="updateTime" label="更新时间" sortable width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="attr3" label="链接">
         <template>

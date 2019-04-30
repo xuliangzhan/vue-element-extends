@@ -33,6 +33,7 @@
       class="dblclick-table2"
       border
       height="466"
+      :default-sort="{prop: 'updateTime', order: 'descending'}"
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-config="{trigger: 'dblclick', mode: 'row'}"
@@ -45,9 +46,9 @@
       <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
       <elx-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>
-      <elx-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+      <elx-editable-column prop="date" label="日期" sortable :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
       <elx-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></elx-editable-column>
-      <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
+      <elx-editable-column prop="updateTime" label="更新时间" sortable width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="attr3" label="链接">
         <template>

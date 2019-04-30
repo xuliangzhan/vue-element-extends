@@ -1534,7 +1534,7 @@ export default {
     reload (datas) {
       this.currentRow = null
       this.deleteRecords = []
-      this._clearAllOpers()
+      // this._clearAllOpers()
       this._clearAllChecked()
       this._clearActiveData()
       this._initial(datas, true)

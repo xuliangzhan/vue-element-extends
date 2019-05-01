@@ -28,7 +28,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-component": "^1.1.1",
     "core-js": "^2.6.5",
-    "element-ui": "^2.8.1",
+    "element-ui": "^2.8.2",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "font-awesome": "^4.7.0",
@@ -42,7 +42,7 @@
     "xe-ajax": "^3.5.3",
     "xe-ajax-mock": "^1.7.10",
     "xe-clipboard": "^1.0.3",
-    "xe-utils": "^1.8.19",
+    "xe-utils": "^1.8.20",
     "xlsx": "^0.14.2"
   },
   "peerDependencies": {

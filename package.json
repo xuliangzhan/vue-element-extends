@@ -1,6 +1,6 @@
 {
   "name": "vue-element-extends",
-  "version": "1.2.12",
+  "version": "1.2.13",
   "description": "Extension component based on ElementUI 2.x",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -32,7 +32,6 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "font-awesome": "^4.7.0",
-    "iview": "^3.4.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
     "sortablejs": "^1.8.4",

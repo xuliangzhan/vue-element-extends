@@ -72,9 +72,9 @@
         prop="userInfo.base.other.sex2"
         label="方式2"
         width="160"
-        :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value2', label: 'spell'}, attrs: {clearable: true, placeholder: '请选择性别'}}">
+        :edit-render="{name: 'ElSelect', options: sexList, optionProps: {value: 'value2', label: 'spell'}, props: {clearable: true, placeholder: '请选择性别'}}">
         <template v-slot:edit="scope">
-          <el-select v-model="scope.row.userInfo.base.other.sex2" v-bind="scope.$render.attrs" @change="$refs.elxEditable.updateStatus(scope)">
+          <el-select v-model="scope.row.userInfo.base.other.sex2" v-bind="scope.$render.props" @change="$refs.elxEditable.updateStatus(scope)">
             <el-option
               v-for="(item, index) in sexList"
               :key="index"
@@ -87,11 +87,11 @@
         prop="userInfo.base.age"
         label="年龄"
         width="160"
-        :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}">
+        :edit-render="{name: 'ElInputNumber', props: {min: 1, max: 200}}">
         <template v-slot:edit="scope">
           <el-input-number
             v-model="scope.row.userInfo.base.age"
-            v-bind="scope.$render.attrs"
+            v-bind="scope.$render.props"
             @input="$refs.elxEditable.updateStatus(scope)"></el-input-number>
         </template>
       </elx-editable-column>
@@ -99,11 +99,11 @@
         prop="userInfo.region"
         label="地区"
         min-width="180"
-        :edit-render="{name: 'ElCascader', attrs: {options: regionList, separator: '-'}}">
+        :edit-render="{name: 'ElCascader', props: {options: regionList, separator: '-'}}">
         <template v-slot:edit="scope">
           <el-cascader
             v-model="scope.row.userInfo.region"
-            v-bind="scope.$render.attrs"
+            v-bind="scope.$render.props"
             @change="$refs.elxEditable.updateStatus(scope)"></el-cascader>
         </template>
       </elx-editable-column>
@@ -112,11 +112,11 @@
         label="选择日期"
         width="220"
         sortable
-        :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}">
+        :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd HH:mm:ss'}}">
         <template v-slot:edit="scope">
           <el-date-picker
             v-model="scope.row.dateObj.date1"
-            v-bind="scope.$render.attrs"
+            v-bind="scope.$render.props"
             @change="$refs.elxEditable.updateStatus(scope)"></el-date-picker>
         </template>
       </elx-editable-column>

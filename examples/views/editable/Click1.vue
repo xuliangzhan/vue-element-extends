@@ -16,7 +16,7 @@
       style="width: 100%">
       <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
       <elx-editable-column prop="name" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
-      <elx-editable-column prop="describe" label="描述" :edit-render="{name: 'ElInput', attrs: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>
+      <elx-editable-column prop="describe" label="描述" :edit-render="{name: 'ElInput', props: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>
       <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column label="操作" width="160">

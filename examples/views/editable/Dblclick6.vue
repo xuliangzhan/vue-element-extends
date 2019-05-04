@@ -28,9 +28,9 @@
         </template>
       </elx-editable-column>
       <elx-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
-      <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', attrs: {min: 1, max: 200}}"></elx-editable-column>
-      <elx-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', attrs: {options: regionList}}"></elx-editable-column>
-      <elx-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', attrs: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+      <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', props: {min: 1, max: 200}}"></elx-editable-column>
+      <elx-editable-column prop="region" label="地区" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></elx-editable-column>
+      <elx-editable-column prop="date" label="日期" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
       <elx-editable-column prop="rate" label="评分" :edit-render="{name: 'ElRate', type: 'visible'}"></elx-editable-column>
       <elx-editable-column prop="attr1" label="属性1" :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="attr2" label="属性2" :edit-render="{name: 'ElInput'}"></elx-editable-column>

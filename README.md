@@ -270,7 +270,8 @@ edit-render 渲染参数配置
 | name | 渲染内置的组件名称 | String | ElAutocomplete / ElInput / ElSelect / ElCascader / ElTimeSelect / ElTimePicker / ElDatePicker / ElInputNumber / ElSwitch / ElRate / ElColorPicker / ElSlider | ElInput |
 | type | 渲染类型 | String | default（组件触发后可视） / visible（组件一直可视） | default |
 | autofocus | 该单元格在激活后自动获取焦点（如果是渲染自定义组件，需要指定 class=elx-custom_input 才会自动获得焦点） | Boolean | — | — |
-| attrs | 渲染组件附加属性，参数请查看被渲染的 Component attrs | Object | — | {} |
+| （v1.2.13+废弃，保留兼容）attrs | 改为使用 props | Object | — | {} |
+| props | 渲染组件附加属性，参数请查看被渲染的 Component props | Object | — | {} |
 | events | 渲染组件附加事件，参数为 ( { rule, row, column, $index }, ...Component arguments ) | Object | — | {} |
 | options | 只对 name=ElSelect 有效，下拉组件选项列表 | Array | — | [] |
 | optionProps | 只对 name=ElSelect 有效，下拉组件选项属性参数配置 | Object | — | { value: 'value', label: 'label' } |
@@ -319,7 +320,7 @@ Run demo on [jsfiddle.net](https://jsfiddle.net/0u86zwbv/) or [runjs](https://js
       <elx-editable-column
         prop="date"
         label="日期"
-        :edit-render="{name: 'ElDatePicker', attrs: {type: 'date', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+        :edit-render="{name: 'ElDatePicker', props: {type: 'date', format: 'yyyy-MM-dd'}}"></elx-editable-column>
       <elx-editable-column
         prop="flag"
         label="开关"

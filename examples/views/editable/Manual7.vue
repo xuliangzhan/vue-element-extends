@@ -28,7 +28,7 @@
         <elx-editable-column prop="visible" label="默认显示" width="100" :formatter="formatterRequired" :edit-render="{name: 'ElSwitch'}"></elx-editable-column>
         <elx-editable-column prop="type" label="渲染类型" width="100" :edit-render="{name: 'ElSelect', options: renderTypeList}"></elx-editable-column>
         <elx-editable-column prop="width" label="设置宽度" width="100" :edit-render="{name: 'ElInput'}"></elx-editable-column>
-        <elx-editable-column prop="align" label="对齐方式" width="100" :edit-render="{name: 'ElSelect', options: alignList, attrs: {clearable: true}}"></elx-editable-column>
+        <elx-editable-column prop="align" label="对齐方式" width="100" :edit-render="{name: 'ElSelect', options: alignList, props: {clearable: true}}"></elx-editable-column>
         <elx-editable-column prop="describe" label="备注" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
         <elx-editable-column prop="updateTime" label="更新时间" width="150" :formatter="formatterDate"></elx-editable-column>
         <elx-editable-column prop="createTime" label="创建时间" width="150" :formatter="formatterDate"></elx-editable-column>
@@ -127,7 +127,7 @@ export default {
         return {
           value: name,
           label: name,
-          attrs: {
+          props: {
             disabled: false
           }
         }
@@ -276,7 +276,7 @@ export default {
     uniqueKey (scope, value) {
       let list = this.columnList
       this.keyList.forEach(item => {
-        item.attrs.disabled = list.some(row => row.key === item.value)
+        item.props.disabled = list.some(row => row.key === item.value)
       })
       if (scope) {
         this.$refs.elxEditable1.updateStatus(scope)
@@ -288,7 +288,7 @@ export default {
       if (!activeInfo && !insertRecords.length) {
         switch (name) {
           case 'elxEditable1':
-            let nextItem = this.keyList.find(item => !item.attrs.disabled)
+            let nextItem = this.keyList.find(item => !item.props.disabled)
             this.$refs[name].insert({
               key: nextItem.value,
               name: nextItem.value,

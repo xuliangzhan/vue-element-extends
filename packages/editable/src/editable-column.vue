@@ -1,5 +1,5 @@
 <template>
-  <el-table-column v-if="isVisible && (type === 'selection' && scrollLoad)" v-bind="attrs">
+  <el-table-column v-if="isVisible && (type === 'selection' && scrollLoad)" v-bind="bindProps">
     <template v-slot:header="scope">
       <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="checkAllEvent"></el-checkbox>
     </template>
@@ -7,10 +7,10 @@
       <el-checkbox v-model="scope.row.scrollChecked" @change="checkRowEvent(scope)"></el-checkbox>
     </template>
   </el-table-column>
-  <el-table-column v-else-if="isVisible && (type === 'selection' || group || isGroup)" v-bind="attrs">
+  <el-table-column v-else-if="isVisible && (type === 'selection' || group || isGroup)" v-bind="bindProps">
     <slot></slot>
   </el-table-column>
-  <el-table-column v-else-if="isVisible && type === 'index'" v-bind="attrs">
+  <el-table-column v-else-if="isVisible && type === 'index'" v-bind="bindProps">
     <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">#</slot>
     </template>
@@ -18,7 +18,7 @@
       <slot v-bind="getIndexScope(scope)">{{ formatRowIndex(scope) }}</slot>
     </template>
   </el-table-column>
-  <el-table-column v-else-if="isVisible && type === 'expand'" v-bind="attrs">
+  <el-table-column v-else-if="isVisible && type === 'expand'" v-bind="bindProps">
     <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)"></slot>
     </template>
@@ -26,7 +26,7 @@
       <slot v-bind="getRowScope(scope)"></slot>
     </template>
   </el-table-column>
-  <el-table-column v-else-if="isVisible && editRender" v-bind="attrs">
+  <el-table-column v-else-if="isVisible && editRender" v-bind="bindProps">
     <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">
         <i v-if="checkRequired(scope)" class="editable-required-icon"></i>
@@ -38,20 +38,20 @@
       <template v-if="isEditRender(scope)">
         <slot name="edit" v-bind="getRowScope(scope)">
           <template v-if="compName === 'ElSelect'">
-            <el-select v-if="renderOpts.optionGroups" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
-              <el-option-group v-for="(group, gIndex) in renderOpts.optionGroups" :key="gIndex" :label="group[renderOpts.optionGroupProps.label]" v-bind="group.attrs">
-                <el-option v-for="(item, index) in group[renderOpts.optionGroupProps.options]" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.attrs"></el-option>
+            <el-select v-if="renderOpts.optionGroups" v-model="scope.row.data[scope.column.property]" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)">
+              <el-option-group v-for="(group, gIndex) in renderOpts.optionGroups" :key="gIndex" :label="group[renderOpts.optionGroupProps.label]" v-bind="group.props">
+                <el-option v-for="(item, index) in group[renderOpts.optionGroupProps.options]" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.props || item.attrs"></el-option>
               </el-option-group>
             </el-select>
-            <el-select v-else v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)">
-              <el-option v-for="(item, index) in renderOpts.options" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.attrs"></el-option>
+            <el-select v-else v-model="scope.row.data[scope.column.property]" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)">
+              <el-option v-for="(item, index) in renderOpts.options" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.props || item.attrs"></el-option>
             </el-select>
           </template>
           <template v-else-if="comps.includes(compName)">
-            <component :is="compName" v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></component>
+            <component :is="compName" v-model="scope.row.data[scope.column.property]" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)"></component>
           </template>
           <template v-else>
-            <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendAttrs(scope)" v-on="getRendEvents(scope)"></el-input>
+            <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)"></el-input>
           </template>
         </slot>
       </template>
@@ -81,7 +81,7 @@
       </template>
     </template>
   </el-table-column>
-  <el-table-column v-else-if="isVisible" v-bind="attrs">
+  <el-table-column v-else-if="isVisible" v-bind="bindProps">
     <template v-slot:header="scope">
       <slot name="header" v-bind="getHeadScope(scope)">{{ scope.column.label }}</slot>
     </template>
@@ -168,7 +168,7 @@ export default {
       }
       return true
     },
-    attrs () {
+    bindProps () {
       let sortBy
       let clsName = this.isReadonly ? 'elx_readonly ' : 'elx_edit '
       if (this.className) {
@@ -261,10 +261,10 @@ export default {
     getRowIdentity (row, column) {
       return XEUtils.get(row.data, column.property)
     },
-    getRendAttrs (scope) {
+    getRendProps (scope) {
       let size = this.$editable.size
-      let attrs = this.renderOpts.attrs
-      return size ? Object.assign({ size }, attrs) : attrs
+      let props = this.renderOpts.props || this.renderOpts.attrs
+      return size ? Object.assign({ size }, props) : props
     },
     getRendEvents ({ $index, row, column, store }) {
       let type = 'change'
@@ -311,13 +311,13 @@ export default {
     },
     getSelectLabel ({ row, column }) {
       let renderOpts = this.renderOpts
-      let attrs = renderOpts.attrs || {}
+      let props = renderOpts.props || this.renderOpts.attrs || {}
       let labelProp = renderOpts.optionProps.label
       let valueProp = renderOpts.optionProps.value
       let optionsProp = renderOpts.optionGroupProps.options
       let value = this.getRowIdentity(row, column)
       if (!(value === null || value === undefined || value === '')) {
-        return (attrs.multiple ? value : [value]).map(renderOpts.optionGroups ? value => {
+        return (props.multiple ? value : [value]).map(renderOpts.optionGroups ? value => {
           let selectItem = XEUtils.find(renderOpts.optionGroups, group => group[optionsProp].find(item => item[valueProp] === value))
           return selectItem ? selectItem[labelProp] : null
         } : value => {
@@ -330,7 +330,7 @@ export default {
     getCascaderLabel ({ row, column }) {
       let values = this.getRowIdentity(row, column) || []
       let labels = []
-      let attrs = this.renderOpts.attrs || {}
+      let props = this.renderOpts.props || this.renderOpts.attrs || {}
       let matchCascaderData = function (index, list) {
         let val = values[index]
         if (list && values.length > index) {
@@ -342,38 +342,38 @@ export default {
           })
         }
       }
-      matchCascaderData(0, attrs.options || [])
-      return labels.join(` ${attrs.separator || '/'} `)
+      matchCascaderData(0, props.options || [])
+      return labels.join(` ${props.separator || '/'} `)
     },
     getTimePickerLabel ({ row, column }) {
       let value = this.getRowIdentity(row, column)
-      let attrs = this.renderOpts.attrs || {}
-      return XEUtils.toDateString(value, attrs.format || 'hh:mm:ss')
+      let props = this.renderOpts.props || this.renderOpts.attrs || {}
+      return XEUtils.toDateString(value, props.format || 'hh:mm:ss')
     },
     getDatePickerLabel ({ row, column }) {
       let value = this.getRowIdentity(row, column)
-      let attrs = this.renderOpts.attrs || {}
-      switch (attrs.type) {
+      let props = this.renderOpts.props || this.renderOpts.attrs || {}
+      switch (props.type) {
         case 'week':
-          return this.getFormatDate(value, attrs, 'yyyywWW')
+          return this.getFormatDate(value, props, 'yyyywWW')
         case 'month':
-          return this.getFormatDate(value, attrs, 'yyyy-MM')
+          return this.getFormatDate(value, props, 'yyyy-MM')
         case 'year':
-          return this.getFormatDate(value, attrs, 'yyyy')
+          return this.getFormatDate(value, props, 'yyyy')
         case 'dates':
-          return this.getFormatDates(value, attrs, ', ', 'yyyy-MM-dd')
+          return this.getFormatDates(value, props, ', ', 'yyyy-MM-dd')
         case 'daterange':
-          return this.getFormatDates(value, attrs, ` ${attrs.rangeSeparator || '-'} `, 'yyyy-MM-dd')
+          return this.getFormatDates(value, props, ` ${props.rangeSeparator || '-'} `, 'yyyy-MM-dd')
         case 'datetimerange':
-          return this.getFormatDates(value, attrs, ` ${attrs.rangeSeparator || '-'} `, 'yyyy-MM-dd HH:ss:mm')
+          return this.getFormatDates(value, props, ` ${props.rangeSeparator || '-'} `, 'yyyy-MM-dd HH:ss:mm')
       }
-      return this.getFormatDate(value, attrs, 'yyyy-MM-dd')
+      return this.getFormatDate(value, props, 'yyyy-MM-dd')
     },
-    getFormatDate (value, attrs, defaultFormat) {
-      return XEUtils.toDateString(value, attrs.format || defaultFormat)
+    getFormatDate (value, props, defaultFormat) {
+      return XEUtils.toDateString(value, props.format || defaultFormat)
     },
-    getFormatDates (values, attrs, separator, defaultFormat) {
-      return XEUtils.toArray(values).map(date => this.getFormatDate(date, attrs, defaultFormat)).join(separator)
+    getFormatDates (values, props, separator, defaultFormat) {
+      return XEUtils.toArray(values).map(date => this.getFormatDate(date, props, defaultFormat)).join(separator)
     },
     checkRequired ({ column, store }) {
       let property = column.property

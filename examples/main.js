@@ -5,7 +5,6 @@ import router from './router'
 import './plugins/element.js'
 import './plugins/element-extends.js'
 import './mock'
-// import './plugins/iview.js'
 
 Vue.config.productionTip = false
 

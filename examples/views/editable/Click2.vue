@@ -44,7 +44,7 @@
       <elx-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="sex" label="性别" sortable :filters="[{text: '男', value: '1'}, {text: '女', value: '0'}]" :filter-method="filterHandler" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
       <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', props: {min: 1, max: 200}}"></elx-editable-column>
-      <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></elx-editable-column>
+      <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList, showAllLevels: false}}"></elx-editable-column>
       <elx-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="describe" label="文本域" show-overflow-tooltip :edit-render="{name: 'ElInput', props: {type: 'textarea', autosize: {minRows: 1, maxRows: 4}}}"></elx-editable-column>
       <elx-editable-column prop="date" label="日期" sortable :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>

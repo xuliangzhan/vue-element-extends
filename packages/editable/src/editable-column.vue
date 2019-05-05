@@ -343,7 +343,7 @@ export default {
         }
       }
       matchCascaderData(0, props.options || [])
-      return labels.join(` ${props.separator || '/'} `)
+      return (props.showAllLevels === false ? labels.slice(labels.length - 1, labels.length) : labels).join(` ${props.separator || '/'} `)
     },
     getTimePickerLabel ({ row, column }) {
       let value = this.getRowIdentity(row, column)

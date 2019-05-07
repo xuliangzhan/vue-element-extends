@@ -40,6 +40,7 @@
         width="55"></elx-editable-column>
       <elx-editable-column
         type="index"
+        label="序号"
         width="55"></elx-editable-column>
       <elx-editable-column
         prop="name"

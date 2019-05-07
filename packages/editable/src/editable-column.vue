@@ -12,7 +12,7 @@
   </el-table-column>
   <el-table-column v-else-if="isVisible && type === 'index'" v-bind="bindProps">
     <template v-slot:header="scope">
-      <slot name="header" v-bind="getHeadScope(scope)">#</slot>
+      <slot name="header" v-bind="getHeadScope(scope)">{{ label || '#' }}</slot>
     </template>
     <template v-slot="scope">
       <slot v-bind="getIndexScope(scope)">{{ formatRowIndex(scope) }}</slot>

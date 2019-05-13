@@ -38,6 +38,9 @@
 
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)
 
+**一个性能更优、功能更加强大的表格**
+[vxe-table](https://xuliangzhan.github.io/vxe-table/)
+
 ## Scroll render
 
 滚动渲染计算逻辑：

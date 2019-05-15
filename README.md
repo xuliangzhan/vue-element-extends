@@ -42,8 +42,6 @@
 
 ## Scroll render
 
-滚动渲染计算逻辑：
-
 ```html
   top --> Space  
     --> visibleStart  
@@ -53,6 +51,12 @@
         --> offsetSize  
   bottom --> Space  
 ```
+
+滚动渲染存在问题：
+
+* 滚动效果体验不太好
+* 不支持树形表格
+* 不支持排序和筛选条件过滤等...
 
 ## Installing
 

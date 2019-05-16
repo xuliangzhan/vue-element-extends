@@ -1700,7 +1700,12 @@ export default {
           this._clearScrollChecked()
         }
       }
-      return this.$nextTick().then(() => rest)
+      return this.$nextTick().then(() => {
+        if (!this.lastActive) {
+          this._restoreTooltip()
+        }
+        return rest
+      })
     },
     getSelecteds () {
       return this._getSelectRows().map(item => item.data)

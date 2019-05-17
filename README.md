@@ -38,7 +38,7 @@
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)
 
 😏**一个功能更加强大的 Vue 表格**  
-查看 [vxe-table](https://xuliangzhan.github.io/vxe-table/)
+推荐：[vxe-table](https://xuliangzhan.github.io/vxe-table/)
 
 ## Scroll render
 

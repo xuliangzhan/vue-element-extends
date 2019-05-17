@@ -269,18 +269,18 @@ export default {
     },
     toggleRowSelection (record, selected) {
       let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
-      return this.$refs.refElTable.toggleRowSelection(matchObj.item, selected)
+      return matchObj ? this.$refs.refElTable.toggleRowSelection(matchObj.item, selected) : null
     },
     toggleAllSelection () {
       return this.$refs.refElTable.toggleAllSelection()
     },
     toggleRowExpansion (record, expanded) {
       let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
-      return this.$refs.refElTable.toggleRowExpansion(matchObj.item, expanded)
+      return matchObj ? this.$refs.refElTable.toggleRowExpansion(matchObj.item, expanded) : null
     },
     setCurrentRow (record) {
       let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
-      return this.$refs.refElTable.setCurrentRow(matchObj.item)
+      return matchObj ? this.$refs.refElTable.setCurrentRow(matchObj.item) : null
     },
     clearSort () {
       return this.$refs.refElTable.clearSort()

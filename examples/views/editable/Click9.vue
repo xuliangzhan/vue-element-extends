@@ -49,6 +49,7 @@
       <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></elx-editable-column>
       <elx-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="date" label="日期" width="160" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
+      <elx-editable-column prop="date2" label="任意时间范围" width="340" :edit-render="{name: 'ElTimePicker', props: {isRange: true, rangeSeparator: '至', startPlaceholder: '开始时间', endPlaceholder: '结束时间', placeholder: '选择时间范围'}}"></elx-editable-column>
       <elx-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></elx-editable-column>
       <elx-editable-column prop="rate" label="评分" min-width="150" :edit-render="{name: 'ElRate', type: 'visible'}"></elx-editable-column>
       <elx-editable-column prop="describe" label="备注" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
@@ -193,7 +194,10 @@ export default {
       this.pendingRemoveList = []
       XEAjax.doGet(`/api/user/page/list/${this.pageVO.pageSize}/${this.pageVO.currentPage}`, this.formData).then(response => {
         let { page, result } = response.data
-        this.list = result
+        this.list = result.map(item => {
+          item.date2 = [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)]
+          return item
+        })
         this.pageVO.totalResult = page.totalResult
         this.loading = false
       }).catch(e => {

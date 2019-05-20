@@ -219,7 +219,7 @@ custom-columns 自定义列的配置：
 |------|------|-----|
 | refresh | 手动刷新表格，对于非双向同步的树形结构可能会用到 |  |
 | reload | 初始化完整表格数据，更新为初始状态 | datas |
-| reloadRow | 初始化指定行数据，更新为初始状态 | row, record |
+| reloadRow | 初始化指定行数据，更新为初始状态 | row, record? |
 | revert | 还原更改，还原指定行 row 或者整个表格的数据 | row?rows?,prop? |
 | insert | 从第一行新增一行新数据 | record |
 | insertAt | 第二个参数 record 从指定位置新增一条数据； null 从第一行新增一行新数据；-1 从最后新增一条数据 | data,record |

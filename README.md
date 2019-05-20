@@ -218,11 +218,11 @@ custom-columns 自定义列的配置：
 | 方法名 | 描述 | 参数 |
 |------|------|-----|
 | refresh | 手动刷新表格，对于非双向同步的树形结构可能会用到 |  |
-| reload | 初始化完整表格数据 | datas |
-| reloadRow | 初始化指定行数据 | row |
+| reload | 初始化完整表格数据，更新为初始状态 | datas |
+| reloadRow | 初始化指定行数据，更新为初始状态 | row, record |
 | revert | 还原更改，还原指定行 row 或者整个表格的数据 | row?rows?,prop? |
-| insert | 从第一行新增一行新数据 | data |
-| insertAt | 第二个参数 row 从指定位置新增一条数据； null 从第一行新增一行新数据；-1 从最后新增一条数据 | data,row |
+| insert | 从第一行新增一行新数据 | record |
+| insertAt | 第二个参数 record 从指定位置新增一条数据； null 从第一行新增一行新数据；-1 从最后新增一条数据 | data,record |
 | remove | 数据删除，指定 row 或 [row, ...] 删除多条数据 | row?rows? |
 |  (v1.2+废弃) removes | 根据多条数据删除 | rows |
 | removeSelecteds | 删除选中行数据 | — |

@@ -1542,11 +1542,11 @@ export default {
       this._updateData()
       return this.$nextTick()
     },
-    reloadRow (record) {
+    reloadRow (record, newRecord) {
       let matchObj = XEUtils.findTree(this.datas, row => row.data === record, this.elTreeOpts)
       if (matchObj) {
         let { item } = matchObj
-        XEUtils.destructuring(item.data, record)
+        XEUtils.destructuring(item.data, newRecord)
         Object.assign(item, {
           store: XEUtils.clone(item.data, true),
           validActive: null,

@@ -1258,7 +1258,7 @@ export default {
                       return reject(cusRule)
                     }
                     return resolve(rule)
-                  })
+                  }, { rules, row, column })
                 } else {
                   let restVal
                   let isNumber = rule.type === 'number'

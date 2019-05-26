@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: 提 Bug
-title: ''
+title: '请将问题描述清楚、并提供相关报错信息，否则将不会及时帮你解决！！！'
 labels: bug
 assignees: ''
 

@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
     <p style="color: red;font-size: 12px;">设置 disabledValidTip=true 关闭校验提示</p>
-    <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-50个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-60之间）phone字段（校验必填，校验手机号码）rate字段（校验必填，校验最少选中2颗星）url（校验必填，校验URL路径）attr1（校验数字）attr2（校验整数）attr3（校验小数）</p>
+    <p style="color: red;font-size: 12px;">name字段（校验必填，校验3-50个字符）nickname字段（校验5-20个字符）sex字段（校验必填，校验手机号码）age字段（校验必填，自定义校验，18-60之间）phone字段（校验必填，校验手机号码）</p>
 
     <el-form ref="tableform" class="click-table9-form" size="mini" :inline="true" :model="formData">
       <el-form-item label="名字" prop="name">
@@ -45,13 +45,11 @@
       <elx-editable-column prop="id" label="ID" width="80"></elx-editable-column>
       <elx-editable-column prop="name" label="名字" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="sex" label="性别" :edit-render="{name: 'ElSelect', options: sexList}"></elx-editable-column>
-      <elx-editable-column prop="age" label="年龄" :edit-render="{name: 'ElInputNumber', props: {min: 1, max: 200}}"></elx-editable-column>
+      <elx-editable-column prop="age" label="年龄" width="140" :edit-render="{name: 'ElInputNumber', props: {min: 1, max: 200}}"></elx-editable-column>
       <elx-editable-column prop="region" label="地区" width="200" :edit-render="{name: 'ElCascader', props: {options: regionList}}"></elx-editable-column>
       <elx-editable-column prop="role" label="角色" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="date" label="日期" width="160" :edit-render="{name: 'ElDatePicker', props: {type: 'datetime', format: 'yyyy-MM-dd'}}"></elx-editable-column>
       <elx-editable-column prop="date2" label="任意时间范围" width="340" :edit-render="{name: 'ElTimePicker', props: {isRange: true, rangeSeparator: '至', startPlaceholder: '开始时间', endPlaceholder: '结束时间', placeholder: '选择时间范围'}}"></elx-editable-column>
-      <elx-editable-column prop="flag" label="是否启用" :edit-render="{name: 'ElSwitch', type: 'visible'}"></elx-editable-column>
-      <elx-editable-column prop="rate" label="评分" min-width="150" :edit-render="{name: 'ElRate', type: 'visible'}"></elx-editable-column>
       <elx-editable-column prop="describe" label="备注" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="updateTime" label="更新时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
@@ -97,13 +95,6 @@ export default {
           }
         }
       }, 50)
-    }
-    const checkRate = (rule, value, callback) => {
-      if (parseInt(value || 0) < 2) {
-        callback(new Error('最小选择2颗星'))
-      } else {
-        callback()
-      }
     }
     const checkAttr2 = (rule, value, callback) => {
       if (!value || XEUtils.isInteger(Number(value))) {
@@ -159,13 +150,6 @@ export default {
         ],
         date: [
           { required: true, message: '请选择日期', trigger: 'change' }
-        ],
-        rate: [
-          { required: true, message: '请选择评分', trigger: 'change' },
-          { validator: checkRate, trigger: 'change' }
-        ],
-        flag: [
-          { required: true, message: '必须启用', trigger: 'change' }
         ],
         email: [
           { required: true, message: '邮件必须填写', trigger: 'change' },
@@ -250,7 +234,7 @@ export default {
         age: 26,
         flag: false
       }).then(({ row }) => {
-        this.$refs.elxEditable.setActiveCell(row, 'name')
+        this.$refs.elxEditable.setActiveCell(row, 'age')
       })
     },
     removeEvent (row) {

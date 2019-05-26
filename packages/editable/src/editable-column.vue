@@ -349,7 +349,7 @@ export default {
       let value = this.getRowIdentity(row, column)
       let props = this.renderOpts.props || this.renderOpts.attrs || {}
       if (props.isRange) {
-        return value.map(date => XEUtils.toDateString(date, props.format || 'hh:mm:ss')).join(` ${props.rangeSeparator || '-'} `)
+        return value ? value.map(date => XEUtils.toDateString(date, props.format || 'hh:mm:ss')).join(` ${props.rangeSeparator || '-'} `) : ''
       }
       return XEUtils.toDateString(value, props.format || 'hh:mm:ss')
     },

@@ -187,7 +187,7 @@ export default {
           },
           {
             code: 'ALL_EXPORT',
-            name: '导出全部.cvs',
+            name: '导出全部.csv',
             prefixIcon: 'el-icon-download'
           }
         ]
@@ -269,12 +269,12 @@ export default {
         [
           {
             code: 'ROW_EXPORT',
-            name: '导出行.cvs',
+            name: '导出行.csv',
             prefixIcon: 'el-icon-download'
           },
           {
             code: 'ALL_EXPORT',
-            name: '导出全部.cvs'
+            name: '导出全部.csv'
           },
           {
             code: 'printer',

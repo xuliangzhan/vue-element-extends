@@ -65,7 +65,7 @@
             <router-link class="apimenu-link" :to="{name: 'EditableDblclick4'}" replace>行编辑+校验</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableDblclick5'}" replace>行编辑+显示/隐藏列+自定义列头</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableDblclick6'}" replace>列编辑+方向键&amp;Tab键切换</router-link>
-            <router-link class="apimenu-link" :to="{name: 'EditableDblclick7'}" replace>列编辑+树形表格+右键菜单</router-link>
+            <router-link class="apimenu-link" :to="{name: 'EditableDblclick7'}" replace>行编辑+树形表格+右键菜单</router-link>
             <router-link class="apimenu-link" :to="{name: 'EditableDblclick8'}" replace>列编辑+懒加载树形表格</router-link>
           </div>
           <div class="apimenu-row">

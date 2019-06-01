@@ -24,7 +24,7 @@
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'click', mode: 'row', props: {children: 'childList'}}"
+      :edit-config="{trigger: 'dblclick', mode: 'row', props: {children: 'childList'}}"
       :context-menu-config="{disabledHeader: true, bodyMenus}"
       @blur-active="blurActiveEvent"
       @current-change="handleCurrentChange"

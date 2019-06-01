@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <p style="color: red;font-size: 12px;">树表格：支持大部分功能</p>
+    <p style="color: red;font-size: 12px;">树表格：支持小部分功能</p>
     <p style="color: red;font-size: 12px;">可以通过 props 指定 children 属性：props: {children: 'children'}</p>
     <p style="color: red;font-size: 12px;">通过参数 context-menu-config 配置右键菜单；通过 custom-menu-link 事件处理自定义菜单</p>
 
@@ -24,7 +24,7 @@
       :data.sync="list"
       :row-class-name="tableRowClassName"
       :edit-rules="validRules"
-      :edit-config="{trigger: 'dblclick', mode: 'cell', props: {children: 'childList'}}"
+      :edit-config="{trigger: 'click', mode: 'row', props: {children: 'childList'}}"
       :context-menu-config="{disabledHeader: true, bodyMenus}"
       @blur-active="blurActiveEvent"
       @current-change="handleCurrentChange"
@@ -33,7 +33,7 @@
       <elx-editable-column type="selection" width="55"></elx-editable-column>
       <elx-editable-column prop="id" label="ID" width="160" :formatter="formatterId"></elx-editable-column>
       <elx-editable-column prop="name" label="名称" min-width="220" show-overflow-tooltip :edit-render="{name: 'ElInput'}"></elx-editable-column>
-      <elx-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize"></elx-editable-column>
+      <elx-editable-column prop="size" label="大小" width="100" :formatter="formatColumnSize" :edit-render="{name: 'ElInput'}"></elx-editable-column>
       <elx-editable-column prop="createTime" label="创建时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column prop="updateTime" label="修改时间" width="160" :formatter="formatterDate"></elx-editable-column>
       <elx-editable-column label="操作" width="100">
@@ -120,7 +120,8 @@ export default {
       return this.$refs.elxEditable.hasRowInsert(row) ? '' : cellValue
     },
     formatColumnSize (row, column, cellValue, index) {
-      if (XEUtils.isNumber(cellValue)) {
+      cellValue = XEUtils.toNumber(cellValue)
+      if (cellValue) {
         let units = ['B', 'KB', 'MB', 'GB', 'TB']
         let unit = ''
         let size = XEUtils.toNumber(cellValue)

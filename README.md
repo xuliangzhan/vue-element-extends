@@ -37,8 +37,8 @@
 
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)
 
-😏**一个功能更加强大的 Vue 表格**  
-后续推荐使用更优的表格：[vxe-table](https://xuliangzhan.github.io/vxe-table/)
+😏**推荐使用更优的表格**  
+[vxe-table](https://xuliangzhan.gitee.io/vxe-table/)
 
 ## Scroll render
 
@@ -52,11 +52,12 @@
   bottom --> Space  
 ```
 
-滚动渲染存在问题：
+滚动可视渲染存在问题：
 
 * 多选列无法全选
-* 不支持树形表格
-* 不支持排序和筛选条件过滤等...
+* 不支持树形结构
+* 不支持排序
+* 不支持筛选
 
 ## Installing
 

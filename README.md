@@ -32,6 +32,9 @@
 
 ## Docs
 
+存在问题：
+树表格只能支持小部分功能，编辑情况下可能会存在问题
+
 😱**注：正常渲染不适用于一页显示海量数据（建议使用分页）；启用滚动渲染可以支撑海量数据（缺点是滚动效果略差）**  
 如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
 

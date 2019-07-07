@@ -7,7 +7,7 @@
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xuliangzhan/vue-element-extends/blob/master/LICENSE)
 
 基于 Vue 2.6.x 、ElementUI 2.x 的扩展组件  
-**推荐使用全功能的 Vue 表格组件，最新版见 [vxe-table](https://xuliangzhan.github.io/vxe-table/#/table/base/basic)**
+**推荐更优的表格，最新版见 🐬 [vxe-table](https://xuliangzhan.github.io/vxe-table/#/table/base/basic)**
 
 * elx-table 功能点：
   * 支持自定义显示、隐藏列

@@ -249,6 +249,11 @@ export default {
       document.body.appendChild(this.ctxMenuStore.el)
     }
   },
+  beforeDestroy () {
+    this.datas.forEach(row => {
+      this._clearValidError(row)
+    })
+  },
   destroyed () {
     let ctxMenuStore = this.ctxMenuStore
     if (ctxMenuStore.el && ctxMenuStore.el.parentNode) {
@@ -1484,7 +1489,7 @@ export default {
               }
               break
             default:
-              this.$emit('custom-menu-link', code, row.data, column, cell, evnt)
+              this.$emit('custom-menu-link', code, row ? row.data : null, column, cell, evnt)
               break
           }
         }

@@ -238,10 +238,12 @@ export default {
     if (this.scrollLoad) {
       this._bindScrollEvent().then(() => this._reloadScrollData())
     }
-    this._initial(this.data, true)
-    this._setDefaultChecked()
-    this._handleColumns()
-    this._updateData()
+    this.$nextTick(() => {
+      this._initial(this.data, true)
+      this._setDefaultChecked()
+      this._handleColumns()
+      this._updateData()
+    })
   },
   mounted () {
     if (this.isCtxMenu && this.$refs.contextMenu) {

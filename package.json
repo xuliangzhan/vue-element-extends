@@ -36,13 +36,13 @@
     "eslint-plugin-vue": "^5.0.0",
     "font-awesome": "^4.7.0",
     "iview": "^3.3.0",
-    "sortablejs": "^1.8.4",
+    "sortablejs": "^1.10.0-rc3",
     "vue": "^2.6.10",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.6.10",
-    "xe-ajax": "^3.5.3",
+    "xe-ajax": "^3.6.0",
     "xe-ajax-mock": "^1.7.10",
-    "xe-utils": "^1.8.19"
+    "xe-utils": "^1.9.7"
   },
   "repository": {
     "type": "git",

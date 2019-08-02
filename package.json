@@ -34,14 +34,14 @@
     "font-awesome": "^4.7.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
-    "sortablejs": "^1.8.4",
+    "sortablejs": "^1.10.0-rc3",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vue-template-compiler": "^2.6.10",
-    "xe-ajax": "^3.5.4",
+    "xe-ajax": "^3.6.0",
     "xe-ajax-mock": "^1.7.10",
-    "xe-clipboard": "^1.1.2",
-    "xe-utils": "^1.9.5",
+    "xe-clipboard": "^1.2.0",
+    "xe-utils": "^1.9.7",
     "xlsx": "^0.14.3"
   },
   "peerDependencies": {

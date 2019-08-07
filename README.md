@@ -35,24 +35,13 @@
 ## Docs
 
 存在问题：
-树表格只能支持小部分功能，编辑情况下可能会存在问题
+树表格只能支持小部分功能，编辑情况下会存在问题
 
 😱**注：正常渲染不适用于一页显示海量数据（建议使用分页）；启用滚动渲染可以支撑海量数据（缺点是滚动效果略差）**  
-如果有更好优化建议或遇到问题欢迎提 [Issues](https://github.com/xuliangzhan/vue-element-extends/issues?q=is%3Aissue+is%3Aclosed)
 
 [https://xuliangzhan.github.io/vue-element-extends/](https://xuliangzhan.github.io/vue-element-extends/)
 
-## Scroll render
-
-```html
-  top --> Space  
-    --> visibleStart  
-      --> renderSize  
-        --> offsetSize  
-  table --> visibleIndex  
-        --> offsetSize  
-  bottom --> Space  
-```
+## Virtual Scroll
 
 存在问题：
 
@@ -77,26 +66,6 @@ npm install xe-utils vue-element-extends
 <script src="https://unpkg.com/xe-utils"></script>
 <script src="https://unpkg.com/vue-element-extends"></script>
 ```
-
-Case 1:
-
-```javascript
-import Vue from 'vue'
-import {
-  Table,
-  TableColumn,
-  Editable,
-  EditableColumn
-} from 'vue-element-extends'
-import 'vue-element-extends/lib/index.css'
-
-Vue.use(Table)
-Vue.use(TableColumn)
-Vue.use(Editable)
-Vue.use(EditableColumn)
-```
-
-Case 2:
 
 ```javascript
 import Vue from 'vue'

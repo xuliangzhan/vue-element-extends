@@ -8,7 +8,7 @@
 
 基于 Vue 2.6.x 、ElementUI 2.x 的扩展组件  
 
-> **后续推荐使用：一个全功能的 Vue 表格，最新版见 🐬[vxe-table](https://xuliangzhan.github.io/vxe-table/#/table/base/basic)**  
+> **后续推荐使用：一个功能齐全的 Vue 表组件，最新版见 🐬[vxe-table](https://xuliangzhan.github.io/vxe-table/#/table/base/basic)**  
 
 * elx-table 功能点：
   * 支持自定义显示、隐藏列

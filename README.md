@@ -341,4 +341,4 @@ export default {
 
 ## License
 
-Copyright (c) 2017-present, Xu Liangzhan
+MIT License, 2017-present, Xu Liangzhan

@@ -1,8 +1,8 @@
 <template>
-  <el-table-column v-if="isVisible && (type === 'selection' || group || isGroup)" v-bind="attrs">
+  <el-table-column v-if="isVisible && (type === 'selection' || group || isGroup)" v-bind="bindProps">
     <slot></slot>
   </el-table-column>
-  <el-table-column v-else-if="isVisible && type === 'index'" v-bind="attrs">
+  <el-table-column v-else-if="isVisible && type === 'index'" v-bind="bindProps">
     <template v-slot:header="scope">
       <slot name="header" v-bind="scope">#</slot>
     </template>
@@ -10,7 +10,7 @@
       <slot v-bind="getIndexScope(scope)">{{ formatRowIndex(scope) }}</slot>
     </template>
   </el-table-column>
-  <el-table-column v-else-if="isVisible && type === 'expand'" v-bind="attrs">
+  <el-table-column v-else-if="isVisible && type === 'expand'" v-bind="bindProps">
     <template v-slot:header="scope">
       <slot name="header" v-bind="scope">{{ scope.column.label }}</slot>
     </template>
@@ -18,7 +18,7 @@
       <slot v-bind="scope"></slot>
     </template>
   </el-table-column>
-  <el-table-column v-else-if="isVisible" v-bind="attrs">
+  <el-table-column v-else-if="isVisible" v-bind="bindProps">
     <template v-slot:header="scope">
       <slot name="header" v-bind="scope">{{ scope.column.label }}</slot>
     </template>
@@ -55,7 +55,7 @@ export default {
       }
       return true
     },
-    attrs () {
+    bindProps () {
       return {
         index: this.index,
         type: this.type,
@@ -75,7 +75,7 @@ export default {
         headerAlign: this.headerAlign,
         className: `elx-table-column ${this.className}`,
         labelClassName: this.labelClassName,
-        selectable: this.selectableEvent,
+        selectable: this.selectable,
         reserveSelection: this.reserveSelection,
         filters: this.filters,
         filterPlacement: this.filterPlacement,

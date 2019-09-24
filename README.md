@@ -9,11 +9,11 @@
 基于 Vue 2.6.x 、ElementUI 2.x 的扩展组件  
 
 > *****************************
->
->
+>  
+>  
 > **后续推荐使用：🐬[vxe-table](https://xuliangzhan.github.io/vxe-table/#/table/base/basic)**  
->
->
+>  
+>  
 > *****************************
 
 * elx-table 功能点：

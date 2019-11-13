@@ -6,12 +6,15 @@
 [![gzip size: CSS](http://img.badgesize.io/https://unpkg.com/vue-element-extends/lib/index.css?compression=gzip&label=gzip%20size:%20CSS)](http://img.badgesize.io/https://unpkg.com/vue-element-extends/lib/index.css?compression=gzip&label=gzip%20size:%20CSS)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xuliangzhan/vue-element-extends/blob/master/LICENSE)
 
-***
-注意：ElementUI 2.3.x ~ 2.6.x 对应 vue-element-extends 1.0.x 版本
-***
+> *****************************
+> **Attention! This component is no longer recommended!**  
+> **非常抱歉！该组件不再继续维护了**  
+> **后续推荐使用：🐬[vxe-table](https://xuliangzhan.github.io/vxe-table/#/table/base/basic)**  
+> *****************************
 
 ## Installing
 
+注意：ElementUI 2.3.x ~ 2.6.x 对应 vue-element-extends 1.0.x 版本  
 使用旧的方式：
 
 ```javascript

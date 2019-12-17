@@ -1,4 +1,4 @@
-# vue-element-extends
+# vue-element-extends（已停止维护）
 
 [![npm version](https://img.shields.io/npm/v/vue-element-extends.svg?style=flat-square)](https://www.npmjs.org/package/vue-element-extends)
 [![npm downloads](https://img.shields.io/npm/dm/vue-element-extends.svg?style=flat-square)](http://npm-stat.com/charts.html?package=vue-element-extends)
@@ -11,7 +11,7 @@
 > *****************************
 > **Attention! This component is no longer recommended!**  
 > **非常抱歉！该组件不再继续维护了**  
-> **后续推荐使用：🐬[vxe-table](https://xuliangzhan.github.io/vxe-table/#/table/base/basic)**  
+> **有需要可以了解下这个表格：🐬[vxe-table](https://xuliangzhan.github.io/vxe-table/#/table/base/basic)**  
 > *****************************
 
 * elx-table 功能点：

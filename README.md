@@ -1,4 +1,4 @@
-# vue-element-extends（已停止维护）
+# vue-element-extends（已废弃，不再维护）
 
 [![npm version](https://img.shields.io/npm/v/vue-element-extends.svg?style=flat-square)](https://www.npmjs.org/package/vue-element-extends)
 [![npm downloads](https://img.shields.io/npm/dm/vue-element-extends.svg?style=flat-square)](http://npm-stat.com/charts.html?package=vue-element-extends)

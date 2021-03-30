@@ -1,6 +1,6 @@
 {
   "name": "vue-element-extends",
-  "version": "1.2.26",
+  "version": "1.2.29",
   "description": "Extension component based on ElementUI 2.x",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -48,8 +48,7 @@
   },
   "peerDependencies": {
     "vue": "^2.6.0",
-    "element-ui": "^2.1.0",
-    "xe-utils": "^1.8.26"
+    "element-ui": "^2.1.0"
   },
   "postcss": {
     "plugins": {

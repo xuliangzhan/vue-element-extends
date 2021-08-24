@@ -1,5 +1,5 @@
-import { ElTable } from './table'
-import { ElTableColumn } from './table-column';
+import { ElTable } from 'element-ui/types/table'
+import { ElTableColumn } from 'element-ui/types/table-column';
 
 
 export interface EditRules {

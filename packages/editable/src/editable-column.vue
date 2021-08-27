@@ -38,20 +38,20 @@
       <template v-if="isEditRender(scope)">
         <slot name="edit" v-bind="getRowScope(scope)">
           <template v-if="compName === 'ElSelect'">
-            <el-select v-if="renderOpts.optionGroups" v-model="scope.row.data[scope.column.property]" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)">
+            <el-select v-if="renderOpts.optionGroups" :value="getRowIdentity(scope.row,scope.column)" @input="(value)=>{updateValue(scope.row.data,scope.column.property,value)}" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)">
               <el-option-group v-for="(group, gIndex) in renderOpts.optionGroups" :key="gIndex" :label="group[renderOpts.optionGroupProps.label]" v-bind="group.props">
                 <el-option v-for="(item, index) in group[renderOpts.optionGroupProps.options]" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.props || item.attrs"></el-option>
               </el-option-group>
             </el-select>
-            <el-select v-else v-model="scope.row.data[scope.column.property]" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)">
+            <el-select v-else :value="getRowIdentity(scope.row,scope.column)" @input="(value)=>{updateValue(scope.row.data,scope.column.property,value)}" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)">
               <el-option v-for="(item, index) in renderOpts.options" :key="index" :value="item[renderOpts.optionProps.value]" :label="item[renderOpts.optionProps.label]" v-bind="item.props || item.attrs"></el-option>
             </el-select>
           </template>
           <template v-else-if="comps.includes(compName)">
-            <component :is="compName" v-model="scope.row.data[scope.column.property]" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)"></component>
+            <component :is="compName" :value="getRowIdentity(scope.row,scope.column)" @input="(value)=>{updateValue(scope.row.data,scope.column.property,value)}" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)"></component>
           </template>
           <template v-else>
-            <el-input v-model="scope.row.data[scope.column.property]" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)"></el-input>
+            <el-input :value="getRowIdentity(scope.row,scope.column)" @input="(value)=>{updateValue(scope.row.data,scope.column.property,value)}" v-bind="getRendProps(scope)" v-on="getRendEvents(scope)"></el-input>
           </template>
         </slot>
       </template>
@@ -215,6 +215,9 @@ export default {
     }
   },
   methods: {
+    updateValue (data, prop, value) {
+      XEUtils.set(data, prop, value)
+    },
     getHeadScope (scope) {
       return {
         column: scope.column,
